@@ -1,0 +1,5 @@
+swiper-container {
+  height: 250px;
+  --swiper-pagination-color: #6D28D9;
+  --swiper-pagination-bottom: 0px
+}

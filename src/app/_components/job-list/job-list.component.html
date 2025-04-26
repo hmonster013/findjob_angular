@@ -1,0 +1,60 @@
+<div class="w-full bg-white p-4 rounded-2xl shadow-sm">
+  <div class="flex items-center space-x-2 mb-6">
+    <svg class="w-6 h-6 text-white bg-purple-600 rounded-full p-1" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 4h2v6H9V4zm0 8h2v2H9v-2z" />
+    </svg>
+    <h2 class="text-2xl font-bold text-purple-800">Việc làm tuyển gấp</h2>
+  </div>
+
+  <!-- Grid cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="relative bg-orange-50 p-4 rounded-xl shadow hover:shadow-md transition cursor-pointer">
+      <!-- Icon flash -->
+      <div class="absolute top-2 left-2 text-orange-400">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M11.3 1L2 12h7l-.9 7L18 8h-7l.3-7z" />
+        </svg>
+      </div>
+
+      <!-- Title and HOT badge -->
+      <div class="flex justify-between items-start">
+        <h3 class="font-semibold text-gray-800 text-md truncate max-w-[220px]">Nhân viên kinh doanh - Tư vấn mạng công nghệ</h3>
+        <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded ml-2">HOT</span>
+      </div>
+
+      <!-- Info below -->
+      <div class="flex items-center text-sm text-gray-500 space-x-2 mt-3">
+        <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M5.05 4.05a7 7 0 119.9 9.9l-4.95 4.95-4.95-4.95a7 7 0 010-9.9zM10 13a3 3 0 100-6 3 3 0 000 6z" />
+        </svg>
+        <span>7tr - 10tr</span>
+        <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 0012.586 0H4z" />
+        </svg>
+        <span>Chưa cập nhật</span>
+        <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M6 2a1 1 0 00-1 1v2H4a1 1 0 100 2h1v8H4a1 1 0 100 2h1v2a1 1 0 102 0v-2h8v2a1 1 0 102 0v-2h1a1 1 0 100-2h-1V7h1a1 1 0 100-2h-1V3a1 1 0 00-1-1H6z" />
+        </svg>
+        <span>07/12/2025</span>
+      </div>
+
+      <!-- Time remaining -->
+      <div class="text-xs text-gray-400 text-right mt-2">
+        Còn 7 tháng
+      </div>
+    </div>
+
+    <!-- Các card khác tiếp tục tương tự -->
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center items-center mt-6 space-x-2 text-purple-600">
+    <button class="p-2 hover:bg-purple-100 rounded-full">&lt;</button>
+    <button class="w-8 h-8 bg-purple-600 text-white rounded-full">1</button>
+    <button class="w-8 h-8 hover:bg-purple-100 rounded-full">2</button>
+    <button class="w-8 h-8 hover:bg-purple-100 rounded-full">3</button>
+    <span class="px-2">...</span>
+    <button class="w-8 h-8 hover:bg-purple-100 rounded-full">371</button>
+    <button class="p-2 hover:bg-purple-100 rounded-full">&gt;</button>
+  </div>
+</div>
