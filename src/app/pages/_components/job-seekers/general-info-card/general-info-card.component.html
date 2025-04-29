@@ -1,0 +1,60 @@
+<div class="p-4 bg-white rounded-lg shadow-md relative">
+
+  <h2 class="text-xl font-bold mb-4">Thông tin chung</h2>
+
+  <div *ngIf="isLoadingResumeDetail">
+    <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+  </div>
+
+  <div *ngIf="!isLoadingResumeDetail && !resumeDetail" class="text-center text-gray-500">
+    Không tìm thấy thông tin hồ sơ.
+  </div>
+
+  <div *ngIf="!isLoadingResumeDetail && resumeDetail" class="space-y-4">
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <span class="font-semibold">Họ tên:</span> {{ resumeDetail?.fullName }}
+      </div>
+      <div>
+        <span class="font-semibold">Số điện thoại:</span> {{ resumeDetail?.phone }}
+      </div>
+      <div>
+        <span class="font-semibold">Email:</span> {{ resumeDetail?.email }}
+      </div>
+      <div>
+        <span class="font-semibold">Giới tính:</span> {{ resumeDetail?.genderText }}
+      </div>
+      <div>
+        <span class="font-semibold">Ngày sinh:</span> {{ resumeDetail?.birthDate | date: 'dd/MM/yyyy' }}
+      </div>
+      <div>
+        <span class="font-semibold">Tỉnh/Thành phố:</span> {{ resumeDetail?.provinceName }}
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-end">
+      <button
+        (click)="handleShowEdit()"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        Chỉnh sửa
+      </button>
+    </div>
+
+  </div>
+
+  <app-general-info-form
+    *ngIf="openPopup"
+    [editData]="resumeDetail"
+    [handleUpdate]="handleUpdate"
+  ></app-general-info-form>
+
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+    </svg>
+  </div>
+
+</div>

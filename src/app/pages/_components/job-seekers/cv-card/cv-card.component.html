@@ -1,0 +1,67 @@
+<div class="p-4 bg-white rounded-lg shadow-md relative">
+
+  <h2 class="text-xl font-bold mb-4">CV đính kèm</h2>
+
+  <div *ngIf="isLoadingCv">
+    <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+  </div>
+
+  <div *ngIf="!isLoadingCv && !cvUrl" class="text-center text-gray-500">
+    Bạn chưa tải lên CV.
+  </div>
+
+  <div *ngIf="!isLoadingCv && cvUrl" class="space-y-4">
+    <object [data]="cvUrl" type="application/pdf" width="100%" height="500px" class="border rounded">
+      Không hiển thị được CV. <a [href]="cvUrl" target="_blank" class="text-blue-500 underline">Xem CV</a>
+    </object>
+  </div>
+
+  <div class="mt-6 flex justify-end">
+    <button
+      (click)="handleOpenUploadPopup()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+    >
+      Tải lên CV mới
+    </button>
+  </div>
+
+  <!-- Upload CV Popup -->
+  <div *ngIf="openPopup" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-96 space-y-4 shadow-lg">
+      <h3 class="text-lg font-bold">Tải lên CV mới</h3>
+
+      <input
+        type="file"
+        (change)="handleFileChange($event)"
+        class="border p-2 rounded w-full"
+        accept=".pdf,.doc,.docx"
+      />
+
+      <div class="flex justify-end space-x-2">
+        <button
+          (click)="openPopup = false"
+          class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
+        >
+          Hủy
+        </button>
+
+        <button
+          (click)="handleSubmit()"
+          class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white"
+          [disabled]="!file"
+        >
+          Xác nhận
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Screen Loading -->
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+    </svg>
+  </div>
+
+</div>

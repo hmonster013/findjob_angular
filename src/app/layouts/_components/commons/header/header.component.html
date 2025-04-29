@@ -1,0 +1,77 @@
+<!-- header.component.html -->
+
+<header class="w-full sticky top-0 z-[999] bg-primary-600 shadow">
+  <div class="container mx-auto flex items-center justify-between p-2">
+
+    <!-- Logo -->
+    <a [routerLink]="['/']" class="flex items-center gap-2">
+      <img
+        src="/assets/images/logo-light.png"
+        alt="MyJob Logo"
+        class="h-10 hidden md:block"
+      />
+      <img
+        src="/assets/images/logo-small.png"
+        alt="MyJob Small Logo"
+        class="h-10 md:hidden"
+      />
+    </a>
+
+    <!-- Desktop Menu -->
+    <nav class="hidden md:flex gap-4 ml-8 flex-grow">
+      <a
+        *ngFor="let page of pages[hostName]"
+        [routerLink]="[page.path]"
+        routerLinkActive="text-white font-bold border-b-2 border-white"
+        class="text-white text-sm hover:opacity-80"
+      >
+        {{ page.label }}
+      </a>
+    </nav>
+
+    <!-- Right Area -->
+    <div class="flex items-center gap-4">
+      <app-notification-card *ngIf="isAuthenticated"></app-notification-card>
+      <app-chat-card *ngIf="isAuthenticated"></app-chat-card>
+
+      <div *ngIf="isAuthenticated; else guestButtons" class="flex items-center gap-2">
+        <img
+          [src]="currentUser?.avatarUrl"
+          alt="Avatar"
+          class="w-10 h-10 rounded-full"
+        />
+        <span class="hidden md:block text-white font-semibold">{{ currentUser?.fullName }}</span>
+      </div>
+
+      <ng-template #guestButtons>
+        <button
+          class="text-white text-sm border border-white px-3 py-1 rounded hover:bg-white hover:text-primary-600"
+          (click)="handleLogin()"
+        >
+          Đăng nhập
+        </button>
+        <button
+          class="hidden md:inline-block text-white text-sm border border-white px-3 py-1 rounded hover:bg-white hover:text-primary-600"
+          (click)="handleSignUp()"
+        >
+          Đăng ký
+        </button>
+      </ng-template>
+
+      <div class="hidden md:block">
+        <app-account-switch-menu></app-account-switch-menu>
+      </div>
+
+      <!-- Mobile Button -->
+      <button class="md:hidden text-white text-2xl" (click)="handleDrawerToggle()">📋</button>
+    </div>
+
+  </div>
+
+  <!-- LeftDrawer for Mobile -->
+  <app-left-drawer
+    [pages]="pages[hostName]"
+    [mobileOpen]="mobileOpen"
+    (closeDrawer)="handleDrawerToggle()"
+  ></app-left-drawer>
+</header>

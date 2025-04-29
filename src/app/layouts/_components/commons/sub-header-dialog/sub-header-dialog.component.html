@@ -1,0 +1,33 @@
+<!-- sửa chỗ này -->
+
+<!-- Top 10 nghề nghiệp -->
+<div class="col-span-3">
+  <div class="border rounded-lg p-4 bg-blue-50">
+    <h3 class="font-semibold text-lg mb-4">Top 10 nghề nghiệp</h3>
+    <div class="flex flex-col gap-2">
+      <div
+        *ngFor="let career of hotCareers"
+        class="cursor-pointer hover:text-orange-400"
+        (click)="onSelectCareer(career.id)"
+      >
+        {{ career.name }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Nghề khác -->
+<div class="col-span-9">
+  <div class="p-4">
+    <h3 class="font-semibold text-lg mb-4">Ngành nghề khác</h3>
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        *ngFor="let career of otherCareers"
+        class="cursor-pointer hover:text-orange-400"
+        (click)="onSelectCareer(career.id)"
+      >
+        {{ career.name }}
+      </div>
+    </div>
+  </div>
+</div>

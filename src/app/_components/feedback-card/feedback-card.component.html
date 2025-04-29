@@ -1,0 +1,34 @@
+<!-- feedback-card.component.html -->
+
+<div class="p-6 rounded-lg shadow hover:shadow-md transition bg-white flex flex-col items-center">
+  <!-- Nếu Loading -->
+  <ng-container *ngIf="isLoading; else showContent">
+    <div class="w-24 h-24 bg-gray-300 rounded-full mb-4 animate-pulse"></div>
+    <div class="w-1/2 h-4 bg-gray-300 mb-2 animate-pulse"></div>
+    <div class="w-2/3 h-3 bg-gray-300 mb-4 animate-pulse"></div>
+    <div class="w-full h-20 bg-gray-300 animate-pulse"></div>
+  </ng-container>
+
+  <!-- Nếu đã load dữ liệu -->
+  <ng-template #showContent>
+    <img
+      [src]="avatarUrl"
+      alt="Avatar"
+      class="w-24 h-24 rounded-full border-4 border-blue-300 object-cover mb-4"
+    />
+
+    <h6 class="text-lg font-bold text-blue-600 text-center mb-2">
+      {{ fullName }}
+    </h6>
+
+    <div class="text-yellow-400 mb-2 text-2xl">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="inline w-6 h-6" viewBox="0 0 24 24">
+        <path d="M7 17H5a5 5 0 015-5h1V6H5a7 7 0 000 14h2v-3zm10 0h-2a5 5 0 015-5h1V6h-6a7 7 0 000 14h2v-3z"/>
+      </svg>
+    </div>
+
+    <p class="text-gray-600 text-center px-2">
+      {{ content }}
+    </p>
+  </ng-template>
+</div>

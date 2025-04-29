@@ -1,0 +1,98 @@
+<div class="flex flex-col h-full relative bg-gray-50">
+  <ng-container *ngIf="selectedRoomId">
+    <div class="absolute top-0 left-0 right-0 z-10 bg-white border-b border-gray-300">
+      <div>
+        <app-chat-info
+          [avatarUrl]="selectedRoom?.user?.avatarUrl"
+          [title]="selectedRoom?.user?.name"
+          [subTitle]="currentUser?.roleName === ROLES_NAME.JOB_SEEKER
+            ? selectedRoom?.user?.company?.companyName
+            : selectedRoom?.user?.email"
+          [mode]="'row'"
+        ></app-chat-info>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="flex-grow overflow-hidden" [ngStyle]="{ 'margin-top': selectedRoomId ? '72px' : '0px', 'margin-bottom': '80px' }">
+    <ng-container *ngIf="selectedRoomId; else noRoom">
+      <div class="flex flex-col h-full">
+        <div class="relative h-full">
+          <ng-container *ngIf="isLoading; else showMessages">
+            <div class="flex justify-center items-center h-full">
+              <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary-500"></div>
+            </div>
+          </ng-container>
+
+          <ng-template #showMessages>
+            <ng-container *ngIf="messages.length === 0; else messageList">
+              <div class="flex justify-center items-center h-full p-4">
+                <app-chat-info
+                  [avatarUrl]="selectedRoom?.user?.avatarUrl"
+                  [title]="selectedRoom?.user?.name"
+                  [subTitle]="currentUser?.roleName === ROLES_NAME.JOB_SEEKER
+                    ? selectedRoom?.user?.company?.companyName
+                    : selectedRoom?.user?.email"
+                  [description]="selectedRoom?.createdBy !== currentUserChat?.userId
+                    ? (currentUser?.roleName === ROLES_NAME.JOB_SEEKER
+                      ? selectedRoom?.user?.company?.companyName + ' đã kết nối với bạn.'
+                      : selectedRoom?.user?.name + ' đã kết nối với bạn.')
+                    : (currentUser?.roleName === ROLES_NAME.JOB_SEEKER
+                      ? 'Bạn đã kết nối đến ' + selectedRoom?.user?.company?.companyName
+                      : 'Bạn đã kết nối đến ' + selectedRoom?.user?.name)"
+                ></app-chat-info>
+              </div>
+            </ng-container>
+
+            <ng-template #messageList>
+              <div #messageListRef id="scrollableDiv" class="flex flex-col-reverse overflow-auto h-full p-4">
+                <div *ngFor="let value of messages">
+                  <app-message
+                    [userId]="value.userId"
+                    [text]="value.text"
+                    [avatarUrl]="currentUserChat?.userId === value.userId
+                      ? currentUserChat?.avatarUrl
+                      : selectedRoom?.user?.avatarUrl"
+                    [createdAt]="value.createdAt">
+                  </app-message>
+                </div>
+
+                <div *ngIf="hasMore" class="py-4 flex justify-center">
+                  <button type="button" class="btn btn-primary" (click)="handleLoadMore()">
+                    Tải thêm
+                  </button>
+                </div>
+              </div>
+            </ng-template>
+          </ng-template>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <ng-template #noRoom>
+    <div class="flex flex-col items-center justify-center h-full p-4">
+      <app-empty-card description="Bạn chưa chọn cuộc trò chuyện nào ..."></app-empty-card>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="selectedRoomId">
+    <form (submit)="handleOnSubmit($event)" class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-300 bg-white z-10">
+      <div class="flex items-end space-x-2">
+        <textarea
+          #inputRef
+          [(ngModel)]="inputValue"
+          (keydown)="handleKeyDown($event)"
+          rows="1"
+          name="chatInput"
+          class="flex-grow rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+          placeholder="Nhập nội dung tại đây ..."
+          maxlength="1000">
+        </textarea>
+        <button type="submit" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold px-6 py-3 rounded-lg h-14">
+          Gửi
+        </button>
+      </div>
+    </form>
+  </ng-container>
+</div>

@@ -1,0 +1,44 @@
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()">
+  <div class="grid grid-cols-1 gap-4">
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">
+        Tên kỹ năng
+        <span class="text-red-500">*</span>
+      </label>
+      <input
+        formControlName="name"
+        placeholder="Nhập tên kỹ năng"
+        type="text"
+        class="border rounded p-2 w-full"
+      />
+      <div *ngIf="form.get('name')?.errors?.['serverError']" class="text-red-500 text-sm mt-1">
+        {{ form.get('name')?.errors?.['serverError'] }}
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">
+        Trình độ
+        <span class="text-red-500">*</span>
+      </label>
+      <div class="flex space-x-2">
+        <ng-container *ngFor="let star of [1,2,3,4,5]">
+          <input
+            type="radio"
+            [value]="star"
+            formControlName="level"
+            class="hidden"
+            [id]="'star-' + star"
+          />
+          <label
+            [for]="'star-' + star"
+            class="cursor-pointer text-2xl select-none text-yellow-400"
+          >★</label>
+        </ng-container>
+      </div>
+      <div *ngIf="form.get('level')?.errors?.['serverError']" class="text-red-500 text-sm mt-1">
+        {{ form.get('level')?.errors?.['serverError'] }}
+      </div>
+    </div>
+  </div>
+</form>

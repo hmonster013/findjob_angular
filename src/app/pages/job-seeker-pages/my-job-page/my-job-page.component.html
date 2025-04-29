@@ -1,0 +1,69 @@
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+  <!-- LEFT content -->
+  <div class="md:col-span-7 lg:col-span-8 space-y-4">
+    <div class="bg-white rounded-xl shadow p-4">
+      <!-- Tabs header -->
+      <div class="flex border-b border-gray-200 mb-4">
+        <button
+          (click)="selectTab('saved')"
+          [class]="
+            'px-4 py-2 text-sm font-medium border-b-2 ' +
+            (selectedTab === 'saved'
+              ? 'text-primary border-primary'
+              : 'text-gray-500 border-transparent hover:text-primary')
+          "
+        >
+          Việc làm đã lưu
+        </button>
+
+        <button
+          (click)="selectTab('applied')"
+          [class]="
+            'ml-4 px-4 py-2 text-sm font-medium border-b-2 ' +
+            (selectedTab === 'applied'
+              ? 'text-primary border-primary'
+              : 'text-gray-500 border-transparent hover:text-primary')
+          "
+        >
+          Việc làm đã ứng tuyển
+        </button>
+
+        <button
+          (click)="selectTab('notified')"
+          [class]="
+            'ml-4 px-4 py-2 text-sm font-medium border-b-2 ' +
+            (selectedTab === 'notified'
+              ? 'text-primary border-primary'
+              : 'text-gray-500 border-transparent hover:text-primary')
+          "
+        >
+          Thông báo việc làm
+        </button>
+      </div>
+
+      <!-- Tabs content -->
+      <div *ngIf="selectedTab === 'saved'">
+        <app-saved-job-card />
+        <p class="mt-2 text-xs text-gray-500">
+          Lưu ý: Bạn không xem được việc làm đã hết hạn hoặc đã tạm ngưng nhận hồ sơ.
+        </p>
+      </div>
+
+      <div *ngIf="selectedTab === 'applied'">
+        <app-applied-job-card />
+      </div>
+
+      <div *ngIf="selectedTab === 'notified'">
+        <app-job-post-notification-card />
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT sidebar -->
+  <div class="md:col-span-5 lg:col-span-4 space-y-4">
+    <div class="bg-white rounded-xl shadow p-4">
+      <h2 class="text-lg font-semibold mb-4">Việc làm phù hợp</h2>
+      <app-suggested-job-post-card [fullWidth]="true" />
+    </div>
+  </div>
+</div>

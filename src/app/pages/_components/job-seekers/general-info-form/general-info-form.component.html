@@ -1,0 +1,100 @@
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Vị trí mong muốn <span class="text-red-500">*</span></label>
+      <input
+        formControlName="title"
+        placeholder="VD: Lập trình viên Backend"
+        type="text"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Cấp bậc mong muốn <span class="text-red-500">*</span></label>
+      <select formControlName="position" class="border rounded p-2 w-full">
+        <option value="">Chọn cấp bậc</option>
+        <option *ngFor="let option of allConfig?.positionOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Trình độ học vấn <span class="text-red-500">*</span></label>
+      <select formControlName="academicLevel" class="border rounded p-2 w-full">
+        <option value="">Chọn trình độ học vấn</option>
+        <option *ngFor="let option of allConfig?.academicLevelOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Kinh nghiệm làm việc <span class="text-red-500">*</span></label>
+      <select formControlName="experience" class="border rounded p-2 w-full">
+        <option value="">Chọn kinh nghiệm làm việc</option>
+        <option *ngFor="let option of allConfig?.experienceOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Nghề nghiệp <span class="text-red-500">*</span></label>
+      <select formControlName="career" class="border rounded p-2 w-full">
+        <option value="">Chọn nghề nghiệp</option>
+        <option *ngFor="let option of allConfig?.careerOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Tỉnh/Thành phố <span class="text-red-500">*</span></label>
+      <select formControlName="city" class="border rounded p-2 w-full">
+        <option value="">Chọn tỉnh thành phố</option>
+        <option *ngFor="let option of allConfig?.cityOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Mức lương tối thiểu <span class="text-red-500">*</span></label>
+      <input
+        formControlName="salaryMin"
+        type="number"
+        placeholder="Nhập mức lương mong muốn tối thiểu"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Mức lương tối đa <span class="text-red-500">*</span></label>
+      <input
+        formControlName="salaryMax"
+        type="number"
+        placeholder="Nhập mức lương mong muốn tối đa"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Nơi làm việc <span class="text-red-500">*</span></label>
+      <select formControlName="typeOfWorkplace" class="border rounded p-2 w-full">
+        <option value="">Chọn nơi làm việc</option>
+        <option *ngFor="let option of allConfig?.typeOfWorkplaceOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Hình thức làm việc <span class="text-red-500">*</span></label>
+      <select formControlName="jobType" class="border rounded p-2 w-full">
+        <option value="">Chọn hình thức làm việc</option>
+        <option *ngFor="let option of allConfig?.jobTypeOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col col-span-2">
+      <label class="mb-2 font-medium">Mục tiêu nghề nghiệp <span class="text-red-500">*</span></label>
+      <textarea
+        formControlName="description"
+        placeholder="Nhập nội dung tại đây"
+        class="border rounded p-2 w-full h-32 resize-none"
+      ></textarea>
+    </div>
+
+  </div>
+</form>

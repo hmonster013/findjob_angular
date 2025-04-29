@@ -1,0 +1,47 @@
+<div class="bg-white rounded-2xl p-4 w-full shadow">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold">Hồ sơ xin việc</h2>
+    <button (click)="navigateToProfile()" class="text-primary hover:underline">
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center text-gray-400 py-8">
+    Đang tải dữ liệu...
+  </div>
+
+  <div *ngIf="!isLoading && resumes.length === 0" class="text-center text-gray-400 py-8">
+    Bạn chưa có hồ sơ nào.
+  </div>
+
+  <div *ngIf="!isLoading && resumes.length > 0">
+    <div
+      *ngFor="let item of resumes"
+      class="flex items-center gap-4 bg-gray-50 p-4 rounded-lg mb-3 hover:shadow hover:-translate-y-1 transition cursor-pointer"
+    >
+      <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-primary text-white">
+        <ng-container [ngSwitch]="item.type">
+          <i *ngSwitchCase="'cvWebsite'" class="fa-solid fa-file-lines text-2xl"></i>
+          <i *ngSwitchCase="'cvUpload'" class="fa-solid fa-file-pdf text-2xl"></i>
+          <i *ngSwitchDefault class="fa-solid fa-file text-2xl"></i>
+        </ng-container>
+      </div>
+
+      <div class="flex-1">
+        <div class="font-medium text-gray-800">{{ item.title || 'Không tiêu đề' }}</div>
+        <div class="text-sm text-gray-500">
+          Sửa lần cuối: {{ item.updateAt | date: 'dd/MM/yyyy' }}
+        </div>
+        <div
+          class="text-xs font-semibold mt-1"
+          [ngClass]="{
+            'text-green-600': item.isActive,
+            'text-red-500': !item.isActive
+          }"
+        >
+          {{ item.isActive ? 'Đang cho phép tìm kiếm' : 'Không cho phép tìm kiếm' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

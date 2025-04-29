@@ -1,0 +1,25 @@
+<div class="mt-4 px-4">
+  <!-- Search -->
+  <app-job-post-search />
+
+  <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Left: Main Job List -->
+    <div class="lg:col-span-8">
+      <app-main-job-post-card />
+    </div>
+
+    <!-- Right: Đề xuất + banner -->
+    <div class="lg:col-span-4">
+      <h2 class="text-xl font-semibold text-primary mb-4">Việc làm đề xuất</h2>
+      <app-suggested-job-post-card [fullWidth]="true" />
+      <div class="mt-6">
+        <app-main-job-right-banner />
+      </div>
+    </div>
+  </div>
+
+  <!-- App intro -->
+  <div class="mt-10">
+    <app-app-introduction-card />
+  </div>
+</div>

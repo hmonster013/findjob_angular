@@ -1,0 +1,132 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
+import { LanguageSkillFormComponent } from '../language-skill-form/language-skill-form.component';
+import { ResumeService } from '../../../../_services/resume.service';
+import { LanguageSkillService } from '../../../../_services/language-skill.service';
+
+@Component({
+  selector: 'app-language-skill-card',
+  standalone: true,
+  templateUrl: './language-skill-card.component.html',
+  styleUrls: ['./language-skill-card.component.css'],
+  imports: [
+    CommonModule,
+    LanguageSkillFormComponent
+  ],
+})
+export class LanguageSkillCardComponent implements OnInit {
+  languageSkills: any[] = [];
+  isLoadingLanguageSkills = true;
+  isFullScreenLoading = false;
+  openPopup = false;
+  editData: any = null;
+  resumeSlug: string | null = null;
+
+  constructor(
+    private route: ActivatedRoute,
+    private resumeService: ResumeService,
+    private languageSkillService: LanguageSkillService,
+    private toastr: ToastrService
+  ) {}
+
+  ngOnInit(): void {
+    this.resumeSlug = this.route.snapshot.paramMap.get('slug');
+    this.loadLanguageSkills();
+  }
+
+  loadLanguageSkills() {
+    if (!this.resumeSlug) return;
+    this.isLoadingLanguageSkills = true;
+    this.resumeService.getLanguageSkills(this.resumeSlug).subscribe({
+      next: (res) => {
+        this.languageSkills = res.data || [];
+      },
+      error: (err) => {
+        console.error('Error loading language skills:', err);
+      },
+      complete: () => {
+        this.isLoadingLanguageSkills = false;
+      },
+    });
+  }
+
+  handleShowAdd() {
+    this.editData = null;
+    this.openPopup = true;
+  }
+
+  handleShowUpdate(id: number) {
+    this.isFullScreenLoading = true;
+    this.languageSkillService.getLanguageSkillById(id).subscribe({
+      next: (res) => {
+        this.editData = res.data;
+        this.openPopup = true;
+      },
+      error: (err) => {
+        console.error('Error loading language skill:', err);
+      },
+      complete: () => {
+        this.isFullScreenLoading = false;
+      },
+    });
+  }
+
+  handleAddOrUpdate = (data: any) => {
+    this.isFullScreenLoading = true;
+    if (data.id) {
+      this.languageSkillService.updateLanguageSkillById(data.id, data).subscribe({
+        next: () => {
+          this.toastr.success('Cập nhật kỹ năng ngôn ngữ thành công!');
+          this.loadLanguageSkills();
+          this.openPopup = false;
+        },
+        error: (err) => {
+          console.error('Error updating language skill:', err);
+        },
+        complete: () => {
+          this.isFullScreenLoading = false;
+        },
+      });
+    } else {
+      this.languageSkillService.addLanguageSkills(data).subscribe({
+        next: () => {
+          this.toastr.success('Thêm kỹ năng ngôn ngữ thành công!');
+          this.loadLanguageSkills();
+          this.openPopup = false;
+        },
+        error: (err) => {
+          console.error('Error adding language skill:', err);
+        },
+        complete: () => {
+          this.isFullScreenLoading = false;
+        },
+      });
+    }
+  };
+
+  handleDelete(id: number) {
+    Swal.fire({
+      title: 'Xác nhận xóa',
+      text: 'Bạn có chắc muốn xóa kỹ năng ngôn ngữ này không?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.languageSkillService.deleteLanguageSkillById(id).subscribe({
+          next: () => {
+            this.toastr.success('Xóa kỹ năng ngôn ngữ thành công!');
+            this.loadLanguageSkills();
+          },
+          error: (err) => {
+            console.error('Error deleting language skill:', err);
+          },
+        });
+      }
+    });
+  }
+}

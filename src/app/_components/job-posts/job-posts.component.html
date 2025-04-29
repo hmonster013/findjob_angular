@@ -1,0 +1,23 @@
+<!-- job-posts.component.html -->
+
+<div class="w-full flex flex-col gap-6">
+
+  <!-- List JobPost -->
+  <div class="grid grid-cols-1 gap-4">
+    <app-job-post *ngFor="let item of items"></app-job-post>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center">
+    <ng-container *ngFor="let pageNum of [].constructor(totalPages); let idx = index">
+      <button
+        (click)="changePage(idx + 1)"
+        [ngClass]="currentPage === (idx + 1) ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border'"
+        class="px-3 py-1 mx-1 rounded-full text-sm hover:bg-blue-100 transition"
+      >
+        {{ idx + 1 }}
+      </button>
+    </ng-container>
+  </div>
+
+</div>

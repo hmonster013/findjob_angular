@@ -1,0 +1,86 @@
+<div class="space-y-4">
+  <!-- Keyword Search -->
+  <div>
+    <input
+      type="text"
+      formControlName="keyword"
+      placeholder="Nhập từ khóa tìm kiếm..."
+      class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-primary-500"
+    />
+  </div>
+
+  <!-- Bộ lọc nâng cao -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <select formControlName="city" class="w-full px-3 py-2 border rounded-md">
+      <option value="">Chọn tỉnh/thành phố</option>
+      <option *ngFor="let city of ['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng']" [value]="city">{{ city }}</option>
+    </select>
+
+    <select formControlName="career" class="w-full px-3 py-2 border rounded-md">
+      <option value="">Chọn ngành nghề</option>
+      <option *ngFor="let career of ['IT', 'Marketing', 'Bán hàng']" [value]="career">{{ career }}</option>
+    </select>
+
+    <select formControlName="experience" class="w-full px-3 py-2 border rounded-md">
+      <option value="">Kinh nghiệm</option>
+      <option value="0">Chưa có kinh nghiệm</option>
+      <option value="1">1 năm</option>
+      <option value="2">2 năm</option>
+      <option value="3">3 năm</option>
+      <option value="4">4 năm</option>
+      <option value="5">5 năm</option>
+      <option value="6">Trên 5 năm</option>
+    </select>
+
+    <select formControlName="position" class="w-full px-3 py-2 border rounded-md">
+      <option value="">Vị trí mong muốn</option>
+      <option *ngFor="let position of ['Nhân viên', 'Trưởng nhóm', 'Quản lý']" [value]="position">{{ position }}</option>
+    </select>
+
+    <select formControlName="academicLevel" class="w-full px-3 py-2 border rounded-md">
+      <option value="">Trình độ học vấn</option>
+      <option *ngFor="let level of ['Cao đẳng', 'Đại học', 'Sau đại học']" [value]="level">{{ level }}</option>
+    </select>
+
+    <select formControlName="workplace" class="w-full px-3 py-2 border rounded-md">
+      <option value="">Hình thức làm việc</option>
+      <option value="onsite">Làm tại công ty</option>
+      <option value="remote">Làm từ xa</option>
+    </select>
+
+    <select formControlName="jobType" class="w-full px-3 py-2 border rounded-md">
+      <option value="">Loại công việc</option>
+      <option value="fulltime">Toàn thời gian</option>
+      <option value="parttime">Bán thời gian</option>
+    </select>
+
+    <select formControlName="gender" class="w-full px-3 py-2 border rounded-md">
+      <option value="">Giới tính</option>
+      <option value="male">Nam</option>
+      <option value="female">Nữ</option>
+      <option value="other">Khác</option>
+    </select>
+
+    <select formControlName="maritalStatus" class="w-full px-3 py-2 border rounded-md">
+      <option value="">Tình trạng hôn nhân</option>
+      <option value="single">Độc thân</option>
+      <option value="married">Đã kết hôn</option>
+    </select>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex gap-4">
+    <button
+      (click)="onSubmit()"
+      class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-md"
+    >
+      🔍 Tìm kiếm
+    </button>
+    <button
+      (click)="onReset()"
+      class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md"
+    >
+      ✖️ Đặt lại
+    </button>
+  </div>
+</div>

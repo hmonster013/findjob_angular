@@ -1,0 +1,41 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <input formControlName="companyName" placeholder="Tên công ty" class="input-text" />
+    <input formControlName="taxCode" placeholder="Mã số thuế" class="input-text" />
+    <input formControlName="employeeSize" placeholder="Quy mô nhân sự" class="input-text" />
+    <input formControlName="fieldOperation" placeholder="Lĩnh vực hoạt động" class="input-text" />
+    <input type="date" formControlName="since" placeholder="Năm thành lập" class="input-text" />
+    <input formControlName="websiteUrl" placeholder="Website" class="input-text" />
+    <input formControlName="facebookUrl" placeholder="Facebook" class="input-text" />
+    <input formControlName="youtubeUrl" placeholder="Youtube" class="input-text" />
+    <input formControlName="linkedinUrl" placeholder="Linkedin" class="input-text" />
+    <input formControlName="companyEmail" type="email" placeholder="Email công ty" class="input-text" />
+    <input formControlName="companyPhone" placeholder="Số điện thoại công ty" class="input-text" />
+
+    <select formControlName="location.city" (change)="onCityChange($event)" class="input-text">
+      <option value="">Chọn Tỉnh/Thành phố</option>
+      <option *ngFor="let city of cityOptions" [value]="city.id">{{ city.name }}</option>
+    </select>
+
+    <select formControlName="location.district" class="input-text">
+      <option value="">Chọn Quận/Huyện</option>
+      <option *ngFor="let district of districtOptions" [value]="district.id">{{ district.name }}</option>
+    </select>
+
+    <input formControlName="location.address" placeholder="Địa chỉ" class="input-text" />
+  </div>
+
+  <div class="grid grid-cols-1">
+    <quill-editor
+      formControlName="description"
+      [styles]="{ minHeight: '200px' }"
+      placeholder="Giới thiệu về công ty"
+    ></quill-editor>
+  </div>
+
+  <div class="flex justify-end">
+    <button type="submit" class="btn-primary">Lưu thông tin</button>
+  </div>
+
+</form>

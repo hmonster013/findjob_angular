@@ -1,0 +1,25 @@
+<!-- user-menu.component.html -->
+
+<div
+  class="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[1000]"
+>
+  <div class="py-1">
+    <ng-container *ngFor="let item of menuItems">
+      <a
+        [routerLink]="['/', item.path]"
+        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
+        (click)="closeMenu()"
+      >
+        {{ item.label }}
+      </a>
+    </ng-container>
+
+    <button
+      class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+      (click)="handleLogout()"
+    >
+      🚪
+      <span class="ml-2">Đăng xuất</span>
+    </button>
+  </div>
+</div>

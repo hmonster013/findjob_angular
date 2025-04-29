@@ -1,0 +1,33 @@
+<!-- feedback-carousel.component.html -->
+
+<div id="feed-back-carousel" class="w-full">
+  <swiper-container
+    [slides-per-view]="col"
+    [space-between]="30"
+    pagination="true"
+    autoplay="true"
+    class="pb-8"
+  >
+    <ng-container *ngIf="isLoading; else feedbackContent">
+      <swiper-slide *ngFor="let i of skeletonArray">
+        <app-feedback-card [isLoading]="true"></app-feedback-card>
+      </swiper-slide>
+    </ng-container>
+
+    <ng-template #feedbackContent>
+      <ng-container *ngIf="feedbacks.length > 0; else noData">
+        <swiper-slide *ngFor="let feedback of feedbacks">
+          <app-feedback-card
+            [avatarUrl]="feedback?.userDict?.avatarUrl"
+            [fullName]="feedback?.userDict?.fullName"
+            [content]="feedback?.content"
+          ></app-feedback-card>
+        </swiper-slide>
+      </ng-container>
+
+      <ng-template #noData>
+        <app-no-data-card title="Chưa có người dùng nào đánh giá"></app-no-data-card>
+      </ng-template>
+    </ng-template>
+  </swiper-container>
+</div>

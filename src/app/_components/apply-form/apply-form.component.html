@@ -1,0 +1,95 @@
+<form [formGroup]="applyForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+  <div *ngIf="isLoadingResumes" class="flex justify-center">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+  </div>
+
+  <div *ngIf="!isLoadingResumes">
+    <div class="space-y-2">
+      <div *ngFor="let resume of resumes">
+        <label class="flex items-center p-2 border rounded-lg cursor-pointer hover:bg-gray-50">
+          <input
+            type="radio"
+            formControlName="resume"
+            [value]="resume.id"
+            class="mr-2"
+          />
+          <div class="flex-1">
+            <div class="font-semibold">{{ resume.title }}</div>
+            <div class="text-xs text-gray-500 italic">
+              <ng-container *ngIf="resume.type === 'cvWebsite'">
+                📄 Hồ sơ trực tuyến
+              </ng-container>
+              <ng-container *ngIf="resume.type === 'cvUpload'">
+                📄 Hồ sơ đính kèm
+              </ng-container>
+            </div>
+          </div>
+          <a
+            [href]="getResumeLink(resume)"
+            target="_blank"
+            class="text-blue-600 font-semibold text-sm"
+          >
+            👁️ Xem hồ sơ
+          </a>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Họ và tên -->
+  <div>
+    <label class="block mb-1 text-sm font-medium">Họ và tên <span class="text-red-500">*</span></label>
+    <input
+      type="text"
+      formControlName="fullName"
+      placeholder="Nhập họ và tên"
+      class="w-full border rounded px-4 py-2 focus:outline-none"
+    />
+    <div *ngIf="applyForm.get('fullName')?.invalid && applyForm.get('fullName')?.touched" class="text-red-500 text-xs mt-1">
+      Họ và tên là bắt buộc
+    </div>
+  </div>
+
+  <!-- Email -->
+  <div>
+    <label class="block mb-1 text-sm font-medium">Email <span class="text-red-500">*</span></label>
+    <input
+      type="email"
+      formControlName="email"
+      placeholder="Nhập email"
+      class="w-full border rounded px-4 py-2 focus:outline-none"
+    />
+    <div *ngIf="applyForm.get('email')?.invalid && applyForm.get('email')?.touched" class="text-red-500 text-xs mt-1">
+      Email không hợp lệ
+    </div>
+  </div>
+
+  <!-- Số điện thoại -->
+  <div>
+    <label class="block mb-1 text-sm font-medium">Số điện thoại <span class="text-red-500">*</span></label>
+    <input
+      type="text"
+      formControlName="phone"
+      placeholder="Nhập số điện thoại"
+      class="w-full border rounded px-4 py-2 focus:outline-none"
+    />
+    <div *ngIf="applyForm.get('phone')?.invalid && applyForm.get('phone')?.touched" class="text-red-500 text-xs mt-1">
+      Số điện thoại không hợp lệ
+    </div>
+  </div>
+
+  <!-- Lưu ý -->
+  <div class="text-gray-500 text-xs">
+    Lưu ý: Họ tên, email, số điện thoại cần chính xác để nhà tuyển dụng liên hệ với bạn.
+  </div>
+
+  <button
+    type="submit"
+    class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+    [disabled]="applyForm.invalid"
+  >
+    Ứng tuyển
+  </button>
+
+</form>

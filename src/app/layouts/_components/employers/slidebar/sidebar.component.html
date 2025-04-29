@@ -1,0 +1,136 @@
+<!-- sidebar.component.html -->
+
+<!-- Desktop Sidebar -->
+<aside
+  *ngIf="!mobileOpen"
+  class="hidden xl:block w-[280px] bg-white border-r shadow h-screen fixed"
+>
+  <div class="flex flex-col h-full p-4">
+
+    <!-- Logo -->
+    <div class="flex justify-center items-center mb-6">
+      <a [routerLink]="['/', ROUTES.EMPLOYER.DASHBOARD]">
+        <img
+          src="/assets/images/logo.png"
+          alt="MyJob Logo"
+          class="h-12 object-contain"
+        />
+      </a>
+    </div>
+
+    <div class="flex-1 overflow-y-auto">
+      <ul class="flex flex-col gap-2">
+
+        <!-- Dashboard -->
+        <li>
+          <a
+            [routerLink]="['/', ROUTES.EMPLOYER.DASHBOARD]"
+            routerLinkActive="bg-gray-100 text-primary font-bold"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition"
+          >
+            📊
+            <span>Bản điều khiển</span>
+          </a>
+        </li>
+
+        <!-- Danh sách tin đăng -->
+        <li>
+          <a
+            [routerLink]="['/', ROUTES.EMPLOYER.JOB_POST]"
+            routerLinkActive="bg-gray-100 text-primary font-bold"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition"
+          >
+            📄
+            <span>Danh sách tin đăng</span>
+          </a>
+        </li>
+
+        <!-- Quản lý ứng viên -->
+        <li>
+          <div (click)="toggleExpand('candidates')" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+            👥
+            <span>Quản lý ứng viên</span>
+            <span class="ml-auto">{{ expandedItems.candidates ? '▼' : '▶' }}</span>
+          </div>
+
+          <ul *ngIf="expandedItems.candidates" class="ml-6 flex flex-col gap-1">
+            <li>
+              <a [routerLink]="['/', ROUTES.EMPLOYER.APPLIED_PROFILE]" routerLinkActive="text-primary font-semibold" class="text-gray-600 hover:text-primary transition">
+                Hồ sơ ứng tuyển
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="['/', ROUTES.EMPLOYER.SAVED_PROFILE]" routerLinkActive="text-primary font-semibold" class="text-gray-600 hover:text-primary transition">
+                Hồ sơ đã lưu
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="['/', ROUTES.EMPLOYER.PROFILE]" routerLinkActive="text-primary font-semibold" class="text-gray-600 hover:text-primary transition">
+                Tìm ứng viên mới
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Thông báo -->
+        <li>
+          <a
+            [routerLink]="['/', ROUTES.EMPLOYER.NOTIFICATION]"
+            routerLinkActive="bg-gray-100 text-primary font-bold"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition"
+          >
+            🔔
+            <span>{{ APP_NAME }} thông báo</span>
+          </a>
+        </li>
+
+        <!-- Quản lý tài khoản -->
+        <li>
+          <div (click)="toggleExpand('account')" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+            🏢
+            <span>Quản lý tài khoản</span>
+            <span class="ml-auto">{{ expandedItems.account ? '▼' : '▶' }}</span>
+          </div>
+
+          <ul *ngIf="expandedItems.account" class="ml-6 flex flex-col gap-1">
+            <li>
+              <a [routerLink]="['/', ROUTES.EMPLOYER.COMPANY]" routerLinkActive="text-primary font-semibold" class="text-gray-600 hover:text-primary transition">
+                Thông tin công ty
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="['/', ROUTES.EMPLOYER.ACCOUNT]" routerLinkActive="text-primary font-semibold" class="text-gray-600 hover:text-primary transition">
+                Tài khoản
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="['/', ROUTES.EMPLOYER.SETTING]" routerLinkActive="text-primary font-semibold" class="text-gray-600 hover:text-primary transition">
+                Cài đặt
+              </a>
+            </li>
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile Sidebar -->
+<aside
+  *ngIf="mobileOpen"
+  class="fixed inset-0 z-[9999] bg-black/50 flex justify-start xl:hidden"
+  (click)="handleDrawerToggle?.()"
+>
+  <div
+    class="w-[280px] bg-white h-full shadow-md p-4"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Drawer content giống Desktop -->
+    <ng-container *ngTemplateOutlet="drawerContent"></ng-container>
+  </div>
+</aside>
+
+<ng-template #drawerContent>
+  <!-- DrawerContent giống phần trên -->
+</ng-template>

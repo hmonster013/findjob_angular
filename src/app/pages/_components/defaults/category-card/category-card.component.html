@@ -1,0 +1,29 @@
+<!-- category-card.component.html -->
+
+<div class="grid grid-cols-1 gap-4">
+  <!-- Search Input -->
+  <div class="flex justify-center">
+    <form class="flex items-center border border-primary-600 p-2 rounded-lg bg-white w-full max-w-[300px] mb-2">
+      <input
+        type="text"
+        [(ngModel)]="searchValue"
+        name="search"
+        (input)="handleFilterChange(searchValue)"
+        placeholder="Tìm kiếm nhanh"
+        class="flex-grow outline-none"
+      />
+      <span class="text-gray-400 ml-2">🔍</span>
+    </form>
+  </div>
+
+  <!-- Items List -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div
+      *ngFor="let item of items"
+      (click)="handleFilter(item.id)"
+      class="text-center cursor-pointer hover:text-orange-400 transition font-semibold"
+    >
+      {{ item.name }}
+    </div>
+  </div>
+</div>

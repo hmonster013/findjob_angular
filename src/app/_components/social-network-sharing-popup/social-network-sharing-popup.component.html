@@ -1,0 +1,42 @@
+<div *ngIf="open" class="fixed inset-0 flex items-center justify-center bg-black/50 z-[9999]">
+  <div class="bg-white rounded-2xl w-80 shadow-lg p-4 relative">
+
+    <!-- Close Button -->
+    <button (click)="closePopup()" class="absolute top-3 right-3 text-gray-500 hover:text-red-500">
+      ✖️
+    </button>
+
+    <!-- Title -->
+    <h2 class="text-center font-bold text-lg mb-4">Chia sẻ qua</h2>
+
+    <!-- Share Buttons -->
+    <div class="flex justify-center gap-4">
+
+      <!-- Facebook -->
+      <a [href]="facebookShareUrl" target="_blank" class="hover:scale-110 transition">
+        <img src="/assets/icons/facebook.svg" alt="Facebook" class="w-10 h-10" />
+      </a>
+
+      <!-- Messenger -->
+      <a *ngIf="facebookMessengerUrl" [href]="facebookMessengerUrl" target="_blank" class="hover:scale-110 transition">
+        <img src="/assets/icons/messenger.svg" alt="Messenger" class="w-10 h-10" />
+      </a>
+
+      <!-- Linkedin -->
+      <a *ngIf="linkedinShareUrl" [href]="linkedinShareUrl" target="_blank" class="hover:scale-110 transition">
+        <img src="/assets/icons/linkedin.svg" alt="LinkedIn" class="w-10 h-10" />
+      </a>
+
+      <!-- Twitter -->
+      <a *ngIf="twitterShareUrl" [href]="twitterShareUrl" target="_blank" class="hover:scale-110 transition">
+        <img src="/assets/icons/twitter.svg" alt="Twitter" class="w-10 h-10" />
+      </a>
+
+      <!-- Email -->
+      <a *ngIf="emailShareUrl" [href]="emailShareUrl" target="_blank" class="hover:scale-110 transition">
+        <img src="/assets/icons/email.svg" alt="Email" class="w-10 h-10" />
+      </a>
+
+    </div>
+  </div>
+</div>

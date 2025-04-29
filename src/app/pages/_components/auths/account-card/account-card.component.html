@@ -1,0 +1,41 @@
+<div class="bg-white p-6 rounded-lg shadow space-y-6">
+  <div class="text-2xl font-bold text-gray-800">
+    Thông tin tài khoản
+  </div>
+
+  <div class="border-t border-gray-300"></div>
+
+  <div class="space-y-6">
+    <app-avatar-card></app-avatar-card>
+    <app-account-form (update)="handleUpdateAccount($event)" [serverErrors]="serverErrors"></app-account-form>
+
+    <div class="text-right">
+      <button
+        class="text-primary-600 hover:underline font-semibold"
+        (click)="openPopup = true">
+        Thay đổi mật khẩu
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup đổi mật khẩu -->
+<div *ngIf="openPopup" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-lg w-full max-w-md">
+    <div class="text-xl font-bold mb-4">Cập nhật mật khẩu</div>
+
+    <app-update-password-form
+      (updatePassword)="handleUpdatePassword($event)"
+      [serverErrors]="serverErrors">
+    </app-update-password-form>
+
+    <div class="mt-4 text-right">
+      <button class="bg-gray-300 px-4 py-2 rounded mr-2" (click)="openPopup = false">Hủy</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading full screen -->
+<div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50">
+  <div class="animate-spin rounded-full h-10 w-10 border-4 border-primary-600 border-t-transparent"></div>
+</div>

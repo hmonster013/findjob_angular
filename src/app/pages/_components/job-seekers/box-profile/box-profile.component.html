@@ -1,0 +1,97 @@
+<div class="p-4 bg-white rounded-lg shadow-md">
+
+  <h2 class="text-xl font-bold mb-4">Hồ sơ xin việc</h2>
+
+  <div *ngIf="isLoadingResume">
+    <div class="space-y-4">
+      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoadingResume && resumes.length === 0" class="text-center text-gray-500">
+    Bạn chưa có hồ sơ xin việc.
+  </div>
+
+  <div *ngIf="!isLoadingResume && resumes.length > 0" class="space-y-6">
+
+    <div *ngFor="let resume of resumes" class="p-4 border rounded hover:shadow-md transition">
+
+      <div class="flex justify-between items-center">
+        <div>
+          <h3 class="text-lg font-semibold">{{ resume.title }}</h3>
+          <p class="text-sm text-gray-500 mt-1">
+            Cập nhật: {{ resume.updatedAt | date: 'dd/MM/yyyy' }}
+          </p>
+          <p class="text-xs text-gray-500 mt-1">
+            Trạng thái: {{ getResumeStatusText(resume.status) }}
+          </p>
+        </div>
+
+        <div class="flex space-x-2">
+          <button
+            (click)="handlePreviewResume(resume.slug)"
+            class="px-3 py-1 text-sm rounded bg-blue-100 hover:bg-blue-200 text-blue-700"
+          >
+            Xem trước
+          </button>
+
+          <button
+            (click)="handleActiveResume(resume.slug)"
+            class="px-3 py-1 text-sm rounded bg-green-100 hover:bg-green-200 text-green-700"
+          >
+            Kích hoạt
+          </button>
+
+          <button
+            (click)="handleNavigateResume(resume.slug)"
+            class="px-3 py-1 text-sm rounded bg-yellow-100 hover:bg-yellow-200 text-yellow-700"
+          >
+            Chỉnh sửa
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="previewResumeSlug === resume.slug" class="mt-4">
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-2">Chọn màu CV:</label>
+          <input
+            type="color"
+            [(ngModel)]="selectedColor"
+            class="w-10 h-10 border rounded"
+          />
+        </div>
+
+        <div class="flex space-x-2">
+          <button
+            (click)="handleDownloadPDF()"
+            class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded"
+          >
+            Tải PDF
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Fullscreen Loading -->
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+    </svg>
+  </div>
+
+  <!-- PDF Generating Spinner -->
+  <div *ngIf="isGeneratingPDF" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-40">
+    <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+    </svg>
+  </div>
+
+</div>

@@ -1,0 +1,48 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h2 class="text-lg font-bold text-primary-600">{{ title }}</h2>
+
+    <div *ngIf="notifications.length > 0" class="flex gap-2">
+      <button (click)="markAllRead()" class="btn-outline-primary">Đánh dấu đã đọc</button>
+      <button (click)="removeAllNotifications()" class="btn-outline-danger">Xóa tất cả</button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="flex justify-center p-6">
+    <span class="loader"></span>
+  </div>
+
+  <div *ngIf="!isLoading && notifications.length === 0" class="text-center text-gray-500">
+    Chưa có thông báo nào.
+  </div>
+
+  <div *ngIf="!isLoading && notifications.length > 0" class="space-y-4">
+    <div
+      *ngFor="let item of notifications"
+      (click)="handleClick(item)"
+      class="flex items-start gap-4 p-4 bg-white rounded shadow cursor-pointer hover:bg-gray-50"
+      [ngClass]="{ 'bg-gray-100': !item.is_read }"
+    >
+      <img
+        [src]="item.image || '/assets/images/notification-default.png'"
+        class="w-12 h-12 rounded border"
+        alt="Notification"
+      />
+      <div class="flex-1">
+        <div class="font-semibold" [ngClass]="{ 'font-bold': !item.is_read }">
+          {{ item.title }}
+        </div>
+        <div class="text-gray-500 text-sm">
+          {{ item.content }}
+        </div>
+      </div>
+      <button (click)="removeNotification(item.key)" class="text-red-500 hover:text-red-700">
+        ✖
+      </button>
+    </div>
+
+    <div *ngIf="pageCount > 1" class="text-center mt-4">
+      <button (click)="loadMore()" class="btn-outline-primary">Xem thêm</button>
+    </div>
+  </div>
+</div>

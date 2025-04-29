@@ -1,0 +1,36 @@
+<div class="flex flex-col items-center relative group">
+  <div class="relative w-32 h-32 p-1 rounded-full bg-gradient-to-r from-primary-600 to-primary-400 shadow-lg">
+    <img
+      [src]="currentUser?.avatarUrl || 'assets/images/default-avatar.png'"
+      class="w-full h-full rounded-full object-cover border-2 border-white"
+      alt="Avatar"
+    />
+
+    <!-- Overlay buttons -->
+    <div class="absolute inset-0 bg-black bg-opacity-30 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+      <div class="flex space-x-2">
+        <!-- Upload button -->
+        <label class="cursor-pointer">
+          <input type="file" class="hidden" (change)="onSelectFile($event)" />
+          <div class="bg-white p-1 rounded-full hover:opacity-80">
+            ✏️
+          </div>
+        </label>
+
+        <!-- Delete button -->
+        <button type="button" (click)="onDelete()" class="bg-white p-1 rounded-full hover:opacity-80">
+          ❌
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-2 text-sm font-medium text-gray-700">
+    Ảnh đại diện
+  </div>
+
+  <!-- Loading Full Screen -->
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 z-50 bg-white bg-opacity-50 flex items-center justify-center">
+    <div class="animate-spin rounded-full h-8 w-8 border-4 border-primary-600 border-t-transparent"></div>
+  </div>
+</div>

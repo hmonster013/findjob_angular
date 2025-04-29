@@ -1,0 +1,35 @@
+<div *ngIf="isOwnMessage(); else partnerMessage" class="flex flex-row justify-end self-end max-w-[80%]">
+  <div>
+    <p
+      class="text-white p-2 mb-1 me-3 text-sm"
+      style="background-color: #441da0; border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-left-radius: 6px;"
+    >
+      {{ text }}
+    </p>
+    <p class="text-gray-400 text-xs me-3 mb-3">{{ formatCreatedAt() }}</p>
+  </div>
+  <img
+    [src]="avatarUrl || 'assets/images/default-avatar.png'"
+    alt="avatar"
+    class="w-12 h-12 rounded-full object-cover"
+  />
+</div>
+
+<ng-template #partnerMessage>
+  <div class="flex flex-row justify-start max-w-[80%]">
+    <img
+      [src]="avatarUrl || 'assets/images/default-avatar.png'"
+      alt="avatar"
+      class="w-12 h-12 rounded-full object-cover"
+    />
+    <div>
+      <p
+        class="p-2 mb-1 ms-3 text-sm"
+        style="background-color: #e5e7eb; color: #374151; border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px;"
+      >
+        {{ text }}
+      </p>
+      <p class="text-gray-400 text-xs ms-3 mb-3">{{ formatCreatedAt() }}</p>
+    </div>
+  </div>
+</ng-template>

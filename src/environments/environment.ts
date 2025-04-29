@@ -13,11 +13,15 @@ export const environment = {
   GOONGAPI_ACCESS_TOKEN: '',
   JOB_SEEKER_BOT_AGENT_ID: '',
   EMPLOYER_BOT_AGENT_ID: '',
-  FIREBASE_API_KEY: 'AIzaSyDdJbQedfwBGsklTNqfoPnjnJrInML8x8k',
-  FIREBASE_AUTH_DOMAIN: 'findjob-44e98.firebaseapp.com',
-  FIREBASE_PROJECT_ID: 'findjob-44e98',
-  FIREBASE_STORAGE_BUCKET: 'findjob-44e98.firebasestorage.app',
-  FIREBASE_MESSAGING_SENDER_ID: '755763278092',
-  FIREBASE_APP_ID: '1:755763278092:web:2faea93e4af1de40be1929',
-  FIREBASE_DATABASE_URL: 'https://findjob-44e98-default-rtdb.asia-southeast1.firebasedatabase.app'
+
+  firebaseConfig: {
+    apiKey: "AIzaSyDdJbQedfwBGsklTNqfoPnjnJrInML8x8k",
+    authDomain: "findjob-44e98.firebaseapp.com",
+    databaseURL: "https://findjob-44e98-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "findjob-44e98",
+    storageBucket: "findjob-44e98.firebasestorage.app",
+    messagingSenderId: "755763278092",
+    appId: "1:755763278092:web:2faea93e4af1de40be1929",
+    measurementId: "G-Z0ZZ7RHNKR"
+  }
 };

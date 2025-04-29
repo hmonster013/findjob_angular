@@ -1,0 +1,51 @@
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 px-4 py-6">
+  <!-- Left content -->
+  <div class="md:col-span-9 space-y-6">
+    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+      <app-personal-info-card [title]="'Thông tin cá nhân'" />
+    </div>
+
+    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+      <app-general-info-card [title]="'Thông tin chung'" />
+    </div>
+
+    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+      <app-experience-detail-card [title]="'Kinh nghiệm làm việc'" />
+    </div>
+
+    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+      <app-education-detail-card [title]="'Thông tin học vấn'" />
+    </div>
+
+    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+      <app-certificate-card [title]="'Chứng chỉ'" />
+    </div>
+
+    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+      <app-language-skill-card [title]="'Kỹ năng ngôn ngữ'" />
+    </div>
+
+    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+      <app-advanced-skill-card [title]="'Kỹ năng chuyên môn'" />
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="hidden md:block md:col-span-3">
+    <div class="sticky top-20">
+      <div class="bg-gradient-to-r from-primary to-blue-500 text-white rounded-xl shadow p-4">
+        <h2 class="text-base font-semibold mb-4">Hồ sơ trực tuyến của bạn</h2>
+        <ul class="space-y-2">
+          <li *ngFor="let label of sections; let i = index">
+            <button
+              class="w-full flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/10 transition text-sm"
+              (click)="scrollTo(i)"
+            >
+              {{ label }}
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

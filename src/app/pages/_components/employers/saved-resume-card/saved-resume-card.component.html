@@ -1,0 +1,32 @@
+<div class="space-y-4 relative">
+  <app-backdrop-loading *ngIf="isFullScreenLoading"></app-backdrop-loading>
+
+  <!-- Filter -->
+  <app-saved-resume-filter-form (filter)="handleFilter($event)"></app-saved-resume-filter-form>
+
+  <!-- Top Buttons -->
+  <div class="flex justify-between items-center">
+    <div class="font-bold text-lg">
+      Tổng cộng: <span class="text-red-500">{{ count }} hồ sơ</span>
+    </div>
+
+    <button
+      class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md"
+      (click)="handleExport()"
+    >
+      📥 Xuất Excel
+    </button>
+  </div>
+
+  <!-- Table -->
+  <app-saved-resume-table
+    [dataSource]="resumes"
+    [isLoading]="isLoading"
+    [total]="count"
+    [page]="page"
+    [rowsPerPage]="rowsPerPage"
+    (edit)="handleSave($event)"
+    (pageChange)="handleChangePage($event)"
+    (rowsPerPageChange)="handleChangeRowsPerPage($event)"
+  ></app-saved-resume-table>
+</div>

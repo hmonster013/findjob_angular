@@ -1,0 +1,53 @@
+<!-- header.component.html -->
+
+<header
+  class="fixed top-0 z-50 bg-primary-600 text-white shadow-md flex items-center justify-between h-16"
+  [style.width]="headerWidth"
+  [style.marginLeft]="headerMarginLeft"
+>
+
+  <!-- Left side: Menu button + Account Switch Menu -->
+  <div class="flex items-center h-full px-4 gap-2">
+    <button
+      class="xl:hidden p-2 rounded hover:bg-primary-700"
+      (click)="handleDrawerToggle?.()"
+    >
+      📋
+    </button>
+
+    <app-account-switch-menu></app-account-switch-menu>
+  </div>
+
+  <!-- Right side: Notifications + Chat + Avatar -->
+  <div class="flex items-center h-full px-4 gap-4 relative">
+
+    <!-- NotificationCard -->
+    <app-notification-card *ngIf="isAuthenticated"></app-notification-card>
+
+    <!-- ChatCard -->
+    <app-chat-card *ngIf="isAuthenticated"></app-chat-card>
+
+    <!-- Avatar + UserMenu -->
+    <div *ngIf="isAuthenticated" class="relative user-menu-wrapper">
+      <div
+        class="flex items-center gap-2 border border-white rounded-full p-1 cursor-pointer hover:bg-primary-700 transition"
+        (click)="toggleUserMenu()"
+      >
+        <img
+          [src]="currentUser?.avatarUrl || '/assets/images/avatar-default.png'"
+          alt="Avatar"
+          class="w-8 h-8 rounded-full object-cover"
+        />
+        <span class="hidden sm:block font-semibold">
+          {{ currentUser?.fullName }}
+        </span>
+      </div>
+
+      <div *ngIf="showUserMenu" class="absolute right-0 mt-2">
+        <app-user-menu (closed)="closeUserMenu()"></app-user-menu>
+      </div>
+    </div>
+
+  </div>
+
+</header>

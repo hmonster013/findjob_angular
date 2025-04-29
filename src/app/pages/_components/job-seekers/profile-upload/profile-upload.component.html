@@ -1,0 +1,76 @@
+<div class="p-4 bg-white rounded-lg shadow-md relative">
+
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold">CV đã tải lên</h2>
+    <button (click)="handleShowUpload()" class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+      ➕
+    </button>
+  </div>
+
+  <hr class="mb-4">
+
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoadingResumes" class="space-y-4">
+    <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+    <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoadingResumes && resumes.length === 0" class="text-center text-gray-500">
+    Bạn chưa tải lên CV nào.
+  </div>
+
+  <!-- List CV -->
+  <div *ngIf="!isLoadingResumes && resumes.length > 0" class="grid gap-4">
+    <div *ngFor="let resume of resumes" class="flex justify-between items-center p-4 border rounded hover:shadow">
+
+      <div class="flex flex-col">
+        <h3 class="text-lg font-semibold">{{ resume.title }}</h3>
+        <p class="text-sm text-gray-500">Ngày cập nhật: {{ resume.updatedAt | date: 'dd/MM/yyyy' }}</p>
+        <span
+          class="text-xs mt-1 px-2 py-1 rounded-full"
+          [ngClass]="{
+            'bg-green-100 text-green-700': resume.isActive,
+            'bg-gray-200 text-gray-600': !resume.isActive
+          }"
+        >
+          {{ resume.isActive ? 'Hoạt động' : 'Không hoạt động' }}
+        </span>
+      </div>
+
+      <div class="flex space-x-2">
+        <button
+          (click)="handleActiveResume(resume.slug)"
+          class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
+          [disabled]="resume.isActive"
+        >
+          Kích hoạt
+        </button>
+
+        <button
+          (click)="handleDeleteResume(resume.slug)"
+          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+        >
+          Xóa
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Upload Form Popup -->
+  <app-profile-upload-form
+    *ngIf="openPopup"
+    [allConfig]="allConfig"
+    (submitForm)="handleUpload($event)"
+  ></app-profile-upload-form>
+
+  <!-- Fullscreen loading -->
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+    </svg>
+  </div>
+
+</div>

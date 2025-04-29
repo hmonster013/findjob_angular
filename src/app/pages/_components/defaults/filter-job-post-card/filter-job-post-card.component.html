@@ -1,0 +1,59 @@
+<!-- filter-job-post-card.component.html -->
+
+<div id="filter-job-post-card">
+  <div class="space-y-6">
+
+    <!-- Jobs Grid -->
+    <div [ngClass]="{
+      'grid grid-cols-1 gap-4': col === 1,
+      'grid grid-cols-2 gap-4': col === 2,
+      'grid grid-cols-3 gap-4': col === 3
+    }">
+      <ng-container *ngIf="isLoading; else jobPostList">
+        <app-job-post *ngFor="let i of [].constructor(pageSize); let idx = index" [isLoading]="true"></app-job-post>
+      </ng-container>
+
+      <ng-template #jobPostList>
+        <ng-container *ngIf="jobPosts.length > 0; else noData">
+          <app-job-post
+            *ngFor="let job of jobPosts"
+            [id]="job.id"
+            [slug]="job.slug"
+            [companyImageUrl]="job?.companyDict?.companyImageUrl"
+            [companyName]="job?.companyDict?.companyName"
+            [jobName]="job?.jobName"
+            [cityName]="job?.locationDict?.city"
+            [deadline]="job?.deadline"
+            [isUrgent]="job?.isUrgent"
+            [isHot]="job?.isHot"
+            [salaryMin]="job.salaryMin"
+            [salaryMax]="job.salaryMax"
+            [isLoading]="false"
+          ></app-job-post>
+        </ng-container>
+      </ng-template>
+
+      <ng-template #noData>
+        <app-no-data-card></app-no-data-card>
+      </ng-template>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1" class="flex justify-center mt-6">
+      <div class="flex gap-2">
+        <button
+          *ngFor="let p of [].constructor(totalPages); let i = index"
+          (click)="changePage(i + 1)"
+          [ngClass]="{
+            'bg-primary-600 text-white': (i + 1) === page,
+            'bg-gray-200 text-gray-800': (i + 1) !== page
+          }"
+          class="px-4 py-2 rounded hover:opacity-80"
+        >
+          {{ i + 1 }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

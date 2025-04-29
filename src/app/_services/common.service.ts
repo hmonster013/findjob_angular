@@ -16,6 +16,10 @@ export class CommonService {
     return this.http.get(`${this.baseUrl}/configs/`);
   }
 
+  getCities(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/cities/`);
+  }
+
   getDistrictsByCityId(cityId: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/districts/?cityId=${cityId}`);
   }

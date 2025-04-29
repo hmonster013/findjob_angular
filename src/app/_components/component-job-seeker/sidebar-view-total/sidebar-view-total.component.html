@@ -1,0 +1,40 @@
+<div class="bg-white shadow rounded-2xl p-4 w-full">
+  <div>
+    <h2 class="text-lg font-semibold mb-1">CV của bạn đã đủ tốt?</h2>
+    <p class="text-xs text-gray-500">
+      Bao nhiêu NTD đang quan tâm tới Hồ sơ của bạn?
+    </p>
+  </div>
+
+  <div class="pt-4">
+    <div class="flex flex-row items-center gap-4">
+      <div class="relative flex items-center justify-center">
+        <div class="absolute w-[100px] h-[100px] rounded-full bg-gradient-to-br from-[#441da0] to-[#6b4fd1] animate-pulse"></div>
+        <div class="relative flex items-center justify-center w-[80px] h-[80px] rounded-full bg-gradient-to-br from-[#441da0] to-[#6b4fd1] text-white font-bold text-2xl">
+          <ng-container *ngIf="!isLoading; else loading">
+            {{ totalView !== null ? totalView : '---' }}
+          </ng-container>
+
+          <ng-template #loading>
+            <div class="w-6 h-6 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="flex-1">
+        <p class="text-sm">
+          Mỗi lượt Nhà tuyển dụng xem CV mang đến một cơ hội để bạn gần hơn với công việc phù hợp.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pt-4 flex justify-end">
+    <button
+      class="bg-gradient-to-br from-[#441da0] to-[#6b4fd1] text-white py-2 px-4 rounded hover:opacity-90 transition"
+      (click)="navigateToJobs()"
+    >
+      Khám phá ngay
+    </button>
+  </div>
+</div>

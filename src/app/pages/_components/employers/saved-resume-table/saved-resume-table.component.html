@@ -1,0 +1,82 @@
+<div class="overflow-x-auto bg-white shadow rounded-lg">
+  <table class="min-w-full table-auto">
+    <thead class="bg-gray-100 text-gray-700">
+      <tr>
+        <th class="px-4 py-2 text-left">Tên CV</th>
+        <th class="px-4 py-2 text-left">Ứng viên</th>
+        <th class="px-4 py-2 text-left">Mức lương</th>
+        <th class="px-4 py-2 text-left">Kinh nghiệm</th>
+        <th class="px-4 py-2 text-left">Thành phố</th>
+        <th class="px-4 py-2 text-left">Ngày lưu</th>
+        <th class="px-4 py-2 text-right">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="!isLoading && dataSource.length > 0; else noData">
+        <tr *ngFor="let row of dataSource" class="border-b hover:bg-gray-50 text-sm">
+          <td class="px-4 py-2">
+            📄 {{ row.resume?.title || 'Chưa cập nhật' }}
+          </td>
+          <td class="px-4 py-2">
+            {{ row.resume?.userDict?.fullName || '---' }}
+          </td>
+          <td class="px-4 py-2">
+            {{ row.resume?.salaryMin || '' }} - {{ row.resume?.salaryMax || '' }}
+          </td>
+          <td class="px-4 py-2">
+            {{ row.resume?.experience || '---' }}
+          </td>
+          <td class="px-4 py-2">
+            {{ row.resume?.city || '---' }}
+          </td>
+          <td class="px-4 py-2">
+            {{ row.createAt | date: 'dd/MM/yyyy' }}
+          </td>
+          <td class="px-4 py-2 flex justify-end gap-2">
+            <button
+              (click)="viewProfile(row.resume?.slug)"
+              title="Xem hồ sơ"
+              class="text-blue-500 hover:text-blue-700"
+            >
+              👁️
+            </button>
+            <button
+              (click)="edit.emit(row.resume?.slug)"
+              class="text-red-500 hover:text-red-700 border border-red-500 rounded px-2 py-1 text-xs"
+            >
+              ❤️ Hủy lưu
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+
+  <!-- Nếu không có data -->
+  <ng-template #noData>
+    <div class="py-8 text-center text-gray-500">
+      <app-no-data-card></app-no-data-card>
+    </div>
+  </ng-template>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && dataSource.length > 0" class="flex justify-center items-center mt-4 space-x-4">
+    <button
+      (click)="pageChange.emit(page - 1)"
+      [disabled]="page === 1"
+      class="px-3 py-1 border rounded hover:bg-gray-100"
+    >
+      Prev
+    </button>
+
+    <div>Trang {{ page }} / {{ totalPages() }}</div>
+
+    <button
+      (click)="pageChange.emit(page + 1)"
+      [disabled]="page >= totalPages()"
+      class="px-3 py-1 border rounded hover:bg-gray-100"
+    >
+      Next
+    </button>
+  </div>
+</div>

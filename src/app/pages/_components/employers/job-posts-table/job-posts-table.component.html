@@ -1,0 +1,92 @@
+<div class="overflow-x-auto">
+  <table class="min-w-full table-auto">
+    <thead>
+      <tr class="bg-gray-100 text-gray-700 text-sm">
+        <th class="px-4 py-2 text-left cursor-pointer" (click)="onSort('jobName')">
+          Tên công việc
+          <span *ngIf="orderBy === 'jobName'">({{ order === 'asc' ? '▲' : '▼' }})</span>
+        </th>
+        <th class="px-4 py-2 text-left cursor-pointer" (click)="onSort('createAt')">
+          Ngày tạo
+          <span *ngIf="orderBy === 'createAt'">({{ order === 'asc' ? '▲' : '▼' }})</span>
+        </th>
+        <th class="px-4 py-2 text-left cursor-pointer" (click)="onSort('deadline')">
+          Hạn nộp
+          <span *ngIf="orderBy === 'deadline'">({{ order === 'asc' ? '▲' : '▼' }})</span>
+        </th>
+        <th class="px-4 py-2 text-left">Ứng tuyển</th>
+        <th class="px-4 py-2 text-left">Lượt xem</th>
+        <th class="px-4 py-2 text-left">Trạng thái</th>
+        <th class="px-4 py-2 text-right">Hành động</th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0; else noData">
+      <tr *ngFor="let row of dataSource" class="border-b hover:bg-gray-50 text-sm">
+        <td class="px-4 py-2">
+          {{ row.jobName }}
+          <span *ngIf="row.isUrgent" class="text-red-500 text-xs ml-2 border border-red-500 px-2 py-0.5 rounded">
+            Tuyển gấp
+          </span>
+        </td>
+        <td class="px-4 py-2">{{ formatDate(row.createAt) }}</td>
+        <td class="px-4 py-2">
+          <span [ngClass]="row.isExpired ? 'text-red-600' : 'text-blue-600'">
+            {{ formatDate(row.deadline) }}
+          </span>
+        </td>
+        <td class="px-4 py-2">{{ row.appliedNumber }}</td>
+        <td class="px-4 py-2">{{ row.views }}</td>
+        <td class="px-4 py-2">
+          <span class="text-xs px-2 py-1 rounded bg-gray-200">
+            {{ allConfig?.jobPostStatusDict?.[row.status] || '---' }}
+          </span>
+        </td>
+        <td class="px-4 py-2 flex justify-end gap-2">
+          <button (click)="edit.emit(row)" title="Cập nhật" class="text-blue-500 hover:text-blue-700">
+            ✏️
+          </button>
+          <button (click)="delete.emit(row)" title="Xóa" class="text-red-500 hover:text-red-700">
+            🗑️
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- No data -->
+  <ng-template #noData>
+    <div class="text-center text-gray-500 py-8">
+      Bạn chưa có tin tuyển dụng nào
+    </div>
+  </ng-template>
+
+  <!-- Pagination -->
+  <div class="flex justify-between items-center mt-4">
+    <div class="text-sm">
+      Hiển thị
+      <select (change)="onChangeRowsPerPage($event)" [value]="rowsPerPage" class="border rounded px-2 py-1 mx-2">
+        <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">{{ size }}</option>
+      </select>
+      mục
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button
+        (click)="goToPage(page - 1)"
+        [disabled]="page === 1"
+        class="px-2 py-1 text-sm border rounded hover:bg-gray-100"
+      >
+        Prev
+      </button>
+      <span class="text-sm">Trang {{ page }} / {{ totalPages() }}</span>
+      <button
+        (click)="goToPage(page + 1)"
+        [disabled]="page === totalPages()"
+        class="px-2 py-1 text-sm border rounded hover:bg-gray-100"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>

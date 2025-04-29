@@ -1,0 +1,43 @@
+<div class="p-6 rounded-lg border border-gray-100 shadow-md bg-white h-full flex flex-col space-y-6">
+  <div class="flex items-center justify-between">
+    <h2 class="text-xl font-semibold text-gray-800">{{ title }}</h2>
+    <div class="tooltip">
+      <svg class="w-5 h-5 text-gray-400 hover:text-primary-500" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M9 2a7 7 0 017 7c0 2.21-1.2 4.16-3 5.3v1.2a1 1 0 01-2 0v-1a1 1 0 01.4-.8A5 5 0 109 4a1 1 0 010-2z" />
+      </svg>
+      <span class="tooltiptext">Thống kê số hồ sơ ứng tuyển theo ngày</span>
+    </div>
+  </div>
+
+  <div class="border-t border-dashed"></div>
+
+  <div>
+    <div class="flex justify-end mb-3 gap-2">
+      <input type="date" [value]="selectedDateRange[0].format('YYYY-MM-DD')" (change)="onDateChange($event, 'start')" class="border rounded px-2 py-1">
+      <input type="date" [value]="selectedDateRange[1].format('YYYY-MM-DD')" (change)="onDateChange($event, 'end')" class="border rounded px-2 py-1">
+      <button class="btn btn-primary" (click)="onSubmitDateChange()" [disabled]="!allowSubmit">Cập nhật</button>
+    </div>
+
+    <div class="relative min-h-[320px]">
+      <ng-container *ngIf="isLoading; else showContent">
+        <div class="flex items-center justify-center h-[320px]">
+          <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary-500"></div>
+        </div>
+      </ng-container>
+
+      <ng-template #showContent>
+        <ng-container *ngIf="data?.labels?.length > 0; else noData">
+          <div class="h-[320px]">
+            <canvas #chartCanvas class="h-full w-full"></canvas>
+          </div>
+        </ng-container>
+
+        <ng-template #noData>
+          <div class="flex items-center justify-center h-[320px] bg-gray-50 rounded-md">
+            <app-empty-card description="Không có dữ liệu để thống kê"></app-empty-card>
+          </div>
+        </ng-template>
+      </ng-template>
+    </div>
+  </div>
+</div>

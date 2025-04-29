@@ -1,0 +1,93 @@
+<div class="overflow-x-auto bg-white shadow rounded-lg">
+  <table class="min-w-full table-auto">
+    <thead class="bg-gray-100 text-gray-700">
+      <tr>
+        <th class="px-4 py-2 text-left">Ứng viên</th>
+        <th class="px-4 py-2 text-left">Công việc</th>
+        <th class="px-4 py-2 text-left">Ngày ứng tuyển</th>
+        <th class="px-4 py-2 text-left">Loại CV</th>
+        <th class="px-4 py-2 text-left">Trạng thái</th>
+        <th class="px-4 py-2 text-right">Hành động</th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!isLoading && dataSource.length > 0; else noDataTemplate">
+      <tr *ngFor="let row of dataSource" class="border-b hover:bg-gray-50 text-sm">
+        <td class="px-4 py-2">{{ row?.resume?.userDict?.fullName || '---' }}</td>
+
+        <td class="px-4 py-2">{{ row?.jobPostDict?.jobName || '---' }}</td>
+
+        <td class="px-4 py-2">{{ row?.createAt | date: 'dd/MM/yyyy' }}</td>
+
+        <td class="px-4 py-2">
+          <span *ngIf="row?.resume?.cvFile; else noCv">📄 File CV</span>
+          <ng-template #noCv>🌐 CV Website</ng-template>
+        </td>
+
+        <td class="px-4 py-2">
+          <select
+            class="border rounded px-2 py-1 w-full"
+            [value]="row.applicationStatus"
+            (change)="handleChangeApplicationStatus($event, row)"
+          >
+            <option value="PENDING">Đang chờ</option>
+            <option value="IN_PROGRESS">Đang phỏng vấn</option>
+            <option value="ACCEPTED">Đã nhận việc</option>
+            <option value="REJECTED">Đã từ chối</option>
+          </select>
+        </td>
+
+        <td class="px-4 py-2 flex justify-end gap-2">
+          <button (click)="viewProfile(row.resume?.slug)" title="Xem hồ sơ" class="text-blue-500 hover:text-blue-700">
+            👁️
+          </button>
+
+          <button (click)="openSendMail(row)" title="Gửi Email" class="text-green-500 hover:text-green-700">
+            📧
+          </button>
+
+          <button (click)="confirmDelete(row.id)" title="Xóa hồ sơ" class="text-red-500 hover:text-red-700">
+            🗑️
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Nếu không có dữ liệu -->
+  <ng-template #noDataTemplate>
+    <div class="py-8 text-center text-gray-500">
+      <app-no-data-card></app-no-data-card>
+    </div>
+  </ng-template>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && dataSource.length > 0" class="flex justify-center items-center mt-4 space-x-4">
+    <button
+      (click)="pageChange.emit(page - 1)"
+      [disabled]="page === 1"
+      class="px-3 py-1 border rounded hover:bg-gray-100"
+    >
+      Prev
+    </button>
+
+    <div>Trang {{ page }} / {{ totalPages() }}</div>
+
+    <button
+      (click)="pageChange.emit(page + 1)"
+      [disabled]="page >= totalPages()"
+      class="px-3 py-1 border rounded hover:bg-gray-100"
+    >
+      Next
+    </button>
+  </div>
+
+  <!-- Popup Gửi Mail -->
+  <app-send-mail-card
+    *ngIf="openSendMailPopup"
+    [openPopup]="openSendMailPopup"
+    [sendMailData]="selectedSendData"
+    (handleSendEmail)="handleSendMail($event)"
+    (setOpenPopup)="openSendMailPopup = $event"
+  ></app-send-mail-card>
+</div>

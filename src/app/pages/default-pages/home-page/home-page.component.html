@@ -1,0 +1,99 @@
+<div class="mt-24">
+  <h2 class="text-xl mb-3 font-semibold">Các công ty nổi bật</h2>
+  <app-top-company-carousel />
+</div>
+
+<div class="mt-24">
+  <div class="border shadow-none">
+    <div class="flex items-center bg-[#441da0] p-4">
+      <div class="bg-white rounded-full p-2 mr-4 text-purple-600 text-xl">⏰</div>
+      <h2 class="text-white text-xl font-semibold">Việc làm tuyển gấp</h2>
+    </div>
+    <div class="p-4">
+      <app-filter-job-post-card [params]="{ isUrgent: true }" />
+    </div>
+  </div>
+</div>
+
+<div class="mt-24">
+  <h2 class="text-xl mb-3 font-semibold">Ngành nghề trọng điểm</h2>
+  <app-career-carousel />
+</div>
+
+<div *ngIf="isJobSeeker" class="mt-24">
+  <div class="border">
+    <div
+      class="flex items-center p-4 bg-cover bg-no-repeat"
+      style="background-image: url('/assets/images/banner-explore.png')"
+    >
+      <div class="bg-white rounded-full p-2 mr-4 text-purple-600 text-xl">💡</div>
+      <h2 class="text-[#441da0] text-xl font-semibold">Việc làm gợi ý</h2>
+    </div>
+    <div class="bg-[#e0f0ff] p-4">
+      <app-suggested-job-post-card />
+    </div>
+  </div>
+</div>
+
+<div
+  class="rounded p-6 mt-16 bg-cover bg-no-repeat"
+  style="background-image: url('/assets/images/banner-explore-pc.png')"
+>
+  <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+    <h2 class="text-white text-2xl font-bold">Cần tìm việc làm phù hợp cho bạn?</h2>
+    <button
+      (click)="navigateToJobs()"
+      class="btn btn-primary flex items-center gap-2 text-white"
+    >
+      <span class="text-xl">🔍</span>
+      Bắt đầu khám phá
+    </button>
+  </div>
+</div>
+
+<div class="mt-24">
+  <div class="border shadow-none">
+    <div class="flex items-center bg-[#441da0] p-4">
+      <div class="bg-white rounded-full p-2 mr-4">
+        {{ HOME_FILTER_CAREER[0].icon || '🧑‍💼' }}
+      </div>
+      <h2 class="text-white text-xl font-semibold">
+        Việc làm ngành {{ HOME_FILTER_CAREER[0].name }}
+      </h2>
+    </div>
+    <div class="p-4">
+      <app-filter-job-post-card
+        [params]="{ careerId: HOME_FILTER_CAREER[0].id }"
+      />
+    </div>
+  </div>
+</div>
+
+<div class="mt-24">
+  <div class="border shadow-none">
+    <div class="flex items-center bg-[#441da0] p-4">
+      <div class="bg-white rounded-full p-2 mr-4">
+        {{ HOME_FILTER_CAREER[1].icon || '💻' }}
+      </div>
+      <h2 class="text-white text-xl font-semibold">
+        Việc làm ngành {{ HOME_FILTER_CAREER[1].name }}
+      </h2>
+    </div>
+    <div class="p-4">
+      <app-filter-job-post-card
+        [params]="{ careerId: HOME_FILTER_CAREER[1].id }"
+      />
+    </div>
+  </div>
+</div>
+
+<div class="mt-24">
+  <h2 class="text-xl mb-3 font-semibold">Người dùng đánh giá</h2>
+  <app-feedback-carousel />
+</div>
+
+<div class="mt-24">
+  <div class="bg-white rounded-xl">
+    <app-job-by-category />
+  </div>
+</div>

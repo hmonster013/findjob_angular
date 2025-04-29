@@ -1,0 +1,19 @@
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()">
+  <div class="grid grid-cols-1 gap-4">
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">
+        Chọn tệp CV của bạn
+        <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="file"
+        (change)="onFileChange($event)"
+        class="border p-2 rounded w-full"
+        multiple
+      />
+      <div *ngIf="fileError" class="text-red-500 text-sm mt-1">
+        {{ fileError }}
+      </div>
+    </div>
+  </div>
+</form>

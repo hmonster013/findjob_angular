@@ -1,0 +1,51 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <input formControlName="jobTitle" placeholder="Tên công việc" class="input-text" />
+
+    <div class="flex gap-2">
+      <input formControlName="salaryMin" placeholder="Lương tối thiểu" class="input-text" type="number" />
+      <input formControlName="salaryMax" placeholder="Lương tối đa" class="input-text" type="number" />
+    </div>
+
+    <input type="date" formControlName="deadline" class="input-text" />
+
+    <input formControlName="quantity" type="number" placeholder="Số lượng tuyển" class="input-text" />
+  </div>
+
+  <div class="grid grid-cols-1 gap-4">
+    <quill-editor formControlName="jobDescription" [styles]="{ minHeight: '200px' }" placeholder="Mô tả công việc"></quill-editor>
+    <quill-editor formControlName="jobRequirement" [styles]="{ minHeight: '200px' }" placeholder="Yêu cầu công việc"></quill-editor>
+    <quill-editor formControlName="benefitsEnjoyed" [styles]="{ minHeight: '200px' }" placeholder="Quyền lợi được hưởng"></quill-editor>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <select formControlName="location.city" (change)="onCityChange($event)" class="input-text">
+      <option value="">Chọn tỉnh thành</option>
+      <option *ngFor="let city of cityOptions" [value]="city.id">{{ city.name }}</option>
+    </select>
+
+    <select formControlName="location.district" class="input-text">
+      <option value="">Chọn quận huyện</option>
+      <option *ngFor="let district of districtOptions" [value]="district.id">{{ district.name }}</option>
+    </select>
+
+    <input formControlName="location.address" placeholder="Địa chỉ chi tiết" class="input-text" />
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <input formControlName="contactName" placeholder="Tên người liên hệ" class="input-text" />
+    <input formControlName="contactPhone" placeholder="Số điện thoại liên hệ" class="input-text" />
+    <input formControlName="contactEmail" placeholder="Email liên hệ" class="input-text" />
+  </div>
+
+  <div class="flex items-center gap-2">
+    <input type="checkbox" formControlName="urgentRecruitment" />
+    <label>Tuyển gấp</label>
+  </div>
+
+  <div class="flex justify-end">
+    <button type="submit" class="btn-primary">Lưu tin tuyển dụng</button>
+  </div>
+
+</form>

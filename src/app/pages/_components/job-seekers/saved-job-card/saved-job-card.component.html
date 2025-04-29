@@ -1,0 +1,63 @@
+<div class="p-4 bg-white rounded-lg shadow-md relative">
+
+  <h2 class="text-xl font-bold mb-4">Công việc đã lưu</h2>
+
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoading" class="space-y-4">
+    <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+    <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && savedJobs.length === 0" class="text-center text-gray-500">
+    Bạn chưa lưu công việc nào.
+  </div>
+
+  <!-- List saved jobs -->
+  <div *ngIf="!isLoading && savedJobs.length > 0" class="space-y-4">
+
+    <div *ngFor="let job of savedJobs" class="p-4 border rounded hover:shadow flex justify-between items-center">
+
+      <div>
+        <h3 (click)="navigateToJob(job.slug)"
+            class="text-lg font-semibold text-blue-600 cursor-pointer hover:underline">
+          {{ job.title }}
+        </h3>
+        <p class="text-sm text-gray-500 mt-1">{{ job.companyName }}</p>
+      </div>
+
+      <div>
+        <button
+          (click)="handleUnsave(job.slug)"
+          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+        >
+          Hủy lưu
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && totalPages > 1" class="flex justify-center items-center space-x-2 mt-6">
+    <button
+      (click)="handleChangePage(page - 1)"
+      [disabled]="page <= 1"
+      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+    >
+      Trước
+    </button>
+
+    <span class="text-sm font-medium">Trang {{ page }} / {{ totalPages }}</span>
+
+    <button
+      (click)="handleChangePage(page + 1)"
+      [disabled]="page >= totalPages"
+      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+    >
+      Sau
+    </button>
+  </div>
+
+</div>

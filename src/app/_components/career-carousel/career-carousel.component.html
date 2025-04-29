@@ -1,0 +1,36 @@
+<div id="career-carousel">
+  <swiper-container
+    [slidesPerView]="slidesPerView"
+    [spaceBetween]="15"
+    [autoplay]="{ delay: 2500, disableOnInteraction: false }"
+    [pagination]="true"
+    class="pb-12 pt-2"
+  >
+    <ng-container *ngIf="!isLoading; else loading">
+      <swiper-slide *ngFor="let career of topCareers">
+        <a [routerLink]="['/viec-lam', { careerId: career.id }]" class="block">
+          <div class="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition flex flex-col items-center min-h-[150px]">
+            <img
+              [src]="career.imageUrl || 'https://via.placeholder.com/64'"
+              alt="{{ career.name }}"
+              class="w-16 h-16 rounded-md object-cover mb-2"
+            />
+            <div class="text-center">
+              <div class="text-indigo-700 font-medium text-sm truncate max-w-[8rem]">{{ career.name }}</div>
+            </div>
+          </div>
+        </a>
+      </swiper-slide>
+    </ng-container>
+
+    <!-- Loading Skeleton -->
+    <ng-template #loading>
+      <swiper-slide *ngFor="let item of [1,2,3,4,5,6,7,8]">
+        <div class="bg-white p-4 rounded-xl shadow-md animate-pulse flex flex-col items-center min-h-[150px]">
+          <div class="w-16 h-16 bg-gray-300 rounded-md mb-2"></div>
+          <div class="w-24 h-3 bg-gray-300 rounded"></div>
+        </div>
+      </swiper-slide>
+    </ng-template>
+  </swiper-container>
+</div>

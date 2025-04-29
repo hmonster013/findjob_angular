@@ -1,0 +1,50 @@
+<div class="space-y-4">
+  <!-- Search form -->
+  <app-profile-search (search)="onSearch($event)" (reset)="onReset()"></app-profile-search>
+
+  <!-- Kết quả tìm kiếm -->
+  <div class="bg-white shadow rounded-lg p-4">
+    <div class="font-bold text-lg mb-4">
+      Kết quả tìm thấy: <span class="text-red-500">{{ count }} hồ sơ</span>
+    </div>
+
+    <div *ngIf="isLoading" class="grid gap-4">
+      <app-job-seeker-profile *ngFor="let skeleton of [].constructor(pageSize)"></app-job-seeker-profile>
+    </div>
+
+    <div *ngIf="!isLoading && resumes.length === 0" class="text-center py-10">
+      <app-no-data-card></app-no-data-card>
+    </div>
+
+    <div *ngIf="!isLoading && resumes.length > 0" class="space-y-4">
+      <div class="grid gap-4">
+        <app-job-seeker-profile
+          *ngFor="let resume of resumes"
+          [jobSeekerProfile]="resume"
+          (save)="onSave(resume.slug)"
+        ></app-job-seeker-profile>
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex justify-center items-center mt-4 space-x-4">
+        <button
+          (click)="onChangePage(page - 1)"
+          [disabled]="page === 1"
+          class="px-3 py-1 border rounded hover:bg-gray-100"
+        >
+          Prev
+        </button>
+
+        <div>Trang {{ page }} / {{ totalPages }}</div>
+
+        <button
+          (click)="onChangePage(page + 1)"
+          [disabled]="page >= totalPages()"
+          class="px-3 py-1 border rounded hover:bg-gray-100"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

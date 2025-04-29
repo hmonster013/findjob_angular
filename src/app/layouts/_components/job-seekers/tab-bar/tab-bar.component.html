@@ -1,0 +1,16 @@
+<!-- tab-bar.component.html -->
+
+<div class="w-full bg-gray-100 px-5 pt-2">
+  <div class="flex overflow-x-auto gap-2 no-scrollbar">
+
+    <button
+      *ngFor="let tab of tabItems"
+      [routerLink]="[tab.path]"
+      routerLinkActive="text-primary-600 font-bold border-b-2 border-primary-600"
+      class="whitespace-nowrap px-3 py-2 rounded-lg text-gray-700 hover:text-primary-600 transition-all"
+    >
+      {{ tab.label }}
+    </button>
+
+  </div>
+</div>

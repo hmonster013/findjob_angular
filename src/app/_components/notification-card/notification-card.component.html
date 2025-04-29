@@ -1,0 +1,50 @@
+<!-- notification-card.component.html -->
+
+<div class="relative">
+  <!-- Icon Notification + Badge -->
+  <button (click)="toggleMenu()" class="relative p-2 hover:bg-gray-100 rounded-full">
+    🔔
+    <span *ngIf="unreadCount > 0"
+      class="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+      {{ unreadCount }}
+    </span>
+  </button>
+
+  <!-- Dropdown Menu -->
+  <div
+    *ngIf="open"
+    class="absolute right-0 mt-2 w-80 bg-white border rounded-lg shadow-lg z-50 overflow-hidden"
+  >
+    <div class="flex justify-between items-center px-4 py-2 border-b">
+      <h5 class="font-semibold text-gray-700">Thông báo</h5>
+      <button (click)="clearAll()" class="text-sm text-blue-600 hover:underline">
+        Xóa tất cả
+      </button>
+    </div>
+
+    <div class="max-h-96 overflow-y-auto flex flex-col">
+      <ng-container *ngIf="notifications.length > 0; else noNoti">
+        <div *ngFor="let noti of notifications" class="border-b hover:bg-gray-50 p-4 cursor-pointer"
+             (click)="markAsRead(noti)">
+          <div class="font-medium text-gray-800">{{ noti.title }}</div>
+          <div class="text-sm text-gray-500">{{ noti.body }}</div>
+          <div class="text-xs text-gray-400 mt-1">{{ noti.createdAt | date:'short' }}</div>
+        </div>
+
+        <button
+          *ngIf="canLoadMore"
+          (click)="loadMore()"
+          class="py-2 text-sm text-center text-blue-600 hover:underline"
+        >
+          Xem thêm
+        </button>
+      </ng-container>
+
+      <ng-template #noNoti>
+        <div class="text-center text-gray-400 py-8">
+          Không có thông báo nào
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

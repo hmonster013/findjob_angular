@@ -1,0 +1,59 @@
+<div class="space-y-4 relative">
+  <app-backdrop-loading *ngIf="isLoadingList || isFullScreenLoading"></app-backdrop-loading>
+
+  <!-- Filter Form -->
+  <app-job-post-filter-form (filter)="onFilter($event)"></app-job-post-filter-form>
+
+  <!-- Top Buttons -->
+  <div class="flex justify-between items-center">
+    <button
+      class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-md"
+      (click)="onOpenCreate()"
+    >
+      + Thêm mới
+    </button>
+
+    <button
+      class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md"
+      (click)="onExport()"
+    >
+      📥 Xuất Excel
+    </button>
+  </div>
+
+  <!-- Table -->
+  <app-job-posts-table
+    [dataSource]="list"
+    [total]="total"
+    [page]="page"
+    [rowsPerPage]="rowsPerPage"
+    [orderBy]="orderBy"
+    [order]="order"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)"
+    (pageChange)="onPageChange($event)"
+    (rowsPerPageChange)="onRowsPerPageChange($event)"
+    (sortChange)="onSortChange($event)"
+  ></app-job-posts-table>
+
+  <!-- Popup Modal Tailwind -->
+  <div *ngIf="openPopup" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white w-full max-w-2xl rounded-lg p-6 relative">
+      <button
+        (click)="openPopup = false"
+        class="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+      >
+        ✖️
+      </button>
+
+      <h2 class="text-xl font-bold mb-4">
+        {{ editData ? 'Cập nhật tin tuyển dụng' : 'Tạo mới tin tuyển dụng' }}
+      </h2>
+
+      <app-job-post-form
+        [editData]="editData"
+        (handleAddOrUpdate)="onSave($event)"
+      ></app-job-post-form>
+    </div>
+  </div>
+</div>

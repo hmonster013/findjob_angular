@@ -1,0 +1,55 @@
+<div class="grid grid-cols-1 md:grid-cols-12 h-screen">
+  <!-- LEFT SIDEBAR -->
+  <div *ngIf="!isMobile" class="hidden sm:block md:col-span-3 border-r border-gray-300 h-full">
+    <div class="h-full bg-white p-4 space-y-4">
+      <app-sidebar-header />
+      <app-left-side-bar [isEmployer]="isEmployer" />
+    </div>
+  </div>
+
+  <!-- MAIN CHAT WINDOW -->
+  <div class="col-span-12 sm:col-span-9 md:col-span-6 bg-white h-full flex flex-col">
+    <!-- Mobile Top Header -->
+    <div *ngIf="isMobile || isMedium" class="flex items-center p-2 gap-2 border-b shadow-sm">
+      <button class="bg-gray-100 p-2 rounded" (click)="openLeftDrawer = !openLeftDrawer">👥</button>
+      <button class="bg-gray-100 p-2 rounded" (click)="openRightDrawer = !openRightDrawer">📋</button>
+      <h1 class="text-center flex-1 font-semibold text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">
+        New way to follow your chance. <span>More engage, more success</span>
+      </h1>
+    </div>
+
+    <div class="flex-1 overflow-hidden">
+      <app-chat-window />
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div *ngIf="!isMedium" class="hidden md:block md:col-span-3 border-l border-gray-300 h-full">
+    <div class="h-full bg-white p-4">
+      <app-right-side-bar [isEmployer]="isEmployer" />
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE LEFT DRAWER -->
+<div
+  *ngIf="isMobile && openLeftDrawer"
+  class="fixed inset-0 z-50 bg-black bg-opacity-50 flex"
+  (click)="openLeftDrawer = false"
+>
+  <div class="bg-white w-4/5 max-w-sm p-4" (click)="$event.stopPropagation()">
+    <app-sidebar-header />
+    <app-left-side-bar [isEmployer]="isEmployer" />
+  </div>
+</div>
+
+<!-- MOBILE RIGHT DRAWER -->
+<div
+  *ngIf="isMedium && openRightDrawer"
+  class="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-end"
+  (click)="openRightDrawer = false"
+>
+  <div class="bg-white w-4/5 max-w-sm p-4" (click)="$event.stopPropagation()">
+    <app-right-side-bar [isEmployer]="isEmployer" />
+  </div>
+</div>

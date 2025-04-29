@@ -1,0 +1,58 @@
+<!-- companies.component.html -->
+
+<!-- Header -->
+<div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+  <div class="flex items-center gap-2">
+    <h2 class="text-2xl font-bold">Công ty nổi bật</h2>
+    <span class="text-blue-600 bg-blue-100 px-3 py-1 rounded-full text-sm">
+      {{ count }} công ty
+    </span>
+  </div>
+</div>
+
+<!-- Nội dung -->
+<div *ngIf="isLoading; else dataContent">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div *ngFor="let i of skeletonArray" class="h-60 border rounded-lg p-4 animate-pulse bg-gray-100"></div>
+  </div>
+</div>
+
+<ng-template #dataContent>
+  <ng-container *ngIf="companies.length > 0; else noData">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <app-company
+        *ngFor="let company of companies"
+        [slug]="company.slug"
+        [companyImageUrl]="company.companyImageUrl"
+        [companyCoverImageUrl]="company.companyCoverImageUrl"
+        [companyName]="company.companyName"
+        [employeeSize]="company.employeeSize"
+        [fieldOperation]="company.fieldOperation"
+        [city]="company.locationDict?.city"
+        [followNumber]="company.followNumber"
+        [jobPostNumber]="company.jobPostNumber"
+        [isFollowed]="company.isFollowed"
+      ></app-company>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center mt-6" *ngIf="totalPages > 1">
+      <ng-container *ngFor="let pageNumber of [].constructor(totalPages); let idx = index">
+        <button
+          (click)="handleChangePage(idx + 1)"
+          class="px-3 py-1 mx-1 rounded-full border"
+          [ngClass]="page === (idx + 1) ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'"
+        >
+          {{ idx + 1 }}
+        </button>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <ng-template #noData>
+    <app-no-data-card
+      [title]="'Hiện chưa tìm công ty phù hợp với tiêu chí của bạn'"
+      [imgComponentSvg]="'/assets/images/no-data.svg'"
+    ></app-no-data-card>
+  </ng-template>
+</ng-template>

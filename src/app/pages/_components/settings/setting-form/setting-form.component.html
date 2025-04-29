@@ -1,0 +1,15 @@
+<form [formGroup]="settingForm" (ngSubmit)="onSubmit()" class="space-y-4">
+  <div class="flex items-center gap-2">
+    <input type="checkbox" formControlName="emailNotificationActive" class="w-5 h-5">
+    <label class="text-gray-700">Cho phép gửi email</label>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <input type="checkbox" formControlName="smsNotificationActive" class="w-5 h-5">
+    <label class="text-gray-700">Cho phép gửi tin nhắn SMS</label>
+  </div>
+
+  <button type="submit" class="mt-4 px-6 py-2 bg-primary-600 text-white rounded hover:bg-primary-700">
+    Lưu thay đổi
+  </button>
+</form>

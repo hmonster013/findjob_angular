@@ -1,0 +1,47 @@
+<!-- home-search.component.html -->
+
+<div class="bg-black/40 rounded-xl p-6">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <!-- Ô tìm kiếm -->
+    <div class="md:col-span-2">
+      <input
+        type="text"
+        formControlName="kw"
+        placeholder="Tìm kiếm cơ hội việc làm"
+        class="w-full p-3 rounded border focus:outline-none"
+      />
+    </div>
+
+    <!-- Ngành nghề -->
+    <div>
+      <select formControlName="careerId" class="w-full p-3 rounded border focus:outline-none">
+        <option value="">Tất cả ngành nghề</option>
+        <option *ngFor="let career of careerOptions" [value]="career.id">
+          {{ career.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Tỉnh thành -->
+    <div>
+      <select formControlName="cityId" class="w-full p-3 rounded border focus:outline-none">
+        <option value="">Tất cả tỉnh thành</option>
+        <option *ngFor="let city of cityOptions" [value]="city.id">
+          {{ city.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Button -->
+    <div class="md:col-span-2 flex justify-center mt-4">
+      <button
+        type="submit"
+        class="bg-primary-600 text-white px-6 py-2 rounded hover:bg-primary-700 transition-all"
+      >
+        Tìm kiếm
+      </button>
+    </div>
+
+  </form>
+</div>

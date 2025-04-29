@@ -1,0 +1,45 @@
+<div id="suggested-job-post-card" class="p-4">
+  <div *ngIf="isLoading" class="flex flex-wrap gap-4">
+    <div *ngFor="let item of [].constructor(pageSize)" [ngClass]="colClass" class="p-2">
+      <app-job-post [isLoading]="true"></app-job-post>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && jobPosts.length === 0" class="flex justify-center items-center p-6">
+    <app-no-data-card>
+      <!-- <app-image-svg8></app-image-svg8> -->
+    </app-no-data-card>
+  </div>
+
+  <div *ngIf="!isLoading && jobPosts.length > 0" class="flex flex-wrap gap-4">
+    <div *ngFor="let value of jobPosts" [ngClass]="colClass" class="p-2">
+      <app-job-post
+        [id]="value.id"
+        [slug]="value.slug"
+        [companyImageUrl]="value?.companyDict?.companyImageUrl"
+        [companyName]="value?.companyDict?.companyName"
+        [jobName]="value?.jobName"
+        [cityName]="value?.locationDict?.city"
+        [deadline]="value?.deadline"
+        [isUrgent]="value?.isUrgent"
+        [isHot]="value?.isHot"
+        [salaryMin]="value.salaryMin"
+        [salaryMax]="value.salaryMax"
+      ></app-job-post>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && pageCount > 1" class="flex justify-center mt-6">
+    <nav class="inline-flex">
+      <button
+        *ngFor="let p of [].constructor(pageCount); let idx = index"
+        (click)="handleChangePage(idx + 1)"
+        class="px-4 py-2 border hover:bg-primary-600 hover:text-white"
+        [class.bg-primary-600]="page === idx + 1"
+        [class.text-white]="page === idx + 1"
+      >
+        {{ idx + 1 }}
+      </button>
+    </nav>
+  </div>
+</div>

@@ -1,0 +1,56 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+  <div class="col-span-1">
+    <input
+      type="text"
+      formControlName="kw"
+      placeholder="Nhập tên tin đăng"
+      class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+    />
+  </div>
+
+  <div class="col-span-1">
+    <select
+      formControlName="isUrgent"
+      class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+    >
+      <option value="">Trạng thái tuyển dụng</option>
+      <option *ngFor="let option of urgentOptions" [value]="option.id">
+        {{ option.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-span-1">
+    <select
+      formControlName="statusId"
+      class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+    >
+      <option value="">Trạng thái duyệt</option>
+      <option *ngFor="let option of statusOptions" [value]="option.id">
+        {{ option.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-span-1 flex items-center justify-end gap-2">
+    <button
+      type="button"
+      (click)="onReset()"
+      class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 focus:outline-none"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 5a5 5 0 00-5 5H3a7 7 0 111.44 4.243l-1.414-1.414A7.001 7.001 0 0010 3v2z" clip-rule="evenodd" />
+      </svg>
+    </button>
+
+    <button
+      type="submit"
+      class="flex items-center gap-2 px-4 py-2 bg-secondary-500 text-white rounded hover:bg-secondary-600"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 2a8 8 0 015.293 13.707l3.707 3.707-1.414 1.414-3.707-3.707A8 8 0 1110 2zm-2 8a2 2 0 114 0 2 2 0 01-4 0z" clip-rule="evenodd" />
+      </svg>
+      Tìm kiếm
+    </button>
+  </div>
+</form>

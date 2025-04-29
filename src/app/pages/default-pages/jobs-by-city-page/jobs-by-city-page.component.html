@@ -1,0 +1,12 @@
+<div class="max-w-screen-lg mx-auto py-6 px-4">
+  <h1 class="text-3xl font-bold text-primary mb-2">Việc làm theo Tỉnh thành</h1>
+  <div class="h-px bg-gray-300 my-4"></div>
+
+  <ng-container *ngIf="!isLoading; else loading">
+    <app-category-card [options]="cityOptions" type="CITY" />
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="text-center text-gray-500 py-10">Đang tải danh sách...</div>
+  </ng-template>
+</div>

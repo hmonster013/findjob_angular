@@ -1,0 +1,64 @@
+<div class="p-4 flex flex-col gap-4">
+  <h2 class="text-sm font-bold text-gray-600 mb-2">
+    {{ isEmployer ? 'ỨNG VIÊN ỨNG TUYỂN' : 'TIN TUYỂN DỤNG ĐÃ ỨNG TUYỂN' }}
+  </h2>
+
+  <div class="overflow-y-auto h-[calc(100vh-120px)] pr-2">
+    <ng-container *ngIf="loading; else contentLoaded">
+      <div *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12]" class="animate-pulse flex gap-4 p-2">
+        <div class="w-12 h-12 bg-gray-300 rounded-full"></div>
+        <div class="flex-1 space-y-2 py-1">
+          <div class="h-3 bg-gray-300 rounded w-3/4"></div>
+          <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #contentLoaded>
+      <ng-container *ngIf="jobPostsApplied.length > 0; else emptyState">
+        <div *ngFor="let job of jobPostsApplied" class="p-2 bg-white rounded-lg shadow hover:bg-gray-100 cursor-pointer flex items-center gap-3">
+          <img [src]="isEmployer ? job.avatarUrl : job.companyImageUrl" class="w-12 h-12 rounded-full border" alt="Logo">
+
+          <div class="flex-1">
+            <div class="font-semibold text-gray-900 truncate">
+              {{ isEmployer ? (job.fullName || '---') : (job.jobPostTitle || '---') }}
+            </div>
+            <div class="text-xs text-gray-500 truncate">
+              {{ isEmployer ? (job.jobPostTitle || '---') : (job.companyName || '---') }}
+            </div>
+          </div>
+
+          <button
+            (click)="handleChat({
+              userId: job.userId,
+              fullName: job.fullName,
+              userEmail: job.userEmail,
+              companyName: job.companyName,
+              companySlug: job.companySlug,
+              avatarUrl: job.avatarUrl || job.companyImageUrl
+            })"
+            class="text-xs px-2 py-1 border rounded border-blue-500 text-blue-500 hover:bg-blue-50"
+          >
+            Nhắn tin
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-template #emptyState>
+        <div class="text-center text-gray-400 py-8">
+          {{ isEmployer ? 'Chưa có ứng viên nào ứng tuyển' : 'Bạn chưa ứng tuyển vị trí nào' }}
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+
+  <div *ngIf="totalPages > 1" class="pt-4 text-center">
+    <button
+      (click)="onPageChange(page + 1)"
+      class="text-sm text-blue-600 hover:underline"
+      *ngIf="page < totalPages"
+    >
+      Tải thêm
+    </button>
+  </div>
+</div>

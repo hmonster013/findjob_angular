@@ -1,0 +1,12 @@
+<!-- mui-image-custom.component.html -->
+<img
+  [src]="src"
+  [alt]="alt"
+  [class]="className"
+  [style.object-fit]="fit"
+  [style.transition]="transitionStyle"
+  loading="lazy"
+  (error)="handleError($event)"
+  [attr.width]="width"
+  [attr.height]="height"
+/>

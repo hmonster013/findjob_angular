@@ -1,0 +1,27 @@
+<div class="bg-white rounded-lg shadow-md p-6">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold text-gray-800">{{ title }}</h2>
+  </div>
+
+  <div *ngIf="isLoadingSettings" class="space-y-4">
+    <div class="h-12 bg-gray-200 rounded animate-pulse"></div>
+    <div class="h-12 bg-gray-200 rounded animate-pulse"></div>
+    <div class="flex justify-center mt-4">
+      <div class="h-12 w-40 bg-gray-200 rounded-full animate-pulse"></div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoadingSettings">
+    <app-setting-form [editData]="editData" (update)="handleUpdateUserSetting($event)"></app-setting-form>
+
+    <div class="flex justify-center mt-6">
+      <button
+        type="submit"
+        form="account-form"
+        class="bg-primary-600 text-white font-semibold px-6 py-2 rounded hover:bg-primary-700"
+      >
+        Cập nhật
+      </button>
+    </div>
+  </div>
+</div>

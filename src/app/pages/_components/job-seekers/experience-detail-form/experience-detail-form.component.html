@@ -1,0 +1,54 @@
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <div class="flex flex-col col-span-2">
+      <label class="mb-2 font-medium">Chức danh/vị trí công việc <span class="text-red-500">*</span></label>
+      <input
+        formControlName="jobName"
+        placeholder="VD: Kỹ sư phần mềm"
+        type="text"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+    <div class="flex flex-col col-span-2">
+      <label class="mb-2 font-medium">Tên công ty <span class="text-red-500">*</span></label>
+      <input
+        formControlName="companyName"
+        placeholder="Nhập tên công ty"
+        type="text"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Ngày bắt đầu <span class="text-red-500">*</span></label>
+      <input
+        formControlName="startDate"
+        type="date"
+        max="{{ maxYesterday }}"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Ngày kết thúc <span class="text-red-500">*</span></label>
+      <input
+        formControlName="endDate"
+        type="date"
+        max="{{ maxToday }}"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+    <div class="flex flex-col col-span-2">
+      <label class="mb-2 font-medium">Mô tả thêm</label>
+      <textarea
+        formControlName="description"
+        placeholder="Nhập nội dung mô tả tại đây"
+        class="border rounded p-2 w-full h-32 resize-none"
+      ></textarea>
+    </div>
+
+  </div>
+</form>

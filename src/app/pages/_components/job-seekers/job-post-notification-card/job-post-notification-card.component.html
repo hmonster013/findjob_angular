@@ -1,0 +1,83 @@
+<div class="p-4 bg-white rounded-lg shadow-md">
+
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold">Thông báo việc làm</h2>
+    <button (click)="handleShowAdd()" class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+      ➕
+    </button>
+  </div>
+
+  <hr class="mb-4">
+
+  <div *ngIf="isLoadingJobPostNotifications">
+    <div class="space-y-4">
+      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoadingJobPostNotifications && jobPostNotifications.length === 0" class="text-center text-gray-500">
+    Bạn chưa tạo thông báo việc làm nào.
+  </div>
+
+  <div *ngIf="!isLoadingJobPostNotifications && jobPostNotifications.length > 0" class="space-y-4">
+
+    <div *ngFor="let notification of jobPostNotifications" class="p-4 border rounded hover:shadow transition">
+      <div class="flex justify-between items-center">
+
+        <div>
+          <h3 class="text-lg font-semibold">{{ notification.name }}</h3>
+          <p class="text-sm text-gray-500 mt-1">{{ notification.description }}</p>
+        </div>
+
+        <div class="flex space-x-2">
+          <button (click)="handleShowUpdate(notification.id)" class="text-indigo-600 hover:underline text-sm">
+            ✏️ Sửa
+          </button>
+          <button (click)="handleDelete(notification.id)" class="text-red-600 hover:underline text-sm">
+            🗑️ Xóa
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoadingJobPostNotifications && totalPages > 1" class="flex justify-center items-center space-x-2 mt-6">
+    <button
+      (click)="handleChangePage(page - 1)"
+      [disabled]="page <= 1"
+      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+    >
+      Trước
+    </button>
+
+    <span class="text-sm font-medium">Trang {{ page }} / {{ totalPages }}</span>
+
+    <button
+      (click)="handleChangePage(page + 1)"
+      [disabled]="page >= totalPages"
+      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+    >
+      Sau
+    </button>
+  </div>
+
+  <!-- Popup Form -->
+  <app-job-post-notification-form
+    *ngIf="openPopup"
+    [editData]="editData"
+    [handleAddOrUpdate]="handleAddOrUpdate"
+  ></app-job-post-notification-form>
+
+  <!-- Fullscreen Loading -->
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+    </svg>
+  </div>
+
+</div>

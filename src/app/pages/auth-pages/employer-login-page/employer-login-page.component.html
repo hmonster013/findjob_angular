@@ -1,0 +1,33 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+  <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-md relative">
+
+    <!-- Logo -->
+    <div class="flex justify-center mb-6">
+      <img src="/assets/images/logo.png" alt="Logo" class="h-12" />
+    </div>
+
+    <!-- Title -->
+    <h2 class="text-2xl font-bold text-center text-gray-700 mb-8">
+      Đăng nhập Nhà Tuyển Dụng
+    </h2>
+
+    <!-- Form -->
+    <app-employer-login-form (submitForm)="onLogin($event)"></app-employer-login-form>
+
+    <!-- Links -->
+    <div class="flex justify-between mt-6 text-sm">
+      <a routerLink="/forget-password" class="text-primary hover:underline">
+        Quên mật khẩu?
+      </a>
+      <a routerLink="/register" class="text-primary hover:underline">
+        Đăng ký tài khoản
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="text-white text-lg">Đang đăng nhập...</div>
+  </div>
+</div>

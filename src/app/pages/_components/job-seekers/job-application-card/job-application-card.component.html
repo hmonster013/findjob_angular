@@ -1,0 +1,65 @@
+<div class="p-4 bg-white rounded-lg shadow-md">
+
+  <h2 class="text-xl font-bold mb-4">Hồ sơ ứng tuyển</h2>
+
+  <div *ngIf="isLoading">
+    <div class="space-y-3">
+      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && resumes.length === 0" class="text-center text-gray-500">
+    Chưa có hồ sơ ứng tuyển nào.
+  </div>
+
+  <div *ngIf="!isLoading && resumes.length > 0" class="grid gap-4">
+
+    <div *ngFor="let resume of resumes" class="flex items-center justify-between p-4 border rounded hover:shadow transition">
+
+      <div class="flex items-center space-x-3">
+        <div class="bg-gray-100 p-2 rounded">
+          <ng-container *ngIf="resume?.type === 'CV_WEBSITE'; else pdfIcon">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 17v-6h6v6h5V7H4v10h5z" />
+            </svg>
+          </ng-container>
+          <ng-template #pdfIcon>
+            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 20h9" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 16h6" />
+            </svg>
+          </ng-template>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold">{{ resume.title }}</h3>
+          <p class="text-sm text-gray-500">
+            Cập nhật: {{ formatDateDisplay(resume.updatedAt) }}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <span class="text-sm px-2 py-1 rounded-full"
+          [ngClass]="{
+            'bg-green-100 text-green-700': resume.isActive,
+            'bg-gray-200 text-gray-700': !resume.isActive
+          }"
+        >
+          {{ resume.isActive ? 'Hoạt động' : 'Không hoạt động' }}
+        </span>
+
+        <button (click)="handleNavigate(resume.slug)" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+          Xem chi tiết
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

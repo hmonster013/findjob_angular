@@ -1,0 +1,59 @@
+<div class="p-4 bg-white rounded-lg shadow-md">
+
+  <h2 class="text-xl font-bold mb-4">Công ty đã xem hồ sơ</h2>
+
+  <div *ngIf="isLoading">
+    <div class="space-y-4">
+      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && companiesViewed.length === 0" class="text-center text-gray-500">
+    Chưa có công ty nào xem hồ sơ của bạn.
+  </div>
+
+  <div *ngIf="!isLoading && companiesViewed.length > 0" class="space-y-4">
+
+    <div *ngFor="let item of companiesViewed" class="p-4 border rounded hover:shadow transition">
+      <div class="flex justify-between items-center">
+
+        <div>
+          <h3 class="text-lg font-semibold text-blue-700">{{ item?.company?.name }}</h3>
+          <p class="text-sm text-gray-500 mt-1">
+            {{ item?.company?.address }}
+          </p>
+        </div>
+
+        <div *ngIf="item?.isSavedResume" class="flex items-center text-green-600">
+          <span class="text-lg">✔️</span>
+          <span class="ml-1 text-sm">Đã lưu hồ sơ</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && totalPages > 1" class="flex justify-center items-center space-x-2 mt-6">
+    <button
+      (click)="handleChangePage(page - 1)"
+      [disabled]="page <= 1"
+      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+    >
+      Trước
+    </button>
+
+    <span class="text-sm font-medium">Trang {{ page }} / {{ totalPages }}</span>
+
+    <button
+      (click)="handleChangePage(page + 1)"
+      [disabled]="page >= totalPages"
+      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+    >
+      Sau
+    </button>
+  </div>
+
+</div>

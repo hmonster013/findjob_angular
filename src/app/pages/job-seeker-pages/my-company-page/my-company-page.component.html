@@ -1,0 +1,48 @@
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 py-6">
+  <!-- LEFT: Tabs content -->
+  <div class="lg:col-span-8 space-y-4">
+    <div class="bg-white rounded-xl shadow p-4">
+      <!-- Tabs header -->
+      <div class="flex border-b border-gray-200 mb-4">
+        <button
+          (click)="selectTab('viewed')"
+          [class]="
+            'px-4 py-2 text-sm font-medium border-b-2 transition-all ' +
+            (selectedTab === 'viewed'
+              ? 'text-primary border-primary'
+              : 'text-gray-500 border-transparent hover:text-primary')
+          "
+        >
+          Nhà tuyển dụng xem hồ sơ
+        </button>
+        <button
+          (click)="selectTab('followed')"
+          [class]="
+            'ml-4 px-4 py-2 text-sm font-medium border-b-2 transition-all ' +
+            (selectedTab === 'followed'
+              ? 'text-primary border-primary'
+              : 'text-gray-500 border-transparent hover:text-primary')
+          "
+        >
+          Theo dõi công ty
+        </button>
+      </div>
+
+      <!-- Tabs content -->
+      <div *ngIf="selectedTab === 'viewed'">
+        <app-company-viewed-card />
+      </div>
+      <div *ngIf="selectedTab === 'followed'">
+        <app-company-followed-card />
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Suggested jobs -->
+  <div class="lg:col-span-4 space-y-4">
+    <div class="bg-white rounded-xl shadow p-4">
+      <h2 class="text-lg font-semibold mb-4">Việc làm phù hợp</h2>
+      <app-suggested-job-post-card [fullWidth]="true" />
+    </div>
+  </div>
+</div>

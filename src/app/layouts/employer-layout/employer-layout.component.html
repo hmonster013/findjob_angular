@@ -1,0 +1,22 @@
+<div class="flex min-h-screen bg-gray-100">
+
+  <!-- Sidebar -->
+  <app-sidebar
+    [mobileOpen]="mobileOpen"
+    [drawerWidth]="280"
+    [handleDrawerToggle]="closeMobileSidebar.bind(this)"
+  ></app-sidebar>
+
+  <div class="flex-1 flex flex-col">
+
+    <!-- Header -->
+    <app-header (toggleSidebar)="toggleMobileSidebar()"></app-header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-4 sm:p-6 lg:p-8 mt-4">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+
+</div>

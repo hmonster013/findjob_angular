@@ -1,0 +1,19 @@
+<!-- image-gallery-custom.component.html -->
+
+<div class="w-full">
+  <swiper-container
+    [slides-per-view]="1"
+    [space-between]="10"
+    pagination="true"
+    navigation="true"
+    class="rounded-lg overflow-hidden"
+  >
+    <swiper-slide *ngFor="let image of images">
+      <img
+        [src]="image.original"
+        alt="Gallery Image"
+        class="w-full h-80 object-cover"
+      />
+    </swiper-slide>
+  </swiper-container>
+</div>

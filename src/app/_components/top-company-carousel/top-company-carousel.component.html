@@ -1,0 +1,26 @@
+<ng-container *ngIf="isLoading; else showRealData">
+  <swiper-slide *ngFor="let i of skeletonArray">
+    <div class="flex flex-col items-center p-4 rounded-2xl border border-gray-200 animate-pulse bg-white h-[165px]">
+      <div class="w-[100px] h-[100px] rounded-full bg-gray-300 mb-2"></div>
+      <div class="w-3/4 h-4 rounded bg-gray-300"></div>
+    </div>
+  </swiper-slide>
+</ng-container>
+
+<ng-template #showRealData>
+  <swiper-slide *ngFor="let company of companies">
+    <div
+      class="flex flex-col items-center p-4 rounded-2xl border border-gray-200 bg-white cursor-pointer hover:-translate-y-1 hover:shadow-lg transition-all h-[165px]"
+      (click)="navigateToCompany(company.slug)"
+    >
+      <img
+        [src]="company.companyImageUrl"
+        alt="{{ company.companyName }}"
+        class="w-[120px] h-[120px] object-contain bg-gray-50 p-2 rounded-lg"
+      />
+      <h6 class="mt-2 text-gray-800 font-semibold text-sm text-center truncate w-full transition-all hover:text-primary-600">
+        {{ company.companyName }}
+      </h6>
+    </div>
+  </swiper-slide>
+</ng-template>

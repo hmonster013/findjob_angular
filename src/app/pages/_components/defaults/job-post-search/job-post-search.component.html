@@ -1,0 +1,106 @@
+<!-- job-post-search.component.html -->
+
+<div class="bg-primary-600 p-6 rounded-lg">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+
+    <!-- Keyword Search -->
+    <div class="md:col-span-4">
+      <input
+        type="text"
+        formControlName="kw"
+        placeholder="Tìm kiếm cơ hội việc làm"
+        class="w-full p-3 rounded border focus:outline-none"
+      />
+    </div>
+
+    <!-- Career -->
+    <div class="md:col-span-3">
+      <select formControlName="careerId" class="w-full p-3 rounded border focus:outline-none">
+        <option value="">Tất cả ngành nghề</option>
+        <option *ngFor="let item of careerOptions" [value]="item.id">{{ item.name }}</option>
+      </select>
+    </div>
+
+    <!-- City -->
+    <div class="md:col-span-2">
+      <select formControlName="cityId" class="w-full p-3 rounded border focus:outline-none">
+        <option value="">Tất cả tỉnh thành</option>
+        <option *ngFor="let item of cityOptions" [value]="item.id">{{ item.name }}</option>
+      </select>
+    </div>
+
+    <!-- Buttons -->
+    <div class="md:col-span-3 flex flex-wrap gap-2 justify-center items-center">
+      <button
+        type="submit"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-all"
+      >
+        Tìm kiếm
+      </button>
+      <button
+        type="button"
+        (click)="toggleAdvanceFilter()"
+        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-all"
+      >
+        {{ showAdvanceFilter ? 'Ẩn lọc nâng cao' : 'Lọc nâng cao' }}
+      </button>
+      <button
+        type="button"
+        (click)="onReset()"
+        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-all"
+      >
+        Reset
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<!-- Advanced Filter -->
+<div *ngIf="showAdvanceFilter" class="bg-white p-6 rounded-lg mt-4 shadow">
+
+  <h3 class="text-lg font-semibold text-primary-600 mb-4">Lọc nâng cao</h3>
+
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+    <!-- Position -->
+    <div>
+      <select formControlName="positionId" class="w-full p-3 rounded border focus:outline-none">
+        <option value="">Tất cả vị trí</option>
+        <option *ngFor="let item of positionOptions" [value]="item.id">{{ item.name }}</option>
+      </select>
+    </div>
+
+    <!-- Experience -->
+    <div>
+      <select formControlName="experienceId" class="w-full p-3 rounded border focus:outline-none">
+        <option value="">Tất cả kinh nghiệm</option>
+        <option *ngFor="let item of experienceOptions" [value]="item.id">{{ item.name }}</option>
+      </select>
+    </div>
+
+    <!-- Job Type -->
+    <div>
+      <select formControlName="jobTypeId" class="w-full p-3 rounded border focus:outline-none">
+        <option value="">Tất cả hình thức</option>
+        <option *ngFor="let item of jobTypeOptions" [value]="item.id">{{ item.name }}</option>
+      </select>
+    </div>
+
+    <!-- Type of Workplace -->
+    <div>
+      <select formControlName="typeOfWorkplaceId" class="w-full p-3 rounded border focus:outline-none">
+        <option value="">Tất cả loại hình làm việc</option>
+        <option *ngFor="let item of typeOfWorkplaceOptions" [value]="item.id">{{ item.name }}</option>
+      </select>
+    </div>
+
+    <!-- Gender -->
+    <div>
+      <select formControlName="genderId" class="w-full p-3 rounded border focus:outline-none">
+        <option value="">Tất cả giới tính</option>
+        <option *ngFor="let item of genderOptions" [value]="item.id">{{ item.name }}</option>
+      </select>
+    </div>
+  </div>
+
+</div>

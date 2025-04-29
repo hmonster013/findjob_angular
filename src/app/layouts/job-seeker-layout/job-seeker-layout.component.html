@@ -1,0 +1,19 @@
+<div class="flex flex-col min-h-screen">
+
+  <!-- Header -->
+  <app-header></app-header>
+
+  <!-- TabBar -->
+  <app-tab-bar></app-tab-bar>
+
+  <!-- Main Content -->
+  <main class="flex-1 px-2 sm:px-4 md:px-6 lg:px-8 xl:px-8 mt-4">
+    <div class="max-w-screen-xl mx-auto w-full">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <app-footer class="bg-[#441da0] text-white mt-6 px-4 py-8"></app-footer>
+
+</div>

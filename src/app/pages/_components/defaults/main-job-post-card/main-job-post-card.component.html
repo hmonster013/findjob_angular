@@ -1,0 +1,57 @@
+<div class="p-4">
+  <div class="flex items-center border-b pb-2 mb-4">
+    <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+      Kết quả tìm kiếm
+      <span class="bg-primary-100 text-primary-600 text-sm font-semibold px-3 py-1 rounded-full">
+        {{ count | number }} tin đăng
+      </span>
+    </h2>
+  </div>
+
+  <div class="space-y-4">
+    <ng-container *ngIf="isLoading; else loaded">
+      <div *ngFor="let i of [].constructor(10)" class="bg-white p-4 rounded shadow">
+        <app-job-post-large [isLoading]="true"></app-job-post-large>
+      </div>
+    </ng-container>
+
+    <ng-template #loaded>
+      <div *ngIf="jobPosts.length === 0" class="flex justify-center">
+        <app-no-data-card>
+          <!-- <app-image-svg3></app-image-svg3> -->
+        </app-no-data-card>
+      </div>
+
+      <div *ngIf="jobPosts.length > 0" class="space-y-4">
+        <div *ngFor="let job of jobPosts" class="bg-white p-4 rounded shadow">
+          <app-job-post-large
+            [id]="job.id"
+            [slug]="job.slug"
+            [companyImageUrl]="job?.companyDict?.companyImageUrl"
+            [companyName]="job?.companyDict?.companyName"
+            [jobName]="job?.jobName"
+            [deadline]="job?.deadline"
+            [isUrgent]="job?.isUrgent"
+            [isHot]="job?.isHot"
+            [salaryMin]="job.salaryMin"
+            [salaryMax]="job.salaryMax"
+          ></app-job-post-large>
+        </div>
+
+        <div *ngIf="pageCount > 1" class="flex justify-center mt-6">
+          <nav class="inline-flex">
+            <button
+              *ngFor="let p of [].constructor(pageCount); let idx = index"
+              (click)="handleChangePage(idx + 1)"
+              class="px-4 py-2 border hover:bg-primary-600 hover:text-white"
+              [class.bg-primary-600]="page === idx + 1"
+              [class.text-white]="page === idx + 1"
+            >
+              {{ idx + 1 }}
+            </button>
+          </nav>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

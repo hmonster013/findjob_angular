@@ -1,0 +1,77 @@
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <div class="flex flex-col col-span-2">
+      <label class="mb-2 font-medium">Họ và tên <span class="text-red-500">*</span></label>
+      <input
+        formControlName="user.fullName"
+        type="text"
+        placeholder="Nhập họ và tên"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Số điện thoại <span class="text-red-500">*</span></label>
+      <input
+        formControlName="phone"
+        type="text"
+        placeholder="Nhập số điện thoại"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Ngày sinh <span class="text-red-500">*</span></label>
+      <input
+        formControlName="birthday"
+        type="date"
+        [max]="maxYesterday"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Giới tính <span class="text-red-500">*</span></label>
+      <select formControlName="gender" class="border rounded p-2 w-full">
+        <option value="">Chọn giới tính</option>
+        <option *ngFor="let option of allConfig?.genderOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Tình trạng hôn nhân <span class="text-red-500">*</span></label>
+      <select formControlName="maritalStatus" class="border rounded p-2 w-full">
+        <option value="">Chọn tình trạng hôn nhân</option>
+        <option *ngFor="let option of allConfig?.maritalStatusOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Tỉnh/Thành phố <span class="text-red-500">*</span></label>
+      <select formControlName="location.city" class="border rounded p-2 w-full" (change)="onCityChange($event)">
+        <option value="">Chọn tỉnh thành phố</option>
+        <option *ngFor="let option of allConfig?.cityOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Quận/Huyện <span class="text-red-500">*</span></label>
+      <select formControlName="location.district" class="border rounded p-2 w-full">
+        <option value="">Chọn Quận/Huyện</option>
+        <option *ngFor="let option of districtOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col col-span-2">
+      <label class="mb-2 font-medium">Địa chỉ <span class="text-red-500">*</span></label>
+      <input
+        formControlName="location.address"
+        type="text"
+        placeholder="Nhập địa chỉ"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+  </div>
+</form>

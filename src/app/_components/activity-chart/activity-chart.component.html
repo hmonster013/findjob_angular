@@ -1,0 +1,19 @@
+<div class="w-full p-2">
+  <div class="min-h-[360px] flex justify-center items-center">
+    <ng-container *ngIf="isLoading; else loaded">
+      <div class="w-8 h-8 border-4 border-t-transparent border-primary rounded-full animate-spin"></div>
+    </ng-container>
+
+    <ng-template #loaded>
+      <ng-container *ngIf="hasData; else noData">
+        <canvas #activityChart></canvas>
+      </ng-container>
+
+      <ng-template #noData>
+        <div class="text-gray-400 text-sm text-center">
+          Không có dữ liệu để thống kê
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+</div>

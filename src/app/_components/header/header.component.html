@@ -1,31 +1,77 @@
-<header class="w-full bg-[#441DA0] text-white">
-  <div class="max-w-[1200px] mx-auto flex justify-between items-center px-4 py-2">
+<header class="sticky top-0 z-50 bg-indigo-700">
+  <div class="container mx-auto flex items-center justify-between py-2 px-4">
     <!-- Logo -->
-    <div class="flex items-center space-x-2">
-      <img src="/static/media/logo192.png" alt="MyJob Logo" class="h-8 w-8">
-      <span class="font-bold text-xl">MyJob</span>
-    </div>
+    <a routerLink="/" class="flex items-center">
+      <img src="assets/images/logo-light.png" alt="Logo" class="h-10 hidden md:block" />
+    </a>
 
-    <!-- Menu -->
-    <nav class="hidden md:flex space-x-6 text-white text-sm">
-      <a href="#" class="hover:underline">Giới thiệu</a>
-      <a href="#" class="hover:underline">Dịch vụ</a>
-      <a href="#" class="hover:underline">Báo giá</a>
-      <a href="#" class="hover:underline">Hỗ trợ</a>
-      <a href="#" class="hover:underline">Blog tuyển dụng</a>
+    <!-- Divider -->
+    <div class="hidden md:block h-10 mx-4 border-l border-gray-300"></div>
+
+    <!-- Mobile Menu Button -->
+    <button (click)="toggleMobileMenu()" class="md:hidden text-white">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden md:flex flex-grow space-x-4">
+      <a *ngFor="let page of pages"
+         [routerLink]="page.path"
+         [ngClass]="{
+           'bg-white bg-opacity-10': isActive(page.path),
+           'text-white hover:bg-indigo-600 px-3 py-2 rounded': true
+         }">
+        {{ page.label }}
+      </a>
     </nav>
 
-    <!-- Action Buttons -->
-    <div class="flex items-center space-x-2 text-sm">
-      <a href="#" class="hidden md:inline-block px-4 py-1.5 rounded-md bg-white text-[#441DA0] font-semibold hover:bg-gray-100 transition">Đăng nhập</a>
-      <a href="#" class="hidden md:inline-block px-4 py-1.5 rounded-md border border-white text-white font-semibold hover:bg-white hover:text-[#441DA0] transition">Đăng ký</a>
+    <!-- Notification + Chat -->
+    <div *ngIf="isAuthenticated" class="hidden md:flex items-center space-x-4">
+      <app-notification-card></app-notification-card>
+      <app-chat-card></app-chat-card>
+    </div>
 
-      <!-- Người tìm việc -->
-      <a href="#" class="flex items-center space-x-1 px-3 py-1.5 rounded-md bg-white text-[#441DA0] font-semibold hover:bg-gray-100 transition">
-        <i class="fa fa-users text-sm"></i>
-        <span>Người tìm việc</span>
-        <span class="text-xs">→ Chuyển</span>
-      </a>
+    <!-- Auth Area -->
+    <div class="flex items-center space-x-2 ml-4">
+      <ng-container *ngIf="!isAuthenticated; else loggedIn">
+        <button (click)="navigateToLogin()"
+                class="border border-white text-white px-3 py-1 rounded hover:bg-indigo-600">
+          Đăng nhập
+        </button>
+        <button (click)="navigateToRegister()"
+                class="hidden sm:block border border-white text-white px-3 py-1 rounded hover:bg-indigo-600">
+          Đăng ký
+        </button>
+      </ng-container>
+
+      <ng-template #loggedIn>
+        <div class="relative">
+          <button (click)="toggleUserMenu()" class="flex items-center space-x-2 border border-purple-500 px-2 py-1 rounded-full">
+            <img [src]="currentUser?.avatarUrl" alt="Avatar" class="w-8 h-8 rounded-full" />
+            <span class="hidden sm:block text-white">{{ currentUser?.fullName }}</span>
+          </button>
+
+          <div *ngIf="openUserMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+            <app-user-menu (close)="closeUserMenu()"></app-user-menu>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Account Switch Menu -->
+    <div class="hidden md:flex ml-4">
+      <app-account-switch-menu></app-account-switch-menu>
     </div>
   </div>
+
+  <!-- Left Drawer for Mobile -->
+  <app-left-drawer
+    [pages]="pages"
+    [mobileOpen]="mobileOpen"
+    (close)="toggleMobileMenu()">
+  </app-left-drawer>
 </header>

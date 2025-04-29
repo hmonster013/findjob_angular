@@ -1,0 +1,63 @@
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="flex flex-col col-span-2">
+      <label class="mb-2 font-medium">
+        Tên chứng chỉ <span class="text-red-500">*</span>
+      </label>
+      <input
+        formControlName="name"
+        placeholder="Nhập tên chứng chỉ"
+        type="text"
+        class="border rounded p-2 w-full"
+      />
+      <div *ngIf="form.get('name')?.errors?.['serverError']" class="text-red-500 text-sm mt-1">
+        {{ form.get('name')?.errors?.['serverError'] }}
+      </div>
+    </div>
+
+    <div class="flex flex-col col-span-2">
+      <label class="mb-2 font-medium">
+        Trường/Trung tâm đào tạo <span class="text-red-500">*</span>
+      </label>
+      <input
+        formControlName="trainingPlace"
+        placeholder="Nhập tên trường/Trung tâm đào tạo"
+        type="text"
+        class="border rounded p-2 w-full"
+      />
+      <div *ngIf="form.get('trainingPlace')?.errors?.['serverError']" class="text-red-500 text-sm mt-1">
+        {{ form.get('trainingPlace')?.errors?.['serverError'] }}
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">
+        Ngày bắt đầu <span class="text-red-500">*</span>
+      </label>
+      <input
+        formControlName="startDate"
+        type="date"
+        max="{{ maxYesterday }}"
+        class="border rounded p-2 w-full"
+      />
+      <div *ngIf="form.get('startDate')?.errors?.['serverError']" class="text-red-500 text-sm mt-1">
+        {{ form.get('startDate')?.errors?.['serverError'] }}
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">
+        Ngày hết hạn (Để trống nếu chứng chỉ vô thời hạn)
+      </label>
+      <input
+        formControlName="expirationDate"
+        type="date"
+        max="{{ maxToday }}"
+        class="border rounded p-2 w-full"
+      />
+      <div *ngIf="form.get('expirationDate')?.errors?.['serverError']" class="text-red-500 text-sm mt-1">
+        {{ form.get('expirationDate')?.errors?.['serverError'] }}
+      </div>
+    </div>
+  </div>
+</form>

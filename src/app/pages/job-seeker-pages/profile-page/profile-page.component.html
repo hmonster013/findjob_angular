@@ -1,0 +1,31 @@
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 py-6">
+  <!-- LEFT content -->
+  <div class="lg:col-span-8 space-y-4">
+    <!-- BoxProfile -->
+    <div class="bg-white p-6 rounded-xl shadow">
+      <app-box-profile [title]="'MyJob Profile'" />
+    </div>
+
+    <!-- ProfileUpload -->
+    <div class="bg-white p-6 rounded-xl shadow">
+      <app-profile-upload [title]="'Hồ sơ đính kèm'" />
+    </div>
+  </div>
+
+  <!-- RIGHT sidebar -->
+  <div class="lg:col-span-4 space-y-4">
+    <div class="bg-white p-6 rounded-xl shadow space-y-4">
+      <h2 class="text-lg font-semibold text-primary">Ai đã xem hồ sơ của bạn</h2>
+      <app-company-viewed-card />
+
+      <div class="text-center">
+        <a
+          routerLink="/job-seeker/dashboard/my-company"
+          class="text-blue-600 hover:underline text-sm"
+        >
+          Xem chi tiết
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

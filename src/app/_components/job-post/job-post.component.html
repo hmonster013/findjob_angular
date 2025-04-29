@@ -1,0 +1,71 @@
+<!-- job-post.component.html -->
+
+<!-- Nếu loading -->
+<ng-container *ngIf="isLoading; else jobContent">
+  <div class="p-4 border rounded-lg shadow space-y-4 animate-pulse">
+    <div class="flex gap-4 items-center">
+      <div class="w-16 h-16 bg-gray-300 rounded"></div>
+      <div class="flex-1 space-y-2">
+        <div class="h-5 bg-gray-300 rounded w-2/3"></div>
+        <div class="h-4 bg-gray-300 rounded w-1/2"></div>
+      </div>
+    </div>
+    <div class="flex gap-4 mt-4">
+      <div class="h-4 bg-gray-300 rounded w-1/4"></div>
+      <div class="h-4 bg-gray-300 rounded w-1/4"></div>
+      <div class="h-4 bg-gray-300 rounded w-1/4"></div>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Nếu có data -->
+<ng-template #jobContent>
+  <div
+    class="p-4 border rounded-lg shadow hover:shadow-md transition cursor-pointer relative bg-white flex flex-col gap-3"
+    (click)="navigateToDetail()"
+  >
+    <!-- Badge HOT -->
+    <div *ngIf="isHot" class="absolute top-2 right-2 bg-red-100 text-red-600 text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
+      🔥 HOT
+    </div>
+
+    <!-- Company Info -->
+    <div class="flex items-center gap-4">
+      <div class="relative">
+        <img
+          [src]="companyImageUrl"
+          alt="Company Logo"
+          class="w-16 h-16 border p-1 rounded-lg object-cover bg-white"
+        />
+        <div *ngIf="isUrgent" class="absolute -top-2 -left-2 w-6 h-6 bg-white flex items-center justify-center rounded-full shadow text-yellow-500 text-xs">
+          ⚡
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-hidden">
+        <h3 class="font-semibold text-gray-800 truncate">{{ jobName }}</h3>
+        <p class="text-gray-500 text-sm truncate">{{ companyName }}</p>
+      </div>
+    </div>
+
+    <!-- Job Details -->
+    <div class="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
+      <div class="flex items-center gap-1">
+        💰 {{ salaryString(salaryMin, salaryMax) }}
+      </div>
+      <div class="flex items-center gap-1">
+        📍 {{ cityName || 'Chưa cập nhật' }}
+      </div>
+      <div class="flex items-center gap-1">
+        📅 {{ deadlineFormatted }}
+      </div>
+    </div>
+
+    <hr class="border-gray-200 my-2" />
+
+    <!-- Deadline -->
+    <div class="flex justify-end items-center text-xs text-gray-500 gap-1">
+      ⏰ Còn {{ daysLeft }} ngày
+    </div>
+  </div>
+</ng-template>

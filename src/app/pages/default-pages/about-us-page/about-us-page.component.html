@@ -1,0 +1,75 @@
+<div class="max-w-screen-xl mx-auto py-10 px-4">
+  <div class="mb-12 text-center">
+    <h1 class="text-4xl font-bold text-primary">Về chúng tôi</h1>
+    <p class="mt-4 max-w-3xl mx-auto text-gray-600 leading-7">
+      {{ APP_NAME }} - Kênh thông tin tuyển dụng và việc làm dành cho mọi Doanh nghiệp và Ứng viên. Chúng tôi tin tưởng sẽ đem lại "HY VỌNG"
+      cho Doanh nghiệp tìm kiếm nhân tài và cho Ứng viên tìm kiếm cơ hội nghề nghiệp. Với 2 hệ thống: Website dành cho Nhà Tuyển Dụng và
+      Ứng dụng dành cho Người Tìm Việc, {{ APP_NAME }} sẽ mang lại những trải nghiệm mới mẻ, thú vị; kết nối ước mơ chinh phục công việc
+      và giúp doanh nghiệp xây dựng đội ngũ nhân sự vững mạnh.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+    <div *ngFor="let feature of features" class="bg-white p-5 rounded-xl border shadow-sm hover:shadow-lg transition-transform duration-300 hover:-translate-y-1">
+      <div class="text-3xl mb-3">{{ feature.icon }}</div>
+      <h3 class="text-lg font-semibold mb-2 text-gray-800">{{ feature.title }}</h3>
+      <p class="text-sm text-gray-600">{{ feature.description }}</p>
+    </div>
+  </div>
+
+  <h2 class="text-3xl font-bold text-center text-primary mb-6">Mobile App {{ APP_NAME }}</h2>
+
+  <!-- 1 -->
+  <div class="mb-10 bg-white rounded-xl shadow p-6 flex flex-col md:flex-row gap-6 items-center">
+    <div class="w-full md:w-1/2">
+      <mui-image-custom [src]="ABOUT_IMAGES.JOB_POST" class="w-full h-[600px] object-cover rounded" />
+    </div>
+    <div class="w-full md:w-1/2 space-y-4">
+      <h3 class="text-xl font-semibold text-yellow-600">Chọn đúng việc - Đi đúng hướng</h3>
+      <p class="text-gray-700 text-justify">Khám phá công việc phù hợp với định hướng nghề nghiệp của bạn.</p>
+      <p class="text-gray-700 text-justify">Chúng tôi cung cấp thông tin chi tiết về yêu cầu công việc, môi trường làm việc và cơ hội phát triển tại mỗi công ty.</p>
+      <p class="text-gray-700 text-justify">Đánh giá chân thực từ nhân viên sẽ giúp bạn có cái nhìn thực tế trước khi quyết định sự nghiệp.</p>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="mb-10 bg-white rounded-xl shadow p-6 flex flex-col md:flex-row-reverse gap-6 items-center">
+    <div class="w-full md:w-1/2">
+      <mui-image-custom [src]="ABOUT_IMAGES.PROFILE" class="w-full h-[600px] object-cover rounded" />
+    </div>
+    <div class="w-full md:w-1/2 space-y-4">
+      <h3 class="text-xl font-semibold text-yellow-600">Tạo CV & Profile</h3>
+      <p class="text-gray-700 text-justify">Xây dựng hồ sơ ứng tuyển chuyên nghiệp với công cụ tạo CV thông minh.</p>
+      <p class="text-gray-700 text-justify">Tối ưu hóa profile của bạn với các mẫu CV đẹp mắt, phù hợp với từng ngành nghề.</p>
+      <p class="text-gray-700 text-justify">Dễ dàng điều chỉnh CV theo yêu cầu, tăng cơ hội được lựa chọn.</p>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="mb-10 bg-white rounded-xl shadow p-6 flex flex-col md:flex-row gap-6 items-center">
+    <div class="w-full md:w-1/2">
+      <mui-image-custom [src]="ABOUT_IMAGES.AROUND_JOB_POST" class="w-full h-[600px] object-cover rounded" />
+    </div>
+    <div class="w-full md:w-1/2 space-y-4">
+      <h3 class="text-xl font-semibold text-yellow-600">Việc làm xung quanh bạn</h3>
+      <p class="text-gray-700 text-justify">Tìm kiếm cơ hội lý tưởng trong khu vực bạn sống.</p>
+      <p class="text-gray-700 text-justify">Với định vị thông minh, chúng tôi gợi ý các công việc phù hợp ở gần bạn.</p>
+      <p class="text-gray-700 text-justify">Tiết kiệm thời gian di chuyển, cân bằng công việc và cuộc sống.</p>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="mb-10 bg-white rounded-xl shadow p-6 flex flex-col md:flex-row-reverse gap-6 items-center">
+    <div class="w-full md:w-1/2">
+      <mui-image-custom [src]="ABOUT_IMAGES.JOB_POST_NOTIFICATION" class="w-full h-[600px] object-cover rounded" />
+    </div>
+    <div class="w-full md:w-1/2 space-y-4">
+      <h3 class="text-xl font-semibold text-yellow-600">Thông báo việc làm mọi lúc</h3>
+      <p class="text-gray-700 text-justify">Không bỏ lỡ cơ hội với hệ thống thông báo thông minh.</p>
+      <p class="text-gray-700 text-justify">Nhận tin tức tức thì về các vị trí phù hợp với kỹ năng và mong muốn.</p>
+      <p class="text-gray-700 text-justify">Tùy chỉnh tiêu chí như lương, địa điểm, ngành nghề để nhận cơ hội tốt nhất.</p>
+    </div>
+  </div>
+
+  <app-app-introduction-card />
+</div>

@@ -1,0 +1,56 @@
+<div class="p-4 flex flex-col gap-4">
+  <input
+    type="text"
+    (input)="handleSearch($event)"
+    placeholder="Tìm kiếm cuộc trò chuyện..."
+    class="p-2 border border-gray-300 rounded w-full"
+  />
+
+  <div
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="300"
+    (scrolled)="loadMore()"
+    class="flex flex-col gap-2 overflow-y-auto h-[75vh]"
+  >
+    <ng-container *ngIf="rooms.length > 0; else noDataTemplate">
+      <div
+        *ngFor="let room of rooms"
+        (click)="navigateToRoom(room.id)"
+        class="flex items-center p-2 bg-white hover:bg-gray-100 rounded cursor-pointer"
+      >
+        <img
+          [src]="room.user?.avatarUrl || 'assets/images/default-avatar.png'"
+          class="w-12 h-12 rounded-full border object-cover"
+          alt="Avatar"
+        />
+
+        <div class="flex-1 ml-3 truncate">
+          <div class="font-semibold truncate">
+            {{ room.user?.name || 'Không tên' }}
+          </div>
+          <div class="text-sm text-gray-500 truncate">
+            {{ isEmployer ? (room.user?.email || '---') : (room.user?.company?.companyName || '---') }}
+          </div>
+        </div>
+
+        <div *ngIf="room.recipientId === currentUser.userId && room.unreadCount > 0">
+          <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #noDataTemplate>
+      <div class="text-center text-gray-400 mt-8">
+        Không có cuộc trò chuyện nào.
+      </div>
+    </ng-template>
+
+    <div *ngIf="loading" class="space-y-2">
+      <div *ngFor="let i of [1,2,3,4,5]" class="flex gap-2 items-center animate-pulse">
+        <div class="w-12 h-12 bg-gray-300 rounded-full"></div>
+        <div class="flex-1 h-4 bg-gray-300 rounded"></div>
+      </div>
+    </div>
+  </div>
+</div>

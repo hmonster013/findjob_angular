@@ -1,0 +1,36 @@
+<div class="bg-white rounded-xl shadow-md p-4">
+  <!-- Tabs -->
+  <div class="flex border-b border-gray-300">
+    <button
+      (click)="selectTab('company')"
+      [class]="
+        'px-4 py-2 font-semibold text-sm rounded-t border-b-2 transition-all ' +
+        (selectedTab === 'company'
+          ? 'text-primary border-primary'
+          : 'text-gray-500 border-transparent hover:text-primary')
+      "
+    >
+      Thông tin công ty
+    </button>
+
+    <button
+      (click)="selectTab('media')"
+      [class]="
+        'ml-4 px-4 py-2 font-semibold text-sm rounded-t border-b-2 transition-all ' +
+        (selectedTab === 'media'
+          ? 'text-primary border-primary'
+          : 'text-gray-500 border-transparent hover:text-primary')
+      "
+    >
+      Đa phương tiện
+    </button>
+  </div>
+
+  <!-- Nội dung tab -->
+  <div class="mt-4">
+    <ng-container [ngSwitch]="selectedTab">
+      <app-company-card *ngSwitchCase="'company'" />
+      <app-company-image-card *ngSwitchCase="'media'" />
+    </ng-container>
+  </div>
+</div>

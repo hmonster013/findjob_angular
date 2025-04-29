@@ -1,0 +1,103 @@
+<ng-container *ngIf="isLoading; else loaded">
+  <div class="text-center py-10 text-gray-500">Đang tải dữ liệu...</div>
+</ng-container>
+
+<ng-template #loaded>
+  <ng-container *ngIf="jobPost; else notFound">
+    <div class="max-w-screen-xl mx-auto px-4 md:px-8 py-8 space-y-8">
+      <!-- Tiêu đề & QR -->
+      <div class="flex flex-col md:flex-row md:items-start gap-6">
+        <div class="flex-1">
+          <h1 class="text-3xl font-bold text-primary mb-2">{{ jobPost.title }}</h1>
+          <div class="text-gray-500 space-y-1">
+            <div>🏢 {{ jobPost.company?.companyName }}</div>
+            <div>📍 {{ jobPost.location?.address || 'Chưa cập nhật' }}</div>
+            <div>📅 {{ jobPost.createdAt | date:'dd/MM/yyyy' }}</div>
+          </div>
+        </div>
+
+        <!-- TODO: Bạn cần tạo component app-qr-code -->
+        <!-- <app-qr-code [data]="currentUrl" /> -->
+      </div>
+
+      <!-- Mô tả công việc -->
+      <div class="bg-white p-6 rounded shadow space-y-4">
+        <h2 class="text-xl font-semibold text-primary">📝 Mô tả công việc</h2>
+        <div class="text-gray-700 leading-relaxed" [innerHTML]="jobPost.description"></div>
+      </div>
+
+      <!-- Quyền lợi -->
+      <div class="bg-white p-6 rounded shadow space-y-4">
+        <h2 class="text-xl font-semibold text-primary">🎁 Quyền lợi</h2>
+        <div class="text-gray-700 leading-relaxed" [innerHTML]="jobPost.benefit"></div>
+      </div>
+
+      <!-- Yêu cầu -->
+      <div class="bg-white p-6 rounded shadow space-y-4">
+        <h2 class="text-xl font-semibold text-primary">📌 Yêu cầu ứng viên</h2>
+        <div class="text-gray-700 leading-relaxed" [innerHTML]="jobPost.requirement"></div>
+      </div>
+
+      <!-- Thông tin liên hệ -->
+      <div class="bg-white p-6 rounded shadow space-y-2">
+        <h2 class="text-xl font-semibold text-primary">📞 Thông tin liên hệ</h2>
+        <p>📧 {{ jobPost.company?.companyEmail }}</p>
+        <p>📍 {{ jobPost.company?.location?.address }}</p>
+        <p>📞 {{ jobPost.company?.companyPhone }}</p>
+      </div>
+
+      <!-- TODO: Bạn cần tạo component app-map -->
+      <!-- <app-map
+        [latitude]="jobPost.company?.location?.lat"
+        [longitude]="jobPost.company?.location?.lng"
+        [title]="jobPost.company?.companyName"
+        [subTitle]="jobPost.company?.location?.address"
+      /> -->
+
+      <!-- Nút lưu và chia sẻ -->
+      <div class="flex gap-4 mt-4">
+        <!-- TODO: Bạn cần tạo component app-loading-button -->
+        <!-- <app-loading-button [loading]="isLoadingSave" (click)="handleSaveJobPost()"> -->
+        <button
+          class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+          (click)="handleSaveJobPost()"
+        >
+          {{ jobPost.isSaved ? 'Đã lưu' : 'Lưu tin' }} ({{ jobPost.saveNumber }})
+        </button>
+
+        <button
+          class="px-4 py-2 rounded border border-gray-400 text-gray-600 hover:bg-gray-100"
+          (click)="openSharePopup = true"
+        >
+          🔗 Chia sẻ
+        </button>
+      </div>
+
+      <!-- Ứng tuyển -->
+      <div *ngIf="isJobSeeker" class="mt-6">
+        <app-apply-card [jobPost]="jobPost" />
+      </div>
+
+      <!-- Tin tương tự -->
+      <div class="mt-10">
+        <h2 class="text-xl font-semibold text-primary mb-4">🧭 Việc làm tương tự</h2>
+        <app-filter-job-post-card [params]="{ careerId: jobPost.career?.id }" />
+      </div>
+
+      <!-- Popup chia sẻ -->
+      <app-social-network-sharing-popup
+        [open]="openSharePopup"
+        (setOpenPopup)="openSharePopup = $event"
+        [facebookShareUrl]="currentUrl"
+        [facebookMessengerUrl]="currentUrl"
+        [linkedinShareUrl]="currentUrl"
+        [twitterShareUrl]="currentUrl"
+        [emailShareUrl]="currentUrl"
+      />
+    </div>
+  </ng-container>
+
+  <ng-template #notFound>
+    <div class="text-center py-16 text-gray-500">Không tìm thấy tin tuyển dụng</div>
+  </ng-template>
+</ng-template>

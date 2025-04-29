@@ -1,0 +1,78 @@
+<div class="space-y-4 relative">
+  <app-backdrop-loading *ngIf="isFullScreenLoading"></app-backdrop-loading>
+
+  <!-- Top Filters -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0">
+    <div class="flex flex-col md:flex-row gap-2">
+      <select formControlName="jobPostId" class="px-4 py-2 border rounded-md">
+        <option [ngValue]="null">-- Tất cả tin tuyển --</option>
+        <option *ngFor="let job of jobs" [ngValue]="job.id">{{ job.jobName }}</option>
+      </select>
+
+      <select formControlName="applicationStatus" class="px-4 py-2 border rounded-md">
+        <option [ngValue]="null">-- Tất cả trạng thái --</option>
+        <option value="PENDING">Đang chờ</option>
+        <option value="IN_PROGRESS">Đang phỏng vấn</option>
+        <option value="ACCEPTED">Đã nhận việc</option>
+        <option value="REJECTED">Đã từ chối</option>
+      </select>
+
+      <button (click)="openFilter = true" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md">
+        🔍 Lọc nâng cao
+      </button>
+    </div>
+
+    <div>
+      <button (click)="handleExport()" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md">
+        📥 Xuất Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- Applied Resume Table -->
+  <app-applied-resume-table
+    [dataSource]="resumes"
+    [isLoading]="isLoading"
+    [total]="total"
+    [page]="page"
+    (delete)="handleDelete($event)"
+    (changeStatus)="handleChangeStatus($event.id, $event.status)"
+    (pageChange)="onPageChange($event)"
+  ></app-applied-resume-table>
+
+  <!-- Popup Filter -->
+  <div *ngIf="openFilter" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white w-full max-w-lg rounded-lg p-6 relative">
+      <button (click)="openFilter = false" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">✖️</button>
+
+      <h2 class="text-xl font-bold mb-4">Lọc nâng cao</h2>
+
+      <form (ngSubmit)="onFilter()" [formGroup]="filterForm" class="space-y-4">
+        <div>
+          <label class="block mb-1">Tin tuyển dụng</label>
+          <select formControlName="jobPostId" class="w-full border rounded-md px-4 py-2">
+            <option [ngValue]="null">-- Tất cả tin tuyển --</option>
+            <option *ngFor="let job of jobs" [ngValue]="job.id">{{ job.jobName }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block mb-1">Trạng thái ứng tuyển</label>
+          <select formControlName="applicationStatus" class="w-full border rounded-md px-4 py-2">
+            <option [ngValue]="null">-- Tất cả trạng thái --</option>
+            <option value="PENDING">Đang chờ</option>
+            <option value="IN_PROGRESS">Đang phỏng vấn</option>
+            <option value="ACCEPTED">Đã nhận việc</option>
+            <option value="REJECTED">Đã từ chối</option>
+          </select>
+        </div>
+
+        <div class="flex justify-end">
+          <button type="submit" class="px-6 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600">
+            🔍 Áp dụng
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

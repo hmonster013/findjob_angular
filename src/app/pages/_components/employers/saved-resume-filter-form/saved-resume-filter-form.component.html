@@ -1,0 +1,57 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+
+  <div class="col-span-12 md:col-span-3">
+    <input
+      type="text"
+      formControlName="kw"
+      placeholder="Nhập tên tin đăng hoặc tên ứng viên"
+      class="input-text"
+    />
+  </div>
+
+  <div class="col-span-12 md:col-span-2">
+    <input
+      type="number"
+      formControlName="salaryMax"
+      placeholder="Nhập mức lương tối đa"
+      class="input-text"
+    />
+  </div>
+
+  <div class="col-span-12 md:col-span-2">
+    <select formControlName="experienceId" class="input-text">
+      <option value="">Chọn kinh nghiệm</option>
+      <option *ngFor="let option of allConfig?.experienceOptions" [value]="option.id">
+        {{ option.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-span-12 md:col-span-2">
+    <select formControlName="cityId" class="input-text">
+      <option value="">Chọn địa điểm</option>
+      <option *ngFor="let option of allConfig?.cityOptions" [value]="option.id">
+        {{ option.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-span-12 md:col-span-3 flex items-center gap-2">
+    <button
+      type="button"
+      (click)="onReset()"
+      class="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
+      title="Đặt lại"
+    >
+      🔄
+    </button>
+
+    <button
+      type="submit"
+      class="flex items-center gap-2 px-4 py-2 bg-secondary-500 text-white rounded hover:bg-secondary-600"
+    >
+      🔍 Tìm kiếm
+    </button>
+  </div>
+
+</form>

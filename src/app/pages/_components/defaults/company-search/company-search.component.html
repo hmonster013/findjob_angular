@@ -1,0 +1,47 @@
+<!-- company-search.component.html -->
+
+<div class="bg-primary-600 p-4 rounded-lg w-full max-w-5xl mx-auto">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+
+    <!-- Input Search -->
+    <div class="col-span-7">
+      <input
+        formControlName="kw"
+        type="text"
+        placeholder="Nhập tên công ty hoặc lĩnh vực cần tìm kiếm"
+        class="w-full p-2 rounded border focus:outline-none"
+      />
+    </div>
+
+    <!-- Select City -->
+    <div class="col-span-3">
+      <select
+        formControlName="cityId"
+        class="w-full p-2 rounded border focus:outline-none"
+      >
+        <option value="">Tất cả tỉnh thành</option>
+        <option *ngFor="let city of cityOptions" [value]="city.id">
+          {{ city.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Buttons -->
+    <div class="col-span-2 flex gap-2 justify-end">
+      <button
+        type="submit"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Tìm kiếm
+      </button>
+      <button
+        type="button"
+        (click)="onReset()"
+        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+      >
+        Xóa
+      </button>
+    </div>
+
+  </form>
+</div>

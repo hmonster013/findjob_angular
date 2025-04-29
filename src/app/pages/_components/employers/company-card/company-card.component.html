@@ -1,0 +1,50 @@
+<div class="space-y-8 relative">
+  <app-backdrop-loading *ngIf="isFullScreenLoading"></app-backdrop-loading>
+
+  <!-- Logo công ty -->
+  <div>
+    <div class="font-semibold text-lg mb-2">Logo công ty</div>
+    <div class="flex flex-col items-center">
+      <img
+        [src]="companyImageUrl || '/assets/default-logo.png'"
+        alt="Company Logo"
+        class="w-32 h-32 object-cover rounded-lg border mb-4"
+      />
+      <label class="bg-primary-500 text-white px-4 py-2 rounded cursor-pointer">
+        Thay đổi logo
+        <input type="file" (change)="handleUploadLogo($event)" hidden />
+      </label>
+    </div>
+  </div>
+
+  <!-- Ảnh bìa công ty -->
+  <div>
+    <div class="font-semibold text-lg mb-2">Ảnh bìa công ty</div>
+    <div class="flex flex-col items-center">
+      <img
+        [src]="companyCoverImageUrl || '/assets/default-cover.png'"
+        alt="Company Cover"
+        class="w-full max-w-3xl h-40 object-cover rounded-lg border mb-4"
+      />
+      <label class="bg-primary-500 text-white px-4 py-2 rounded cursor-pointer">
+        Thay đổi ảnh bìa
+        <input type="file" (change)="handleUploadCover($event)" hidden />
+      </label>
+    </div>
+  </div>
+
+  <!-- Form chỉnh sửa công ty -->
+  <div>
+    <ng-container *ngIf="!isLoadingCompany; else loadingCompanyForm">
+      <app-company-form
+        [editData]="editData"
+        [serverErrors]="serverErrors"
+        (handleUpdate)="handleUpdate($event)"
+      ></app-company-form>
+    </ng-container>
+
+    <ng-template #loadingCompanyForm>
+      <div class="text-center text-gray-400">Đang tải thông tin công ty...</div>
+    </ng-template>
+  </div>
+</div>

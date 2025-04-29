@@ -1,0 +1,74 @@
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <div class="flex flex-col col-span-2">
+      <label class="mb-2 font-medium">Từ khóa <span class="text-red-500">*</span></label>
+      <input
+        formControlName="jobName"
+        placeholder="Nhập từ khoá là tên công việc hoặc liên quan đến công việc"
+        type="text"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Ngành nghề <span class="text-red-500">*</span></label>
+      <select formControlName="career" class="border rounded p-2 w-full">
+        <option value="">Chọn ngành nghề cần tuyển</option>
+        <option *ngFor="let option of allConfig?.careerOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Tỉnh/Thành phố <span class="text-red-500">*</span></label>
+      <select formControlName="city" class="border rounded p-2 w-full">
+        <option value="">Chọn tỉnh thành phố</option>
+        <option *ngFor="let option of allConfig?.cityOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Vị trí/chức vụ</label>
+      <select formControlName="position" class="border rounded p-2 w-full">
+        <option value="">Chọn vị trí/chức vụ</option>
+        <option *ngFor="let option of allConfig?.positionOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Kinh nghiệm</label>
+      <select formControlName="experience" class="border rounded p-2 w-full">
+        <option value="">Chọn kinh nghiệm yêu cầu</option>
+        <option *ngFor="let option of allConfig?.experienceOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-medium">Mức lương mong muốn</label>
+      <input
+        formControlName="salary"
+        placeholder="Nhập mức lương mong muốn của bạn"
+        type="number"
+        class="border rounded p-2 w-full"
+      />
+    </div>
+
+    <div class="flex flex-col col-span-2">
+      <label class="mb-2 font-medium">Tần suất thông báo</label>
+      <div class="flex flex-wrap gap-4">
+        <ng-container *ngFor="let option of allConfig?.frequencyNotificationOptions">
+          <label class="inline-flex items-center space-x-2">
+            <input
+              type="radio"
+              [value]="option.id"
+              formControlName="frequency"
+              class="text-blue-500"
+            />
+            <span>{{ option.name }}</span>
+          </label>
+        </ng-container>
+      </div>
+    </div>
+
+  </div>
+</form>
