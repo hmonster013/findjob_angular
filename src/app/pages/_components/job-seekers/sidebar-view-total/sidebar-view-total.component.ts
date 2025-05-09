@@ -39,6 +39,6 @@ export class SidebarViewTotalComponent implements OnInit {
   }
 
   navigateToJobs() {
-    this.router.navigate(['/job-seeker/jobs']);
+    this.router.navigate(['/viec-lam']);
   }
 }

@@ -1,71 +1,75 @@
-<div class="p-4 bg-white rounded-lg shadow-md">
+<div class="p-6 bg-white rounded-xl shadow-lg">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Việc làm đã ứng tuyển</h2>
 
-  <h2 class="text-xl font-bold mb-4">Việc làm đã ứng tuyển</h2>
-
-  <div *ngIf="isLoading">
-    <div class="space-y-4">
-      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
-      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
-      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoading" class="space-y-4">
+    <div *ngFor="let _ of [1,2,3,4,5]" class="flex items-center p-4 bg-gray-100 rounded-lg animate-pulse">
+      <div class="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
+      <div class="flex-1">
+        <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+      </div>
     </div>
   </div>
 
-  <div *ngIf="!isLoading && jobPostsApplied.length === 0" class="text-center text-gray-500">
-    Bạn chưa ứng tuyển công việc nào.
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && jobPostsApplied.length === 0" class="text-center text-gray-500 py-12 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
+    <svg class="mx-auto h-28 w-28 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+    </svg>
+    <p class="mt-4 text-lg font-medium">Bạn chưa ứng tuyển công việc nào.</p>
   </div>
 
-  <div *ngIf="!isLoading && jobPostsApplied.length > 0" class="space-y-6">
-    <div *ngFor="let item of jobPostsApplied" class="p-4 border rounded-lg hover:shadow-md transition-all">
-
-      <div class="flex justify-between items-center">
-        <div class="flex-1">
-          <h3 class="text-lg font-semibold text-blue-700">{{ item?.jobPost?.title }}</h3>
-          <p class="text-sm text-gray-500 mt-1">
-            {{ item?.jobPost?.companyName }}
-          </p>
+  <!-- List applied jobs -->
+  <div *ngIf="!isLoading && jobPostsApplied.length > 0" class="space-y-4">
+    <div *ngFor="let item of jobPostsApplied" class="flex items-center p-4 border border-gray-200 rounded-lg hover:shadow-md transition bg-white">
+      <img
+        [src]="item.jobPostDict.companyDict.companyImageUrl || 'https://via.placeholder.com/48'"
+        alt="Company Logo"
+        class="h-12 w-12 rounded-full object-cover mr-4"
+      />
+      <div class="flex-1">
+        <div class="flex items-center space-x-2">
+          <a [routerLink]="['/viec-lam', item.jobPostDict.slug]" class="text-lg font-semibold text-blue-600 hover:underline">{{ item.jobPostDict.jobName }}</a>
+          <span *ngIf="item.jobPostDict.isUrgent" class="urgent-badge">Khẩn cấp</span>
         </div>
-
-        <div class="ml-4">
-          <a [routerLink]="['/job-posts', item?.jobPost?.slug]" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
-            Xem chi tiết
-          </a>
-        </div>
+        <p class="text-sm text-gray-600 mt-2">{{ item.jobPostDict.companyDict.companyName }}</p>
+        <p class="text-sm text-gray-500 mt-2">
+          Mức lương: {{ item.jobPostDict.salaryMin }} - {{ item.jobPostDict.salaryMax }} triệu | Hạn nộp: {{ item.jobPostDict.deadline | date: 'dd/MM/yyyy' }}
+        </p>
+        <p class="text-sm mt-2">
+          <span class="font-semibold text-blue-600">Ứng tuyển ngày: {{ formatDateDisplay(item.createAt) }}</span>
+          <span *ngIf="item.resumeDict.type === 'WEBSITE'" class="online-resume-badge ml-2">Hồ sơ trực tuyến</span>
+        </p>
       </div>
-
-      <div class="flex justify-between items-center mt-4">
-        <div class="flex items-center space-x-2 text-sm text-gray-600">
-          <span>Ứng tuyển lúc:</span>
-          <span class="font-semibold">{{ formatDateDisplay(item?.createdAt) }}</span>
-        </div>
-        <div>
-          <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
-            {{ item?.statusText }}
-          </span>
-        </div>
-      </div>
-
     </div>
   </div>
 
   <!-- Pagination -->
-  <div *ngIf="!isLoading && totalPages > 1" class="flex justify-center items-center space-x-2 mt-6">
+  <div *ngIf="!isLoading && totalPages > 1" class="flex justify-center items-center space-x-2 mt-8">
     <button
       (click)="handleChangePage(page - 1)"
       [disabled]="page <= 1"
-      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
     >
-      Trước
+      <i class="fas fa-chevron-left"></i>
     </button>
-
-    <span class="text-sm font-medium">Trang {{ page }} / {{ totalPages }}</span>
-
+    <div class="flex space-x-1">
+      <button
+        *ngFor="let p of pages"
+        (click)="handleChangePage(p)"
+        [ngClass]="{'bg-blue-500 text-white': p === page, 'bg-gray-100 text-gray-700': p !== page}"
+        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-100 transition"
+      >
+        {{ p }}
+      </button>
+    </div>
     <button
       (click)="handleChangePage(page + 1)"
       [disabled]="page >= totalPages"
-      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
     >
-      Sau
+      <i class="fas fa-chevron-right"></i>
     </button>
   </div>
-
 </div>

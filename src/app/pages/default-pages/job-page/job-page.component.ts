@@ -19,4 +19,6 @@ import { MainJobRightBannerComponent } from '../../../_components/main-job-right
   ],
   templateUrl: './job-page.component.html',
 })
-export class JobPageComponent {}
+export class JobPageComponent {
+
+}

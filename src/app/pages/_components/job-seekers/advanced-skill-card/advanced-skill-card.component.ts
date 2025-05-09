@@ -11,11 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-advanced-skill-card',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    AdvancedSkillFormComponent
-  ],
+  imports: [CommonModule, FormsModule, AdvancedSkillFormComponent],
   templateUrl: './advanced-skill-card.component.html',
   styleUrls: ['./advanced-skill-card.component.css'],
 })
@@ -41,14 +37,19 @@ export class AdvancedSkillCardComponent implements OnInit {
   }
 
   loadAdvancedSkills() {
-    if (!this.resumeSlug) return;
+    if (!this.resumeSlug) {
+      this.toastr.error('Không tìm thấy hồ sơ!');
+      this.isLoadingAdvancedSkills = false;
+      return;
+    }
     this.isLoadingAdvancedSkills = true;
     this.resumeService.getAdvancedSkills(this.resumeSlug).subscribe({
       next: (res) => {
         this.advancedSkills = res.data || [];
       },
       error: (err) => {
-        console.error('Error:', err);
+        console.error('Error loading advanced skills:', err);
+        this.toastr.error('Có lỗi khi tải danh sách kỹ năng!');
       },
       complete: () => {
         this.isLoadingAdvancedSkills = false;
@@ -68,9 +69,11 @@ export class AdvancedSkillCardComponent implements OnInit {
       next: (res) => {
         this.editData = res.data;
         this.openPopup = true;
+        this.serverErrors = null;
       },
       error: (err) => {
-        console.error('Error:', err);
+        console.error('Error loading advanced skill:', err);
+        this.toastr.error('Có lỗi khi tải thông tin kỹ năng!');
       },
       complete: () => {
         this.isFullScreenLoading = false;
@@ -86,9 +89,12 @@ export class AdvancedSkillCardComponent implements OnInit {
           this.toastr.success('Cập nhật kỹ năng thành công!');
           this.loadAdvancedSkills();
           this.openPopup = false;
+          this.serverErrors = null;
         },
         error: (err) => {
           console.error('Update error:', err);
+          this.toastr.error('Có lỗi khi cập nhật kỹ năng!');
+          this.serverErrors = err.error?.errors || null;
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -100,9 +106,12 @@ export class AdvancedSkillCardComponent implements OnInit {
           this.toastr.success('Thêm kỹ năng thành công!');
           this.loadAdvancedSkills();
           this.openPopup = false;
+          this.serverErrors = null;
         },
         error: (err) => {
           console.error('Add error:', err);
+          this.toastr.error('Có lỗi khi thêm kỹ năng!');
+          this.serverErrors = err.error?.errors || null;
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -128,6 +137,7 @@ export class AdvancedSkillCardComponent implements OnInit {
           },
           error: (err) => {
             console.error('Delete error:', err);
+            this.toastr.error('Có lỗi khi xóa kỹ năng!');
           },
         });
       }

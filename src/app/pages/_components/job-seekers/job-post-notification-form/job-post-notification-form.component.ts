@@ -22,34 +22,55 @@ export class JobPostNotificationFormComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.form = this.fb.group({
       jobName: ['', [Validators.required, Validators.maxLength(200)]],
-      career: ['', Validators.required],
-      city: ['', Validators.required],
+      career: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Phải là số
+      city: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Phải là số
       position: [''],
       experience: [''],
-      salary: [''],
-      frequency: [
-        (this.allConfig?.frequencyNotificationOptions || [])[0]?.id || null,
-      ],
+      salary: [null, [Validators.min(0)]], // Chấp nhận null, kiểm tra số dương
+      frequency: ['', Validators.required], // Bắt buộc
     });
 
+    // Đặt giá trị mặc định cho frequency
+    const defaultFrequency = (this.allConfig?.frequencyNotificationOptions || [])[0]?.id || '';
+    this.form.patchValue({ frequency: defaultFrequency });
+
+    // Patch editData nếu có
     if (this.editData) {
-      this.form.patchValue(this.editData);
+      this.form.patchValue({
+        ...this.editData,
+        salary: this.editData.salary || null, // Chuyển chuỗi rỗng thành null
+      });
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['editData'] && !changes['editData'].firstChange) {
       if (this.editData) {
-        this.form.patchValue(this.editData);
+        this.form.patchValue({
+          ...this.editData,
+          salary: this.editData.salary || null, // Chuyển chuỗi rỗng thành null
+        });
       } else {
-        this.form.reset();
+        this.form.reset({
+          jobName: '',
+          career: '',
+          city: '',
+          position: '',
+          experience: '',
+          salary: null,
+          frequency: (this.allConfig?.frequencyNotificationOptions || [])[0]?.id || '',
+        });
       }
     }
   }
 
   onSubmit() {
     if (this.form.valid && this.handleAddOrUpdate) {
-      this.handleAddOrUpdate(this.form.value);
+      const formValue = {
+        ...this.form.value,
+        salary: this.form.value.salary || null, // Chuyển chuỗi rỗng thành null
+      };
+      this.handleAddOrUpdate(formValue);
     }
   }
 }

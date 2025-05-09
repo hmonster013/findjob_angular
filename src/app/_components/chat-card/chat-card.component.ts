@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { ROUTES } from '../../_configs/constants';
+import { ROLES_NAME, ROUTES } from '../../_configs/constants';
 import { CommonModule } from '@angular/common';
 import { Firestore } from '@angular/fire/firestore';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, doc, onSnapshot, query, where } from 'firebase/firestore';
+import { AuthStateService } from '../../_services/auth-state.service';
+import { FirebaseService } from '../../_services/firebase.service';
+import { db } from '../../_configs/firebase-config';
 
 @Component({
   selector: 'app-chat-card',
@@ -14,54 +17,45 @@ import { collection, onSnapshot, query, where } from 'firebase/firestore';
   styleUrl: './chat-card.component.css'
 })
 export class ChatCardComponent {
-  unreadCount: number = 0;
-  currentUser: any;
-  private unsubscribe: any;
+  unreadCount = 0;
+  private unsubscribe: () => void = () => {};
 
   constructor(
-    private firestore: Firestore,
-    private router: Router,
+    private authService: AuthStateService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.getCurrentUser();
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser?.id) return;
 
-    if (this.currentUser?.id) {
-      const chatRoomsRef = collection(this.firestore, 'chatRooms');
-      const q = query(
-        chatRoomsRef,
-        where('recipientId', '==', `${this.currentUser.id}`),
-        where('unreadCount', '>', 0)
-      );
+    const chatRoomRef = collection(db, 'chatRooms');
+    const q = query(
+      chatRoomRef,
+      where('recipientId', '==', `${currentUser.id}`),
+      where('unreadCount', '>', 0)
+    );
 
-      this.unsubscribe = onSnapshot(q, (querySnapshot) => {
-        let total = 0;
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          total += data['unreadCount'] || 0;
-        });
-
-        this.unreadCount = total;
+    this.unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let total = 0;
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        total += data['unreadCount'] || 0;
       });
+      this.unreadCount = total;
+    });
+  }
+
+  handleRedirect(): void {
+    const role = this.authService.getCurrentUser()?.roleName;
+    if (role === ROLES_NAME.EMPLOYER) {
+      this.router.navigate([`/${ROUTES.EMPLOYER.CHAT}`]);
+    } else {
+      this.router.navigate([`/${ROUTES.JOB_SEEKER.CHAT}`]);
     }
   }
 
   ngOnDestroy(): void {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-  }
-
-  getCurrentUser() {
-    // Fake lấy từ LocalStorage / Service, bạn thay bằng service thực
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-  }
-
-  handleRedirect() {
-    if (this.currentUser?.roleName === 'Employer') {
-      this.router.navigate(['/employer/chat']);
-    } else {
-      this.router.navigate(['/job-seeker/chat']);
-    }
+    this.unsubscribe?.();
   }
 }

@@ -11,6 +11,7 @@ import { NotificationCardComponent } from '../../_components/defaults/notificati
     NotificationCardComponent
   ],
   templateUrl: './notification-page.component.html',
+  styleUrl: './notification-page.component.css'
 })
 export class NotificationPageComponent {
   appName = APP_NAME;

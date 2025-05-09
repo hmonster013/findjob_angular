@@ -3,52 +3,62 @@ import { AuthStateService } from '../../../../_services/auth-state.service';
 import { Router, RouterLink } from '@angular/router';
 import { ROLES_NAME, ROUTES } from '../../../../_configs/constants';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-menu',
+  standalone: true,
   imports: [
     CommonModule,
     RouterLink
   ],
   templateUrl: './user-menu.component.html',
-  styleUrl: './user-menu.component.css'
+  styleUrls: ['./user-menu.component.css']
 })
 export class UserMenuComponent {
-  currentUser: any;
-  isOpen: boolean = false;
-
   @Output() closed = new EventEmitter<void>();
 
-  constructor(
-    private authStateService: AuthStateService,
-    private router: Router,
-  ) {
-    this.currentUser = this.authStateService.getCurrentUser();
+  menuItems: { label: string; path: string }[] = [];
+  currentUser: any;
+
+  private jobSeekerMenu = [
+    { label: 'Quản lý tài khoản', path: ROUTES.JOB_SEEKER.DASHBOARD },
+  ];
+
+  private employerMenu = [
+    { label: 'Trang quản lý NTD', path: ROUTES.EMPLOYER.DASHBOARD },
+  ];
+
+  constructor(private authService: AuthStateService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.currentUser = this.authService.getCurrentUser();
+    this.menuItems =
+      this.currentUser?.roleName === ROLES_NAME.JOB_SEEKER
+        ? this.jobSeekerMenu
+        : this.currentUser?.roleName === ROLES_NAME.EMPLOYER
+        ? this.employerMenu
+        : [];
   }
 
-  get menuItems() {
-    if (!this.currentUser) return [];
-
-    if (this.currentUser.roleName === ROLES_NAME.JOB_SEEKER) {
-      return [
-        { label: 'Quản lý tài khoản', path: ROUTES.JOB_SEEKER.DASHBOARD },
-      ];
-    } else if (this.currentUser.roleName === ROLES_NAME.EMPLOYER) {
-      return [
-        { label: 'Trang quản lý NTD', path: ROUTES.EMPLOYER.DASHBOARD },
-      ];
-    } else {
-      return [];
-    }
-  }
-
-  handleLogout() {
-    this.authStateService.clearUser();
-    this.router.navigate([`/${ROUTES.AUTH.LOGIN}`]);
-  }
-
-  closeMenu() {
-    this.isOpen = false;
+  closeMenu(): void {
     this.closed.emit();
+  }
+
+  handleLogout(): void {
+    this.closeMenu();
+    Swal.fire({
+      title: 'Đăng xuất tài khoản',
+      text: 'Bạn có chắc chắn muốn đăng xuất?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Có, đăng xuất!',
+      cancelButtonText: 'Hủy',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.authService.clearUser();
+        this.router.navigate([`/${ROUTES.AUTH.LOGIN}`]);
+      }
+    });
   }
 }

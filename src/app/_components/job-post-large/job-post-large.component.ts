@@ -29,7 +29,7 @@ export class JobPostLargeComponent {
 
   navigateToDetail() {
     if (this.slug) {
-      this.router.navigate(['/job', this.slug]);
+      this.router.navigate(['/viec-lam', this.slug]);
     }
   }
 

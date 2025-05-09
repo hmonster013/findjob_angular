@@ -9,7 +9,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule
   ],
   templateUrl: './setting-form.component.html',
-  styleUrl: './setting-form.component.css'
+  styleUrls: ['./setting-form.component.css'],
+  standalone: true
 })
 export class SettingFormComponent {
   @Input() editData: any = null;

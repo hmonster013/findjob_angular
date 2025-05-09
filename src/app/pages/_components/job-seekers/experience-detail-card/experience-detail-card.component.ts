@@ -12,10 +12,7 @@ import { ExperienceDetailService } from '../../../../_services/expericen-detail.
   standalone: true,
   templateUrl: './experience-detail-card.component.html',
   styleUrls: ['./experience-detail-card.component.css'],
-  imports: [
-    CommonModule,
-    ExperienceDetailFormComponent
-  ],
+  imports: [CommonModule, ExperienceDetailFormComponent],
 })
 export class ExperienceDetailCardComponent implements OnInit {
   experiencesDetail: any[] = [];
@@ -38,7 +35,11 @@ export class ExperienceDetailCardComponent implements OnInit {
   }
 
   loadExperiencesDetail() {
-    if (!this.resumeSlug) return;
+    if (!this.resumeSlug) {
+      this.toastr.error('Không tìm thấy hồ sơ!');
+      this.isLoadingExperiencesDetail = false;
+      return;
+    }
     this.isLoadingExperiencesDetail = true;
     this.resumeService.getExperiencesDetail(this.resumeSlug).subscribe({
       next: (res) => {
@@ -46,6 +47,7 @@ export class ExperienceDetailCardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading experiences:', err);
+        this.toastr.error('Có lỗi khi tải danh sách kinh nghiệm!');
       },
       complete: () => {
         this.isLoadingExperiencesDetail = false;
@@ -67,6 +69,7 @@ export class ExperienceDetailCardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading experience:', err);
+        this.toastr.error('Có lỗi khi tải thông tin kinh nghiệm!');
       },
       complete: () => {
         this.isFullScreenLoading = false;
@@ -85,6 +88,7 @@ export class ExperienceDetailCardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error updating experience:', err);
+          this.toastr.error('Có lỗi khi cập nhật kinh nghiệm!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -99,6 +103,7 @@ export class ExperienceDetailCardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error adding experience:', err);
+          this.toastr.error('Có lỗi khi thêm kinh nghiệm!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -124,6 +129,7 @@ export class ExperienceDetailCardComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error deleting experience:', err);
+            this.toastr.error('Có lỗi khi xóa kinh nghiệm!');
           },
         });
       }

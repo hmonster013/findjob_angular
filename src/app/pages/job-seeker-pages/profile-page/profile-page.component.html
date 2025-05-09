@@ -3,12 +3,20 @@
   <div class="lg:col-span-8 space-y-4">
     <!-- BoxProfile -->
     <div class="bg-white p-6 rounded-xl shadow">
-      <app-box-profile [title]="'MyJob Profile'" />
+      <app-box-profile
+        [currentUser]="currentUser"
+        [allConfig]="allConfigs"
+        [title]="'MyJob Profile'"
+      />
     </div>
 
     <!-- ProfileUpload -->
     <div class="bg-white p-6 rounded-xl shadow">
-      <app-profile-upload [title]="'Hồ sơ đính kèm'" />
+      <app-profile-upload
+        [allConfig]="allConfigs"
+        [jobSeekerProfileId]="currentUser.jobSeekerProfile.id"
+        [title]="'Hồ sơ đính kèm'"
+      />
     </div>
   </div>
 

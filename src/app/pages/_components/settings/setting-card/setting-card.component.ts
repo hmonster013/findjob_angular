@@ -10,9 +10,10 @@ import { SettingFormComponent } from "../setting-form/setting-form.component";
   imports: [
     CommonModule,
     SettingFormComponent
-],
+  ],
   templateUrl: './setting-card.component.html',
-  styleUrl: './setting-card.component.css'
+  styleUrls: ['./setting-card.component.css'],
+  standalone: true
 })
 export class SettingCardComponent {
   @Input() title: string = '';
@@ -24,7 +25,7 @@ export class SettingCardComponent {
 
   constructor(
     private authService: AuthenticationService,
-    private toastr: ToastrService // ✅ inject ToastrService
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -58,11 +59,11 @@ export class SettingCardComponent {
       .subscribe({
         next: (res) => {
           this.editData = res.data;
-          this.toastr.success('Cập nhật setting thành công!'); // ✅ dùng ngx-toastr
+          this.toastr.success('Cập nhật setting thành công!');
         },
         error: (err) => {
           console.error('Failed to update settings', err);
-          this.toastr.error('Cập nhật setting thất bại!'); // ✅ dùng ngx-toastr
+          this.toastr.error('Cập nhật setting thất bại!');
         }
       });
   }

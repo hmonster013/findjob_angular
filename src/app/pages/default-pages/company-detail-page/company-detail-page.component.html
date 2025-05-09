@@ -7,40 +7,35 @@
     <div class="space-y-6">
       <mui-image-custom
         [src]="companyDetail.companyCoverImageUrl || IMAGES.coverImageDefault"
-        class="w-full max-h-[250px] object-cover"
+        class="w-full max-h-[250px] object-cover rounded-lg"
       />
 
       <div class="flex flex-col md:flex-row items-center gap-6">
         <mui-image-custom
-          [src]="companyDetail.companyImageUrl"
+          [src]="companyDetail.companyImageUrl || '' "
           class="w-28 h-28 rounded border shadow bg-white -mt-16"
         />
 
         <div class="flex-1 text-center md:text-left">
-          <h1 class="text-2xl font-bold text-primary">{{ companyDetail.companyName }}</h1>
+          <h1 class="text-2xl font-bold text-purple-800">{{ companyDetail.companyName }}</h1>
           <div class="text-gray-600 mt-2 space-y-1">
             <div>📂 {{ companyDetail.fieldOperation || 'Chưa cập nhật' }}</div>
-            <div>👥 {{ companyDetail.employeeSize || 'Chưa cập nhật' }}</div>
+            <div>👥 {{ companyDetail.employeeSize || 'Chưa cập nhật' }} nhân viên</div>
             <div>📅 {{ companyDetail.since | date:'dd/MM/yyyy' }}</div>
           </div>
         </div>
 
-        <!-- TODO: Bạn cần tạo component app-qr-code -->
-        <!-- <app-qr-code [data]="currentUrl" class="self-start" /> -->
-
         <div class="flex flex-col gap-2 mt-4 md:mt-0">
-          <!-- TODO: Bạn cần tạo component app-loading-button -->
-          <!-- <app-loading-button [loading]="isLoadingFollow" (click)="handleFollow()"> -->
           <button
             *ngIf="isJobSeeker"
             (click)="handleFollow()"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all"
           >
-            {{ companyDetail.isFollowed ? 'Đang theo dõi' : 'Theo dõi' }} ({{ companyDetail.followNumber }})
+            {{ companyDetail.isFollowed ? 'Đang theo dõi' : 'Theo dõi' }} ({{ companyDetail.followNumber || 0 }})
           </button>
 
           <button
-            class="bg-secondary text-white rounded px-4 py-2"
+            class="bg-orange-500 text-white rounded px-4 py-2 hover:bg-orange-600 transition-all"
             (click)="openSharePopup = true"
           >
             🔗 Chia sẻ
@@ -49,7 +44,7 @@
       </div>
 
       <div class="bg-gray-50 p-4 rounded shadow">
-        <h2 class="text-xl font-semibold text-primary mb-3">Về công ty</h2>
+        <h2 class="text-xl font-semibold text-purple-800 mb-3">Về công ty</h2>
         <div
           class="text-gray-700 leading-relaxed"
           [innerHTML]="companyDetail.description || '<i>Chưa cập nhật</i>'"
@@ -57,40 +52,38 @@
       </div>
 
       <div>
-        <h2 class="text-xl font-semibold text-primary mb-3">Việc làm đang tuyển</h2>
+        <h2 class="text-xl font-semibold text-purple-800 mb-3">Việc làm đang tuyển</h2>
         <app-filter-job-post-card [params]="{ companyId: companyDetail.id }" />
       </div>
 
       <div class="grid md:grid-cols-3 gap-6">
         <div class="col-span-1 bg-white p-4 border rounded shadow space-y-2">
-          <h3 class="font-semibold text-primary">🌐 Website</h3>
+          <h3 class="font-semibold text-purple-800">🌐 Website</h3>
           <a *ngIf="website" [href]="website" target="_blank" class="text-blue-600 hover:underline break-words">{{ website }}</a>
           <p *ngIf="!website" class="text-gray-400 italic">Chưa cập nhật</p>
         </div>
 
         <div class="col-span-1 bg-white p-4 border rounded shadow space-y-2">
-          <h3 class="font-semibold text-primary">📲 Theo dõi tại</h3>
+          <h3 class="font-semibold text-purple-800">📲 Theo dõi tại</h3>
           <div class="flex gap-2">
-            <a *ngIf="companyDetail.facebookUrl" [href]="companyDetail.facebookUrl" target="_blank">🌐 Facebook</a>
-            <a *ngIf="companyDetail.youtubeUrl" [href]="companyDetail.youtubeUrl" target="_blank">▶️ YouTube</a>
-            <a *ngIf="companyDetail.linkedinUrl" [href]="companyDetail.linkedinUrl" target="_blank">💼 LinkedIn</a>
+            <a *ngIf="companyDetail.facebookUrl" [href]="companyDetail.facebookUrl" target="_blank" class="text-blue-600 hover:underline">🌐 Facebook</a>
+            <a *ngIf="companyDetail.youtubeUrl" [href]="companyDetail.youtubeUrl" target="_blank" class="text-blue-600 hover:underline">▶️ YouTube</a>
+            <a *ngIf="companyDetail.linkedinUrl" [href]="companyDetail.linkedinUrl" target="_blank" class="text-blue-600 hover:underline">💼 LinkedIn</a>
+            <p *ngIf="!companyDetail.facebookUrl && !companyDetail.youtubeUrl && !companyDetail.linkedinUrl" class="text-gray-400 italic">Chưa cập nhật</p>
           </div>
         </div>
 
         <div class="col-span-1 bg-white p-4 border rounded shadow space-y-2">
-          <h3 class="font-semibold text-primary">📌 Thông tin liên hệ</h3>
-          <p>📧 {{ companyDetail.companyEmail }}</p>
-          <p>📞 {{ companyDetail.companyPhone }}</p>
-          <p>🔢 {{ companyDetail.taxCode }}</p>
+          <h3 class="font-semibold text-purple-800">📌 Thông tin liên hệ</h3>
+          <p>📧 {{ companyDetail.companyEmail || 'Chưa cập nhật' }}</p>
+          <p>📞 {{ companyDetail.companyPhone || 'Chưa cập nhật' }}</p>
+          <p>🔢 {{ companyDetail.taxCode || 'Chưa cập nhật' }}</p>
           <p>📍 {{ location }}</p>
         </div>
       </div>
 
-      <!-- TODO: Bạn cần tạo component app-map -->
-      <!-- <app-map [latitude]="companyDetail.location?.lat" [longitude]="companyDetail.location?.lng" [title]="companyDetail.companyName" [subTitle]="companyDetail.location?.address" /> -->
-
       <div *ngIf="imageList.length > 0" class="mt-6">
-        <h3 class="font-semibold text-primary mb-2">🖼️ Hình ảnh</h3>
+        <h3 class="font-semibold text-purple-800 mb-2">🖼️ Hình ảnh</h3>
         <app-image-gallery-custom [images]="imageList" />
       </div>
 

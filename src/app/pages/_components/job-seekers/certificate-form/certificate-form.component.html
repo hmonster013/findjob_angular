@@ -59,5 +59,21 @@
         {{ form.get('expirationDate')?.errors?.['serverError'] }}
       </div>
     </div>
+
+    <div class="flex justify-end mt-4 col-span-2">
+      <button
+        type="submit"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        Lưu
+      </button>
+      <button
+        type="button"
+        (click)="cancel()"
+        class="ml-2 bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded"
+      >
+        Hủy
+      </button>
+    </div>
   </div>
 </form>

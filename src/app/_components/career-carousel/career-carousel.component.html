@@ -4,19 +4,20 @@
     [spaceBetween]="15"
     [autoplay]="{ delay: 2500, disableOnInteraction: false }"
     [pagination]="true"
-    class="pb-12 pt-2"
+    class="h-[220px] pb-12 pt-2"
   >
     <ng-container *ngIf="!isLoading; else loading">
       <swiper-slide *ngFor="let career of topCareers">
         <a [routerLink]="['/viec-lam', { careerId: career.id }]" class="block">
-          <div class="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition flex flex-col items-center min-h-[150px]">
+          <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition flex flex-col items-center min-h-[150px]">
             <img
               [src]="career.imageUrl || 'https://via.placeholder.com/64'"
               alt="{{ career.name }}"
               class="w-16 h-16 rounded-md object-cover mb-2"
             />
             <div class="text-center">
-              <div class="text-indigo-700 font-medium text-sm truncate max-w-[8rem]">{{ career.name }}</div>
+              <div class="text-blue-700 font-medium text-sm truncate max-w-[8rem]">{{ career.name }}</div>
+              <div class="text-gray-600 text-xs mt-1">{{ career.jobPostTotal | number }} bài đăng</div>
             </div>
           </div>
         </a>
@@ -26,9 +27,10 @@
     <!-- Loading Skeleton -->
     <ng-template #loading>
       <swiper-slide *ngFor="let item of [1,2,3,4,5,6,7,8]">
-        <div class="bg-white p-4 rounded-xl shadow-md animate-pulse flex flex-col items-center min-h-[150px]">
+        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-lg animate-pulse flex flex-col items-center min-h-[150px]">
           <div class="w-16 h-16 bg-gray-300 rounded-md mb-2"></div>
-          <div class="w-24 h-3 bg-gray-300 rounded"></div>
+          <div class="w-24 h-3 bg-gray-300 rounded mb-1"></div>
+          <div class="w-16 h-2 bg-gray-300 rounded"></div>
         </div>
       </swiper-slide>
     </ng-template>

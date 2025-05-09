@@ -5,95 +5,109 @@
 <ng-template #loaded>
   <ng-container *ngIf="jobPost; else notFound">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8 py-8 space-y-8">
-      <!-- Tiêu đề & QR -->
       <div class="flex flex-col md:flex-row md:items-start gap-6">
         <div class="flex-1">
-          <h1 class="text-3xl font-bold text-primary mb-2">{{ jobPost.title }}</h1>
+          <h1 class="text-3xl font-bold text-purple-800 mb-2">{{ jobPost.jobName }}</h1>
           <div class="text-gray-500 space-y-1">
-            <div>🏢 {{ jobPost.company?.companyName }}</div>
+            <div>🏢 {{ jobPost.companyDict?.companyName || 'Chưa cập nhật' }}</div>
             <div>📍 {{ jobPost.location?.address || 'Chưa cập nhật' }}</div>
-            <div>📅 {{ jobPost.createdAt | date:'dd/MM/yyyy' }}</div>
+            <div>📅 {{ jobPost.createAt | date:'dd/MM/yyyy' }}</div>
           </div>
         </div>
-
-        <!-- TODO: Bạn cần tạo component app-qr-code -->
-        <!-- <app-qr-code [data]="currentUrl" /> -->
+        <!-- <app-qr-code [data]="currentUrl"></app-qr-code> -->
       </div>
 
-      <!-- Mô tả công việc -->
-      <div class="bg-white p-6 rounded shadow space-y-4">
-        <h2 class="text-xl font-semibold text-primary">📝 Mô tả công việc</h2>
-        <div class="text-gray-700 leading-relaxed" [innerHTML]="jobPost.description"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div><strong class="text-gray-800">Mức lương:</strong> {{ formatSalary(jobPost.salaryMin, jobPost.salaryMax) }}</div>
+        <div><strong class="text-gray-800">Kinh nghiệm:</strong> {{ jobPost.experience || 'Chưa cập nhật' }} năm</div>
+        <div><strong class="text-gray-800">Cấp bậc:</strong> {{ positionMap[jobPost.position] || 'Chưa cập nhật' }}</div>
+        <div><strong class="text-gray-800">Hình thức:</strong> {{ jobTypeMap[jobPost.jobType] || 'Chưa cập nhật' }}</div>
+        <div><strong class="text-gray-800">Số lượng tuyển:</strong> {{ jobPost.quantity || 'Chưa cập nhật' }}</div>
+        <div><strong class="text-gray-800">Yêu cầu giới tính:</strong> {{ genderMap[jobPost.genderRequired] || 'Chưa cập nhật' }}</div>
       </div>
 
-      <!-- Quyền lợi -->
-      <div class="bg-white p-6 rounded shadow space-y-4">
-        <h2 class="text-xl font-semibold text-primary">🎁 Quyền lợi</h2>
-        <div class="text-gray-700 leading-relaxed" [innerHTML]="jobPost.benefit"></div>
+      <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
+        <h2 class="section-title">📝 Mô tả công việc</h2>
+        <div class="text-gray-700 leading-relaxed" [innerHTML]="jobPost.jobDescription"></div>
       </div>
 
-      <!-- Yêu cầu -->
-      <div class="bg-white p-6 rounded shadow space-y-4">
-        <h2 class="text-xl font-semibold text-primary">📌 Yêu cầu ứng viên</h2>
-        <div class="text-gray-700 leading-relaxed" [innerHTML]="jobPost.requirement"></div>
+      <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
+        <h2 class="section-title">🎁 Quyền lợi</h2>
+        <div class="text-gray-700 leading-relaxed" [innerHTML]="jobPost.benefitsEnjoyed"></div>
       </div>
 
-      <!-- Thông tin liên hệ -->
-      <div class="bg-white p-6 rounded shadow space-y-2">
-        <h2 class="text-xl font-semibold text-primary">📞 Thông tin liên hệ</h2>
-        <p>📧 {{ jobPost.company?.companyEmail }}</p>
-        <p>📍 {{ jobPost.company?.location?.address }}</p>
-        <p>📞 {{ jobPost.company?.companyPhone }}</p>
+      <div class="bg-white p-6 rounded-lg shadow-md space-y-4">
+        <h2 class="section-title">📌 Yêu cầu ứng viên</h2>
+        <div class="text-gray-700 leading-relaxed" [innerHTML]="jobPost.jobRequirement"></div>
       </div>
 
-      <!-- TODO: Bạn cần tạo component app-map -->
+      <div class="bg-white p-6 rounded-lg shadow-md space-y-2">
+        <h2 class="section-title">📞 Thông tin liên hệ</h2>
+        <p>📧 {{ jobPost.contactPersonEmail || 'Chưa cập nhật' }}</p>
+        <p>📍 {{ jobPost.location?.address || 'Chưa cập nhật' }}</p>
+        <p>📞 {{ jobPost.contactPersonPhone || 'Chưa cập nhật' }}</p>
+        <p>👤 {{ jobPost.contactPersonName || 'Chưa cập nhật' }}</p>
+      </div>
+
       <!-- <app-map
-        [latitude]="jobPost.company?.location?.lat"
-        [longitude]="jobPost.company?.location?.lng"
-        [title]="jobPost.company?.companyName"
-        [subTitle]="jobPost.company?.location?.address"
-      /> -->
+        *ngIf="jobPost.location?.lat && jobPost.location?.lng"
+        [latitude]="jobPost.location.lat"
+        [longitude]="jobPost.location.lng"
+        [title]="jobPost.jobName"
+        [subTitle]="jobPost.location.address"
+      ></app-map> -->
 
-      <!-- Nút lưu và chia sẻ -->
       <div class="flex gap-4 mt-4">
-        <!-- TODO: Bạn cần tạo component app-loading-button -->
-        <!-- <app-loading-button [loading]="isLoadingSave" (click)="handleSaveJobPost()"> -->
+        <!-- Nút Lưu -->
         <button
-          class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+          *ngIf="isJobSeeker"
           (click)="handleSaveJobPost()"
+          [disabled]="isLoadingSave"
+          class="px-4 py-2 rounded-md shadow-sm text-sm font-medium transition-colors duration-200 flex items-center gap-2"
+          [ngClass]="{
+            'bg-purple-700 text-white hover:bg-purple-800': jobPost.isSaved,
+            'border border-purple-700 text-purple-700 hover:border-purple-800 hover:bg-purple-50': !jobPost.isSaved
+          }"
         >
-          {{ jobPost.isSaved ? 'Đã lưu' : 'Lưu tin' }} ({{ jobPost.saveNumber }})
+          <i class="fas" [ngClass]="jobPost.isSaved ? 'fa-heart' : 'fa-heart-o'"></i>
+          {{ jobPost.isSaved ? 'Đã lưu' : 'Lưu tin' }} ({{ jobPost.saveNumber || 0 }})
         </button>
 
+        <!-- Nút Chia sẻ -->
         <button
-          class="px-4 py-2 rounded border border-gray-400 text-gray-600 hover:bg-gray-100"
+          class="px-4 py-2 rounded-md border border-gray-400 text-gray-600 hover:bg-gray-100 text-sm font-medium transition-colors duration-200 flex items-center gap-2"
           (click)="openSharePopup = true"
         >
-          🔗 Chia sẻ
+          <i class="fas fa-share"></i> Chia sẻ
+        </button>
+
+        <!-- Nút Nộp hồ sơ -->
+        <button
+          *ngIf="isJobSeeker"
+          (click)="openPopup = true"
+          class="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-md shadow-sm text-sm font-medium hover:opacity-90 transition-opacity duration-200"
+          [disabled]="jobPost.isApplied"
+        >
+          {{ jobPost.isApplied ? 'Đã ứng tuyển' : 'Nộp hồ sơ' }}
         </button>
       </div>
 
-      <!-- Ứng tuyển -->
-      <div *ngIf="isJobSeeker" class="mt-6">
-        <app-apply-card [jobPost]="jobPost" />
-      </div>
+      <app-apply-card
+        *ngIf="isJobSeeker"
+        [jobPostId]="jobPost.id"
+        [openPopup]="openPopup"
+        (setOpenPopup)="openPopup = $event"
+        (applySuccess)="isApplySuccess = true"
+      ></app-apply-card>
 
-      <!-- Tin tương tự -->
-      <div class="mt-10">
-        <h2 class="text-xl font-semibold text-primary mb-4">🧭 Việc làm tương tự</h2>
-        <app-filter-job-post-card [params]="{ careerId: jobPost.career?.id }" />
-      </div>
-
-      <!-- Popup chia sẻ -->
       <app-social-network-sharing-popup
         [open]="openSharePopup"
         (setOpenPopup)="openSharePopup = $event"
         [facebookShareUrl]="currentUrl"
-        [facebookMessengerUrl]="currentUrl"
         [linkedinShareUrl]="currentUrl"
         [twitterShareUrl]="currentUrl"
         [emailShareUrl]="currentUrl"
-      />
+      ></app-social-network-sharing-popup>
     </div>
   </ng-container>
 

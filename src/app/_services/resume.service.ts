@@ -9,7 +9,6 @@ import { environment } from '../../environments/environment';
 export class ResumeService {
 
   private baseUrl = `${environment.apiUrl}/api/info/web`;
-  private privateBaseUrl = `${environment.apiUrl}/api/info/web/private-resumes`;
 
   constructor(private http: HttpClient) {}
 
@@ -36,50 +35,50 @@ export class ResumeService {
 
   // ✅ Private Resumes
   getResumeOwner(resumeSlug: string): Observable<any> {
-    return this.http.get(`${this.privateBaseUrl}/${resumeSlug}/resume-owner/`);
+    return this.http.get(`${this.baseUrl}/private-resumes/${resumeSlug}/resume-owner/`);
   }
 
   getCv(resumeSlug: string): Observable<any> {
-    return this.http.get(`${this.privateBaseUrl}/${resumeSlug}/cv/`);
+    return this.http.get(`${this.baseUrl}/private-resumes/${resumeSlug}/cv/`);
   }
 
   updateCV(resumeSlug: string, formData: FormData): Observable<any> {
-    return this.http.put(`${this.privateBaseUrl}/${resumeSlug}/cv/`, formData);
+    return this.http.put(`${this.baseUrl}/private-resumes/${resumeSlug}/cv/`, formData);
   }
 
   addResume(formData: FormData): Observable<any> {
-    return this.http.post(this.privateBaseUrl + '/', formData);
+    return this.http.post(`${this.baseUrl}/private-resumes/`, formData);
   }
 
   updateResume(resumeSlug: string, data: any): Observable<any> {
-    return this.http.put(`${this.privateBaseUrl}/${resumeSlug}/`, data);
+    return this.http.put(`${this.baseUrl}/private-resumes/${resumeSlug}/`, data);
   }
 
   deleteResume(resumeSlug: string): Observable<any> {
-    return this.http.delete(`${this.privateBaseUrl}/${resumeSlug}/`);
+    return this.http.delete(`${this.baseUrl}/private-resumes/${resumeSlug}/`);
   }
 
   activeResume(resumeSlug: string): Observable<any> {
-    return this.http.get(`${this.privateBaseUrl}/${resumeSlug}/resume-active/`);
+    return this.http.get(`${this.baseUrl}/private-resumes/${resumeSlug}/resume-active/`);
   }
 
   getExperiencesDetail(resumeSlug: string): Observable<any> {
-    return this.http.get(`${this.privateBaseUrl}/${resumeSlug}/experiences-detail/`);
+    return this.http.get(`${this.baseUrl}/private-resumes/${resumeSlug}/experiences-detail/`);
   }
 
   getEducationsDetail(resumeSlug: string): Observable<any> {
-    return this.http.get(`${this.privateBaseUrl}/${resumeSlug}/educations-detail/`);
+    return this.http.get(`${this.baseUrl}/private-resumes/${resumeSlug}/educations-detail/`);
   }
 
   getCertificates(resumeSlug: string): Observable<any> {
-    return this.http.get(`${this.privateBaseUrl}/${resumeSlug}/certificates-detail/`);
+    return this.http.get(`${this.baseUrl}/private-resumes/${resumeSlug}/certificates-detail/`);
   }
 
   getLanguageSkills(resumeSlug: string): Observable<any> {
-    return this.http.get(`${this.privateBaseUrl}/${resumeSlug}/language-skills/`);
+    return this.http.get(`${this.baseUrl}/private-resumes/${resumeSlug}/language-skills/`);
   }
 
   getAdvancedSkills(resumeSlug: string): Observable<any> {
-    return this.http.get(`${this.privateBaseUrl}/${resumeSlug}/advanced-skills/`);
+    return this.http.get(`${this.baseUrl}/private-resumes/${resumeSlug}/advanced-skills/`);
   }
 }

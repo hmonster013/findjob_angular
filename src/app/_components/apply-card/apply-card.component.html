@@ -2,34 +2,31 @@
 <div class="bg-white border p-4 rounded-lg shadow flex justify-between items-center">
   <p class="text-lg font-medium text-primary">Bạn quan tâm vị trí này?</p>
   <button
-    (click)="setOpenPopup(true)"
+    (click)="setOpenPopup.emit(true)"
     class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
   >
     Ứng tuyển ngay
   </button>
 </div>
 
-<!-- Form Popup thay thế cho component FormPopup -->
+<!-- Form Popup -->
 <div
   *ngIf="openPopup"
   class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
 >
   <div class="bg-white w-full max-w-md mx-auto rounded-lg shadow-lg relative p-6">
-    <!-- Nút đóng -->
     <button
-      (click)="setOpenPopup(false)"
+      (click)="setOpenPopup.emit(false)"
       class="absolute top-2 right-2 text-gray-500 hover:text-black text-lg"
     >
       ✖
     </button>
 
-    <!-- Tiêu đề -->
     <div class="mb-4">
       <p class="text-gray-600">Ứng tuyển vị trí</p>
       <h2 class="text-xl font-semibold text-primary">{{ jobPost?.title }}</h2>
     </div>
 
-    <!-- Form -->
     <app-apply-form (submitApply)="handleApplyJob($event)" />
   </div>
 </div>

@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApplyFormComponent } from '../apply-form/apply-form.component';
 import { JobPostActivityService } from '../../_services/job-post-activity.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-apply-card',
@@ -13,39 +14,35 @@ import { JobPostActivityService } from '../../_services/job-post-activity.servic
   templateUrl: './apply-card.component.html',
 })
 export class ApplyCardComponent {
-  @Input() jobPost: any;
+  @Input() jobPostId!: number;
+  @Input() jobPost!: any;
+  @Input() openPopup = false;
 
-  openPopup = false;
+  @Output() setOpenPopup = new EventEmitter<boolean>();
+  @Output() applySuccess = new EventEmitter<boolean>();
+
   isFullScreenLoading = false;
 
-  constructor(private jobPostActivityService: JobPostActivityService) {}
-
-  get popupTitle(): string {
-    return `Ứng tuyển vị trí ${this.jobPost?.title || ''}`;
-  }
-
-  setOpenPopup(state: boolean) {
-    this.openPopup = state;
-  }
+  constructor(
+    private jobPostActivityService: JobPostActivityService,
+    private toastr: ToastrService
+  ) {}
 
   handleApplyJob(data: any) {
     this.isFullScreenLoading = true;
-    const payload = {
-      ...data,
-      job_post: this.jobPost?.id,
-    };
-
-    this.jobPostActivityService.applyJob(payload).subscribe({
-      next: () => {
-        alert('Ứng tuyển thành công.');
-        this.openPopup = false;
-      },
-      error: () => {
-        alert('Ứng tuyển thất bại.');
-      },
-      complete: () => {
-        this.isFullScreenLoading = false;
-      },
-    });
+    this.jobPostActivityService.applyJob({ ...data, job_post: this.jobPostId })
+      .subscribe({
+        next: () => {
+          this.toastr.success('Ứng tuyển thành công.');
+          this.applySuccess.emit(true);
+          this.setOpenPopup.emit(false);
+          this.isFullScreenLoading = false;
+        },
+        error: (err) => {
+          this.toastr.error('Ứng tuyển thất bại. Vui lòng thử lại!');
+          console.error(err);
+          this.isFullScreenLoading = false;
+        },
+      });
   }
 }

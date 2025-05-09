@@ -1,12 +1,28 @@
-<!-- mui-image-custom.component.html -->
-<img
-  [src]="src"
-  [alt]="alt"
-  [class]="className"
-  [style.object-fit]="fit"
-  [style.transition]="transitionStyle"
-  loading="lazy"
-  (error)="handleError($event)"
-  [attr.width]="width"
-  [attr.height]="height"
-/>
+<div class="relative w-full max-w-full h-auto">
+  <!-- Skeleton Placeholder -->
+  <div
+    *ngIf="isLoading"
+    class="w-full h-full bg-gray-300 rounded-md animate-pulse flex items-center justify-center"
+    [style.width]="width ? width + 'px' : '100%'"
+    [style.height]="height ? height + 'px' : 'auto'"
+  >
+    <i class="fas fa-image text-gray-500 text-2xl"></i>
+  </div>
+
+  <!-- Image -->
+  <img
+    *ngIf="!isLoading"
+    [src]="computedSrc"
+    [alt]="alt"
+    [class]="computedClassName"
+    [style.object-fit]="computedFit"
+    class="w-full max-w-full h-auto rounded-md shadow-sm transition-opacity duration-300"
+    [class.opacity-0]="!isLoaded"
+    [class.opacity-100]="isLoaded"
+    loading="lazy"
+    (load)="handleLoad()"
+    (error)="handleError($event)"
+    [attr.width]="width"
+    [attr.height]="height"
+  />
+</div>

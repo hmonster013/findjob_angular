@@ -1,0 +1,21 @@
+table {
+  width: 100%;
+}
+
+th,
+td {
+  padding: 12px 16px;
+}
+
+th {
+  font-weight: 500;
+}
+
+.no-data-card svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.overflow-x-auto {
+  width: 100%;
+}

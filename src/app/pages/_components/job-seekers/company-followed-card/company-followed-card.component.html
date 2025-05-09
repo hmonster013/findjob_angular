@@ -1,61 +1,75 @@
-<div class="p-4 bg-white rounded-lg shadow-md">
+<div class="p-6 bg-white rounded-xl shadow-lg">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Công ty bạn theo dõi</h2>
 
-  <h2 class="text-xl font-bold mb-4">Công ty bạn theo dõi</h2>
-
-  <div *ngIf="isLoading">
-    <div class="space-y-4">
-      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
-      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
-    </div>
-  </div>
-
-  <div *ngIf="!isLoading && companiesFollowed.length === 0" class="text-center text-gray-500">
-    Bạn chưa theo dõi công ty nào.
-  </div>
-
-  <div *ngIf="!isLoading && companiesFollowed.length > 0" class="space-y-4">
-
-    <div *ngFor="let company of companiesFollowed" class="p-4 border rounded hover:shadow transition">
-
-      <div class="flex justify-between items-center">
-        <div>
-          <h3 class="text-lg font-semibold text-blue-700">{{ company?.company?.name }}</h3>
-          <p class="text-sm text-gray-500 mt-1">
-            {{ company?.company?.address }}
-          </p>
-        </div>
-
-        <button
-          (click)="handleUnfollow(company?.company?.slug)"
-          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-        >
-          Hủy theo dõi
-        </button>
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoading" class="space-y-4">
+    <div *ngFor="let _ of [1,2,3,4,5]" class="flex items-center p-4 bg-gray-100 rounded-lg animate-pulse">
+      <div class="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
+      <div class="flex-1">
+        <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
       </div>
-
+      <div class="w-24 h-8 bg-gray-200 rounded"></div>
     </div>
+  </div>
 
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && companiesFollowed.length === 0" class="text-center text-gray-500 py-12 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
+    <svg class="mx-auto h-28 w-28 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+    </svg>
+    <p class="mt-4 text-lg font-medium">Bạn chưa theo dõi công ty nào.</p>
+  </div>
+
+  <!-- List companies -->
+  <div *ngIf="!isLoading && companiesFollowed.length > 0" class="space-y-4">
+    <div *ngFor="let company of companiesFollowed" class="flex items-center p-4 border border-gray-200 rounded-lg hover:shadow-md transition bg-white">
+      <img
+        [src]="company.company.companyImageUrl || 'https://via.placeholder.com/48'"
+        alt="Company Logo"
+        class="h-12 w-12 rounded-full object-cover mr-4"
+      />
+      <div class="flex-1">
+        <a [routerLink]="['/company', company.company.slug]" class="text-lg font-semibold text-blue-600 hover:underline">{{ company.company.companyName }}</a>
+        <p class="text-sm text-gray-500 mt-2">{{ company.company.fieldOperation }}</p>
+        <p class="text-sm text-gray-500 mt-1">
+          Theo dõi: {{ company.company.followNumber }} • Bài đăng: {{ company.company.jobPostNumber }}
+        </p>
+      </div>
+      <button
+        (click)="handleUnfollow(company.company.slug)"
+        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition"
+      >
+        <i class="fas fa-user-minus mr-1"></i> Hủy theo dõi
+      </button>
+    </div>
   </div>
 
   <!-- Pagination -->
-  <div *ngIf="!isLoading && totalPages > 1" class="flex justify-center items-center space-x-2 mt-6">
+  <div *ngIf="!isLoading && totalPages > 1" class="flex justify-center items-center space-x-2 mt-8">
     <button
       (click)="handleChangePage(page - 1)"
       [disabled]="page <= 1"
-      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
     >
-      Trước
+      <i class="fas fa-chevron-left"></i>
     </button>
-
-    <span class="text-sm font-medium">Trang {{ page }} / {{ totalPages }}</span>
-
+    <div class="flex space-x-1">
+      <button
+        *ngFor="let p of pages"
+        (click)="handleChangePage(p)"
+        [ngClass]="{'bg-blue-500 text-white': p === page, 'bg-gray-100 text-gray-700': p !== page}"
+        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-100 transition"
+      >
+        {{ p }}
+      </button>
+    </div>
     <button
       (click)="handleChangePage(page + 1)"
       [disabled]="page >= totalPages"
-      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
     >
-      Sau
+      <i class="fas fa-chevron-right"></i>
     </button>
   </div>
-
 </div>

@@ -43,14 +43,14 @@ export class JobSeekerLoginPageComponent implements OnInit {
 
     this.authService.checkCreds(formData.email, ROLES_NAME.JOB_SEEKER).subscribe({
       next: (res) => {
-        if (res.exists && res.email_verified === false) {
+        if (res.data.exists && res.data.email_verified === false) {
           this.authStateService.setCurrentUser({ email: formData.email });
           this.router.navigate(['/email-verification']);
           this.isLoading = false;
-        } else if (res.exists && res.email_verified === true) {
+        } else if (res.data.exists && res.data.email_verified === true) {
           this.getAccessToken(formData);
         } else {
-          this.errorMessage = 'Tài khoản không tồn tại hoặc sai thông tin.';
+          this.toastr.warning('Tài khoản không tồn tại hoặc sai thông tin.');
           this.isLoading = false;
         }
       },
@@ -64,10 +64,10 @@ export class JobSeekerLoginPageComponent implements OnInit {
   getAccessToken(formData: { email: string; password: string }) {
     this.authService.getToken(formData.email, formData.password, ROLES_NAME.JOB_SEEKER).subscribe({
       next: (res) => {
-        if (res.access_token) {
+        if (res.data.access_token) {
           this.tokenService.saveAccessTokenAndRefreshTokenToCookie(
-            res.access_token,
-            res.refresh_token,
+            res.data.access_token,
+            res.data.refresh_token,
             'email'
           );
           this.authService.getUserInfo().subscribe({
@@ -112,10 +112,10 @@ export class JobSeekerLoginPageComponent implements OnInit {
       token
     ).subscribe({
       next: (res) => {
-        if (res.access_token) {
+        if (res.data.access_token) {
           this.tokenService.saveAccessTokenAndRefreshTokenToCookie(
-            res.access_token,
-            res.refresh_token,
+            res.data.access_token,
+            res.data.refresh_token,
             provider
           );
           this.authService.getUserInfo().subscribe({

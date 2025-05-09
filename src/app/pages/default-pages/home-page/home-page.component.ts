@@ -10,6 +10,7 @@ import { JobByCategoryComponent } from '../../_components/defaults/job-by-catego
 import { SuggestedJobPostCardComponent } from '../../_components/defaults/suggested-job-post-card/suggested-job-post-card.component';
 import { HOME_FILTER_CAREER, ROLES_NAME, ROUTES } from '../../../_configs/constants';
 import { AuthStateService } from '../../../_services/auth-state.service';
+import { HomeSearchComponent } from "../../_components/defaults/home-search/home-search.component";
 
 @Component({
   selector: 'app-home-page',
@@ -24,7 +25,8 @@ import { AuthStateService } from '../../../_services/auth-state.service';
     JobByCategoryComponent,
     FilterJobPostCardComponent,
     SuggestedJobPostCardComponent,
-  ],
+    HomeSearchComponent
+],
   templateUrl: './home-page.component.html',
 })
 export class HomePageComponent {

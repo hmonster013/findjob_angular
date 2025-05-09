@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FilterJobPostCardComponent } from '../../_components/defaults/filter-job-post-card/filter-job-post-card.component';
+import { ToastrService } from 'ngx-toastr';
 import { SocialNetworkSharingPopupComponent } from '../../../_components/social-network-sharing-popup/social-network-sharing-popup.component';
 import { ApplyCardComponent } from '../../../_components/apply-card/apply-card.component';
-import { MuiImageCustomComponent } from '../../../_components/mui-image-custom/mui-image-custom.component';
 import { AuthStateService } from '../../../_services/auth-state.service';
 import { ROLES_NAME } from '../../../_configs/constants';
 import { JobService } from '../../../_services/job.service';
@@ -18,30 +17,47 @@ import { JobService } from '../../../_services/job.service';
   standalone: true,
   imports: [
     CommonModule,
-    FilterJobPostCardComponent,
     SocialNetworkSharingPopupComponent,
     ApplyCardComponent,
-    MuiImageCustomComponent,
     // QrCodeComponent,
     // MapComponent,
     // LoadingButtonComponent,
   ],
   templateUrl: './job-detail-page.component.html',
+  styleUrls: ['./job-detail-page.component.css'],
 })
 export class JobDetailPageComponent implements OnInit {
   slug = '';
   isLoading = true;
   isLoadingSave = false;
   openSharePopup = false;
+  openPopup = false;
+  isApplySuccess = false;
 
   jobPost: any = null;
   isAuthenticated = false;
   currentUser: any;
 
+  // Ánh xạ các giá trị số thành text
+  positionMap: { [key: number]: string } = {
+    9: 'Nhân viên' // Ví dụ, dựa trên jobPost.position = 9
+  };
+
+  jobTypeMap: { [key: number]: string } = {
+    3: 'Toàn thời gian' // Ví dụ, dựa trên jobPost.jobType = 3
+  };
+
+  genderMap: { [key: string]: string } = {
+    'M': 'Nam',
+    'F': 'Nữ',
+    'O': 'Không yêu cầu'
+  };
+
   constructor(
     private route: ActivatedRoute,
     private jobService: JobService,
-    private authService: AuthStateService
+    private authService: AuthStateService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -71,11 +87,11 @@ export class JobDetailPageComponent implements OnInit {
           isSaved,
           saveNumber: isSaved ? current.saveNumber + 1 : current.saveNumber - 1,
         };
-        alert(isSaved ? 'Đã lưu tin' : 'Đã hủy lưu tin');
+        this.toastr.success(isSaved ? 'Đã lưu tin' : 'Đã hủy lưu tin');
         this.isLoadingSave = false;
       },
       error: () => {
-        alert('Có lỗi xảy ra');
+        this.toastr.error('Có lỗi xảy ra');
         this.isLoadingSave = false;
       },
     });
@@ -87,5 +103,14 @@ export class JobDetailPageComponent implements OnInit {
 
   get currentUrl(): string {
     return window.location.href;
+  }
+
+  formatSalary(min: number, max: number): string {
+    if (!min && !max) return 'Thoả thuận';
+    if (min && max) {
+      return `${(min / 1000000).toFixed(1)} - ${(max / 1000000).toFixed(1)} triệu`;
+    }
+    if (min) return `Từ ${(min / 1000000).toFixed(1)} triệu`;
+    return `Lên đến ${(max / 1000000).toFixed(1)} triệu`;
   }
 }

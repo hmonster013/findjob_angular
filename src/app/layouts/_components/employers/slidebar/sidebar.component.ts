@@ -1,26 +1,29 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { APP_NAME, ROUTES } from '../../../../_configs/constants';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
+  standalone: true,
   imports: [
     CommonModule,
     RouterLink,
     RouterLinkActive
   ],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrls: ['./sidebar.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent {
-  @Input() drawerWidth: number = 280;
+  @Input() isMobile: boolean = false;
+  @Input() drawerWidth: number = 200;
   @Input() mobileOpen: boolean = false;
   @Input() handleDrawerToggle?: () => void;
 
   expandedItems = {
-    candidates: true,
-    account: true,
+    candidates: false,
+    account: false
   };
 
   ROUTES = ROUTES;

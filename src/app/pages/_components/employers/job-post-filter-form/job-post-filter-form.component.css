@@ -1,0 +1,13 @@
+/* Đảm bảo buttons căn chỉnh tốt trong flex */
+button {
+  white-space: nowrap;
+}
+
+/* Tùy chỉnh thêm nếu cần */
+.bg-secondary-500 {
+  background-color: #3b82f6;
+}
+
+.bg-secondary-600 {
+  background-color: #2563eb;
+}

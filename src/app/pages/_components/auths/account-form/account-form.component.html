@@ -1,40 +1,37 @@
 <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" id="account-form" class="space-y-6">
   <!-- Full Name -->
-  <div>
-    <label class="block font-medium text-gray-700 mb-1">
-      Họ và tên <span class="text-red-500">*</span>
+  <div class="space-y-1">
+    <label class="block text-sm font-medium text-gray-800">
+      Họ và tên <span class="text-red-600">*</span>
     </label>
     <input type="text" formControlName="fullName" placeholder="Nhập họ và tên"
-      class="input input-bordered w-full" />
+      class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base transition-colors duration-200"
+      [ngClass]="{'border-red-600': accountForm.get('fullName')?.errors && accountForm.get('fullName')?.touched}" />
 
-    <div *ngIf="accountForm.get('fullName')?.errors" class="text-red-500 text-sm mt-1">
-      {{ accountForm.get('fullName')?.errors?.['required'] ? 'Họ và tên là bắt buộc.' : '' }}
-      {{ accountForm.get('fullName')?.errors?.['maxlength'] ? 'Họ và tên vượt quá độ dài cho phép.' : '' }}
-      {{ accountForm.get('fullName')?.errors?.['server'] }}
+    <div *ngIf="accountForm.get('fullName')?.errors && accountForm.get('fullName')?.touched" class="text-red-600 text-xs mt-1">
+      <div *ngIf="accountForm.get('fullName')?.errors?.['required']">Họ và tên là bắt buộc.</div>
+      <div *ngIf="accountForm.get('fullName')?.errors?.['maxlength']">Họ và tên vượt quá độ dài cho phép.</div>
+      <div *ngIf="accountForm.get('fullName')?.errors?.['server']">{{ accountForm.get('fullName')?.errors?.['server'] }}</div>
     </div>
   </div>
 
   <!-- Email -->
-  <div>
-    <label class="block font-medium text-gray-700 mb-1">
-      Email <span class="text-red-500">*</span>
+  <div class="space-y-1">
+    <label class="block text-sm font-medium text-gray-800">
+      Email <span class="text-red-600">*</span>
     </label>
     <input type="email" formControlName="email" placeholder="Nhập email"
-      class="input input-bordered w-full bg-gray-100 cursor-not-allowed" [disabled]="true" />
+      class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-200 cursor-not-allowed text-base"
+      [disabled]="true" />
   </div>
 
   <!-- Password -->
-  <div>
-    <label class="block font-medium text-gray-700 mb-1">
-      Mật khẩu <span class="text-red-500">*</span>
+  <div class="space-y-1">
+    <label class="block text-sm font-medium text-gray-800">
+      Mật khẩu <span class="text-red-600">*</span>
     </label>
     <input type="password" formControlName="password" placeholder="Nhập mật khẩu"
-      class="input input-bordered w-full bg-gray-100 cursor-not-allowed" [disabled]="true" />
-  </div>
-
-  <div class="flex justify-end">
-    <button type="submit" class="px-6 py-2 bg-primary-600 text-white rounded hover:bg-primary-700">
-      Cập nhật
-    </button>
+      class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-200 cursor-not-allowed text-base"
+      [disabled]="true" />
   </div>
 </form>

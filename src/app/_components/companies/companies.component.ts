@@ -45,9 +45,27 @@ export class CompaniesComponent {
     });
   }
 
-  handleChangePage(newPage: number) {
-    this.page = newPage;
-    this.fetchCompanies();
+  changePage(newPage: number) {
+    if (newPage >= 1 && newPage <= this.totalPages) {
+      this.page = newPage;
+      this.fetchCompanies();
+    }
+  }
+
+  getVisiblePages(): number[] {
+    const maxVisiblePages = 5; // Số trang tối đa hiển thị (VD: 1, 2, 3, 4, 5)
+    const half = Math.floor(maxVisiblePages / 2); // Số trang hiển thị trước/sau trang hiện tại
+    let start = Math.max(1, this.page - half);
+    let end = Math.min(this.totalPages, start + maxVisiblePages - 1);
+
+    // Điều chỉnh start nếu end đạt giới hạn
+    start = Math.max(1, end - maxVisiblePages + 1);
+
+    const pages: number[] = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   get totalPages() {

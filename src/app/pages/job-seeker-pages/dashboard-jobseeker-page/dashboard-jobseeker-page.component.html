@@ -2,13 +2,13 @@
   <!-- LEFT SIDEBAR -->
   <div class="md:col-span-5 lg:col-span-3 space-y-4">
     <div class="bg-white p-4 rounded-xl shadow">
-      <app-sidebar-profile />
+      <app-sidebar-profile [currentUser]="currentUser"/>
     </div>
     <div class="bg-white p-4 rounded-xl shadow">
       <app-sidebar-view-total />
     </div>
     <div class="bg-white p-4 rounded-xl shadow">
-      <app-job-application-card />
+      <app-job-application-card [jobSeekerProfileId]="currentUser.jobSeekerProfile.id"/>
     </div>
   </div>
 

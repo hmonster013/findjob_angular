@@ -9,7 +9,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
     ReactiveFormsModule
   ],
   templateUrl: './account-form.component.html',
-  styleUrl: './account-form.component.css'
+  styleUrls: ['./account-form.component.css'],
+  standalone: true
 })
 export class AccountFormComponent {
   @Input() serverErrors: any = null;
@@ -41,8 +42,7 @@ export class AccountFormComponent {
 
   onSubmit() {
     if (this.accountForm.valid) {
-      this.update.emit(this.accountForm.getRawValue()); // dùng getRawValue để lấy cả field disabled
+      this.update.emit(this.accountForm.getRawValue());
     }
   }
-
 }

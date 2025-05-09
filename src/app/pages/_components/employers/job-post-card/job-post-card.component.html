@@ -1,59 +1,82 @@
-<div class="space-y-4 relative">
-  <app-backdrop-loading *ngIf="isLoadingList || isFullScreenLoading"></app-backdrop-loading>
+<div class="bg-white rounded-lg shadow flex flex-col flex-1 h-full w-full">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6">
+    <h1 class="text-2xl font-semibold text-gray-800">Quản lý tin tuyển dụng</h1>
+    <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+      <button
+        class="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md text-sm"
+        (click)="onExport()"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        Xuất Excel
+      </button>
+      <button
+        class="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-sm"
+        (click)="onOpenCreate()"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Thêm mới
+      </button>
+    </div>
+  </div>
 
   <!-- Filter Form -->
-  <app-job-post-filter-form (filter)="onFilter($event)"></app-job-post-filter-form>
+  <div class="p-6 pt-0">
+    <h2 class="text-sm font-medium text-gray-600 mb-2">Bộ lọc:</h2>
+    <app-job-post-filter-form (filter)="onFilter($event)"></app-job-post-filter-form>
+  </div>
 
-  <!-- Top Buttons -->
-  <div class="flex justify-between items-center">
-    <button
-      class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-md"
-      (click)="onOpenCreate()"
-    >
-      + Thêm mới
-    </button>
-
-    <button
-      class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md"
-      (click)="onExport()"
-    >
-      📥 Xuất Excel
-    </button>
+  <!-- Loading Progress -->
+  <div *ngIf="isLoadingList && !isFullScreenLoading" class="w-full h-1 bg-gray-200 rounded-full overflow-hidden mx-6">
+    <div class="h-full bg-blue-500 animate-pulse"></div>
   </div>
 
   <!-- Table -->
-  <app-job-posts-table
-    [dataSource]="list"
-    [total]="total"
-    [page]="page"
-    [rowsPerPage]="rowsPerPage"
-    [orderBy]="orderBy"
-    [order]="order"
-    (edit)="onEdit($event)"
-    (delete)="onDelete($event)"
-    (pageChange)="onPageChange($event)"
-    (rowsPerPageChange)="onRowsPerPageChange($event)"
-    (sortChange)="onSortChange($event)"
-  ></app-job-posts-table>
+  <div class="flex-1 mx-6 mb-6">
+    <app-job-posts-table
+      [dataSource]="list"
+      [total]="total"
+      [page]="page"
+      [rowsPerPage]="rowsPerPage"
+      [orderBy]="orderBy"
+      [order]="order"
+      [headCells]="headCells"
+      [isLoading]="isLoadingList"
+      (edit)="onEdit($event)"
+      (delete)="onDelete($event)"
+      (pageChange)="onPageChange($event)"
+      (rowsPerPageChange)="onRowsPerPageChange($event)"
+      (sortChange)="onSortChange($event)"
+    ></app-job-posts-table>
+  </div>
 
   <!-- Popup Modal Tailwind -->
-  <div *ngIf="openPopup" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div class="bg-white w-full max-w-2xl rounded-lg p-6 relative">
+  <div *ngIf="openPopup" class="fixed inset-0 bg-sky-500/50 flex justify-center items-center z-[1000] p-4">
+    <div class="bg-white w-full max-w-4xl rounded-lg relative max-h-[90vh] flex flex-col overflow-hidden">
       <button
         (click)="openPopup = false"
-        class="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+        class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 z-10"
       >
-        ✖️
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
       </button>
 
-      <h2 class="text-xl font-bold mb-4">
+      <h2 class="text-xl font-bold p-6 pb-0">
         {{ editData ? 'Cập nhật tin tuyển dụng' : 'Tạo mới tin tuyển dụng' }}
       </h2>
 
-      <app-job-post-form
-        [editData]="editData"
-        (handleAddOrUpdate)="onSave($event)"
-      ></app-job-post-form>
+      <div class="flex-1 overflow-y-auto p-6">
+        <app-job-post-form
+          [editData]="editData"
+          [serverErrors]="serverErrors"
+          (handleAddOrUpdate)="onSave($event)"
+        ></app-job-post-form>
+      </div>
     </div>
   </div>
 </div>

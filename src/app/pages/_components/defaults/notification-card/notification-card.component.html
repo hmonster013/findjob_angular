@@ -1,48 +1,70 @@
 <div class="space-y-6">
   <div class="flex justify-between items-center">
-    <h2 class="text-lg font-bold text-primary-600">{{ title }}</h2>
-
-    <div *ngIf="notifications.length > 0" class="flex gap-2">
+    <h2 class="text-2xl font-bold text-gray-800">{{ title }}</h2>
+    <div *ngIf="notifications.length > 0" class="flex gap-3">
       <button (click)="markAllRead()" class="btn-outline-primary">Đánh dấu đã đọc</button>
       <button (click)="removeAllNotifications()" class="btn-outline-danger">Xóa tất cả</button>
     </div>
   </div>
 
-  <div *ngIf="isLoading" class="flex justify-center p-6">
-    <span class="loader"></span>
+  <!-- Skeleton loading -->
+  <div *ngIf="isLoading" class="space-y-4">
+    <div *ngFor="let _ of [1,2,3,4,5]" class="flex items-center p-4 bg-gray-100 rounded-lg animate-pulse">
+      <div class="w-12 h-12 bg-gray-200 rounded border mr-4"></div>
+      <div class="flex-1">
+        <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+      </div>
+      <div class="w-6 h-6 bg-gray-200 rounded-full"></div>
+    </div>
   </div>
 
-  <div *ngIf="!isLoading && notifications.length === 0" class="text-center text-gray-500">
-    Chưa có thông báo nào.
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && notifications.length === 0" class="text-center text-gray-500 py-12 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
+    <svg class="mx-auto h-28 w-28 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+    </svg>
+    <p class="mt-4 text-lg font-medium">Chưa có thông báo nào.</p>
   </div>
 
+  <!-- List notifications -->
   <div *ngIf="!isLoading && notifications.length > 0" class="space-y-4">
     <div
       *ngFor="let item of notifications"
       (click)="handleClick(item)"
-      class="flex items-start gap-4 p-4 bg-white rounded shadow cursor-pointer hover:bg-gray-50"
-      [ngClass]="{ 'bg-gray-100': !item.is_read }"
+      class="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-gray-50 transition"
+      [ngClass]="{'bg-blue-50': !item.is_read}"
     >
       <img
-        [src]="item.image || '/assets/images/notification-default.png'"
-        class="w-12 h-12 rounded border"
+        [src]="item.image || 'https://via.placeholder.com/48'"
+        class="w-12 h-12 rounded border border-gray-200 object-cover"
         alt="Notification"
       />
       <div class="flex-1">
-        <div class="font-semibold" [ngClass]="{ 'font-bold': !item.is_read }">
+        <div class="font-semibold text-gray-800" [ngClass]="{'font-bold': !item.is_read}">
           {{ item.title }}
         </div>
-        <div class="text-gray-500 text-sm">
-          {{ item.content }}
-        </div>
+        <div class="text-gray-500 text-sm mt-1">{{ item.content }}</div>
+        <div class="text-gray-400 text-xs mt-1">{{ item.time | date: 'dd/MM/yyyy HH:mm' }}</div>
       </div>
-      <button (click)="removeNotification(item.key)" class="text-red-500 hover:text-red-700">
-        ✖
+      <button
+        (click)="removeNotification(item.key); $event.stopPropagation()"
+        class="text-red-500 hover:text-red-700"
+        title="Xóa thông báo"
+      >
+        <i class="fas fa-times"></i>
       </button>
     </div>
 
-    <div *ngIf="pageCount > 1" class="text-center mt-4">
-      <button (click)="loadMore()" class="btn-outline-primary">Xem thêm</button>
+    <!-- Pagination -->
+    <div *ngIf="pageCount > 1" class="flex justify-center items-center space-x-2 mt-8">
+      <button
+        (click)="loadMore()"
+        [disabled]="notifications.length >= count"
+        class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+      >
+        <i class="fas fa-chevron-down"></i>
+      </button>
     </div>
   </div>
 </div>

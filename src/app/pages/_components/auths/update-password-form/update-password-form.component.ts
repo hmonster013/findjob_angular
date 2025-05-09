@@ -9,7 +9,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validato
     ReactiveFormsModule
   ],
   templateUrl: './update-password-form.component.html',
-  styleUrl: './update-password-form.component.css'
+  styleUrls: ['./update-password-form.component.css'],
+  standalone: true
 })
 export class UpdatePasswordFormComponent {
   @Input() serverErrors: any = {};
@@ -29,7 +30,7 @@ export class UpdatePasswordFormComponent {
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/)
       ]],
       confirmPassword: ['', [Validators.required]]
-    }, { validators: [this.passwordMatchValidator] }); // ✅ đưa vào mảng validators
+    }, { validators: [this.passwordMatchValidator] });
   }
 
   ngOnChanges(changes: SimpleChanges) {

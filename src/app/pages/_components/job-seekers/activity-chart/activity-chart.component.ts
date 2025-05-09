@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, ChartConfiguration } from 'chart.js';
 import { StatisticService } from '../../../../_services/statistic.service';
@@ -15,57 +15,89 @@ export class ActivityChartComponent implements OnInit, AfterViewInit {
 
   chart: Chart | undefined;
   isLoading = true;
-  dataChart: any[] = [];
+  dataChart: any = null;
 
-  constructor(private statisticService: StatisticService) {}
+  private isCanvasReady = false;
+
+  constructor(
+    private statisticService: StatisticService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.fetchData();
   }
 
   ngAfterViewInit(): void {
-    // Khởi tạo chart sau khi có canvas
+    this.isCanvasReady = true;
+    console.log('ngAfterViewInit: Canvas ready, canvas element:', this.canvasRef?.nativeElement);
+    if (this.dataChart?.labels?.length > 0 && this.canvasRef?.nativeElement) {
+      console.log('Rendering chart in ngAfterViewInit');
+      this.renderChart();
+    }
   }
 
   fetchData() {
     this.isLoading = true;
     this.statisticService.jobSeekerActivityStatistics().subscribe({
       next: (res) => {
-        const result = res.data || [];
-        this.dataChart = result;
-        if (this.dataChart.length > 0) {
+        console.log('API response:', res);
+        this.dataChart = res.data || null;
+        console.log('dataChart:', this.dataChart);
+        this.isLoading = false;
+        this.cdr.detectChanges(); // Buộc cập nhật giao diện
+        if (this.dataChart?.labels?.length > 0 && this.isCanvasReady) {
+          console.log('Rendering chart in fetchData');
           this.renderChart();
         }
       },
       error: (err) => {
         console.error('Error fetching activity data:', err);
+        this.dataChart = null;
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       complete: () => {
-        this.isLoading = false;
-      }
+        console.log('fetchData complete, isLoading:', this.isLoading);
+      },
     });
   }
 
   renderChart() {
-    const ctx = this.canvasRef.nativeElement.getContext('2d');
-    if (!ctx) return;
+    const ctx = this.canvasRef?.nativeElement.getContext('2d');
+    if (!ctx || !this.dataChart) {
+      console.error('Cannot render chart: ctx or dataChart is missing', {
+        ctx: !!ctx,
+        dataChart: this.dataChart,
+      });
+      return;
+    }
 
-    // Nếu đã có chart cũ thì destroy trước
+    if (
+      !Array.isArray(this.dataChart.labels) ||
+      !Array.isArray(this.dataChart.data1) ||
+      !Array.isArray(this.dataChart.data2) ||
+      !Array.isArray(this.dataChart.data3) ||
+      this.dataChart.labels.length !== this.dataChart.data1.length ||
+      this.dataChart.labels.length !== this.dataChart.data2.length ||
+      this.dataChart.labels.length !== this.dataChart.data3.length
+    ) {
+      console.error('Invalid chart data:', this.dataChart);
+      return;
+    }
+
     if (this.chart) {
       this.chart.destroy();
     }
 
-    const labels = this.dataChart.map(item => item.label);
-    const counts = this.dataChart.map(item => item.count);
-
     const config: ChartConfiguration<'line'> = {
       type: 'line',
       data: {
-        labels: labels,
+        labels: this.dataChart.labels,
         datasets: [
           {
-            label: 'Hoạt động',
-            data: counts,
+            label: this.dataChart.title1 || 'Việc đã ứng tuyển',
+            data: this.dataChart.data1,
             borderColor: 'rgba(59, 130, 246, 1)',
             backgroundColor: 'rgba(59, 130, 246, 0.2)',
             fill: false,
@@ -73,36 +105,62 @@ export class ActivityChartComponent implements OnInit, AfterViewInit {
             pointRadius: 5,
             pointHoverRadius: 7,
           },
-        ]
+          {
+            label: this.dataChart.title2 || 'Việc đã lưu',
+            data: this.dataChart.data2,
+            borderColor: 'rgba(16, 185, 129, 1)',
+            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+            fill: false,
+            tension: 0.4,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+          },
+          {
+            label: this.dataChart.title3 || 'Công ty đang theo dõi',
+            data: this.dataChart.data3,
+            borderColor: 'rgba(244, 63, 94, 1)',
+            backgroundColor: 'rgba(244, 63, 94, 0.2)',
+            fill: false,
+            tension: 0.4,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+          },
+        ],
       },
       options: {
         responsive: true,
         plugins: {
           legend: {
-            display: false,
+            display: true,
+            position: 'top',
           },
           tooltip: {
             callbacks: {
-              label: (context) => `Số lượng: ${context.parsed.y}`,
-            }
-          }
+              label: (context) => `${context.dataset.label}: ${context.parsed.y}`,
+            },
+          },
         },
         scales: {
           x: {
             grid: {
-              display: false, // <-- Chỉ tắt gridline x
-            }
+              display: false,
+            },
           },
           y: {
             grid: {
-              display: true, // nếu muốn giữ đường grid y
+              display: true,
             },
-            beginAtZero: true
-          }
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1,
+            },
+          },
         },
       },
     };
 
+    console.log('Creating chart with config:', config);
     this.chart = new Chart(ctx, config);
+    console.log('Chart created:', this.chart);
   }
 }

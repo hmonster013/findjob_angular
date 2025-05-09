@@ -70,4 +70,9 @@ export class JobPostSearchComponent {
   toggleAdvanceFilter() {
     this.showAdvanceFilter = !this.showAdvanceFilter;
   }
+
+  isFormNotEmpty(): boolean {
+    const values = this.form.value;
+    return Object.values(values).some(value => value !== '' && value !== null);
+  }
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { JobPostActivityService } from '../../../../_services/job-post-activity.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-applied-job-card',
@@ -18,7 +19,10 @@ export class AppliedJobCardComponent implements OnInit {
   pageSize = 10;
   count = 0;
 
-  constructor(private jobPostActivityService: JobPostActivityService) {}
+  constructor(
+    private jobPostActivityService: JobPostActivityService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.loadJobPostActivities();
@@ -33,6 +37,7 @@ export class AppliedJobCardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching job post activities:', err);
+        this.toastr.error('Không thể tải danh sách công việc đã ứng tuyển!');
       },
       complete: () => {
         this.isLoading = false;
@@ -45,11 +50,30 @@ export class AppliedJobCardComponent implements OnInit {
   }
 
   handleChangePage(newPage: number) {
-    this.page = newPage;
-    this.loadJobPostActivities();
+    if (newPage >= 1 && newPage <= this.totalPages) {
+      this.page = newPage;
+      this.loadJobPostActivities();
+    }
   }
 
   get totalPages(): number {
     return Math.ceil(this.count / this.pageSize);
+  }
+
+  get pages(): number[] {
+    const total = this.totalPages;
+    const pages = [];
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, this.page - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(total, startPage + maxPagesToShow - 1);
+
+    if (endPage - startPage + 1 < maxPagesToShow) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 }

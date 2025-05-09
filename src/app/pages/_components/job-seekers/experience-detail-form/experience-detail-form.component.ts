@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -13,6 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class ExperienceDetailFormComponent implements OnInit, OnChanges {
   @Input() editData: any = null;
   @Input() handleAddOrUpdate!: (data: any) => void;
+  @Output() cancelForm = new EventEmitter<void>();
 
   form!: FormGroup;
   maxYesterday: string = '';
@@ -59,5 +60,10 @@ export class ExperienceDetailFormComponent implements OnInit, OnChanges {
     if (this.form.valid && this.handleAddOrUpdate) {
       this.handleAddOrUpdate(this.form.value);
     }
+  }
+
+  cancel() {
+    this.form.reset();
+    this.cancelForm.emit();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -6,34 +6,32 @@ import Swal from 'sweetalert2';
 import { ProfileUploadFormComponent } from '../profile-upload-form/profile-upload-form.component';
 import { CV_TYPES } from '../../../../_configs/constants';
 import { ResumeService } from '../../../../_services/resume.service';
+import { JobSeekerProfileService } from '../../../../_services/job-seeker-profile.service';
 
 @Component({
   selector: 'app-profile-upload',
   standalone: true,
   templateUrl: './profile-upload.component.html',
   styleUrls: ['./profile-upload.component.css'],
-  imports: [
-    CommonModule,
-    ProfileUploadFormComponent
-  ],
+  imports: [CommonModule, ProfileUploadFormComponent],
 })
 export class ProfileUploadComponent implements OnInit {
+  @Input() allConfig: any = {};
+  @Input() jobSeekerProfileId: any;
+
   resumes: any[] = [];
   isLoadingResumes = true;
   isFullScreenLoading = false;
   openPopup = false;
-  allConfig: any = {}; // cần truyền từ component cha thực tế
-  jobSeekerProfileId: number | null = null;
   CV_UPLOAD = CV_TYPES.cvUpload;
 
   constructor(
+    private jobSeekerProfileService: JobSeekerProfileService,
     private resumeService: ResumeService,
-    private route: ActivatedRoute,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.jobSeekerProfileId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.jobSeekerProfileId) {
       this.loadResumes();
     }
@@ -42,15 +40,15 @@ export class ProfileUploadComponent implements OnInit {
   loadResumes() {
     this.isLoadingResumes = true;
     const params = {
-      resumeType: this.CV_UPLOAD,
-      jobSeekerProfileId: this.jobSeekerProfileId
+      resumeType: this.CV_UPLOAD
     };
-    this.resumeService.getResumes(params).subscribe({
+    this.jobSeekerProfileService.getResumes(this.jobSeekerProfileId, params).subscribe({
       next: (res) => {
         this.resumes = res.data || [];
       },
       error: (err) => {
         console.error('Error loading resumes:', err);
+        this.toastr.error('Có lỗi khi tải danh sách CV!');
       },
       complete: () => {
         this.isLoadingResumes = false;
@@ -59,6 +57,7 @@ export class ProfileUploadComponent implements OnInit {
   }
 
   handleShowUpload() {
+    console.log('Opening popup'); // Debug log
     this.openPopup = true;
   }
 
@@ -87,6 +86,7 @@ export class ProfileUploadComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error uploading resume:', err);
+        this.toastr.error('Có lỗi khi tải lên CV!');
       },
       complete: () => {
         this.isFullScreenLoading = false;
@@ -111,6 +111,7 @@ export class ProfileUploadComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error deleting resume:', err);
+            this.toastr.error('Có lỗi khi xóa CV!');
           }
         });
       }
@@ -126,6 +127,7 @@ export class ProfileUploadComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error activating resume:', err);
+        this.toastr.error('Có lỗi khi kích hoạt CV!');
       },
       complete: () => {
         this.isFullScreenLoading = false;

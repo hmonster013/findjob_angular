@@ -6,6 +6,7 @@ import { JobApplicationCardComponent } from '../../_components/job-seekers/job-a
 import { JobSeekerQuantityStatisticsComponent } from '../../_components/job-seekers/job-seeker-quantity-statistics/job-seeker-quantity-statistics.component';
 import { ActivityChartComponent } from '../../_components/job-seekers/activity-chart/activity-chart.component';
 import { SuggestedJobPostCardComponent } from '../../_components/defaults/suggested-job-post-card/suggested-job-post-card.component';
+import { AuthStateService } from '../../../_services/auth-state.service';
 
 @Component({
   selector: 'app-dashboard-jobseeker-page',
@@ -21,4 +22,12 @@ import { SuggestedJobPostCardComponent } from '../../_components/defaults/sugges
   ],
   templateUrl: './dashboard-jobseeker-page.component.html',
 })
-export class DashboardJobSeekerPageComponent {}
+export class DashboardJobSeekerPageComponent {
+  currentUser: any;
+
+  constructor(
+    private authStateService: AuthStateService,
+  ){
+    this.currentUser = authStateService.getCurrentUser();
+  }
+}

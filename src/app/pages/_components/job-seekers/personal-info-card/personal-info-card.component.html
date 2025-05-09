@@ -1,63 +1,90 @@
-<div class="p-4 bg-white rounded-lg shadow-md relative">
+<div class="p-6 bg-white rounded-lg shadow-md relative">
+  <!-- Title -->
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4">Thông tin cá nhân</h2>
+  <hr class="border-gray-500 mb-4">
 
-  <h2 class="text-xl font-bold mb-4">Thông tin cá nhân</h2>
-
-  <div *ngIf="isLoadingProfile">
-    <div class="space-y-3">
-      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
-      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
-    </div>
+  <!-- Loading Skeleton -->
+  <div *ngIf="isLoadingProfile" class="space-y-3">
+    <div class="h-6 bg-gray-300 rounded-md animate-pulse"></div>
+    <div class="h-6 bg-gray-300 rounded-md animate-pulse"></div>
   </div>
 
-  <div *ngIf="!isLoadingProfile && !profile" class="text-center text-gray-500">
+  <!-- No Profile -->
+  <div *ngIf="!isLoadingProfile && !profile" class="text-center text-gray-600 text-sm">
     Bạn chưa có thông tin cá nhân.
   </div>
 
+  <!-- Profile Info -->
   <div *ngIf="!isLoadingProfile && profile" class="space-y-4">
-
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
       <div>
-        <span class="font-semibold">Họ tên:</span> {{ profile.fullName }}
+        <span class="font-semibold text-gray-800">Họ tên:</span> {{ profile.user.fullName }}
       </div>
       <div>
-        <span class="font-semibold">Email:</span> {{ profile.email }}
+        <span class="font-semibold text-gray-800">Email:</span> {{ profile.email }}
       </div>
       <div>
-        <span class="font-semibold">Số điện thoại:</span> {{ profile.phone }}
+        <span class="font-semibold text-gray-800">Số điện thoại:</span> {{ profile.phone }}
       </div>
       <div>
-        <span class="font-semibold">Ngày sinh:</span> {{ profile.birthDate | date: 'dd/MM/yyyy' }}
+        <span class="font-semibold text-gray-800">Ngày sinh:</span> {{ profile.birthDate | date: 'dd/MM/yyyy' }}
       </div>
       <div>
-        <span class="font-semibold">Giới tính:</span> {{ profile.genderText }}
+        <span class="font-semibold text-gray-800">Giới tính:</span> {{ profile.genderText }}
       </div>
       <div>
-        <span class="font-semibold">Địa chỉ:</span> {{ profile.address }}
+        <span class="font-semibold text-gray-800">Địa chỉ:</span> {{ profile.address }}
       </div>
     </div>
 
     <div class="mt-6 flex justify-end">
       <button
         (click)="handleShowEdit()"
-        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+        class="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-md shadow-sm hover:bg-blue-700 text-sm font-medium transition-colors duration-200 flex items-center gap-2"
       >
-        Chỉnh sửa
+        <i class="fas fa-edit"></i> Chỉnh sửa
       </button>
     </div>
-
   </div>
 
-  <app-personal-profile-form
+  <!-- Modal Popup -->
+  <div
     *ngIf="openPopup"
-    [editData]="profile"
-    [handleUpdateProfile]="handleUpdate"
-  ></app-personal-profile-form>
-
-  <div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-    </svg>
+    class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50 transition-opacity duration-300"
+  >
+    <div class="bg-white rounded-lg p-6 max-w-md w-full relative max-h-[80vh] overflow-y-auto">
+      <!-- Close Button -->
+      <button
+        (click)="openPopup = false"
+        class="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+        aria-label="Đóng modal"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+      <!-- Form -->
+      <app-personal-profile-form
+        [editData]="profile"
+        [handleUpdateProfile]="handleUpdate"
+        [allConfig]="allConfig"
+      ></app-personal-profile-form>
+      <!-- Save Button -->
+      <div class="flex justify-end mt-4">
+        <button
+          type="submit"
+          form="modal-form"
+          class="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-md shadow-sm hover:bg-blue-700 text-sm font-medium transition-colors duration-200 flex items-center gap-2"
+        >
+          <i class="fas fa-save"></i> Lưu
+        </button>
+      </div>
+    </div>
   </div>
 
+  <!-- Fullscreen Loading -->
+  <div
+    *ngIf="isFullScreenLoading"
+    class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50"
+  >
+    <div class="animate-spin rounded-full h-10 w-10 border-2 border-blue-600 border-t-transparent shadow-sm"></div>
+  </div>
 </div>

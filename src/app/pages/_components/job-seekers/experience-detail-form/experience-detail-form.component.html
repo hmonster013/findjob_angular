@@ -1,6 +1,5 @@
 <form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
     <div class="flex flex-col col-span-2">
       <label class="mb-2 font-medium">Chức danh/vị trí công việc <span class="text-red-500">*</span></label>
       <input
@@ -50,5 +49,20 @@
       ></textarea>
     </div>
 
+    <div class="flex justify-end mt-4 col-span-2">
+      <button
+        type="submit"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        Lưu
+      </button>
+      <button
+        type="button"
+        (click)="cancel()"
+        class="ml-2 bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded"
+      >
+        Hủy
+      </button>
+    </div>
   </div>
 </form>

@@ -1,4 +1,3 @@
-<!-- chat-card.component.html -->
 <button
   (click)="handleRedirect()"
   class="relative p-2 rounded-full hover:bg-gray-100 transition"
@@ -17,7 +16,7 @@
 
   <span
     *ngIf="unreadCount > 0"
-    class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2"
+    class="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full"
   >
     {{ unreadCount }}
   </span>

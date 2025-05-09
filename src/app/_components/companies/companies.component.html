@@ -36,16 +36,41 @@
     </div>
 
     <!-- Pagination -->
-    <div class="flex justify-center mt-6" *ngIf="totalPages > 1">
-      <ng-container *ngFor="let pageNumber of [].constructor(totalPages); let idx = index">
+    <div *ngIf="totalPages > 1" class="flex justify-center mt-6">
+      <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
+        <!-- Previous Button -->
         <button
-          (click)="handleChangePage(idx + 1)"
-          class="px-3 py-1 mx-1 rounded-full border"
-          [ngClass]="page === (idx + 1) ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'"
+          (click)="changePage(page - 1)"
+          [disabled]="page === 1"
+          class="px-3 py-2 border border-gray-300 rounded-l-md text-gray-500 hover:bg-purple-800 hover:text-white disabled:text-gray-400 disabled:hover:bg-white disabled:hover:text-gray-400"
         >
-          {{ idx + 1 }}
+          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
         </button>
-      </ng-container>
+
+        <!-- Page Numbers -->
+        <button
+          *ngFor="let p of getVisiblePages()"
+          (click)="changePage(p)"
+          class="px-4 py-2 border-t border-b border-gray-300 text-gray-700 hover:bg-purple-800 hover:text-white"
+          [class.bg-purple-800]="p === page"
+          [class.text-white]="p === page"
+        >
+          {{ p }}
+        </button>
+
+        <!-- Next Button -->
+        <button
+          (click)="changePage(page + 1)"
+          [disabled]="page === totalPages"
+          class="px-3 py-2 border border-gray-300 rounded-r-md text-gray-500 hover:bg-purple-800 hover:text-white disabled:text-gray-400 disabled:hover:bg-white disabled:hover:text-gray-400"
+        >
+          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </nav>
     </div>
   </ng-container>
 

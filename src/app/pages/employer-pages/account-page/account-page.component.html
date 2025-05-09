@@ -1,11 +1,11 @@
-<div class="p-6 bg-white rounded-xl shadow-md">
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5">
-    <div class="col-span-1">
-      <app-account-card
-        [title]="
-          '<h2 class=\'text-xl font-semibold bg-gradient-to-r from-primary to-blue-500 text-transparent bg-clip-text\'>Thông tin tài khoản</h2>'
-        "
-      />
-    </div>
+<div class="container mx-auto p-6 space-y-8">
+  <app-backdrop-loading *ngIf="isLoading"></app-backdrop-loading>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <h1 class="text-2xl font-bold mb-4">Quản lý tài khoản</h1>
+    <app-account-card
+      (profileUpdated)="fetchUserProfile()"
+      (logout)="logout()"
+    ></app-account-card>
   </div>
 </div>

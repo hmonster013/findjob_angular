@@ -1,32 +1,40 @@
-<!-- sửa chỗ này -->
-
-<!-- Top 10 nghề nghiệp -->
-<div class="col-span-3">
-  <div class="border rounded-lg p-4 bg-blue-50">
-    <h3 class="font-semibold text-lg mb-4">Top 10 nghề nghiệp</h3>
-    <div class="flex flex-col gap-2">
-      <div
-        *ngFor="let career of hotCareers"
-        class="cursor-pointer hover:text-orange-400"
-        (click)="onSelectCareer(career.id)"
-      >
-        {{ career.name }}
-      </div>
+<div *ngIf="open" class="fixed left-0 right-0 top-[55px] bottom-0 bg-black bg-opacity-40 z-50 overflow-y-auto">
+  <div class="bg-white min-h-full p-6">
+    <div class="text-right mb-4">
+      <button (click)="close.emit()" class="text-gray-500 hover:text-black">Đóng</button>
     </div>
-  </div>
-</div>
 
-<!-- Nghề khác -->
-<div class="col-span-9">
-  <div class="p-4">
-    <h3 class="font-semibold text-lg mb-4">Ngành nghề khác</h3>
-    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
-      <div
-        *ngFor="let career of otherCareers"
-        class="cursor-pointer hover:text-orange-400"
-        (click)="onSelectCareer(career.id)"
-      >
-        {{ career.name }}
+    <div class="grid grid-cols-12 gap-4">
+      <!-- Top 10 nghề nghiệp -->
+      <div class="col-span-3">
+        <div class="border rounded-lg p-4 bg-blue-50">
+          <h3 class="font-semibold text-lg mb-4">Top 10 nghề nghiệp</h3>
+          <div class="flex flex-col gap-2">
+            <div
+              *ngFor="let career of topCareers"
+              class="cursor-pointer hover:text-orange-400"
+              (click)="onSelectCareer(career.id)"
+            >
+              {{ career.name }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nghề khác -->
+      <div class="col-span-9">
+        <div class="p-4">
+          <h3 class="font-semibold text-lg mb-4">Ngành nghề khác</h3>
+          <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            <div
+              *ngFor="let career of allCareers"
+              class="cursor-pointer hover:text-orange-400"
+              (click)="onSelectCareer(career.id)"
+            >
+              {{ career.name }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

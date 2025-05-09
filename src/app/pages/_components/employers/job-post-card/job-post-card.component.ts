@@ -1,42 +1,54 @@
-import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { SweetAlertIcon } from 'sweetalert2';
-import { JobService } from '../../../../_services/job.service';
-import { ToastrService } from 'ngx-toastr';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { confirmModal, errorModal } from '../../../../_utils/sweetalert2-modal';
+import { Subject, takeUntil } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { JobService } from '../../../../_services/job.service';
 import { JobPostsTableComponent } from "../job-posts-table/job-posts-table.component";
 import { JobPostFormComponent } from "../job-post-form/job-post-form.component";
 import { JobPostFilterFormComponent } from "../job-post-filter-form/job-post-filter-form.component";
 import { BackdropLoadingComponent } from "../../../../_components/backdrop-loading/backdrop-loading.component";
+import { confirmModal, errorModal } from '../../../../_utils/sweetalert2-modal';
 import { exportToXLSX } from '../../../../_utils/xlsx-utils';
 
 @Component({
   selector: 'app-job-post-card',
+  standalone: true,
   imports: [
     CommonModule,
     JobPostsTableComponent,
     JobPostFormComponent,
     JobPostFilterFormComponent,
     BackdropLoadingComponent
-],
+  ],
   templateUrl: './job-post-card.component.html',
-  styleUrl: './job-post-card.component.css'
+  styleUrls: ['./job-post-card.component.css']
 })
-export class JobPostCardComponent {
+export class JobPostCardComponent implements OnInit, OnDestroy {
   isLoadingList: boolean = false;
   isFullScreenLoading: boolean = false;
   openPopup: boolean = false;
   editData: any = null;
+  serverErrors: any = {};
 
-  page: number = 1;
-  rowsPerPage: number = 10;
+  page: number = 0; // 0-based như React
+  rowsPerPage: number = 5; // Mặc định 5 như React
   total: number = 0;
   filterData: any = {};
-  order: 'asc' | 'desc' = 'desc';
-  orderBy: string = 'updatedAt';
-
+  order: 'asc' | 'desc' = 'asc'; // Mặc định như React
+  orderBy: string = 'createAt'; // Mặc định như React
   list: any[] = [];
+
+  headCells = [
+    { id: 'jobName', showOrder: true, numeric: false, disablePadding: true, label: 'Tên tin đăng' },
+    { id: 'createAt', showOrder: true, numeric: false, disablePadding: false, label: 'Ngày đăng' },
+    { id: 'deadline', showOrder: true, numeric: false, disablePadding: false, label: 'Thời hạn nộp' },
+    { id: 'appliedTotal', showOrder: true, numeric: false, disablePadding: false, label: 'Lượt nộp' },
+    { id: 'viewedTotal', showOrder: true, numeric: false, disablePadding: false, label: 'Lượt xem' },
+    { id: 'isVerify', showOrder: false, numeric: false, disablePadding: false, label: 'Trạng thái' },
+    { id: 'action', showOrder: false, numeric: true, disablePadding: false, label: 'Hành động' }
+  ];
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private jobService: JobService,
@@ -50,38 +62,50 @@ export class JobPostCardComponent {
   fetchJobPosts() {
     this.isLoadingList = true;
     const params = {
-      page: this.page,
-      limit: this.rowsPerPage,
-      order: { [this.orderBy]: this.order },
-      ...this.filterData,
+      page: this.page + 1,
+      pageSize: this.rowsPerPage,
+      ordering: `${this.order === 'desc' ? '-' : ''}${this.orderBy}`,
+      ...this.filterData
     };
-    this.jobService.getEmployerJobPost(params).subscribe({
+    this.jobService.getEmployerJobPost(params).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
-        this.list = res.data || [];
-        this.total = res.pagination?.total || 0;
+        this.list = res.data.results || [];
+        this.total = res.count || 0;
         this.isLoadingList = false;
       },
       error: () => {
         this.isLoadingList = false;
-        errorModal('Lỗi', 'Không thể load tin tuyển dụng');
+        errorModal('Lỗi', 'Không thể tải danh sách tin tuyển dụng');
       }
     });
   }
 
   onOpenCreate() {
     this.editData = null;
+    this.serverErrors = {};
     this.openPopup = true;
   }
 
   onEdit(item: any) {
-    this.editData = item;
-    this.openPopup = true;
+    this.isFullScreenLoading = true;
+    this.jobService.getEmployerJobPostDetailById(item.id).pipe(takeUntil(this.destroy$)).subscribe({
+      next: (res) => {
+        this.editData = res.data || {};
+        this.serverErrors = {};
+        this.openPopup = true;
+        this.isFullScreenLoading = false;
+      },
+      error: () => {
+        this.isFullScreenLoading = false;
+        errorModal('Lỗi', 'Không thể tải chi tiết tin tuyển dụng');
+      }
+    });
   }
 
   onDelete(item: any) {
     confirmModal(() => {
       this.isFullScreenLoading = true;
-      this.jobService.deleteJobPostById(item.id).subscribe({
+      this.jobService.deleteJobPostById(item.id).pipe(takeUntil(this.destroy$)).subscribe({
         next: () => {
           this.toast.success('Xóa tin tuyển dụng thành công');
           this.isFullScreenLoading = false;
@@ -92,42 +116,39 @@ export class JobPostCardComponent {
           errorModal('Lỗi', 'Xóa tin tuyển dụng thất bại');
         }
       });
-    }, 'Bạn có chắc muốn xóa tin tuyển dụng này?', '', 'warning');
+    }, 'Bạn có chắc muốn xóa tin tuyển dụng này?', 'Tin tuyển dụng này sẽ được xóa vĩnh viễn và không thể khôi phục.', 'warning');
   }
 
   onSave(formData: any) {
+    // Giả định formData đã là HTML từ ngx-quill, không cần convert
     const formSubmit = { ...formData };
-
-    // Nếu các trường cần xử lý EditorState -> HTML thì xử lý ở đây
-    // Ví dụ:
-    // formSubmit.jobDescription = convertEditorStateToHTML(formData.jobDescription);
-    // formSubmit.jobRequirement = convertEditorStateToHTML(formData.jobRequirement);
-
     this.isFullScreenLoading = true;
 
     if (this.editData) {
-      this.jobService.updateJobPostById(this.editData.id, formSubmit).subscribe({
+      this.jobService.updateJobPostById(this.editData.id, formSubmit).pipe(takeUntil(this.destroy$)).subscribe({
         next: () => {
           this.toast.success('Cập nhật tin tuyển dụng thành công');
           this.openPopup = false;
           this.isFullScreenLoading = false;
           this.fetchJobPosts();
         },
-        error: () => {
+        error: (err) => {
           this.isFullScreenLoading = false;
+          this.serverErrors = err.error?.errors || { general: 'Cập nhật tin tuyển dụng thất bại' };
           errorModal('Lỗi', 'Cập nhật tin tuyển dụng thất bại');
         }
       });
     } else {
-      this.jobService.addJobPost(formSubmit).subscribe({
+      this.jobService.addJobPost(formSubmit).pipe(takeUntil(this.destroy$)).subscribe({
         next: () => {
           this.toast.success('Tạo mới tin tuyển dụng thành công');
           this.openPopup = false;
           this.isFullScreenLoading = false;
           this.fetchJobPosts();
         },
-        error: () => {
+        error: (err) => {
           this.isFullScreenLoading = false;
+          this.serverErrors = err.error?.errors || { general: 'Tạo tin tuyển dụng thất bại' };
           errorModal('Lỗi', 'Tạo tin tuyển dụng thất bại');
         }
       });
@@ -135,8 +156,12 @@ export class JobPostCardComponent {
   }
 
   onFilter(filter: any) {
-    this.filterData = filter;
-    this.page = 1;
+    const filterData = {
+      ...filter,
+      isUrgent: filter.isUrgent === 1 ? true : filter.isUrgent === 2 ? false : ''
+    };
+    this.filterData = filterData;
+    this.page = 0;
     this.fetchJobPosts();
   }
 
@@ -147,7 +172,7 @@ export class JobPostCardComponent {
 
   onRowsPerPageChange(limit: number) {
     this.rowsPerPage = limit;
-    this.page = 1;
+    this.page = 0;
     this.fetchJobPosts();
   }
 
@@ -158,21 +183,29 @@ export class JobPostCardComponent {
       this.orderBy = sortField;
       this.order = 'asc';
     }
-    this.page = 1;
+    this.page = 0;
     this.fetchJobPosts();
   }
 
   onExport() {
     const params = {
-      ...this.filterData,
+      ...this.filterData
     };
-    this.jobService.exportEmployerJobPosts(params).subscribe({
+    this.isFullScreenLoading = true;
+    this.jobService.exportEmployerJobPosts(params).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         exportToXLSX(res.data, 'danh-sach-tin-tuyen-dung');
+        this.isFullScreenLoading = false;
       },
       error: () => {
+        this.isFullScreenLoading = false;
         errorModal('Lỗi', 'Xuất file thất bại');
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

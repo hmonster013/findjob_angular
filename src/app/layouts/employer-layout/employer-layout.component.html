@@ -1,22 +1,41 @@
-<div class="flex min-h-screen bg-gray-100">
-
-  <!-- Sidebar -->
-  <app-sidebar
-    [mobileOpen]="mobileOpen"
-    [drawerWidth]="280"
-    [handleDrawerToggle]="closeMobileSidebar.bind(this)"
-  ></app-sidebar>
-
-  <div class="flex-1 flex flex-col">
-
-    <!-- Header -->
-    <app-header (toggleSidebar)="toggleMobileSidebar()"></app-header>
-
-    <!-- Main Content -->
-    <main class="flex-1 p-4 sm:p-6 lg:p-8 mt-4">
-      <router-outlet></router-outlet>
-    </main>
-
+<div class="flex">
+  <!-- Sidebar cố định trên desktop -->
+  <div class="hidden xl:block w-[200px] bg-white border-r shadow">
+    <app-sidebar [isMobile]="false"></app-sidebar>
   </div>
 
+  <!-- Nội dung chính -->
+  <div class="flex-1">
+    <!-- Header -->
+    <div class="bg-white shadow">
+      <app-header
+        [drawerWidth]="drawerWidth"
+        [handleDrawerToggle]="toggleMobileSidebar.bind(this)"
+      ></app-header>
+    </div>
+
+    <!-- Router Outlet -->
+    <div class="p-6 mt-[50px]">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+  <!-- Modal Sidebar trên di động -->
+  <div
+    *ngIf="mobileOpen"
+    class="fixed inset-0 z-50 bg-black bg-opacity-50 xl:hidden"
+    (click)="toggleMobileSidebar()"
+  >
+    <div
+      class="w-[200px] h-screen bg-white border-r shadow"
+      (click)="$event.stopPropagation()"
+    >
+      <app-sidebar
+        [isMobile]="true"
+        [mobileOpen]="mobileOpen"
+        [drawerWidth]="drawerWidth"
+        [handleDrawerToggle]="toggleMobileSidebar.bind(this)"
+      ></app-sidebar>
+    </div>
+  </div>
 </div>

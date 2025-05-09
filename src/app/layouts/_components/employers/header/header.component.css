@@ -1,0 +1,22 @@
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.user-menu-wrapper .absolute {
+  z-index: 45;
+}
+
+app-notification-card,
+app-chat-card {
+  z-index: 45;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  header > div {
+    gap: 0.5rem; /* Giảm gap trên màn hình nhỏ */
+  }
+}

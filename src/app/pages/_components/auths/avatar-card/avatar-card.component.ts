@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { CompanyService } from '../../../../_services/company.service';
+import { CommonModule } from '@angular/common';
+import { AuthenticationService } from '../../../../_services/authentication.service';
 import { AuthStateService } from '../../../../_services/auth-state.service';
 import { ToastrService } from 'ngx-toastr';
 import { confirmModal } from '../../../../_utils/sweetalert2-modal';
-import { AuthenticationService } from '../../../../_services/authentication.service';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-avatar-card',
@@ -12,7 +11,8 @@ import { CommonModule } from '@angular/common';
     CommonModule
   ],
   templateUrl: './avatar-card.component.html',
-  styleUrl: './avatar-card.component.css'
+  styleUrls: ['./avatar-card.component.css'],
+  standalone: true
 })
 export class AvatarCardComponent {
   isFullScreenLoading = false;

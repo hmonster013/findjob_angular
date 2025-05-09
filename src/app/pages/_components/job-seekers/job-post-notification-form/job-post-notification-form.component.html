@@ -1,74 +1,97 @@
-<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()">
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()" class="space-y-4">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-    <div class="flex flex-col col-span-2">
-      <label class="mb-2 font-medium">Từ khóa <span class="text-red-500">*</span></label>
+    <div class="flex flex-col md:col-span-2">
+      <label class="mb-3 font-semibold text-gray-700">Từ khóa <span class="text-red-500 text-base">*</span></label>
       <input
         formControlName="jobName"
-        placeholder="Nhập từ khoá là tên công việc hoặc liên quan đến công việc"
+        placeholder="Nhập từ khóa (tên công việc hoặc liên quan)"
         type="text"
-        class="border rounded p-2 w-full"
+        class="input-field"
+        [ngClass]="{'border-red-500': form.get('jobName')?.invalid && form.get('jobName')?.touched}"
       />
+      <span *ngIf="form.get('jobName')?.invalid && form.get('jobName')?.touched" class="error-text">
+        {{ form.get('jobName')?.errors?.['required'] ? 'Từ khóa là bắt buộc.' : 'Từ khóa tối đa 200 ký tự.' }}
+      </span>
     </div>
 
     <div class="flex flex-col">
-      <label class="mb-2 font-medium">Ngành nghề <span class="text-red-500">*</span></label>
-      <select formControlName="career" class="border rounded p-2 w-full">
-        <option value="">Chọn ngành nghề cần tuyển</option>
+      <label class="mb-3 font-semibold text-gray-700">Ngành nghề <span class="text-red-500 text-base">*</span></label>
+      <select
+        formControlName="career"
+        class="input-field"
+        [ngClass]="{'border-red-500': form.get('career')?.invalid && form.get('career')?.touched}"
+      >
+        <option value="">Chọn ngành nghề</option>
         <option *ngFor="let option of allConfig?.careerOptions" [value]="option.value">{{ option.label }}</option>
       </select>
+      <span *ngIf="form.get('career')?.invalid && form.get('career')?.touched" class="error-text">
+        Ngành nghề là bắt buộc.
+      </span>
     </div>
 
     <div class="flex flex-col">
-      <label class="mb-2 font-medium">Tỉnh/Thành phố <span class="text-red-500">*</span></label>
-      <select formControlName="city" class="border rounded p-2 w-full">
-        <option value="">Chọn tỉnh thành phố</option>
+      <label class="mb-3 font-semibold text-gray-700">Tỉnh/Thành phố <span class="text-red-500 text-base">*</span></label>
+      <select
+        formControlName="city"
+        class="input-field"
+        [ngClass]="{'border-red-500': form.get('city')?.invalid && form.get('city')?.touched}"
+      >
+        <option value="">Chọn tỉnh/thành phố</option>
         <option *ngFor="let option of allConfig?.cityOptions" [value]="option.value">{{ option.label }}</option>
       </select>
+      <span *ngIf="form.get('city')?.invalid && form.get('city')?.touched" class="error-text">
+        Tỉnh/Thành phố là bắt buộc.
+      </span>
     </div>
 
     <div class="flex flex-col">
-      <label class="mb-2 font-medium">Vị trí/chức vụ</label>
-      <select formControlName="position" class="border rounded p-2 w-full">
+      <label class="mb-3 font-semibold text-gray-700">Vị trí/Chức vụ</label>
+      <select formControlName="position" class="input-field">
         <option value="">Chọn vị trí/chức vụ</option>
         <option *ngFor="let option of allConfig?.positionOptions" [value]="option.value">{{ option.label }}</option>
       </select>
     </div>
 
     <div class="flex flex-col">
-      <label class="mb-2 font-medium">Kinh nghiệm</label>
-      <select formControlName="experience" class="border rounded p-2 w-full">
-        <option value="">Chọn kinh nghiệm yêu cầu</option>
+      <label class="mb-3 font-semibold text-gray-700">Kinh nghiệm</label>
+      <select formControlName="experience" class="input-field">
+        <option value="">Chọn kinh nghiệm</option>
         <option *ngFor="let option of allConfig?.experienceOptions" [value]="option.value">{{ option.label }}</option>
       </select>
     </div>
 
     <div class="flex flex-col">
-      <label class="mb-2 font-medium">Mức lương mong muốn</label>
+      <label class="mb-3 font-semibold text-gray-700">Mức lương mong muốn</label>
       <input
         formControlName="salary"
-        placeholder="Nhập mức lương mong muốn của bạn"
+        placeholder="Nhập mức lương mong muốn (triệu VNĐ)"
         type="number"
-        class="border rounded p-2 w-full"
+        class="input-field"
+        [ngClass]="{'border-red-500': form.get('salary')?.invalid && form.get('salary')?.touched}"
       />
+      <span *ngIf="form.get('salary')?.invalid && form.get('salary')?.touched" class="error-text">
+        Mức lương không hợp lệ.
+      </span>
     </div>
 
-    <div class="flex flex-col col-span-2">
-      <label class="mb-2 font-medium">Tần suất thông báo</label>
+    <div class="flex flex-col md:col-span-2">
+      <label class="mb-3 font-semibold text-gray-700">Tần suất thông báo <span class="text-red-500 text-base">*</span></label>
       <div class="flex flex-wrap gap-4">
         <ng-container *ngFor="let option of allConfig?.frequencyNotificationOptions">
-          <label class="inline-flex items-center space-x-2">
+          <label class="inline-flex items-center space-x-2 cursor-pointer">
             <input
               type="radio"
               [value]="option.id"
               formControlName="frequency"
-              class="text-blue-500"
+              class="radio-field"
             />
-            <span>{{ option.name }}</span>
+            <span class="text-gray-600">{{ option.name }}</span>
           </label>
         </ng-container>
       </div>
+      <span *ngIf="form.get('frequency')?.invalid && form.get('frequency')?.touched" class="error-text">
+        Tần suất thông báo là bắt buộc.
+      </span>
     </div>
-
   </div>
 </form>

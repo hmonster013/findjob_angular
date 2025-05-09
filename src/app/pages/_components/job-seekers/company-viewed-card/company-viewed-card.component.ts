@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ResumeViewedService } from '../../../../_services/resume-viewed.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-company-viewed-card',
@@ -18,7 +19,8 @@ export class CompanyViewedCardComponent implements OnInit {
   count = 0;
 
   constructor(
-    private resumeViewedService: ResumeViewedService
+    private resumeViewedService: ResumeViewedService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -34,6 +36,7 @@ export class CompanyViewedCardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching companies viewed:', err);
+        this.toastr.error('Không thể tải danh sách công ty đã xem hồ sơ!');
       },
       complete: () => {
         this.isLoading = false;
@@ -42,11 +45,30 @@ export class CompanyViewedCardComponent implements OnInit {
   }
 
   handleChangePage(newPage: number) {
-    this.page = newPage;
-    this.loadCompaniesViewed();
+    if (newPage >= 1 && newPage <= this.totalPages) {
+      this.page = newPage;
+      this.loadCompaniesViewed();
+    }
   }
 
   get totalPages(): number {
     return Math.ceil(this.count / this.pageSize);
+  }
+
+  get pages(): number[] {
+    const total = this.totalPages;
+    const pages = [];
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, this.page - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(total, startPage + maxPagesToShow - 1);
+
+    if (endPage - startPage + 1 < maxPagesToShow) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 }

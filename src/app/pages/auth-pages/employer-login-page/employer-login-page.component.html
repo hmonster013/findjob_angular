@@ -1,25 +1,29 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
-  <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-md relative">
-
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 px-4 py-12">
+  <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg relative transform transition-all duration-300 hover:shadow-xl">
+    
     <!-- Logo -->
-    <div class="flex justify-center mb-6">
-      <img src="/assets/images/logo.png" alt="Logo" class="h-12" />
+    <div class="flex justify-center mb-8">
+      <img src="/assets/images/logo.png" alt="Logo" class="h-16 transform transition-transform duration-300 hover:scale-105" />
     </div>
 
     <!-- Title -->
-    <h2 class="text-2xl font-bold text-center text-gray-700 mb-8">
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">
       Đăng nhập Nhà Tuyển Dụng
     </h2>
 
     <!-- Form -->
-    <app-employer-login-form (submitForm)="onLogin($event)"></app-employer-login-form>
+    <div class="space-y-6">
+      <app-employer-login-form (submitForm)="onLogin($event)"></app-employer-login-form>
+    </div>
 
     <!-- Links -->
-    <div class="flex justify-between mt-6 text-sm">
-      <a routerLink="/forget-password" class="text-primary hover:underline">
+    <div class="flex justify-between mt-8 text-sm">
+      <a routerLink="/forget-password" class="text-blue-600 hover:text-blue-800 transition-colors duration-300 flex items-center">
+        <i class="fas fa-key mr-2"></i>
         Quên mật khẩu?
       </a>
-      <a routerLink="/register" class="text-primary hover:underline">
+      <a routerLink="/register" class="text-blue-600 hover:text-blue-800 transition-colors duration-300 flex items-center">
+        <i class="fas fa-user-plus mr-2"></i>
         Đăng ký tài khoản
       </a>
     </div>
@@ -27,7 +31,10 @@
   </div>
 
   <!-- Loading Overlay -->
-  <div *ngIf="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="text-white text-lg">Đang đăng nhập...</div>
+  <div *ngIf="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
+    <div class="bg-white p-6 rounded-lg shadow-xl flex items-center space-x-4">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div class="text-gray-700 text-lg">Đang đăng nhập...</div>
+    </div>
   </div>
 </div>

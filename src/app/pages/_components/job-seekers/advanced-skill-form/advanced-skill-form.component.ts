@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -14,6 +14,7 @@ export class AdvancedSkillFormComponent implements OnInit, OnChanges {
   @Input() editData: any = null;
   @Input() serverErrors: any = null;
   @Input() handleAddOrUpdate!: (data: any) => void;
+  @Output() cancelForm = new EventEmitter<void>();
 
   form!: FormGroup;
 
@@ -22,7 +23,7 @@ export class AdvancedSkillFormComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(200)]],
-      level: ['', [Validators.required]],
+      level: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
     });
 
     if (this.editData) {
@@ -54,5 +55,10 @@ export class AdvancedSkillFormComponent implements OnInit, OnChanges {
     if (this.form.valid && this.handleAddOrUpdate) {
       this.handleAddOrUpdate(this.form.value);
     }
+  }
+
+  cancel() {
+    this.form.reset();
+    this.cancelForm.emit();
   }
 }

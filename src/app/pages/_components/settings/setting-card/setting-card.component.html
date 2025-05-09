@@ -1,26 +1,32 @@
 <div class="bg-white rounded-lg shadow-md p-6">
+  <!-- Title -->
   <div class="flex justify-between items-center mb-4">
-    <h2 class="text-xl font-bold text-gray-800">{{ title }}</h2>
+    <h2 class="text-2xl font-semibold text-gray-800">{{ title }}</h2>
   </div>
 
+  <!-- Divider -->
+  <hr class="border-gray-500 mb-4">
+
+  <!-- Loading Skeleton -->
   <div *ngIf="isLoadingSettings" class="space-y-4">
-    <div class="h-12 bg-gray-200 rounded animate-pulse"></div>
-    <div class="h-12 bg-gray-200 rounded animate-pulse"></div>
+    <div class="h-10 bg-gray-300 rounded-md animate-pulse"></div>
+    <div class="h-10 bg-gray-300 rounded-md animate-pulse"></div>
     <div class="flex justify-center mt-4">
-      <div class="h-12 w-40 bg-gray-200 rounded-full animate-pulse"></div>
+      <div class="h-10 w-32 bg-gray-300 rounded-md animate-pulse"></div>
     </div>
   </div>
 
+  <!-- Settings Form -->
   <div *ngIf="!isLoadingSettings">
     <app-setting-form [editData]="editData" (update)="handleUpdateUserSetting($event)"></app-setting-form>
 
     <div class="flex justify-center mt-6">
       <button
         type="submit"
-        form="account-form"
-        class="bg-primary-600 text-white font-semibold px-6 py-2 rounded hover:bg-primary-700"
+        form="setting-form"
+        class="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-md shadow-sm hover:bg-blue-700 text-sm font-medium transition-colors duration-200 flex items-center gap-2"
       >
-        Cập nhật
+        <i class="fas fa-save"></i> Cập nhật
       </button>
     </div>
   </div>

@@ -1,6 +1,5 @@
 <form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()">
   <div class="grid grid-cols-1 gap-4">
-
     <div class="flex flex-col">
       <label class="mb-2 font-medium">
         Ngôn ngữ <span class="text-red-500">*</span>
@@ -9,6 +8,9 @@
         <option value="">Chọn ngôn ngữ</option>
         <option *ngFor="let option of allConfig?.languageOptions" [value]="option.value">{{ option.label }}</option>
       </select>
+      <div *ngIf="form.get('language')?.errors?.['required'] && form.get('language')?.touched" class="text-red-500 text-sm mt-1">
+        Vui lòng chọn ngôn ngữ
+      </div>
       <div *ngIf="form.get('language')?.errors?.['serverError']" class="text-red-500 text-sm mt-1">
         {{ form.get('language')?.errors?.['serverError'] }}
       </div>
@@ -16,7 +18,7 @@
 
     <div class="flex flex-col">
       <label class="mb-2 font-medium">
-        Trình độ <span class="text-red-500">*</span>
+        Cấp độ <span class="text-red-500">*</span>
       </label>
       <div class="flex space-x-2">
         <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
@@ -25,18 +27,38 @@
             [value]="star"
             formControlName="level"
             class="hidden"
-            [id]="'star-' + star"
+            [id]="'level-star-' + star"
           />
           <label
-            [for]="'star-' + star"
-            class="text-yellow-400 text-2xl cursor-pointer select-none"
+            [for]="'level-star-' + star"
+            class="text-2xl cursor-pointer select-none transition-colors duration-200"
+            [ngClass]="{'text-yellow-400': form.get('level')?.value >= star, 'text-gray-300': form.get('level')?.value < star}"
+            attr.aria-label="Cấp độ {{star}}"
           >★</label>
         </ng-container>
+      </div>
+      <div *ngIf="form.get('level')?.errors?.['required'] && form.get('level')?.touched" class="text-red-500 text-sm mt-1">
+        Vui lòng chọn cấp độ
       </div>
       <div *ngIf="form.get('level')?.errors?.['serverError']" class="text-red-500 text-sm mt-1">
         {{ form.get('level')?.errors?.['serverError'] }}
       </div>
     </div>
 
+    <div class="flex justify-end mt-4">
+      <button
+        type="submit"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        Lưu
+      </button>
+      <button
+        type="button"
+        (click)="cancel()"
+        class="ml-2 bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded"
+      >
+        Hủy
+      </button>
+    </div>
   </div>
 </form>

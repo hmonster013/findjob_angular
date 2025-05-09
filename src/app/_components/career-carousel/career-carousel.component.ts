@@ -16,7 +16,7 @@ import { RouterLink } from '@angular/router';
 })
 export class CareerCarouselComponent {
   isLoading = true;
-  topCareers: { id: number; name: string; imageUrl: string }[] = [];
+  topCareers: { id: number; name: string; imageUrl: string; jobPostTotal: number }[] = [];
   slidesPerView = 5;
 
   constructor(private commonService: CommonService) {}

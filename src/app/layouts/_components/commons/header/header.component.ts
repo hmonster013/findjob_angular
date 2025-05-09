@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { HOST_NAME, ROUTES } from '../../../../_configs/constants';
 import { AuthStateService } from '../../../../_services/auth-state.service';
 import { Router, RouterLink } from '@angular/router';
@@ -6,7 +6,8 @@ import { CommonModule } from '@angular/common';
 import { AccountSwitchMenuComponent } from "../account-switch-menu/account-switch-menu.component";
 import { LeftDrawerComponent } from "../../../../_components/left-drawer/left-drawer.component";
 import { NotificationCardComponent } from "../../../../_components/notification-card/notification-card.component";
-import { ChatCardComponent } from "../../../../_components/chat-card/chat-card.component";
+import { ChatCardComponent } from '../../../../_components/chat-card/chat-card.component';
+import { UserMenuComponent } from "../user-menu/user-menu.component";
 
 @Component({
   selector: 'app-header',
@@ -16,17 +17,13 @@ import { ChatCardComponent } from "../../../../_components/chat-card/chat-card.c
     AccountSwitchMenuComponent,
     LeftDrawerComponent,
     NotificationCardComponent,
-    ChatCardComponent
+    ChatCardComponent,
+    UserMenuComponent
 ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  mobileOpen: boolean = false;
-  currentUser: any;
-  isAuthenticated: boolean = false;
-
-  hostName = window.location.hostname;
   pages = {
     [HOST_NAME.MYJOB]: [
       { id: 1, label: 'Việc làm', path: `/${ROUTES.JOB_SEEKER.JOBS}` },
@@ -39,19 +36,25 @@ export class HeaderComponent {
       { id: 3, label: 'Báo giá', path: `/${ROUTES.EMPLOYER.PRICING}` },
       { id: 4, label: 'Hỗ trợ', path: `/${ROUTES.EMPLOYER.SUPPORT}` },
       { id: 5, label: 'Blog tuyển dụng', path: `/${ROUTES.EMPLOYER.BLOG}` },
-    ]
+    ],
   };
 
-  constructor(
-    private authStateService: AuthStateService,
-    private router: Router
-  ) {
-    this.currentUser = this.authStateService.getCurrentUser();
-    this.isAuthenticated = !!this.currentUser;
-  }
+  hostName = window.location.hostname;
+  mobileOpen = false;
+  isAuthenticated = false;
+  currentUser: any = null;
+  showUserMenu = false;
 
-  handleDrawerToggle() {
-    this.mobileOpen = !this.mobileOpen;
+  constructor(
+    private router: Router,
+    private authStateService: AuthStateService
+  ) {}
+
+  ngOnInit(): void {
+    this.authStateService.getAuthStatus().subscribe(status => {
+      this.isAuthenticated = status;
+      this.currentUser = this.authStateService.getCurrentUser();
+    });
   }
 
   handleLogin() {
@@ -60,5 +63,24 @@ export class HeaderComponent {
 
   handleSignUp() {
     this.router.navigate([`/${ROUTES.AUTH.REGISTER}`]);
+  }
+
+  handleDrawerToggle() {
+    this.mobileOpen = !this.mobileOpen;
+  }
+
+  toggleUserMenu() {
+    this.showUserMenu = !this.showUserMenu;
+  }
+
+  closeUserMenu() {
+    this.showUserMenu = false;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (event.target.innerWidth >= 768) {
+      this.mobileOpen = false;
+    }
   }
 }

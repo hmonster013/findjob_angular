@@ -30,7 +30,7 @@ export class SubHeaderComponent {
   getTopCareers() {
     this.commonService.getTop10Careers().subscribe({
       next: (res) => {
-        this.topCareers = res.data || [];
+        this.topCareers = res.data;
       },
       error: (error) => {
         console.error('Lỗi tải top careers:', error);
@@ -45,5 +45,11 @@ export class SubHeaderComponent {
 
   toggleDialog(openStatus: boolean) {
     this.open = openStatus;
+
+    if (openStatus) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
   }
 }

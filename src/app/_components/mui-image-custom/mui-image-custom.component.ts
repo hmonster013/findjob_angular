@@ -6,17 +6,41 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './mui-image-custom.component.html',
+  styleUrls: ['./mui-image-custom.component.css'],
 })
 export class MuiImageCustomComponent {
-  @Input() src = '';
-  @Input() alt = 'image';
-  @Input() className = '';
+  @Input() src: string = '';
+  @Input() alt: string = 'image';
+  @Input() className: string = '';
   @Input() fit: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down' = 'cover';
-  @Input() transitionStyle = 'all 0.3s ease';
   @Input() width?: number;
   @Input() height?: number;
 
+  isLoading: boolean = true;
+  isLoaded: boolean = false;
+  private readonly fallbackImage: string = '/assets/images/fallback.png';
+  private readonly validFitValues: string[] = ['cover', 'contain', 'fill', 'none', 'scale-down'];
+
+  get computedSrc(): string {
+    return this.src && typeof this.src === 'string' ? this.src : this.fallbackImage;
+  }
+
+  get computedFit(): string {
+    return this.validFitValues.includes(this.fit) ? this.fit : 'cover';
+  }
+
+  get computedClassName(): string {
+    return `w-full max-w-full h-auto rounded-md shadow-sm ${this.className}`.trim();
+  }
+
+  handleLoad() {
+    this.isLoading = false;
+    this.isLoaded = true;
+  }
+
   handleError(event: Event) {
-    (event.target as HTMLImageElement).src = '/assets/images/fallback.png';
+    this.isLoading = false;
+    this.isLoaded = true;
+    (event.target as HTMLImageElement).src = this.fallbackImage;
   }
 }

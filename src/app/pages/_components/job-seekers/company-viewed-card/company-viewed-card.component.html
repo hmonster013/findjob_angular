@@ -1,38 +1,34 @@
 <div class="p-4 bg-white rounded-lg shadow-md">
-
   <h2 class="text-xl font-bold mb-4">Công ty đã xem hồ sơ</h2>
 
-  <div *ngIf="isLoading">
-    <div class="space-y-4">
-      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
-      <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
-    </div>
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoading" class="space-y-4">
+    <div *ngFor="let _ of [1,2,3,4,5]" class="h-16 bg-gray-200 rounded animate-pulse"></div>
   </div>
 
-  <div *ngIf="!isLoading && companiesViewed.length === 0" class="text-center text-gray-500">
-    Chưa có công ty nào xem hồ sơ của bạn.
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && companiesViewed.length === 0" class="text-center text-gray-500 py-8">
+    <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+    </svg>
+    <p class="mt-2">Chưa có công ty nào xem hồ sơ của bạn.</p>
   </div>
 
+  <!-- List companies -->
   <div *ngIf="!isLoading && companiesViewed.length > 0" class="space-y-4">
-
     <div *ngFor="let item of companiesViewed" class="p-4 border rounded hover:shadow transition">
       <div class="flex justify-between items-center">
-
         <div>
-          <h3 class="text-lg font-semibold text-blue-700">{{ item?.company?.name }}</h3>
-          <p class="text-sm text-gray-500 mt-1">
-            {{ item?.company?.address }}
-          </p>
+          <a [routerLink]="['/cong-ty', item.company.slug]" class="text-lg font-semibold text-blue-700 hover:underline">{{ item?.company?.companyName }}</a>
+          <p class="text-sm text-gray-500 mt-1">Lượt xem: {{ item?.views }}</p>
+          <p class="text-sm text-gray-500 mt-1">Ngày xem: {{ item?.createAt | date: 'dd/MM/yyyy hh:mm' }}</p>
         </div>
-
-        <div *ngIf="item?.isSavedResume" class="flex items-center text-green-600">
-          <span class="text-lg">✔️</span>
-          <span class="ml-1 text-sm">Đã lưu hồ sơ</span>
+        <div *ngIf="item?.isSavedResume" class="saved-badge">
+          <i class="fas fa-check mr-1"></i>
+          Đã lưu hồ sơ
         </div>
-
       </div>
     </div>
-
   </div>
 
   <!-- Pagination -->
@@ -40,20 +36,26 @@
     <button
       (click)="handleChangePage(page - 1)"
       [disabled]="page <= 1"
-      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+      class="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
     >
       Trước
     </button>
-
-    <span class="text-sm font-medium">Trang {{ page }} / {{ totalPages }}</span>
-
+    <div class="flex space-x-1">
+      <button
+        *ngFor="let p of pages"
+        (click)="handleChangePage(p)"
+        [ngClass]="{'bg-blue-500 text-white': p === page, 'bg-gray-200 text-gray-700': p !== page}"
+        class="px-3 py-1 rounded hover:bg-blue-100"
+      >
+        {{ p }}
+      </button>
+    </div>
     <button
       (click)="handleChangePage(page + 1)"
       [disabled]="page >= totalPages"
-      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+      class="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
     >
       Sau
     </button>
   </div>
-
 </div>

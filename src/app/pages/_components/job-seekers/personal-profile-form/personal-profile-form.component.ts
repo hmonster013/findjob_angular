@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -15,6 +15,7 @@ export class PersonalProfileFormComponent implements OnInit, OnChanges {
   @Input() editData: any = null;
   @Input() handleUpdateProfile!: (data: any) => void;
   @Input() allConfig: any = {};
+  @Output() cancelForm = new EventEmitter<void>();
 
   form!: FormGroup;
   districtOptions: any[] = [];
@@ -60,7 +61,7 @@ export class PersonalProfileFormComponent implements OnInit, OnChanges {
   patchFormData(data: any) {
     this.form.patchValue({
       phone: data?.phone || '',
-      birthday: data?.birthday || '',
+      birthday: data?.birthDate || '', // Sửa birthDate thành birthday
       gender: data?.gender || '',
       maritalStatus: data?.maritalStatus || '',
       user: {
@@ -72,6 +73,9 @@ export class PersonalProfileFormComponent implements OnInit, OnChanges {
         address: data?.location?.address || '',
       },
     });
+    if (data?.location?.city) {
+      this.loadDistricts(Number(data.location.city));
+    }
   }
 
   setMaxYesterday() {
@@ -80,30 +84,36 @@ export class PersonalProfileFormComponent implements OnInit, OnChanges {
     this.maxYesterday = today.toISOString().split('T')[0];
   }
 
+  loadDistricts(cityId: number) {
+    this.commonService.getDistrictsByCityId(cityId).subscribe({
+      next: (res) => {
+        this.districtOptions = res.data;
+      },
+      error: (err) => {
+        console.error('Error loading districts:', err);
+      },
+    });
+  }
+
   onCityChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const value = selectElement?.value;
 
     if (value) {
-      const cityId = Number(value); // 💥 ép kiểu từ string thành number
-
-      this.commonService.getDistrictsByCityId(cityId).subscribe({
-        next: (res) => {
-          this.districtOptions = res.data;
-          this.form.get('location')?.get('district')?.setValue('');
-        },
-        error: (err) => {
-          console.error('Error loading districts:', err);
-        },
-      });
+      const cityId = Number(value);
+      this.loadDistricts(cityId);
+      this.form.get('location')?.get('district')?.setValue('');
     }
   }
-
-
 
   onSubmit() {
     if (this.form.valid && this.handleUpdateProfile) {
       this.handleUpdateProfile(this.form.value);
     }
+  }
+
+  cancel() {
+    this.form.reset();
+    this.cancelForm.emit();
   }
 }

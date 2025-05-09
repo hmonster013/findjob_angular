@@ -1,0 +1,51 @@
+.modal-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #000;
+}
+
+.toggle-switch {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch + div {
+  position: relative;
+  width: 3rem; /* w-12 */
+  height: 1.5rem; /* h-6 */
+  background-color: #d1d5db; /* bg-gray-300 */
+  border-radius: 9999px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.toggle-switch:checked + div {
+  background-color: #3b82f6; /* bg-blue-500 */
+}
+
+.toggle-switch + div::before {
+  content: '';
+  position: absolute;
+  top: 0.125rem; /* top-0.5 */
+  left: 0.125rem; /* left-0.5 */
+  width: 1.125rem; /* w-4.5 */
+  height: 1.125rem; /* h-4.5 */
+  background-color: #ffffff; /* bg-white */
+  border-radius: 50%;
+  transition: transform 0.2s ease-in-out;
+}
+
+.toggle-switch:checked + div::before {
+  transform: translateX(1.5rem); /* translate-x-6 */
+}

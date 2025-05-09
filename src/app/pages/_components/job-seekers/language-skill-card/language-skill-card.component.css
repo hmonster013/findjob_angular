@@ -1,0 +1,8 @@
+.modal-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.close-button:hover {
+  color: #000;
+}

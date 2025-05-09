@@ -1,9 +1,8 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form" class="space-y-4">
-
   <!-- Upload file -->
   <div>
     <label class="block text-sm font-medium mb-1">Chọn tệp CV của bạn <span class="text-red-500">*</span></label>
-    <input type="file" (change)="onFileChange($event)" class="block w-full text-sm text-gray-500">
+    <input type="file" (change)="onFileChange($event)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
     <div *ngIf="fileError" class="text-red-500 text-xs mt-1">{{ fileError }}</div>
   </div>
 
@@ -11,46 +10,69 @@
   <div>
     <label class="block text-sm font-medium mb-1">Vị trí mong muốn <span class="text-red-500">*</span></label>
     <input type="text" formControlName="title" placeholder="VD: Lập trình viên Backend" class="input-class" />
+    <div *ngIf="form.get('title')?.errors?.['required'] && form.get('title')?.touched" class="text-red-500 text-xs mt-1">
+      Vui lòng nhập vị trí mong muốn
+    </div>
   </div>
 
   <!-- Position -->
   <div>
     <label class="block text-sm font-medium mb-1">Cấp bậc mong muốn <span class="text-red-500">*</span></label>
     <select formControlName="position" class="input-class">
+      <option value="">Chọn cấp bậc</option>
       <option *ngFor="let option of allConfig?.positionOptions" [value]="option.value">{{ option.label }}</option>
     </select>
+    <div *ngIf="form.get('position')?.errors?.['required'] && form.get('position')?.touched" class="text-red-500 text-xs mt-1">
+      Vui lòng chọn cấp bậc
+    </div>
   </div>
 
   <!-- Academic Level -->
   <div>
     <label class="block text-sm font-medium mb-1">Trình độ học vấn <span class="text-red-500">*</span></label>
     <select formControlName="academicLevel" class="input-class">
+      <option value="">Chọn trình độ học vấn</option>
       <option *ngFor="let option of allConfig?.academicLevelOptions" [value]="option.value">{{ option.label }}</option>
     </select>
+    <div *ngIf="form.get('academicLevel')?.errors?.['required'] && form.get('academicLevel')?.touched" class="text-red-500 text-xs mt-1">
+      Vui lòng chọn trình độ học vấn
+    </div>
   </div>
 
   <!-- Experience -->
   <div>
     <label class="block text-sm font-medium mb-1">Kinh nghiệm làm việc <span class="text-red-500">*</span></label>
     <select formControlName="experience" class="input-class">
+      <option value="">Chọn kinh nghiệm làm việc</option>
       <option *ngFor="let option of allConfig?.experienceOptions" [value]="option.value">{{ option.label }}</option>
     </select>
+    <div *ngIf="form.get('experience')?.errors?.['required'] && form.get('experience')?.touched" class="text-red-500 text-xs mt-1">
+      Vui lòng chọn kinh nghiệm làm việc
+    </div>
   </div>
 
   <!-- Career -->
   <div>
     <label class="block text-sm font-medium mb-1">Nghề nghiệp <span class="text-red-500">*</span></label>
     <select formControlName="career" class="input-class">
+      <option value="">Chọn nghề nghiệp</option>
       <option *ngFor="let option of allConfig?.careerOptions" [value]="option.value">{{ option.label }}</option>
     </select>
+    <div *ngIf="form.get('career')?.errors?.['required'] && form.get('career')?.touched" class="text-red-500 text-xs mt-1">
+      Vui lòng chọn nghề nghiệp
+    </div>
   </div>
 
   <!-- City -->
   <div>
     <label class="block text-sm font-medium mb-1">Tỉnh/Thành phố <span class="text-red-500">*</span></label>
     <select formControlName="city" class="input-class">
+      <option value="">Chọn tỉnh/thành phố</option>
       <option *ngFor="let option of allConfig?.cityOptions" [value]="option.value">{{ option.label }}</option>
     </select>
+    <div *ngIf="form.get('city')?.errors?.['required'] && form.get('city')?.touched" class="text-red-500 text-xs mt-1">
+      Vui lòng chọn tỉnh/thành phố
+    </div>
   </div>
 
   <!-- Salary Min / Max -->
@@ -58,10 +80,22 @@
     <div>
       <label class="block text-sm font-medium mb-1">Lương tối thiểu <span class="text-red-500">*</span></label>
       <input type="number" formControlName="salaryMin" placeholder="Nhập lương tối thiểu" class="input-class" />
+      <div *ngIf="form.get('salaryMin')?.errors?.['required'] && form.get('salaryMin')?.touched" class="text-red-500 text-xs mt-1">
+        Vui lòng nhập lương tối thiểu
+      </div>
+      <div *ngIf="form.get('salaryMin')?.errors?.['invalid']" class="text-red-500 text-xs mt-1">
+        Lương tối thiểu phải nhỏ hơn lương tối đa
+      </div>
     </div>
     <div>
       <label class="block text-sm font-medium mb-1">Lương tối đa <span class="text-red-500">*</span></label>
       <input type="number" formControlName="salaryMax" placeholder="Nhập lương tối đa" class="input-class" />
+      <div *ngIf="form.get('salaryMax')?.errors?.['required'] && form.get('salaryMax')?.touched" class="text-red-500 text-xs mt-1">
+        Vui lòng nhập lương tối đa
+      </div>
+      <div *ngIf="form.get('salaryMax')?.errors?.['invalid']" class="text-red-500 text-xs mt-1">
+        Lương tối đa phải lớn hơn lương tối thiểu
+      </div>
     </div>
   </div>
 
@@ -69,27 +103,38 @@
   <div>
     <label class="block text-sm font-medium mb-1">Nơi làm việc <span class="text-red-500">*</span></label>
     <select formControlName="typeOfWorkplace" class="input-class">
+      <option value="">Chọn nơi làm việc</option>
       <option *ngFor="let option of allConfig?.typeOfWorkplaceOptions" [value]="option.value">{{ option.label }}</option>
     </select>
+    <div *ngIf="form.get('typeOfWorkplace')?.errors?.['required'] && form.get('typeOfWorkplace')?.touched" class="text-red-500 text-xs mt-1">
+      Vui lòng chọn nơi làm việc
+    </div>
   </div>
 
   <!-- Job type -->
   <div>
     <label class="block text-sm font-medium mb-1">Hình thức làm việc <span class="text-red-500">*</span></label>
     <select formControlName="jobType" class="input-class">
+      <option value="">Chọn hình thức làm việc</option>
       <option *ngFor="let option of allConfig?.jobTypeOptions" [value]="option.value">{{ option.label }}</option>
     </select>
+    <div *ngIf="form.get('jobType')?.errors?.['required'] && form.get('jobType')?.touched" class="text-red-500 text-xs mt-1">
+      Vui lòng chọn hình thức làm việc
+    </div>
   </div>
 
   <!-- Description -->
   <div>
     <label class="block text-sm font-medium mb-1">Mục tiêu nghề nghiệp <span class="text-red-500">*</span></label>
     <textarea formControlName="description" rows="4" class="input-class" placeholder="Nhập nội dung tại đây"></textarea>
+    <div *ngIf="form.get('description')?.errors?.['required'] && form.get('description')?.touched" class="text-red-500 text-xs mt-1">
+      Vui lòng nhập mục tiêu nghề nghiệp
+    </div>
   </div>
 
-  <!-- Submit -->
-  <div class="flex justify-end">
+  <!-- Submit / Cancel -->
+  <div class="flex justify-end space-x-2">
     <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Lưu</button>
+    <button type="button" (click)="cancel()" class="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded">Hủy</button>
   </div>
-
 </form>

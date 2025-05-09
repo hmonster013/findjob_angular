@@ -11,12 +11,13 @@ import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TokenService } from '../_services/token.service';
 import { AuthenticationService } from '../_services/authentication.service';
+import { AuthStateService } from '../_services/auth-state.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
   private tokenService = inject(TokenService);
-  private authService = inject(AuthenticationService);
+  private authStateService = inject(AuthStateService);
   private router = inject(Router);
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -28,6 +29,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         // Tự động logout nếu gặp 401 hoặc 403
         if ([401, 403].includes(status)) {
           this.tokenService.removeAccessTokenAndRefreshTokenFromCookie();
+          this.authStateService.clearUser();
           this.router.navigate(['/dang-nhap']);
         }
 

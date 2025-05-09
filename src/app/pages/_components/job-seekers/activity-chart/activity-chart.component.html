@@ -1,21 +1,19 @@
 <div class="p-4 bg-white rounded-lg shadow-md relative">
-
   <h2 class="text-xl font-bold mb-4">Biểu đồ hoạt động</h2>
 
   <!-- Loading skeleton -->
   <div *ngIf="isLoading">
-    <div class="h-5 bg-gray-200 rounded animate-pulse mb-4"></div>
+    <div class="h-5 bg-gray-200 hole rounded animate-pulse mb-4"></div>
     <div class="h-64 bg-gray-200 rounded animate-pulse"></div>
   </div>
 
-  <!-- Empty -->
-  <div *ngIf="!isLoading && dataChart.length === 0" class="text-center text-gray-500">
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && !dataChart?.labels?.length" class="text-center text-gray-500">
     Không có dữ liệu hoạt động.
   </div>
 
   <!-- Chart -->
-  <div *ngIf="!isLoading && dataChart.length > 0">
+  <div *ngIf="!isLoading && dataChart?.labels?.length">
     <canvas #activityCanvas height="300"></canvas>
   </div>
-
 </div>

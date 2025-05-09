@@ -12,10 +12,7 @@ import { EducationDetailService } from '../../../../_services/education-detail.s
   standalone: true,
   templateUrl: './education-detail-card.component.html',
   styleUrls: ['./education-detail-card.component.css'],
-  imports: [
-    CommonModule,
-    EducationDetailFormComponent
-  ],
+  imports: [CommonModule, EducationDetailFormComponent],
 })
 export class EducationDetailCardComponent implements OnInit {
   educationsDetail: any[] = [];
@@ -39,7 +36,11 @@ export class EducationDetailCardComponent implements OnInit {
   }
 
   loadEducationsDetail() {
-    if (!this.resumeSlug) return;
+    if (!this.resumeSlug) {
+      this.toastr.error('Không tìm thấy hồ sơ!');
+      this.isLoadingEducationsDetail = false;
+      return;
+    }
     this.isLoadingEducationsDetail = true;
     this.resumeService.getEducationsDetail(this.resumeSlug).subscribe({
       next: (res) => {
@@ -47,6 +48,7 @@ export class EducationDetailCardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading education detail:', err);
+        this.toastr.error('Có lỗi khi tải danh sách học vấn!');
       },
       complete: () => {
         this.isLoadingEducationsDetail = false;
@@ -69,6 +71,7 @@ export class EducationDetailCardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading education detail:', err);
+        this.toastr.error('Có lỗi khi tải thông tin học vấn!');
       },
       complete: () => {
         this.isFullScreenLoading = false;
@@ -87,6 +90,7 @@ export class EducationDetailCardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Update education detail error:', err);
+          this.toastr.error('Có lỗi khi cập nhật học vấn!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -101,6 +105,7 @@ export class EducationDetailCardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Add education detail error:', err);
+          this.toastr.error('Có lỗi khi thêm học vấn!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -126,6 +131,7 @@ export class EducationDetailCardComponent implements OnInit {
           },
           error: (err) => {
             console.error('Delete education detail error:', err);
+            this.toastr.error('Có lỗi khi xóa học vấn!');
           },
         });
       }

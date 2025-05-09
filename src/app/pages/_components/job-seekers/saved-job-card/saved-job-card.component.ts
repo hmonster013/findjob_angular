@@ -42,6 +42,7 @@ export class SavedJobCardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading saved jobs:', err);
+        this.toastr.error('Không thể tải danh sách công việc đã lưu!');
       },
       complete: () => {
         this.isLoading = false;
@@ -59,6 +60,7 @@ export class SavedJobCardComponent implements OnInit {
       cancelButtonText: 'Giữ lại'
     }).then((result) => {
       if (result.isConfirmed) {
+        // TODO: Kiểm tra xem API có endpoint riêng cho unsave không, hiện dùng saveJobPost có thể sai
         this.jobService.saveJobPost(slug).subscribe({
           next: () => {
             this.toastr.success('Đã hủy lưu công việc thành công!');
@@ -66,6 +68,7 @@ export class SavedJobCardComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error unsaving job:', err);
+            this.toastr.error('Không thể hủy lưu công việc!');
           }
         });
       }
@@ -73,8 +76,10 @@ export class SavedJobCardComponent implements OnInit {
   }
 
   handleChangePage(newPage: number) {
-    this.page = newPage;
-    this.loadSavedJobs();
+    if (newPage >= 1 && newPage <= this.totalPages) {
+      this.page = newPage;
+      this.loadSavedJobs();
+    }
   }
 
   public navigateToJob(slug: string) {
@@ -83,5 +88,22 @@ export class SavedJobCardComponent implements OnInit {
 
   get totalPages(): number {
     return Math.ceil(this.count / this.pageSize);
+  }
+
+  get pages(): number[] {
+    const total = this.totalPages;
+    const pages = [];
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, this.page - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(total, startPage + maxPagesToShow - 1);
+
+    if (endPage - startPage + 1 < maxPagesToShow) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 }

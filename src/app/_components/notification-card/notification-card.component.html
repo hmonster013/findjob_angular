@@ -1,5 +1,4 @@
 <!-- notification-card.component.html -->
-
 <div class="relative">
   <!-- Icon Notification + Badge -->
   <button (click)="toggleMenu()" class="relative p-2 hover:bg-gray-100 rounded-full">
@@ -13,7 +12,7 @@
   <!-- Dropdown Menu -->
   <div
     *ngIf="open"
-    class="absolute right-0 mt-2 w-80 bg-white border rounded-lg shadow-lg z-50 overflow-hidden"
+    class="absolute right-0 mt-2 w-64 max-w-[90vw] bg-white border rounded-lg shadow-lg z-45 overflow-hidden"
   >
     <div class="flex justify-between items-center px-4 py-2 border-b">
       <h5 class="font-semibold text-gray-700">Thông báo</h5>

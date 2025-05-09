@@ -1,41 +1,58 @@
-<div class="bg-white p-6 rounded-lg shadow space-y-6">
-  <div class="text-2xl font-bold text-gray-800">
-    Thông tin tài khoản
+<div class="bg-white p-6 rounded-lg shadow-md space-y-6">
+  <!-- Title -->
+  <div class="flex justify-between items-center">
+    <h2 class="text-2xl font-semibold text-gray-800">Thông tin tài khoản</h2>
   </div>
 
-  <div class="border-t border-gray-300"></div>
+  <!-- Divider -->
+  <hr class="border-gray-500">
 
-  <div class="space-y-6">
-    <app-avatar-card></app-avatar-card>
-    <app-account-form (update)="handleUpdateAccount($event)" [serverErrors]="serverErrors"></app-account-form>
+  <!-- Main Content -->
+  <div class="px-0 sm:px-2 space-y-6">
+    <div class="flex flex-col gap-6">
+      <!-- Avatar Section -->
+      <div>
+        <app-avatar-card></app-avatar-card>
+      </div>
 
-    <div class="text-right">
-      <button
-        class="text-primary-600 hover:underline font-semibold"
-        (click)="openPopup = true">
-        Thay đổi mật khẩu
-      </button>
+      <!-- Account Form Section -->
+      <div>
+        <app-account-form (update)="handleUpdateAccount($event)" [serverErrors]="serverErrors"></app-account-form>
+        <div class="mt-2 text-right">
+          <button (click)="openPopup = true" class="text-blue-700 hover:text-blue-900 hover:underline text-xs font-medium transition-colors duration-200">
+            Thay đổi mật khẩu
+          </button>
+        </div>
+        <!-- Update Button -->
+        <div class="mt-4 flex justify-center">
+          <button type="submit" form="account-form" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-md hover:bg-blue-700 text-sm font-medium transition-colors duration-200 flex items-center gap-2">
+            <i class="fas fa-save"></i> Cập nhật
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Popup đổi mật khẩu -->
-<div *ngIf="openPopup" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-  <div class="bg-white p-6 rounded-lg w-full max-w-md">
-    <div class="text-xl font-bold mb-4">Cập nhật mật khẩu</div>
-
-    <app-update-password-form
-      (updatePassword)="handleUpdatePassword($event)"
-      [serverErrors]="serverErrors">
-    </app-update-password-form>
-
-    <div class="mt-4 text-right">
-      <button class="bg-gray-300 px-4 py-2 rounded mr-2" (click)="openPopup = false">Hủy</button>
+  <!-- Password Change Popup -->
+  <div *ngIf="openPopup" class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50 transition-opacity duration-300">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md transform transition-transform duration-300 scale-100">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-900">Cập nhật mật khẩu</h3>
+        <button (click)="openPopup = false" class="text-gray-600 hover:text-gray-800 transition-colors duration-200">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <app-update-password-form (updatePassword)="handleUpdatePassword($event)" [serverErrors]="serverErrors"></app-update-password-form>
+      <div class="flex justify-end mt-4">
+        <button type="submit" form="modal-form" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-md shadow-sm hover:bg-blue-700 text-sm font-medium transition-colors duration-200 flex items-center gap-2">
+          <i class="fas fa-save"></i> Lưu
+        </button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Loading full screen -->
-<div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50">
-  <div class="animate-spin rounded-full h-10 w-10 border-4 border-primary-600 border-t-transparent"></div>
+  <!-- Loading Overlay -->
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50">
+    <div class="animate-spin rounded-full h-10 w-10 border-2 border-blue-600 border-t-transparent"></div>
+  </div>
 </div>

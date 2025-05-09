@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, ObservableLike } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -22,6 +22,11 @@ export class CommonService {
 
   getDistrictsByCityId(cityId: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/districts/?cityId=${cityId}`);
+  }
+
+  getCareers(noPagination: boolean = false): Observable<any> {
+    const params = new HttpParams().set('noPagination', noPagination.toString());
+    return this.http.get(`${this.baseUrl}/all-careers/`, { params });
   }
 
   getTop10Careers(): Observable<any> {

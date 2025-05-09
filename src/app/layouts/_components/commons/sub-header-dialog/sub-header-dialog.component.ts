@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { CommonService } from '../../../../_services/common.service';
 
 @Component({
   selector: 'app-sub-header-dialog',
@@ -11,7 +12,6 @@ import { Component, EventEmitter, HostListener, Input, Output } from '@angular/c
 })
 export class SubHeaderDialogComponent {
   @Input() open: boolean = false;
-  @Input() allCareers: any[] = [];
   @Input() topCareers: any[] = [];
 
   @Output() close = new EventEmitter<void>();
@@ -19,12 +19,31 @@ export class SubHeaderDialogComponent {
 
   isMobile: boolean = false;
   careers: any[] = [];
-  hotCareers: any[] = [];    // 🔥 top nghề
-  otherCareers: any[] = [];  // 📦 nghề khác
+  hotCareers: any[] = [];
+  otherCareers: any[] = [];
+  allCareers: any[] = [];
+
+  constructor (
+    private commonService: CommonService,
+  ) {
+
+  }
 
   ngOnInit() {
     this.handleResize();
-    this.combineCareers();
+    this.getAllCareers();
+  }
+
+  getAllCareers() {
+    this.commonService.getCareers().subscribe({
+      next: (res) => {
+        this.allCareers = res.results;
+        this.combineCareers();
+      },
+      error: (err) => {
+
+      }
+    })
   }
 
   combineCareers() {

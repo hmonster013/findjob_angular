@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Database, ref, get, child, remove, update, query, orderByChild, limitToLast } from '@angular/fire/database';
 import { AuthStateService } from '../../_services/auth-state.service';
+
 @Component({
   selector: 'app-notification-card',
+  standalone: true,
   imports: [
     CommonModule
   ],
   templateUrl: './notification-card.component.html',
-  styleUrl: './notification-card.component.css'
+  styleUrls: ['./notification-card.component.css']
 })
 export class NotificationCardComponent {
   open = false;
@@ -16,6 +18,7 @@ export class NotificationCardComponent {
   unreadCount: number = 0;
   pageSize: number = 5;
   canLoadMore: boolean = false;
+  @Output() closed = new EventEmitter<void>();
 
   constructor(
     private db: Database,
@@ -28,6 +31,9 @@ export class NotificationCardComponent {
 
   toggleMenu() {
     this.open = !this.open;
+    if (!this.open) {
+      this.closed.emit();
+    }
   }
 
   async fetchNotifications() {
@@ -74,6 +80,7 @@ export class NotificationCardComponent {
     }
 
     this.open = false;
+    this.closed.emit();
     if (notification.redirectUrl) {
       window.location.href = notification.redirectUrl;
     }
@@ -90,5 +97,6 @@ export class NotificationCardComponent {
     this.notifications = [];
     this.unreadCount = 0;
     this.open = false;
+    this.closed.emit();
   }
 }

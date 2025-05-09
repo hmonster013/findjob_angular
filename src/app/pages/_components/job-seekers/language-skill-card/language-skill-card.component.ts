@@ -12,10 +12,7 @@ import { LanguageSkillService } from '../../../../_services/language-skill.servi
   standalone: true,
   templateUrl: './language-skill-card.component.html',
   styleUrls: ['./language-skill-card.component.css'],
-  imports: [
-    CommonModule,
-    LanguageSkillFormComponent
-  ],
+  imports: [CommonModule, LanguageSkillFormComponent],
 })
 export class LanguageSkillCardComponent implements OnInit {
   languageSkills: any[] = [];
@@ -24,6 +21,15 @@ export class LanguageSkillCardComponent implements OnInit {
   openPopup = false;
   editData: any = null;
   resumeSlug: string | null = null;
+  allConfig: any = {
+    languageOptions: [
+      { value: 'EN', label: 'Tiếng Anh' },
+      { value: 'FR', label: 'Tiếng Pháp' },
+      { value: 'JP', label: 'Tiếng Nhật' },
+      { value: 'CN', label: 'Tiếng Trung' },
+      { value: 'KR', label: 'Tiếng Hàn' },
+    ],
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -38,7 +44,11 @@ export class LanguageSkillCardComponent implements OnInit {
   }
 
   loadLanguageSkills() {
-    if (!this.resumeSlug) return;
+    if (!this.resumeSlug) {
+      this.toastr.error('Không tìm thấy hồ sơ!');
+      this.isLoadingLanguageSkills = false;
+      return;
+    }
     this.isLoadingLanguageSkills = true;
     this.resumeService.getLanguageSkills(this.resumeSlug).subscribe({
       next: (res) => {
@@ -46,6 +56,7 @@ export class LanguageSkillCardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading language skills:', err);
+        this.toastr.error('Có lỗi khi tải danh sách kỹ năng ngôn ngữ!');
       },
       complete: () => {
         this.isLoadingLanguageSkills = false;
@@ -67,6 +78,7 @@ export class LanguageSkillCardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading language skill:', err);
+        this.toastr.error('Có lỗi khi tải thông tin kỹ năng ngôn ngữ!');
       },
       complete: () => {
         this.isFullScreenLoading = false;
@@ -85,6 +97,7 @@ export class LanguageSkillCardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error updating language skill:', err);
+          this.toastr.error('Có lỗi khi cập nhật kỹ năng ngôn ngữ!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -99,6 +112,7 @@ export class LanguageSkillCardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error adding language skill:', err);
+          this.toastr.error('Có lỗi khi thêm kỹ năng ngôn ngữ!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -124,6 +138,7 @@ export class LanguageSkillCardComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error deleting language skill:', err);
+            this.toastr.error('Có lỗi khi xóa kỹ năng ngôn ngữ!');
           },
         });
       }

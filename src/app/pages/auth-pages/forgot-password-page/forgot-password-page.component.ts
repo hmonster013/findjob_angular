@@ -16,34 +16,26 @@ import { PLATFORM } from '../../../_configs/constants';
   styleUrls: ['./forgot-password-page.component.css'],
 })
 export class ForgotPasswordPageComponent {
-  isLoading = false;
   messageSuccess: string | null = null;
+  isLoading = false;
 
   constructor(
     private authService: AuthenticationService,
     private toastr: ToastrService
   ) {}
 
-  onSubmit(formData: { email: string }) {
+  onSubmit(data: { email: string }) {
     this.isLoading = true;
-
-    const payload = {
-      ...formData,
-      platform: PLATFORM,
-    };
-
-    this.authService.forgotPassword(payload).subscribe({
-      next: (res) => {
-        if (res.status) {
-          this.messageSuccess = `Chúng tôi đã gửi email hướng dẫn đến ${formData.email}`;
-        } else {
-          this.toastr.error(res.message || 'Không thể gửi yêu cầu đặt lại mật khẩu.');
-        }
+    this.authService.forgotPassword({
+      ...data,
+      platform: PLATFORM
+    }).subscribe({
+      next: () => {
+        this.messageSuccess = `Chúng tôi đã gửi email hướng dẫn đến ${data.email}`;
         this.isLoading = false;
       },
-      error: (error) => {
-        console.error('Forgot password error:', error);
-        this.toastr.error('Không thể gửi yêu cầu đặt lại mật khẩu.');
+      error: () => {
+        this.toastr.error('Đã xảy ra lỗi, vui lòng thử lại sau!');
         this.isLoading = false;
       }
     });

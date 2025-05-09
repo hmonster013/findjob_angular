@@ -1,0 +1,21 @@
+.urgent-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(239, 68, 68, 0.15);
+  color: rgb(239, 68, 68);
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.applied-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(47, 161, 51, 0.15);
+  color: rgb(47, 161, 51);
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}

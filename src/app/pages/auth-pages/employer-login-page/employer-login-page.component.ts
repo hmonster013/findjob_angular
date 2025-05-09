@@ -37,12 +37,12 @@ export class EmployerLoginPageComponent {
 
     this.authService.checkCreds(email, role).subscribe({
       next: (res) => {
-        if (res.status) {
+        if (res) {
           this.authService.getToken(email, password, role).subscribe({
             next: (tokenRes) => {
               this.tokenService.saveAccessTokenAndRefreshTokenToCookie(
-                tokenRes.access_token,
-                tokenRes.refresh_token,
+                tokenRes.data.access_token,
+                tokenRes.data.refresh_token,
                 'email' // provider mặc định email (nếu login normal)
               );
 

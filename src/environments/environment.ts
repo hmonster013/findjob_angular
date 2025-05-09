@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:8000',
+
   FINDJOB_HOST_NAME: '127.0.0.1',
   EMPLOYER_FINDJOB_HOST_NAME: 'localhost',
   FINDJOB_SERVER_CLIENT_ID: 'JpQmKGALLC3uYW7hfrNsXoTp0QAckYx5aPoFRMAK',

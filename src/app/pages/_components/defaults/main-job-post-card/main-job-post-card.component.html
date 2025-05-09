@@ -2,7 +2,7 @@
   <div class="flex items-center border-b pb-2 mb-4">
     <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
       Kết quả tìm kiếm
-      <span class="bg-primary-100 text-primary-600 text-sm font-semibold px-3 py-1 rounded-full">
+      <span class="bg-purple-100 text-purple-800 text-sm font-semibold px-3 py-1 rounded-full">
         {{ count | number }} tin đăng
       </span>
     </h2>
@@ -38,16 +38,40 @@
           ></app-job-post-large>
         </div>
 
-        <div *ngIf="pageCount > 1" class="flex justify-center mt-6">
-          <nav class="inline-flex">
+        <!-- Pagination -->
+        <div *ngIf="totalPages > 1" class="flex justify-center mt-6">
+          <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
+            <!-- Previous Button -->
             <button
-              *ngFor="let p of [].constructor(pageCount); let idx = index"
-              (click)="handleChangePage(idx + 1)"
-              class="px-4 py-2 border hover:bg-primary-600 hover:text-white"
-              [class.bg-primary-600]="page === idx + 1"
-              [class.text-white]="page === idx + 1"
+              (click)="changePage(page - 1)"
+              [disabled]="page === 1"
+              class="px-3 py-2 border border-gray-300 rounded-l-md text-gray-500 hover:bg-purple-800 hover:text-white disabled:text-gray-400 disabled:hover:bg-white disabled:hover:text-gray-400"
             >
-              {{ idx + 1 }}
+              <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <!-- Page Numbers -->
+            <button
+              *ngFor="let p of getVisiblePages()"
+              (click)="changePage(p)"
+              class="px-4 py-2 border-t border-b border-gray-300 text-gray-700 hover:bg-purple-800 hover:text-white"
+              [class.bg-purple-800]="p === page"
+              [class.text-white]="p === page"
+            >
+              {{ p }}
+            </button>
+
+            <!-- Next Button -->
+            <button
+              (click)="changePage(page + 1)"
+              [disabled]="page === totalPages"
+              class="px-3 py-2 border border-gray-300 rounded-r-md text-gray-500 hover:bg-purple-800 hover:text-white disabled:text-gray-400 disabled:hover:bg-white disabled:hover:text-gray-400"
+            >
+              <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           </nav>
         </div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -14,6 +14,7 @@ export class GeneralInfoFormComponent implements OnInit, OnChanges {
   @Input() editData: any = null;
   @Input() handleUpdate!: (data: any) => void;
   @Input() allConfig: any = {};
+  @Output() cancelForm = new EventEmitter<void>();
 
   form!: FormGroup;
 
@@ -53,5 +54,10 @@ export class GeneralInfoFormComponent implements OnInit, OnChanges {
     if (this.form.valid && this.handleUpdate) {
       this.handleUpdate(this.form.value);
     }
+  }
+
+  cancel() {
+    this.form.reset();
+    this.cancelForm.emit();
   }
 }

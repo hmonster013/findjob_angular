@@ -2,8 +2,7 @@
   <div class="grid grid-cols-1 gap-4">
     <div class="flex flex-col">
       <label class="mb-2 font-medium">
-        Tên kỹ năng
-        <span class="text-red-500">*</span>
+        Tên kỹ năng <span class="text-red-500">*</span>
       </label>
       <input
         formControlName="name"
@@ -11,6 +10,9 @@
         type="text"
         class="border rounded p-2 w-full"
       />
+      <div *ngIf="form.get('name')?.errors?.['required'] && form.get('name')?.touched" class="text-red-500 text-sm mt-1">
+        Vui lòng nhập tên kỹ năng
+      </div>
       <div *ngIf="form.get('name')?.errors?.['serverError']" class="text-red-500 text-sm mt-1">
         {{ form.get('name')?.errors?.['serverError'] }}
       </div>
@@ -18,11 +20,10 @@
 
     <div class="flex flex-col">
       <label class="mb-2 font-medium">
-        Trình độ
-        <span class="text-red-500">*</span>
+        Trình độ <span class="text-red-500">*</span>
       </label>
       <div class="flex space-x-2">
-        <ng-container *ngFor="let star of [1,2,3,4,5]">
+        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
           <input
             type="radio"
             [value]="star"
@@ -32,13 +33,34 @@
           />
           <label
             [for]="'star-' + star"
-            class="cursor-pointer text-2xl select-none text-yellow-400"
+            class="text-2xl cursor-pointer select-none transition-colors duration-200"
+            [ngClass]="{'text-yellow-400': form.get('level')?.value >= star, 'text-gray-300': form.get('level')?.value < star}"
+            attr.aria-label="Đánh giá trình độ kỹ năng mức {{star}}"
           >★</label>
         </ng-container>
+      </div>
+      <div *ngIf="form.get('level')?.errors?.['required'] && form.get('level')?.touched" class="text-red-500 text-sm mt-1">
+        Vui lòng chọn trình độ
       </div>
       <div *ngIf="form.get('level')?.errors?.['serverError']" class="text-red-500 text-sm mt-1">
         {{ form.get('level')?.errors?.['serverError'] }}
       </div>
+    </div>
+
+    <div class="flex justify-end mt-4">
+      <button
+        type="submit"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        Lưu
+      </button>
+      <button
+        type="button"
+        (click)="cancel()"
+        class="ml-2 bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded"
+      >
+        Hủy
+      </button>
     </div>
   </div>
 </form>

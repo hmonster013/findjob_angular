@@ -2,15 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { collection, doc, getDocs, limit, onSnapshot, orderBy, query, startAfter, updateDoc, where, writeBatch } from 'firebase/firestore';
+import { ToastrService } from 'ngx-toastr';
 import { db } from '../../../../_configs/firebase-config';
 import { ROUTES } from '../../../../_configs/constants';
 import { formatRoute } from '../../../../_utils/func-utils';
 
 @Component({
   selector: 'app-notification-card',
-  imports: [
-    CommonModule
-  ],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './notification-card.component.html',
   styleUrl: './notification-card.component.css'
 })
@@ -23,9 +23,16 @@ export class NotificationCardComponent {
   lastKey: any = null;
   PAGE_SIZE = 10;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() {
+    if (!this.currentUserId) {
+      this.toastr.error('Vui lòng đăng nhập để xem thông báo!');
+      return;
+    }
     this.listenCount();
     this.loadNotifications();
   }
@@ -46,6 +53,9 @@ export class NotificationCardComponent {
 
     onSnapshot(q, (snapshot) => {
       this.count = snapshot.size;
+    }, (error) => {
+      console.error('Error listening to notification count:', error);
+      this.toastr.error('Không thể tải số lượng thông báo!');
     });
   }
 
@@ -64,65 +74,107 @@ export class NotificationCardComponent {
       this.notifications = notiList;
       this.lastKey = snapshot.docs[snapshot.docs.length - 1];
       this.isLoading = false;
+    }, (error) => {
+      console.error('Error loading notifications:', error);
+      this.toastr.error('Không thể tải danh sách thông báo!');
+      this.isLoading = false;
     });
   }
 
   async loadMore() {
     if (!this.currentUserId || !this.lastKey) return;
+    this.isLoading = true;
 
-    const notiRef = collection(db, 'users', `${this.currentUserId}`, 'notifications');
-    const nextQuery = query(notiRef, where('is_deleted', '==', false), orderBy('time', 'desc'), startAfter(this.lastKey), limit(this.PAGE_SIZE));
-    const snapshot = await getDocs(nextQuery);
+    try {
+      const notiRef = collection(db, 'users', `${this.currentUserId}`, 'notifications');
+      const nextQuery = query(notiRef, where('is_deleted', '==', false), orderBy('time', 'desc'), startAfter(this.lastKey), limit(this.PAGE_SIZE));
+      const snapshot = await getDocs(nextQuery);
 
-    const nextList: any[] = [];
-    snapshot.forEach((doc) => {
-      nextList.push({ ...doc.data(), key: doc.id });
-    });
+      const nextList: any[] = [];
+      snapshot.forEach((doc) => {
+        nextList.push({ ...doc.data(), key: doc.id });
+      });
 
-    this.notifications = [...this.notifications, ...nextList];
-    this.lastKey = snapshot.docs[snapshot.docs.length - 1];
+      this.notifications = [...this.notifications, ...nextList];
+      this.lastKey = snapshot.docs[snapshot.docs.length - 1];
+    } catch (error) {
+      console.error('Error loading more notifications:', error);
+      this.toastr.error('Không thể tải thêm thông báo!');
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   async markAllRead() {
     if (!this.currentUserId) return;
 
-    const notiRef = collection(db, 'users', `${this.currentUserId}`, 'notifications');
-    const readQuery = query(notiRef, where('is_read', '==', false));
-    const snapshot = await getDocs(readQuery);
+    try {
+      const notiRef = collection(db, 'users', `${this.currentUserId}`, 'notifications');
+      const readQuery = query(notiRef, where('is_read', '==', false));
+      const snapshot = await getDocs(readQuery);
 
-    const batch = writeBatch(db);
-    snapshot.forEach((doc) => {
-      batch.update(doc.ref, { is_read: true });
-    });
-    await batch.commit();
-  }
-
-  async removeNotification(key: string) {
-    if (!this.currentUserId) return;
-    await updateDoc(doc(db, 'users', `${this.currentUserId}`, 'notifications', key), { is_deleted: true });
-    this.notifications = this.notifications.filter(n => n.key !== key);
+      const batch = writeBatch(db);
+      snapshot.forEach((doc) => {
+        batch.update(doc.ref, { is_read: true });
+      });
+      await batch.commit();
+      this.toastr.success('Đã đánh dấu tất cả thông báo là đã đọc!');
+    } catch (error) {
+      console.error('Error marking all read:', error);
+      this.toastr.error('Không thể đánh dấu tất cả thông báo là đã đọc!');
+    }
   }
 
   async removeAllNotifications() {
     if (!this.currentUserId) return;
-    const notiRef = collection(db, 'users', `${this.currentUserId}`, 'notifications');
-    const deleteQuery = query(notiRef, where('is_deleted', '==', false));
-    const snapshot = await getDocs(deleteQuery);
 
-    const batch = writeBatch(db);
-    snapshot.forEach((doc) => {
-      batch.update(doc.ref, { is_deleted: true });
-    });
-    await batch.commit();
+    try {
+      const notiRef = collection(db, 'users', `${this.currentUserId}`, 'notifications');
+      const deleteQuery = query(notiRef, where('is_deleted', '==', false));
+      const snapshot = await getDocs(deleteQuery);
+
+      const batch = writeBatch(db);
+      snapshot.forEach((doc) => {
+        batch.update(doc.ref, { is_deleted: true });
+      });
+      await batch.commit();
+      this.notifications = [];
+      this.toastr.success('Đã xóa tất cả thông báo!');
+    } catch (error) {
+      console.error('Error removing all notifications:', error);
+      this.toastr.error('Không thể xóa tất cả thông báo!');
+    }
+  }
+
+  async removeNotification(key: string) {
+    if (!this.currentUserId) return;
+
+    try {
+      await updateDoc(doc(db, 'users', `${this.currentUserId}`, 'notifications', key), { is_deleted: true });
+      this.notifications = this.notifications.filter(n => n.key !== key);
+      this.toastr.success('Đã xóa thông báo!');
+    } catch (error) {
+      console.error('Error removing notification:', error);
+      this.toastr.error('Không thể xóa thông báo!');
+    }
   }
 
   async markRead(key: string) {
     if (!this.currentUserId) return;
-    await updateDoc(doc(db, 'users', `${this.currentUserId}`, 'notifications', key), { is_read: true });
+
+    try {
+      await updateDoc(doc(db, 'users', `${this.currentUserId}`, 'notifications', key), { is_read: true });
+    } catch (error) {
+      console.error('Error marking notification read:', error);
+      this.toastr.error('Không thể đánh dấu thông báo là đã đọc!');
+    }
   }
 
   handleClick(item: any) {
-    if (!item?.key) return;
+    if (!item?.key) {
+      this.toastr.error('Thông báo không hợp lệ!');
+      return;
+    }
     this.markRead(item.key);
 
     switch (item.type) {
@@ -146,6 +198,9 @@ export class NotificationCardComponent {
         if (item['APPLY_JOB']?.resume_slug) {
           this.router.navigate([`/${formatRoute(ROUTES.EMPLOYER.PROFILE_DETAIL, item['APPLY_JOB'].resume_slug)}`]);
         }
+        break;
+      default:
+        this.toastr.warning('Loại thông báo không được hỗ trợ!');
         break;
     }
   }

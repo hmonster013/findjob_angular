@@ -12,22 +12,23 @@ import { NoDataCardComponent } from "../../../../_components/no-data-card/no-dat
     CommonModule,
     JobPostLargeComponent,
     NoDataCardComponent
-],
+  ],
   templateUrl: './main-job-post-card.component.html',
   styleUrl: './main-job-post-card.component.css'
 })
 export class MainJobPostCardComponent {
   isLoading = true;
   jobPosts: any[] = [];
-  page = 1;
-  count = 0;
+  page: number = 1;
+  count: number = 0;
+  totalPages: number = 0;
   pageSize = 10;
   destroy$ = new Subject<void>();
 
   constructor(private jobService: JobService) {}
 
   ngOnInit() {
-    this.loadJobPosts();
+    this.getJobPosts();
   }
 
   ngOnDestroy() {
@@ -35,7 +36,7 @@ export class MainJobPostCardComponent {
     this.destroy$.complete();
   }
 
-  loadJobPosts() {
+  getJobPosts() {
     this.isLoading = true;
     const jobPostFilter = {}; // 🔥 bạn cần lấy từ service lưu trạng thái filter hoặc để tạm
 
@@ -45,6 +46,7 @@ export class MainJobPostCardComponent {
         next: (res) => {
           this.count = res.data?.count || 0;
           this.jobPosts = res.data?.results || [];
+          this.totalPages = this.pageCount; // Gán totalPages từ pageCount
           this.isLoading = false;
         },
         error: (err) => {
@@ -54,9 +56,27 @@ export class MainJobPostCardComponent {
       });
   }
 
-  handleChangePage(newPage: number) {
-    this.page = newPage;
-    this.loadJobPosts();
+  changePage(newPage: number) {
+    if (newPage >= 1 && newPage <= this.totalPages) {
+      this.page = newPage;
+      this.getJobPosts();
+    }
+  }
+
+  getVisiblePages(): number[] {
+    const maxVisiblePages = 5; // Số trang tối đa hiển thị (VD: 1, 2, 3, 4, 5)
+    const half = Math.floor(maxVisiblePages / 2); // Số trang hiển thị trước/sau trang hiện tại
+    let start = Math.max(1, this.page - half);
+    let end = Math.min(this.totalPages, start + maxVisiblePages - 1);
+
+    // Điều chỉnh start nếu end đạt giới hạn
+    start = Math.max(1, end - maxVisiblePages + 1);
+
+    const pages: number[] = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   get pageCount(): number {

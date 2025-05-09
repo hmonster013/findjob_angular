@@ -6,11 +6,14 @@ import { CommonModule } from '@angular/common';
   selector: 'app-profile-upload-form',
   standalone: true,
   templateUrl: './profile-upload-form.component.html',
+  styleUrls: ['./profile-upload-form.component.css'],
   imports: [CommonModule, ReactiveFormsModule],
 })
 export class ProfileUploadFormComponent {
   @Input() allConfig: any;
   @Output() submitForm = new EventEmitter<any>();
+  @Output() cancelForm = new EventEmitter<void>();
+
   form: FormGroup;
   fileError = '';
 
@@ -18,15 +21,15 @@ export class ProfileUploadFormComponent {
     this.form = this.fb.group({
       file: [null, Validators.required],
       title: ['', [Validators.required, Validators.maxLength(200)]],
-      position: [null, Validators.required],
-      academicLevel: [null, Validators.required],
-      experience: [null, Validators.required],
-      career: [null, Validators.required],
-      city: [null, Validators.required],
+      position: ['', Validators.required],
+      academicLevel: ['', Validators.required],
+      experience: ['', Validators.required],
+      career: ['', Validators.required],
+      city: ['', Validators.required],
       salaryMin: [null, [Validators.required, Validators.min(0)]],
       salaryMax: [null, [Validators.required, Validators.min(0)]],
-      typeOfWorkplace: [null, Validators.required],
-      jobType: [null, Validators.required],
+      typeOfWorkplace: ['', Validators.required],
+      jobType: ['', Validators.required],
       description: ['', [Validators.required, Validators.maxLength(800)]],
     }, { validators: [this.salaryValidator()] });
   }
@@ -61,8 +64,15 @@ export class ProfileUploadFormComponent {
   onSubmit() {
     if (this.form.invalid) {
       this.fileError = this.form.controls['file'].errors ? 'Tập tin là bắt buộc.' : '';
+      this.form.markAllAsTouched();
       return;
     }
     this.submitForm.emit(this.form.value);
+  }
+
+  cancel() {
+    this.form.reset();
+    this.fileError = '';
+    this.cancelForm.emit();
   }
 }
