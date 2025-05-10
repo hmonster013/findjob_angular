@@ -1,86 +1,144 @@
-<div class="space-y-4">
+<form [formGroup]="searchForm" class="space-y-6 p-4 sm:p-6 bg-white shadow-md rounded-lg">
   <!-- Keyword Search -->
   <div>
+    <label for="keyword" class="block text-sm font-medium text-gray-700 mb-1">Từ khóa tìm kiếm</label>
     <input
+      id="keyword"
       type="text"
       formControlName="keyword"
-      placeholder="Nhập từ khóa tìm kiếm..."
-      class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-primary-500"
+      placeholder="Nhập từ khóa (VD: lập trình viên, marketing...)"
+      class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+      aria-label="Từ khóa tìm kiếm"
     />
   </div>
 
-  <!-- Bộ lọc nâng cao -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <select formControlName="city" class="w-full px-3 py-2 border rounded-md">
-      <option value="">Chọn tỉnh/thành phố</option>
-      <option *ngFor="let city of ['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng']" [value]="city">{{ city }}</option>
-    </select>
+  <!-- Advanced Filters -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div>
+      <label for="city" class="block text-sm font-medium text-gray-700 mb-1">Tỉnh/Thành phố</label>
+      <select
+        id="city"
+        formControlName="city"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Tỉnh/Thành phố"
+      >
+        <option *ngFor="let city of cities" [value]="city.value">{{ city.label }}</option>
+      </select>
+    </div>
 
-    <select formControlName="career" class="w-full px-3 py-2 border rounded-md">
-      <option value="">Chọn ngành nghề</option>
-      <option *ngFor="let career of ['IT', 'Marketing', 'Bán hàng']" [value]="career">{{ career }}</option>
-    </select>
+    <div>
+      <label for="career" class="block text-sm font-medium text-gray-700 mb-1">Ngành nghề</label>
+      <select
+        id="career"
+        formControlName="career"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Ngành nghề"
+      >
+        <option *ngFor="let career of careers" [value]="career.value">{{ career.label }}</option>
+      </select>
+    </div>
 
-    <select formControlName="experience" class="w-full px-3 py-2 border rounded-md">
-      <option value="">Kinh nghiệm</option>
-      <option value="0">Chưa có kinh nghiệm</option>
-      <option value="1">1 năm</option>
-      <option value="2">2 năm</option>
-      <option value="3">3 năm</option>
-      <option value="4">4 năm</option>
-      <option value="5">5 năm</option>
-      <option value="6">Trên 5 năm</option>
-    </select>
+    <div>
+      <label for="experience" class="block text-sm font-medium text-gray-700 mb-1">Kinh nghiệm</label>
+      <select
+        id="experience"
+        formControlName="experience"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Kinh nghiệm"
+      >
+        <option *ngFor="let exp of experiences" [value]="exp.value">{{ exp.label }}</option>
+      </select>
+    </div>
 
-    <select formControlName="position" class="w-full px-3 py-2 border rounded-md">
-      <option value="">Vị trí mong muốn</option>
-      <option *ngFor="let position of ['Nhân viên', 'Trưởng nhóm', 'Quản lý']" [value]="position">{{ position }}</option>
-    </select>
+    <div>
+      <label for="position" class="block text-sm font-medium text-gray-700 mb-1">Vị trí mong muốn</label>
+      <select
+        id="position"
+        formControlName="position"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Vị trí mong muốn"
+      >
+        <option *ngFor="let pos of positions" [value]="pos.value">{{ pos.label }}</option>
+      </select>
+    </div>
 
-    <select formControlName="academicLevel" class="w-full px-3 py-2 border rounded-md">
-      <option value="">Trình độ học vấn</option>
-      <option *ngFor="let level of ['Cao đẳng', 'Đại học', 'Sau đại học']" [value]="level">{{ level }}</option>
-    </select>
+    <div>
+      <label for="academicLevel" class="block text-sm font-medium text-gray-700 mb-1">Trình độ học vấn</label>
+      <select
+        id="academicLevel"
+        formControlName="academicLevel"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Trình độ học vấn"
+      >
+        <option *ngFor="let level of academicLevels" [value]="level.value">{{ level.label }}</option>
+      </select>
+    </div>
 
-    <select formControlName="workplace" class="w-full px-3 py-2 border rounded-md">
-      <option value="">Hình thức làm việc</option>
-      <option value="onsite">Làm tại công ty</option>
-      <option value="remote">Làm từ xa</option>
-    </select>
+    <div>
+      <label for="workplace" class="block text-sm font-medium text-gray-700 mb-1">Hình thức làm việc</label>
+      <select
+        id="workplace"
+        formControlName="workplace"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Hình thức làm việc"
+      >
+        <option *ngFor="let wp of workplaces" [value]="wp.value">{{ wp.label }}</option>
+      </select>
+    </div>
 
-    <select formControlName="jobType" class="w-full px-3 py-2 border rounded-md">
-      <option value="">Loại công việc</option>
-      <option value="fulltime">Toàn thời gian</option>
-      <option value="parttime">Bán thời gian</option>
-    </select>
+    <div>
+      <label for="jobType" class="block text-sm font-medium text-gray-700 mb-1">Loại công việc</label>
+      <select
+        id="jobType"
+        formControlName="jobType"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Loại công việc"
+      >
+        <option *ngFor="let jt of jobTypes" [value]="jt.value">{{ jt.label }}</option>
+      </select>
+    </div>
 
-    <select formControlName="gender" class="w-full px-3 py-2 border rounded-md">
-      <option value="">Giới tính</option>
-      <option value="male">Nam</option>
-      <option value="female">Nữ</option>
-      <option value="other">Khác</option>
-    </select>
+    <div>
+      <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
+      <select
+        id="gender"
+        formControlName="gender"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Giới tính"
+      >
+        <option *ngFor="let gender of genders" [value]="gender.value">{{ gender.label }}</option>
+      </select>
+    </div>
 
-    <select formControlName="maritalStatus" class="w-full px-3 py-2 border rounded-md">
-      <option value="">Tình trạng hôn nhân</option>
-      <option value="single">Độc thân</option>
-      <option value="married">Đã kết hôn</option>
-    </select>
+    <div>
+      <label for="maritalStatus" class="block text-sm font-medium text-gray-700 mb-1">Tình trạng hôn nhân</label>
+      <select
+        id="maritalStatus"
+        formControlName="maritalStatus"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Tình trạng hôn nhân"
+      >
+        <option *ngFor="let status of maritalStatuses" [value]="status.value">{{ status.label }}</option>
+      </select>
+    </div>
   </div>
 
   <!-- Action Buttons -->
-  <div class="flex gap-4">
+  <div class="flex flex-wrap gap-4 justify-center sm:justify-start">
     <button
       (click)="onSubmit()"
-      class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-md"
+      [disabled]="isFormEmpty()"
+      class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+      aria-label="Tìm kiếm"
     >
-      🔍 Tìm kiếm
+      <i class="fas fa-search"></i> Tìm kiếm
     </button>
     <button
       (click)="onReset()"
-      class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md"
+      class="flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md shadow-sm transition duration-150"
+      aria-label="Đặt lại"
     >
-      ✖️ Đặt lại
+      <i class="fas fa-times"></i> Đặt lại
     </button>
   </div>
-</div>
+</form>

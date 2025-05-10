@@ -17,8 +17,7 @@ import { exportToXLSX } from '../../../../_utils/xlsx-utils';
     CommonModule,
     JobPostsTableComponent,
     JobPostFormComponent,
-    JobPostFilterFormComponent,
-    BackdropLoadingComponent
+    JobPostFilterFormComponent
   ],
   templateUrl: './job-post-card.component.html',
   styleUrls: ['./job-post-card.component.css']

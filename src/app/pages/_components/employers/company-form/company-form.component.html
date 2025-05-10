@@ -1,41 +1,261 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6 p-4 sm:p-6 bg-white shadow-md rounded-lg">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <!-- Company Name -->
+    <div>
+      <label for="companyName" class="block text-sm font-medium text-gray-700 mb-1">Tên công ty</label>
+      <input
+        id="companyName"
+        formControlName="companyName"
+        placeholder="Nhập tên công ty"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Tên công ty"
+      />
+      <p *ngIf="form.get('companyName')?.touched && form.get('companyName')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('companyName')?.errors?.['required'] ? 'Tên công ty là bắt buộc' : 'Tối đa 100 ký tự' }}
+      </p>
+    </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <input formControlName="companyName" placeholder="Tên công ty" class="input-text" />
-    <input formControlName="taxCode" placeholder="Mã số thuế" class="input-text" />
-    <input formControlName="employeeSize" placeholder="Quy mô nhân sự" class="input-text" />
-    <input formControlName="fieldOperation" placeholder="Lĩnh vực hoạt động" class="input-text" />
-    <input type="date" formControlName="since" placeholder="Năm thành lập" class="input-text" />
-    <input formControlName="websiteUrl" placeholder="Website" class="input-text" />
-    <input formControlName="facebookUrl" placeholder="Facebook" class="input-text" />
-    <input formControlName="youtubeUrl" placeholder="Youtube" class="input-text" />
-    <input formControlName="linkedinUrl" placeholder="Linkedin" class="input-text" />
-    <input formControlName="companyEmail" type="email" placeholder="Email công ty" class="input-text" />
-    <input formControlName="companyPhone" placeholder="Số điện thoại công ty" class="input-text" />
+    <!-- Tax Code -->
+    <div>
+      <label for="taxCode" class="block text-sm font-medium text-gray-700 mb-1">Mã số thuế</label>
+      <input
+        id="taxCode"
+        formControlName="taxCode"
+        placeholder="Nhập mã số thuế"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Mã số thuế"
+      />
+      <p *ngIf="form.get('taxCode')?.touched && form.get('taxCode')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        Tối đa 20 ký tự
+      </p>
+    </div>
 
-    <select formControlName="location.city" (change)="onCityChange($event)" class="input-text">
-      <option value="">Chọn Tỉnh/Thành phố</option>
-      <option *ngFor="let city of cityOptions" [value]="city.id">{{ city.name }}</option>
-    </select>
+    <!-- Employee Size -->
+    <div>
+      <label for="employeeSize" class="block text-sm font-medium text-gray-700 mb-1">Quy mô nhân sự</label>
+      <input
+        id="employeeSize"
+        formControlName="employeeSize"
+        placeholder="Nhập số lượng nhân sự"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Quy mô nhân sự"
+      />
+      <p *ngIf="form.get('employeeSize')?.touched && form.get('employeeSize')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('employeeSize')?.errors?.['required'] ? 'Quy mô nhân sự là bắt buộc' : 'Chỉ nhập số' }}
+      </p>
+    </div>
 
-    <select formControlName="location.district" class="input-text">
-      <option value="">Chọn Quận/Huyện</option>
-      <option *ngFor="let district of districtOptions" [value]="district.id">{{ district.name }}</option>
-    </select>
+    <!-- Field Operation -->
+    <div>
+      <label for="fieldOperation" class="block text-sm font-medium text-gray-700 mb-1">Lĩnh vực hoạt động</label>
+      <input
+        id="fieldOperation"
+        formControlName="fieldOperation"
+        placeholder="Nhập lĩnh vực hoạt động"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Lĩnh vực hoạt động"
+      />
+      <p *ngIf="form.get('fieldOperation')?.touched && form.get('fieldOperation')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('fieldOperation')?.errors?.['required'] ? 'Lĩnh vực hoạt động là bắt buộc' : 'Tối đa 100 ký tự' }}
+      </p>
+    </div>
 
-    <input formControlName="location.address" placeholder="Địa chỉ" class="input-text" />
+    <!-- Since -->
+    <div>
+      <label for="since" class="block text-sm font-medium text-gray-700 mb-1">Năm thành lập</label>
+      <input
+        id="since"
+        type="date"
+        formControlName="since"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Năm thành lập"
+      />
+      <p *ngIf="form.get('since')?.touched && form.get('since')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        Ngày không hợp lệ
+      </p>
+    </div>
+
+    <!-- Website URL -->
+    <div>
+      <label for="websiteUrl" class="block text-sm font-medium text-gray-700 mb-1">Website</label>
+      <input
+        id="websiteUrl"
+        formControlName="websiteUrl"
+        placeholder="Nhập URL website"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Website"
+      />
+      <p *ngIf="form.get('websiteUrl')?.touched && form.get('websiteUrl')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        URL không hợp lệ
+      </p>
+    </div>
+
+    <!-- Facebook URL -->
+    <div>
+      <label for="facebookUrl" class="block text-sm font-medium text-gray-700 mb-1">Facebook</label>
+      <input
+        id="facebookUrl"
+        formControlName="facebookUrl"
+        placeholder="Nhập URL Facebook"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Facebook"
+      />
+      <p *ngIf="form.get('facebookUrl')?.touched && form.get('facebookUrl')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        URL Facebook không hợp lệ
+      </p>
+    </div>
+
+    <!-- YouTube URL -->
+    <div>
+      <label for="youtubeUrl" class="block text-sm font-medium text-gray-700 mb-1">YouTube</label>
+      <input
+        id="youtubeUrl"
+        formControlName="youtubeUrl"
+        placeholder="Nhập URL YouTube"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="YouTube"
+      />
+      <p *ngIf="form.get('youtubeUrl')?.touched && form.get('youtubeUrl')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        URL YouTube không hợp lệ
+      </p>
+    </div>
+
+    <!-- LinkedIn URL -->
+    <div>
+      <label for="linkedinUrl" class="block text-sm font-medium text-gray-700 mb-1">LinkedIn</label>
+      <input
+        id="linkedinUrl"
+        formControlName="linkedinUrl"
+        placeholder="Nhập URL LinkedIn"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="LinkedIn"
+      />
+      <p *ngIf="form.get('linkedinUrl')?.touched && form.get('linkedinUrl')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        URL LinkedIn không hợp lệ
+      </p>
+    </div>
+
+    <!-- Company Email -->
+    <div>
+      <label for="companyEmail" class="block text-sm font-medium text-gray-700 mb-1">Email công ty</label>
+      <input
+        id="companyEmail"
+        type="email"
+        formControlName="companyEmail"
+        placeholder="Nhập email công ty"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Email công ty"
+      />
+      <p *ngIf="form.get('companyEmail')?.touched && form.get('companyEmail')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('companyEmail')?.errors?.['required'] ? 'Email là bắt buộc' : 'Email không hợp lệ' }}
+      </p>
+    </div>
+
+    <!-- Company Phone -->
+    <div>
+      <label for="companyPhone" class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại công ty</label>
+      <input
+        id="companyPhone"
+        formControlName="companyPhone"
+        placeholder="Nhập số điện thoại"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Số điện thoại công ty"
+      />
+      <p *ngIf="form.get('companyPhone')?.touched && form.get('companyPhone')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('companyPhone')?.errors?.['required'] ? 'Số điện thoại là bắt buộc' : 'Số điện thoại phải có 10-11 số' }}
+      </p>
+    </div>
+
+    <!-- City -->
+    <div>
+      <label for="city" class="block text-sm font-medium text-gray-700 mb-1">Tỉnh/Thành phố</label>
+      <select
+        id="city"
+        formControlName="location.city"
+        (change)="onCityChange($event)"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Tỉnh/Thành phố"
+      >
+        <option value="">Chọn Tỉnh/Thành phố</option>
+        <option *ngFor="let city of cityOptions" [value]="city.id">{{ city.name }}</option>
+      </select>
+      <p *ngIf="form.get('location.city')?.touched && form.get('location.city')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        Tỉnh/Thành phố là bắt buộc
+      </p>
+    </div>
+
+    <!-- District -->
+    <div>
+      <label for="district" class="block text-sm font-medium text-gray-700 mb-1">Quận/Huyện</label>
+      <select
+        id="district"
+        formControlName="location.district"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Quận/Huyện"
+      >
+        <option value="">Chọn Quận/Huyện</option>
+        <option *ngFor="let district of districtOptions" [value]="district.id">{{ district.name }}</option>
+      </select>
+      <p *ngIf="form.get('location.district')?.touched && form.get('location.district')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        Quận/Huyện là bắt buộc
+      </p>
+    </div>
+
+    <!-- Address -->
+    <div>
+      <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Địa chỉ</label>
+      <input
+        id="address"
+        formControlName="location.address"
+        placeholder="Nhập địa chỉ chi tiết"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+        aria-label="Địa chỉ"
+      />
+      <p *ngIf="form.get('location.address')?.touched && form.get('location.address')?.errors" class="text-red-500 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('location.address')?.errors?.['required'] ? 'Địa chỉ là bắt buộc' : 'Tối đa 200 ký tự' }}
+      </p>
+    </div>
   </div>
 
+  <!-- Description -->
   <div class="grid grid-cols-1">
+    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Giới thiệu về công ty</label>
     <quill-editor
+      id="description"
       formControlName="description"
-      [styles]="{ minHeight: '200px' }"
-      placeholder="Giới thiệu về công ty"
+      [styles]="{ 'min-height': '200px', 'border': '1px solid #d1d5db', 'border-radius': '0.375rem' }"
+      placeholder="Nhập mô tả về công ty"
+      class="bg-white"
     ></quill-editor>
+    <p *ngIf="form.get('description')?.touched && form.get('description')?.errors" class="text-red-500 text-xs mt-1">
+      <i class="fas fa-exclamation-circle mr-1"></i>
+      {{ form.get('description')?.errors?.['required'] ? 'Mô tả là bắt buộc' : 'Tối thiểu 10 ký tự' }}
+    </p>
   </div>
 
+  <!-- Submit Button -->
   <div class="flex justify-end">
-    <button type="submit" class="btn-primary">Lưu thông tin</button>
+    <button
+      type="submit"
+      [disabled]="form.invalid"
+      class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+      aria-label="Lưu thông tin"
+    >
+      <i class="fas fa-save"></i> Lưu thông tin
+    </button>
   </div>
-
 </form>

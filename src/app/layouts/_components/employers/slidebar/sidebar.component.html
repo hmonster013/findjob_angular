@@ -1,16 +1,15 @@
-<!-- sidebar.component.html -->
 <aside
   [ngClass]="{
-    'fixed inset-0 z-40 bg-black/50 flex justify-start xl:hidden': isMobile && mobileOpen,
-    'bg-white border-r shadow h-screen xl:fixed xl:z-10': !isMobile
+    'fixed inset-0 z-40 bg-black/40 flex justify-start lg:hidden transition-opacity duration-300': isMobile && mobileOpen,
+    'bg-white border-r shadow h-screen lg:fixed lg:z-10': !isMobile
   }"
   [style.width.px]="isMobile ? null : drawerWidth"
   (click)="isMobile ? handleDrawerToggle?.() : null"
 >
   <div
-    class="bg-white h-full p-4 flex flex-col"
+    class="bg-white h-full p-4 flex flex-col transform transition-transform duration-300"
+    [ngClass]="{'translate-x-0 shadow-xl': isMobile && mobileOpen, '-translate-x-full': isMobile && !mobileOpen}"
     [style.width.px]="drawerWidth"
-    [ngClass]="{'shadow-md': isMobile}"
     (click)="$event.stopPropagation()"
   >
     <!-- Logo -->
@@ -19,7 +18,8 @@
         <img
           src="/assets/images/logo.png"
           alt="MyJob Logo"
-          class="h-12 object-contain"
+          class="h-12 sm:h-14 transform transition-transform duration-300 hover:scale-105"
+          loading="lazy"
         />
       </a>
     </div>
@@ -27,23 +27,26 @@
     <!-- Close button for mobile -->
     <button
       *ngIf="isMobile"
-      class="self-end mb-4 p-2 rounded hover:bg-gray-100"
+      class="self-end mb-4 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
       (click)="handleDrawerToggle?.()"
+      aria-label="Đóng sidebar"
     >
-      <i class="fas fa-times"></i>
+      <i class="fas fa-times text-lg text-gray-600"></i>
     </button>
 
     <!-- Menu -->
     <div class="flex-1 overflow-y-auto">
-      <ul class="flex flex-col gap-2">
+      <ul class="flex flex-col gap-3">
         <!-- Dashboard -->
         <li>
           <a
             [routerLink]="['/', ROUTES.EMPLOYER.DASHBOARD]"
-            routerLinkActive="bg-gray-100 text-blue-600 font-bold"
-            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition"
+            routerLinkActive="bg-blue-50 text-blue-700 font-semibold"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center gap-3 p-4 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Bản điều khiển"
           >
-            <i class="fas fa-tachometer-alt"></i>
+            <i class="fas fa-tachometer-alt text-lg"></i>
             <span>Bản điều khiển</span>
           </a>
         </li>
@@ -52,10 +55,11 @@
         <li>
           <a
             [routerLink]="['/', ROUTES.EMPLOYER.JOB_POST]"
-            routerLinkActive="bg-gray-100 text-blue-600 font-bold"
-            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition"
+            routerLinkActive="bg-blue-50 text-blue-700 font-semibold"
+            class="flex items-center gap-3 p-4 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Danh sách tin đăng"
           >
-            <i class="fas fa-file-alt"></i>
+            <i class="fas fa-file-alt text-lg"></i>
             <span>Danh sách tin đăng</span>
           </a>
         </li>
@@ -64,18 +68,25 @@
         <li>
           <div
             (click)="toggleExpand('candidates')"
-            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition cursor-pointer"
+            class="flex items-center gap-3 p-4 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [attr.aria-expanded]="expandedItems.candidates"
+            aria-controls="candidates-submenu"
+            role="button"
+            tabindex="0"
+            (keydown.enter)="toggleExpand('candidates')"
+            (keydown.space)="toggleExpand('candidates')"
           >
-            <i class="fas fa-users"></i>
+            <i class="fas fa-users text-lg"></i>
             <span>Quản lý ứng viên</span>
-            <span class="ml-auto">{{ expandedItems.candidates ? '▼' : '▶' }}</span>
+            <i class="ml-auto fas" [ngClass]="expandedItems.candidates ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
           </div>
-          <ul *ngIf="expandedItems.candidates" class="ml-6 flex flex-col gap-1">
+          <ul *ngIf="expandedItems.candidates" id="candidates-submenu" class="ml-8 flex flex-col gap-2 mt-2">
             <li>
               <a
                 [routerLink]="['/', ROUTES.EMPLOYER.APPLIED_PROFILE]"
-                routerLinkActive="text-blue-600 font-semibold"
-                class="text-gray-600 hover:text-blue-600 transition"
+                routerLinkActive="text-blue-600 font-medium"
+                class="text-gray-600 hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Hồ sơ ứng tuyển"
               >
                 Hồ sơ ứng tuyển
               </a>
@@ -83,8 +94,9 @@
             <li>
               <a
                 [routerLink]="['/', ROUTES.EMPLOYER.SAVED_PROFILE]"
-                routerLinkActive="text-blue-600 font-semibold"
-                class="text-gray-600 hover:text-blue-600 transition"
+                routerLinkActive="text-blue-600 font-medium"
+                class="text-gray-600 hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Hồ sơ đã lưu"
               >
                 Hồ sơ đã lưu
               </a>
@@ -92,8 +104,9 @@
             <li>
               <a
                 [routerLink]="['/', ROUTES.EMPLOYER.PROFILE]"
-                routerLinkActive="text-blue-600 font-semibold"
-                class="text-gray-600 hover:text-blue-600 transition"
+                routerLinkActive="text-blue-600 font-medium"
+                class="text-gray-600 hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Tìm ứng viên mới"
               >
                 Tìm ứng viên mới
               </a>
@@ -105,10 +118,11 @@
         <li>
           <a
             [routerLink]="['/', ROUTES.EMPLOYER.NOTIFICATION]"
-            routerLinkActive="bg-gray-100 text-blue-600 font-bold"
-            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition"
+            routerLinkActive="bg-blue-50 text-blue-700 font-semibold"
+            class="flex items-center gap-3 p-4 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Thông báo"
           >
-            <i class="fas fa-bell"></i>
+            <i class="fas fa-bell text-lg"></i>
             <span>{{ APP_NAME }} thông báo</span>
           </a>
         </li>
@@ -117,18 +131,25 @@
         <li>
           <div
             (click)="toggleExpand('account')"
-            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition cursor-pointer"
+            class="flex items-center gap-3 p-4 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [attr.aria-expanded]="expandedItems.account"
+            aria-controls="account-submenu"
+            role="button"
+            tabindex="0"
+            (keydown.enter)="toggleExpand('account')"
+            (keydown.space)="toggleExpand('account')"
           >
-            <i class="fas fa-building"></i>
+            <i class="fas fa-building text-lg"></i>
             <span>Quản lý tài khoản</span>
-            <span class="ml-auto">{{ expandedItems.account ? '▼' : '▶' }}</span>
+            <i class="ml-auto fas" [ngClass]="expandedItems.account ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
           </div>
-          <ul *ngIf="expandedItems.account" class="ml-6 flex flex-col gap-1">
+          <ul *ngIf="expandedItems.account" id="account-submenu" class="ml-8 flex flex-col gap-2 mt-2">
             <li>
               <a
                 [routerLink]="['/', ROUTES.EMPLOYER.COMPANY]"
-                routerLinkActive="text-blue-600 font-semibold"
-                class="text-gray-600 hover:text-blue-600 transition"
+                routerLinkActive="text-blue-600 font-medium"
+                class="text-gray-600 hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Thông tin công ty"
               >
                 Thông tin công ty
               </a>
@@ -136,8 +157,9 @@
             <li>
               <a
                 [routerLink]="['/', ROUTES.EMPLOYER.ACCOUNT]"
-                routerLinkActive="text-blue-600 font-semibold"
-                class="text-gray-600 hover:text-blue-600 transition"
+                routerLinkActive="text-blue-600 font-medium"
+                class="text-gray-600 hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Tài khoản"
               >
                 Tài khoản
               </a>
@@ -145,8 +167,9 @@
             <li>
               <a
                 [routerLink]="['/', ROUTES.EMPLOYER.SETTING]"
-                routerLinkActive="text-blue-600 font-semibold"
-                class="text-gray-600 hover:text-blue-600 transition"
+                routerLinkActive="text-blue-600 font-medium"
+                class="text-gray-600 hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Cài đặt"
               >
                 Cài đặt
               </a>

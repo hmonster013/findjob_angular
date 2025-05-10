@@ -60,7 +60,6 @@ export class JobPostActivityService {
     return this.http.delete(`${this.baseUrl}/employer-job-posts-activity/${id}/`);
   }
 
-  // Helper method to convert params object to HttpParams
   private convertToHttpParams(params: any): HttpParams {
     let httpParams = new HttpParams();
     for (const key in params) {

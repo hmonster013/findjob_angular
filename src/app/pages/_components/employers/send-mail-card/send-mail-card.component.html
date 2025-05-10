@@ -1,89 +1,116 @@
 <!-- Modal overlay -->
-<div *ngIf="openPopup" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-  <div class="bg-white w-full max-w-2xl rounded-lg p-6 relative">
-    <button (click)="closePopup()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
+<div *ngIf="openPopup" class="modal-overlay">
+  <div class="modal-content">
+    <!-- Close button -->
+    <button (click)="closePopup()" class="close-button">
+      <i class="fas fa-times"></i>
     </button>
 
-    <h2 class="text-xl font-bold mb-4">Gửi mail</h2>
+    <h2>Gửi Email</h2>
 
-    <form (ngSubmit)="onSubmit()" [formGroup]="mailForm" class="space-y-4">
+    <form (ngSubmit)="onSubmit()" [formGroup]="mailForm">
+      <!-- Full Name -->
       <div>
-        <label class="block mb-1 font-medium">Tên người nhận <span class="text-red-500">*</span></label>
-        <input
-          formControlName="fullName"
-          type="text"
-          [disabled]="true"
-          class="w-full px-4 py-2 border rounded-md bg-gray-100 cursor-not-allowed"
-        />
-        <div *ngIf="mailForm.get('fullName')?.invalid && mailForm.get('fullName')?.touched" class="text-red-500 text-sm">
-          {{ mailForm.get('fullName')?.errors?.['required'] ? 'Tên người nhận là bắt buộc' :
-             mailForm.get('fullName')?.errors?.['maxlength'] ? 'Tên người nhận vượt quá 100 ký tự' : '' }}
+        <label>
+          Tên người nhận <span class="required">*</span>
+        </label>
+        <input formControlName="fullName" type="text" [disabled]="true" />
+        <div
+          *ngIf="mailForm.get('fullName')?.invalid && mailForm.get('fullName')?.touched"
+          class="error-message"
+        >
+          {{
+            mailForm.get('fullName')?.errors?.['required']
+              ? 'Tên người nhận là bắt buộc'
+              : mailForm.get('fullName')?.errors?.['maxlength']
+              ? 'Tên người nhận vượt quá 100 ký tự'
+              : ''
+          }}
         </div>
       </div>
 
+      <!-- Email -->
       <div>
-        <label class="block mb-1 font-medium">Email người nhận <span class="text-red-500">*</span></label>
-        <input
-          formControlName="email"
-          type="email"
-          [disabled]="true"
-          class="w-full px-4 py-2 border rounded-md bg-gray-100 cursor-not-allowed"
-        />
-        <div *ngIf="mailForm.get('email')?.invalid && mailForm.get('email')?.touched" class="text-red-500 text-sm">
-          {{ mailForm.get('email')?.errors?.['required'] ? 'Email người nhận là bắt buộc' :
-             mailForm.get('email')?.errors?.['email'] ? 'Email người nhận không hợp lệ' :
-             mailForm.get('email')?.errors?.['maxlength'] ? 'Email người nhận vượt quá 100 ký tự' : '' }}
+        <label>
+          Email người nhận <span class="required">*</span>
+        </label>
+        <input formControlName="email" type="email" [disabled]="true" />
+        <div
+          *ngIf="mailForm.get('email')?.invalid && mailForm.get('email')?.touched"
+          class="error-message"
+        >
+          {{
+            mailForm.get('email')?.errors?.['required']
+              ? 'Email người nhận là bắt buộc'
+              : mailForm.get('email')?.errors?.['email']
+              ? 'Email người nhận không hợp lệ'
+              : mailForm.get('email')?.errors?.['maxlength']
+              ? 'Email người nhận vượt quá 100 ký tự'
+              : ''
+          }}
         </div>
       </div>
 
+      <!-- Title -->
       <div>
-        <label class="block mb-1 font-medium">Tiêu đề <span class="text-red-500">*</span></label>
-        <input
-          formControlName="title"
-          type="text"
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
-        />
-        <div *ngIf="mailForm.get('title')?.invalid && mailForm.get('title')?.touched" class="text-red-500 text-sm">
-          {{ mailForm.get('title')?.errors?.['required'] ? 'Tiêu đề email là bắt buộc' :
-             mailForm.get('title')?.errors?.['maxlength'] ? 'Tiêu đề email vượt quá 200 ký tự' : '' }}
+        <label>
+          Tiêu đề <span class="required">*</span>
+        </label>
+        <input formControlName="title" type="text" />
+        <div
+          *ngIf="mailForm.get('title')?.invalid && mailForm.get('title')?.touched"
+          class="error-message"
+        >
+          {{
+            mailForm.get('title')?.errors?.['required']
+              ? 'Tiêu đề email là bắt buộc'
+              : mailForm.get('title')?.errors?.['maxlength']
+              ? 'Tiêu đề email vượt quá 200 ký tự'
+              : ''
+          }}
         </div>
       </div>
 
+      <!-- Content -->
       <div>
-        <label class="block mb-1 font-medium">Nội dung email <span class="text-red-500">*</span></label>
+        <label>
+          Nội dung email <span class="required">*</span>
+        </label>
         <quill-editor
           formControlName="content"
-          [styles]="{ minHeight: '150px' }"
-          class="w-full border rounded-md"
+          class="quill-editor"
           placeholder="Nhập nội dung email"
         ></quill-editor>
-        <div *ngIf="mailForm.get('content')?.invalid && mailForm.get('content')?.touched" class="text-red-500 text-sm">
-          {{ mailForm.get('content')?.errors?.['required'] ? 'Nội dung email là bắt buộc' :
-             mailForm.get('content')?.errors?.['noContent'] ? 'Nội dung email phải có text' : '' }}
+        <div
+          *ngIf="mailForm.get('content')?.invalid && mailForm.get('content')?.touched"
+          class="error-message"
+        >
+          {{
+            mailForm.get('content')?.errors?.['required']
+              ? 'Nội dung email là bắt buộc'
+              : mailForm.get('content')?.errors?.['noContent']
+              ? 'Nội dung email phải có text'
+              : ''
+          }}
         </div>
       </div>
 
-      <div class="flex items-center space-x-2">
-        <input
-          id="isSendMe"
-          type="checkbox"
-          formControlName="isSendMe"
-          class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-        />
-        <label for="isSendMe" class="text-sm">Gửi một bản sao đến địa chỉ email nhà tuyển dụng của tôi</label>
+      <!-- Checkbox -->
+      <div class="checkbox-container">
+        <input id="isSendMe" type="checkbox" formControlName="isSendMe" />
+        <label for="isSendMe" class="checkbox-label">
+          Gửi một bản sao đến email của tôi
+        </label>
       </div>
 
-      <div class="flex justify-end">
+      <!-- Submit Button -->
+      <div style="text-align: right;">
         <button
           type="submit"
-          class="flex items-center gap-2 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          class="submit-button"
+          [disabled]="!mailForm.valid"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l9 6 9-6M3 8v8l9 6 9-6V8" />
-          </svg>
+          <i class="fas fa-paper-plane"></i>
           Gửi
         </button>
       </div>

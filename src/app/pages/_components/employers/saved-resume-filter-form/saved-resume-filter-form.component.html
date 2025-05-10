@@ -1,57 +1,80 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-12 gap-4">
-
-  <div class="col-span-12 md:col-span-3">
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  class="flex flex-row items-center gap-2 p-4 overflow-x-auto"
+>
+  <div class="flex-1 min-w-[120px]">
     <input
       type="text"
       formControlName="kw"
-      placeholder="Nhập tên tin đăng hoặc tên ứng viên"
-      class="input-text"
+      placeholder="Tên tin đăng hoặc ứng viên"
+      class="w-full h-10 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-xs"
     />
+    <div
+      *ngIf="form.get('kw')?.touched && form.get('kw')?.errors?.['maxlength']"
+      class="text-red-500 text-xs mt-1"
+    >
+      Tên không được vượt quá 100 ký tự
+    </div>
   </div>
 
-  <div class="col-span-12 md:col-span-2">
+  <div class="w-24 min-w-[80px]">
     <input
       type="number"
       formControlName="salaryMax"
-      placeholder="Nhập mức lương tối đa"
-      class="input-text"
+      placeholder="Lương tối đa"
+      class="w-full h-10 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-xs"
     />
+    <div
+      *ngIf="
+        form.get('salaryMax')?.touched && form.get('salaryMax')?.errors?.['min']
+      "
+      class="text-red-500 text-xs mt-1"
+    >
+      Lương tối đa phải ≥ 0
+    </div>
   </div>
 
-  <div class="col-span-12 md:col-span-2">
-    <select formControlName="experienceId" class="input-text">
-      <option value="">Chọn kinh nghiệm</option>
-      <option *ngFor="let option of allConfig?.experienceOptions" [value]="option.id">
+  <div class="w-32 min-w-[80px]">
+    <select
+      formControlName="experienceId"
+      class="w-full h-10 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-xs"
+    >
+      <option [ngValue]="null">Kinh nghiệm</option>
+      <option *ngFor="let option of configs?.experienceOptions" [ngValue]="option.id">
         {{ option.name }}
       </option>
     </select>
   </div>
 
-  <div class="col-span-12 md:col-span-2">
-    <select formControlName="cityId" class="input-text">
-      <option value="">Chọn địa điểm</option>
-      <option *ngFor="let option of allConfig?.cityOptions" [value]="option.id">
+  <div class="w-32 min-w-[80px]">
+    <select
+      formControlName="cityId"
+      class="w-full h-10 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-xs"
+    >
+      <option [ngValue]="null">Địa điểm</option>
+      <option *ngFor="let option of configs?.cityOptions" [ngValue]="option.id">
         {{ option.name }}
       </option>
     </select>
   </div>
 
-  <div class="col-span-12 md:col-span-3 flex items-center gap-2">
+  <div class="flex items-center gap-2">
     <button
       type="button"
       (click)="onReset()"
-      class="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
+      class="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full text-gray-600"
       title="Đặt lại"
     >
-      🔄
+      <i class="fas fa-sync-alt"></i>
     </button>
 
     <button
       type="submit"
-      class="flex items-center gap-2 px-4 py-2 bg-secondary-500 text-white rounded hover:bg-secondary-600"
+      class="h-10 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-sm font-medium flex items-center gap-2 disabled:bg-gray-400 min-w-[80px] sm:text-xs"
+      [disabled]="!form.valid"
     >
-      🔍 Tìm kiếm
+      <i class="fas fa-search"></i> Tìm kiếm
     </button>
   </div>
-
 </form>

@@ -12,7 +12,6 @@ export class StatisticService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ Employer Statistics
   employerGeneralStatistics(): Observable<any> {
     return this.http.get(`${this.baseUrl}/employer-general-statistics/`);
   }
@@ -33,7 +32,6 @@ export class StatisticService {
     return this.http.post(`${this.baseUrl}/employer-recruitment-statistics/`, data);
   }
 
-  // ✅ Job Seeker Statistics
   jobSeekerGeneralStatistics(): Observable<any> {
     return this.http.get(`${this.baseUrl}/job-seeker-general-statistics/`);
   }

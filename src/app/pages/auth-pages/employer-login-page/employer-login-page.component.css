@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:host {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Custom style cho form input nếu cần */
+.employer-login-form input {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.employer-login-form input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}

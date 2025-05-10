@@ -6,24 +6,20 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    RouterLinkActive
-  ],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent {
   @Input() isMobile: boolean = false;
-  @Input() drawerWidth: number = 200;
+  @Input() drawerWidth: number = 240; // Tăng từ 200px lên 240px
   @Input() mobileOpen: boolean = false;
   @Input() handleDrawerToggle?: () => void;
 
   expandedItems = {
     candidates: false,
-    account: false
+    account: false,
   };
 
   ROUTES = ROUTES;

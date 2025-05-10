@@ -9,7 +9,7 @@ import { QuillModule } from 'ngx-quill';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, QuillModule],
   templateUrl: './send-mail-card.component.html',
-  styleUrls: ['./send-mail-card.component.css']
+  styleUrls: ['./send-mail-card.component.css'],
 })
 export class SendMailCardComponent implements OnInit, OnDestroy {
   @Input() openPopup: boolean = false;
@@ -26,18 +26,16 @@ export class SendMailCardComponent implements OnInit, OnDestroy {
       email: [{ value: '', disabled: true }, [Validators.required, Validators.email, Validators.maxLength(100)]],
       title: ['', [Validators.required, Validators.maxLength(200)]],
       content: ['', [Validators.required, this.contentValidator()]],
-      isSendMe: [false]
+      isSendMe: [false],
     });
   }
 
   ngOnInit(): void {
-    this.mailForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      // Cập nhật error messages nếu cần
-    });
+    // Chỉ subscribe valueChanges nếu cần xử lý lỗi động
   }
 
   ngOnChanges(): void {
-    if (this.openPopup) {
+    if (this.openPopup && !this.sendMailData) {
       this.resetForm();
     }
     if (this.sendMailData) {
@@ -46,7 +44,7 @@ export class SendMailCardComponent implements OnInit, OnDestroy {
         email: this.sendMailData.email || '',
         title: this.sendMailData.title || '',
         content: this.sendMailData.content || '',
-        isSendMe: this.sendMailData.isSendMe || false
+        isSendMe: this.sendMailData.isSendMe || false,
       });
     }
   }
@@ -79,7 +77,7 @@ export class SendMailCardComponent implements OnInit, OnDestroy {
       email: '',
       title: '',
       content: '',
-      isSendMe: false
+      isSendMe: false,
     });
   }
 

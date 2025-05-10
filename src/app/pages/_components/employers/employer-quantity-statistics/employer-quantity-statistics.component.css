@@ -1,0 +1,20 @@
+/* Animation cho card khi dữ liệu được tải */
+.card-enter {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.card-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Đảm bảo icon Font Awesome căn chỉnh tốt */
+.fa-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+}

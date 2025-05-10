@@ -1,49 +1,85 @@
-<div class="space-y-4">
+<div class="space-y-6 p-4 sm:p-6">
   <!-- Search form -->
   <app-profile-search (search)="onSearch($event)" (reset)="onReset()"></app-profile-search>
 
-  <!-- Kết quả tìm kiếm -->
-  <div class="bg-white shadow rounded-lg p-4">
-    <div class="font-bold text-lg mb-4">
-      Kết quả tìm thấy: <span class="text-red-500">{{ count }} hồ sơ</span>
+  <!-- Results -->
+  <div class="bg-white shadow-md rounded-lg p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold text-gray-800">
+        Kết quả tìm thấy: <span class="text-red-500">{{ count }} hồ sơ</span>
+      </h2>
+      <div *ngIf="resumes.length > 0" class="flex items-center gap-2">
+        <label for="pageSize" class="text-sm text-gray-600">Hiển thị:</label>
+        <select
+          id="pageSize"
+          [(ngModel)]="pageSize"
+          (change)="onChangePageSize(pageSize)"
+          class="px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+      </div>
     </div>
 
+    <!-- Skeleton Loading -->
     <div *ngIf="isLoading" class="grid gap-4">
-      <app-job-seeker-profile *ngFor="let skeleton of [].constructor(pageSize)"></app-job-seeker-profile>
+      <div *ngFor="let _ of [].constructor(pageSize)" class="p-4 bg-gray-50 border border-gray-200 rounded-lg animate-pulse">
+        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+      </div>
     </div>
 
+    <!-- No Data -->
     <div *ngIf="!isLoading && resumes.length === 0" class="text-center py-10">
       <app-no-data-card></app-no-data-card>
     </div>
 
+    <!-- Resume List -->
     <div *ngIf="!isLoading && resumes.length > 0" class="space-y-4">
       <div class="grid gap-4">
         <app-job-seeker-profile
           *ngFor="let resume of resumes"
           [jobSeekerProfile]="resume"
           (save)="onSave(resume.slug)"
+          class="hover:shadow-lg transition-shadow duration-200"
         ></app-job-seeker-profile>
       </div>
 
       <!-- Pagination -->
-      <div class="flex justify-center items-center mt-4 space-x-4">
-        <button
-          (click)="onChangePage(page - 1)"
-          [disabled]="page === 1"
-          class="px-3 py-1 border rounded hover:bg-gray-100"
-        >
-          Prev
-        </button>
-
-        <div>Trang {{ page }} / {{ totalPages }}</div>
-
-        <button
-          (click)="onChangePage(page + 1)"
-          [disabled]="page >= totalPages()"
-          class="px-3 py-1 border rounded hover:bg-gray-100"
-        >
-          Next
-        </button>
+      <div class="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
+        <div class="text-sm text-gray-600">
+          Trang {{ page }} / {{ totalPages() }} ({{ count }} hồ sơ)
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            (click)="onChangePage(page - 1)"
+            [disabled]="page === 1"
+            class="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Trang trước"
+          >
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button
+            *ngFor="let pageNum of getPageNumbers()"
+            (click)="onChangePage(pageNum)"
+            class="px-3 py-1 border border-gray-300 rounded-md"
+            [ngClass]="{'bg-blue-500 text-white border-blue-500': pageNum === page, 'hover:bg-gray-100': pageNum !== page}"
+            attr.aria-label="Trang {{ pageNum }}"
+          >
+            {{ pageNum }}
+          </button>
+          <button
+            (click)="onChangePage(page + 1)"
+            [disabled]="page >= totalPages()"
+            class="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Trang sau"
+          >
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>

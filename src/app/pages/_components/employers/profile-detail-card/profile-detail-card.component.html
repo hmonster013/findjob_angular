@@ -1,121 +1,116 @@
-<div class="space-y-4 relative">
+<div class="container">
   <app-backdrop-loading *ngIf="isLoading || isFullScreenLoading"></app-backdrop-loading>
 
   <!-- Loading skeleton -->
-  <div *ngIf="isLoading" class="space-y-4">
-    <div class="h-10 bg-gray-200 rounded animate-pulse"></div>
-    <div class="h-40 bg-gray-200 rounded animate-pulse"></div>
+  <div *ngIf="isLoading" class="skeleton-container">
+    <div class="skeleton-header"></div>
+    <div class="skeleton-content"></div>
+    <div class="skeleton-content"></div>
+    <div class="skeleton-content"></div>
+    <div class="skeleton-content"></div>
   </div>
 
   <!-- No Data -->
-  <div *ngIf="!isLoading && !profileDetail" class="text-center py-10 text-gray-500">
-    Không tìm thấy hồ sơ ứng viên
+  <div *ngIf="!isLoading && !profileDetail" class="no-data">
+    Không tìm thấy hồ sơ ứng viên. Có thể hồ sơ này đã được đặt chế độ không cho phép tìm kiếm.
   </div>
 
   <!-- Profile Content -->
-  <div *ngIf="!isLoading && profileDetail" class="space-y-4">
-
+  <div *ngIf="!isLoading && profileDetail" class="content-container">
     <!-- Top Info -->
-    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-4">
-        <img [src]="profileDetail?.avatarUrl" alt="avatar" class="w-20 h-20 rounded-full object-cover" />
-        <div>
-          <div class="font-bold text-lg">{{ profileDetail.fullName }}</div>
-          <div class="text-sm text-gray-600">{{ profileDetail.title || '---' }}</div>
-          <div class="text-xs text-gray-500">
-            Cập nhật: {{ formatDate(profileDetail.updatedAt) }}
+    <div class="top-info">
+      <div class="profile-header">
+        <img [src]="profileDetail?.user?.avatarUrl || 'assets/images/default-avatar.png'" alt="avatar" class="avatar" />
+        <div class="profile-info">
+          <div class="profile-name">{{ profileDetail.user.fullName || '---' }}</div>
+          <div class="profile-title">{{ profileDetail.title || 'Chưa cập nhật' }}</div>
+          <div class="profile-updated">
+            Cập nhật: {{ formatDate(profileDetail.updateAt) }}
+            <span *ngIf="profileDetail.lastViewedDate" class="last-viewed">
+              <i class="fas fa-check-circle"></i> Xem lần cuối: {{ formatDate(profileDetail.lastViewedDate) }}
+            </span>
           </div>
         </div>
       </div>
 
       <!-- Action buttons -->
-      <div class="flex flex-wrap gap-2">
-        <button (click)="printProfile()" class="px-3 py-2 bg-primary-500 text-white rounded-md">
-          🖨️ In hồ sơ
+      <div class="action-buttons">
+        <button type="button" (click)="printProfile()" class="action-button print-button">
+          <i class="fas fa-print"></i> In hồ sơ
         </button>
-        <button (click)="onOpenSendMail()" class="px-3 py-2 bg-green-500 text-white rounded-md">
-          📧 Gửi thư mời
+        <button
+          type="button"
+          (click)="handleSave()"
+          class="action-button"
+          [ngClass]="profileDetail.isSaved ? 'save-button-saved' : 'save-button'"
+        >
+          <i [ngClass]="profileDetail.isSaved ? 'fas fa-heart' : 'far fa-heart'"></i>
+          {{ profileDetail.isSaved ? 'Đã lưu' : 'Lưu hồ sơ' }}
+        </button>
+        <button type="button" (click)="onOpenSendMail()" class="action-button email-button">
+          <i [ngClass]="profileDetail.isSentEmail ? 'fas fa-envelope-open-text' : 'fas fa-envelope'"></i>
+          {{ profileDetail.isSentEmail ? 'Gửi lại Email' : 'Gửi Email' }}
         </button>
       </div>
     </div>
 
     <!-- Profile Detail -->
-    <div class="space-y-6">
-      <div>
-        <h2 class="font-semibold text-lg mb-2">Thông tin cá nhân</h2>
-        <div [innerHTML]="getSafeHtml(profileDetail.personalInfoHtml)"></div>
+    <div class="profile-details">
+      <div class="section">
+        <h2 class="section-title">Thông tin cá nhân</h2>
+        <div class="section-content" [innerHTML]="getPersonalInfoHtml()"></div>
       </div>
 
-      <div>
-        <h2 class="font-semibold text-lg mb-2">Thông tin chung</h2>
-        <div [innerHTML]="getSafeHtml(profileDetail.generalInfoHtml)"></div>
+      <div class="section">
+        <h2 class="section-title">Thông tin chung</h2>
+        <div class="section-content" [innerHTML]="getGeneralInfoHtml()"></div>
       </div>
 
-      <div>
-        <h2 class="font-semibold text-lg mb-2">Mục tiêu nghề nghiệp</h2>
-        <div [innerHTML]="getSafeHtml(profileDetail.careerGoalHtml)"></div>
+      <div class="section">
+        <h2 class="section-title">Mục tiêu nghề nghiệp</h2>
+        <div class="section-content" [innerHTML]="getCareerGoalHtml()"></div>
       </div>
 
-      <!-- Nếu là CV Website -->
-      <div *ngIf="profileDetail.type === 'cvWebsite'" class="space-y-6">
-        <div>
-          <h2 class="font-semibold text-lg mb-2">Kinh nghiệm làm việc</h2>
-          <div [innerHTML]="getSafeHtml(profileDetail.experienceHtml)"></div>
+      <div *ngIf="profileDetail.type === 'WEBSITE'" class="section-group">
+        <div class="section">
+          <h2 class="section-title">Kinh nghiệm làm việc</h2>
+          <div class="section-content" [innerHTML]="getSafeHtml(profileDetail.experiencesDetails, 'experience')"></div>
         </div>
 
-        <div>
-          <h2 class="font-semibold text-lg mb-2">Học vấn</h2>
-          <div [innerHTML]="getSafeHtml(profileDetail.educationHtml)"></div>
+        <div class="section">
+          <h2 class="section-title">Học vấn</h2>
+          <div class="section-content" [innerHTML]="getSafeHtml(profileDetail.educationDetails, 'education')"></div>
         </div>
 
-        <div>
-          <h2 class="font-semibold text-lg mb-2">Chứng chỉ</h2>
-          <div [innerHTML]="getSafeHtml(profileDetail.certificateHtml)"></div>
+        <div class="section">
+          <h2 class="section-title">Chứng chỉ</h2>
+          <div class="section-content" [innerHTML]="getSafeHtml(profileDetail.certificates, 'certificate')"></div>
         </div>
 
-        <div>
-          <h2 class="font-semibold text-lg mb-2">Ngôn ngữ</h2>
-          <div [innerHTML]="getSafeHtml(profileDetail.languageHtml)"></div>
+        <div class="section">
+          <h2 class="section-title">Ngôn ngữ</h2>
+          <div class="section-content" [innerHTML]="getSafeHtml(profileDetail.languageSkills, 'language')"></div>
         </div>
 
-        <div>
-          <h2 class="font-semibold text-lg mb-2">Kỹ năng</h2>
-          <div [innerHTML]="getSafeHtml(profileDetail.skillHtml)"></div>
+        <div class="section">
+          <h2 class="section-title">Kỹ năng chuyên môn</h2>
+          <div class="section-content" [innerHTML]="getSafeHtml(profileDetail.advancedSkills, 'skill')"></div>
         </div>
       </div>
 
-      <!-- Nếu là upload file -->
-      <div *ngIf="profileDetail.type === 'uploadFile'" class="space-y-4">
-        <h2 class="font-semibold text-lg mb-2">File hồ sơ</h2>
-        <a [href]="pdfUrl" target="_blank" class="text-blue-500 underline">Xem file CV</a>
+      <div *ngIf="profileDetail.type === 'uploadFile'" class="section">
+        <h2 class="section-title">File hồ sơ</h2>
+        <a [href]="pdfUrl" target="_blank" class="cv-link">Xem file CV</a>
       </div>
     </div>
-
   </div>
 
   <!-- Popup Send Email -->
-  <div *ngIf="openSendMailPopup" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div class="bg-white p-6 rounded-lg w-full max-w-md space-y-4 relative">
-      <button (click)="onCloseSendMail()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
-        ✖️
-      </button>
-      <h2 class="text-lg font-bold mb-4">Gửi thư mời</h2>
-
-      <form [formGroup]="sendMailForm" (ngSubmit)="onSendMail()" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium mb-1">Tiêu đề</label>
-          <input formControlName="subject" type="text" class="border w-full px-3 py-2 rounded" />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium mb-1">Nội dung</label>
-          <textarea formControlName="body" rows="5" class="border w-full px-3 py-2 rounded"></textarea>
-        </div>
-
-        <button type="submit" class="bg-primary-500 text-white px-4 py-2 rounded w-full">
-          Gửi thư
-        </button>
-      </form>
-    </div>
-  </div>
+  <app-send-mail-card
+    *ngIf="openSendMailPopup"
+    [openPopup]="openSendMailPopup"
+    [sendMailData]="sendMailData"
+    (handleSendEmail)="handleSendEmail($event)"
+    (setOpenPopup)="openSendMailPopup = $event"
+  ></app-send-mail-card>
 </div>

@@ -1,20 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StatisticService } from '../../../../_services/statistic.service';
-import { BackdropLoadingComponent } from '../../../../_components/backdrop-loading/backdrop-loading.component';
 
 @Component({
   selector: 'app-employer-quantity-statistics',
-  imports: [
-    CommonModule,
-    BackdropLoadingComponent,
-  ],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './employer-quantity-statistics.component.html',
-  styleUrl: './employer-quantity-statistics.component.css'
+  styleUrls: ['./employer-quantity-statistics.component.css'],
 })
-export class EmployerQuantityStatisticsComponent {
+export class EmployerQuantityStatisticsComponent implements OnInit {
   isLoading: boolean = false;
   data: any = {};
+  animateCards: boolean = false;
 
   constructor(private statisticService: StatisticService) {}
 
@@ -28,11 +26,14 @@ export class EmployerQuantityStatisticsComponent {
       next: (res) => {
         this.data = res.data || {};
         this.isLoading = false;
+        setTimeout(() => {
+          this.animateCards = true;
+        }, 100);
       },
       error: (err) => {
         console.error('Error fetching statistics:', err);
         this.isLoading = false;
-      }
+      },
     });
   }
 }

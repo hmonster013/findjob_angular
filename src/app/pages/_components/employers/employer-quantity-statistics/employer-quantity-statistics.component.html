@@ -1,40 +1,81 @@
 <div class="relative">
-  <app-backdrop-loading *ngIf="isLoading"></app-backdrop-loading>
+  <div *ngIf="isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+    <div *ngFor="let _ of [1,2,3,4]" class="bg-gray-100 rounded-xl p-6 animate-pulse">
+      <div class="h-8 bg-gray-300 rounded w-12 mb-2"></div>
+      <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+    </div>
+  </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
     <!-- Tổng số tin tuyển -->
-    <div class="bg-white rounded-lg shadow p-6 flex items-center space-x-4">
-      <div class="text-green-600 text-4xl">📄</div>
+    <div
+      class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-4 hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+      role="region"
+      aria-label="Tổng số tin tuyển dụng"
+      [ngClass]="{'card-enter': !animateCards, 'card-enter-active': animateCards}"
+    >
+      <i class="fas fa-file-alt text-green-600 text-3xl"></i>
       <div>
-        <div class="text-gray-700 font-semibold text-sm mb-1">Tất cả tin tuyển dụng</div>
-        <div class="text-2xl font-bold text-green-600">{{ data.totalJobPost || 0 }}</div>
+        <div class="text-gray-600 font-medium text-xs uppercase tracking-wide mb-1">
+          Tất cả tin tuyển dụng
+        </div>
+        <div class="text-2xl font-extrabold text-green-600">
+          {{ data.totalJobPost || 0 }}
+        </div>
       </div>
     </div>
 
     <!-- Tin tuyển chờ duyệt -->
-    <div class="bg-white rounded-lg shadow p-6 flex items-center space-x-4">
-      <div class="text-yellow-500 text-4xl">⏳</div>
+    <div
+      class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-4 hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+      role="region"
+      aria-label="Tin tuyển dụng chờ duyệt"
+      [ngClass]="{'card-enter': !animateCards, 'card-enter-active': animateCards}"
+    >
+      <i class="fas fa-hourglass-half text-yellow-500 text-3xl"></i>
       <div>
-        <div class="text-gray-700 font-semibold text-sm mb-1">Tin tuyển dụng chờ duyệt</div>
-        <div class="text-2xl font-bold text-yellow-500">{{ data.totalJobPostingPendingApproval || 0 }}</div>
+        <div class="text-gray-600 font-medium text-xs uppercase tracking-wide mb-1">
+          Tin tuyển dụng chờ duyệt
+        </div>
+        <div class="text-2xl font-extrabold text-yellow-500">
+          {{ data.totalJobPostingPendingApproval || 0 }}
+        </div>
       </div>
     </div>
 
     <!-- Tin tuyển hết hạn -->
-    <div class="bg-white rounded-lg shadow p-6 flex items-center space-x-4">
-      <div class="text-red-600 text-4xl">❌</div>
+    <div
+      class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-4 hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+      role="region"
+      aria-label="Tin tuyển dụng hết hạn"
+      [ngClass]="{'card-enter': !animateCards, 'card-enter-active': animateCards}"
+    >
+      <i class="fas fa-times-circle text-red-600 text-3xl"></i>
       <div>
-        <div class="text-gray-700 font-semibold text-sm mb-1">Tin tuyển dụng hết hạn</div>
-        <div class="text-2xl font-bold text-red-600">{{ data.totalJobPostExpired || 0 }}</div>
+        <div class="text-gray-600 font-medium text-xs uppercase tracking-wide mb-1">
+          Tin tuyển dụng hết hạn
+        </div>
+        <div class="text-2xl font-extrabold text-red-600">
+          {{ data.totalJobPostExpired || 0 }}
+        </div>
       </div>
     </div>
 
     <!-- Ứng viên ứng tuyển -->
-    <div class="bg-white rounded-lg shadow p-6 flex items-center space-x-4">
-      <div class="text-blue-500 text-4xl">👤</div>
+    <div
+      class="bg-white rounded-xl shadow-lg p-6 flex items-center space-x-4 hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+      role="region"
+      aria-label="Ứng viên ứng tuyển"
+      [ngClass]="{'card-enter': !animateCards, 'card-enter-active': animateCards}"
+    >
+      <i class="fas fa-user-plus text-blue-500 text-3xl"></i>
       <div>
-        <div class="text-gray-700 font-semibold text-sm mb-1">Ứng viên ứng tuyển</div>
-        <div class="text-2xl font-bold text-blue-500">{{ data.totalApply || 0 }}</div>
+        <div class="text-gray-600 font-medium text-xs uppercase tracking-wide mb-1">
+          Ứng viên ứng tuyển
+        </div>
+        <div class="text-2xl font-extrabold text-blue-500">
+          {{ data.totalApply || 0 }}
+        </div>
       </div>
     </div>
   </div>

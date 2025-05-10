@@ -1,20 +1,31 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
-
-import dayjs from 'dayjs';
 import { NoDataCardComponent } from "../../../../_components/no-data-card/no-data-card.component";
+
+interface Resume {
+  slug?: string;
+  title?: string;
+  userDict?: { fullName: string };
+  salaryMin?: number;
+  salaryMax?: number;
+  experience?: string;
+  city?: string;
+}
+
+interface ResumeRow {
+  resume?: Resume;
+  createAt?: string;
+}
+
 @Component({
   selector: 'app-saved-resume-table',
-  imports: [
-    CommonModule,
-    NoDataCardComponent
-],
-  templateUrl: './saved-resume-table.component.html',
-  styleUrl: './saved-resume-table.component.css'
+  standalone: true,
+  imports: [CommonModule, NoDataCardComponent, DatePipe],
+  templateUrl: './saved-resume-table.component.html'
 })
 export class SavedResumeTableComponent {
-  @Input() dataSource: any[] = [];
+  @Input() dataSource: ResumeRow[] = [];
   @Input() isLoading: boolean = false;
   @Input() total: number = 0;
   @Input() page: number = 1;
@@ -26,13 +37,18 @@ export class SavedResumeTableComponent {
 
   constructor(private router: Router) {}
 
-  viewProfile(slug: string) {
+  viewProfile(slug: string | undefined) {
     if (slug) {
-      this.router.navigate(['/employer/profiles', slug]);
+      this.router.navigate(['/chi-tiet-ung-vien/', slug]);
     }
   }
 
   totalPages(): number {
     return Math.ceil(this.total / this.rowsPerPage) || 1;
+  }
+
+  formatSalary(min: number | undefined, max: number | undefined): string {
+    if (!min && !max) return '---';
+    return `${min?.toLocaleString() || ''} - ${max?.toLocaleString() || ''}`;
   }
 }

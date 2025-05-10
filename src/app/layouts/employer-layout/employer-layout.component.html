@@ -1,13 +1,13 @@
-<div class="flex">
+<div class="flex min-h-screen">
   <!-- Sidebar cố định trên desktop -->
-  <div class="hidden xl:block w-[200px] bg-white border-r shadow">
-    <app-sidebar [isMobile]="false"></app-sidebar>
+  <div class="hidden lg:block w-[240px] bg-white border-r shadow-lg">
+    <app-sidebar [isMobile]="false" [drawerWidth]="drawerWidth"></app-sidebar>
   </div>
 
   <!-- Nội dung chính -->
-  <div class="flex-1">
+  <div class="flex-1 flex flex-col">
     <!-- Header -->
-    <div class="bg-white shadow">
+    <div class="bg-white shadow-lg">
       <app-header
         [drawerWidth]="drawerWidth"
         [handleDrawerToggle]="toggleMobileSidebar.bind(this)"
@@ -15,19 +15,23 @@
     </div>
 
     <!-- Router Outlet -->
-    <div class="p-6 mt-[50px]">
+    <main class="flex-1 p-4 sm:p-6 mt-16 bg-gray-50">
       <router-outlet></router-outlet>
-    </div>
+    </main>
   </div>
 
   <!-- Modal Sidebar trên di động -->
   <div
     *ngIf="mobileOpen"
-    class="fixed inset-0 z-50 bg-black bg-opacity-50 xl:hidden"
+    class="fixed inset-0 z-50 bg-black bg-opacity-40 lg:hidden transition-opacity duration-300"
+    [ngClass]="{'opacity-100': mobileOpen, 'opacity-0 pointer-events-none': !mobileOpen}"
     (click)="toggleMobileSidebar()"
+    role="dialog"
+    aria-label="Đóng sidebar di động"
   >
     <div
-      class="w-[200px] h-screen bg-white border-r shadow"
+      class="w-[240px] h-screen bg-white border-r shadow-xl transform transition-transform duration-300"
+      [ngClass]="{'translate-x-0': mobileOpen, '-translate-x-full': !mobileOpen}"
       (click)="$event.stopPropagation()"
     >
       <app-sidebar

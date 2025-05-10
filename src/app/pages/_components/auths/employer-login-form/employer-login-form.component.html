@@ -1,39 +1,59 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5 employer-login-form">
   <!-- Email -->
   <div>
-    <label class="block font-medium text-gray-700 mb-1">
-      Email <span class="text-red-500">*</span>
-    </label>
-    <input type="email" formControlName="email" placeholder="Nhập email của bạn"
-      class="input input-bordered w-full" />
-
-    <div *ngIf="loginForm.get('email')?.errors" class="text-red-500 text-sm mt-1">
-      {{ loginForm.get('email')?.errors?.['required'] ? 'Email là bắt buộc.' : '' }}
-      {{ loginForm.get('email')?.errors?.['email'] ? 'Email không đúng định dạng.' : '' }}
+    <label for="email" class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+    <input
+      id="email"
+      type="email"
+      formControlName="email"
+      placeholder="Nhập email của bạn"
+      class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+      aria-describedby="email-error"
+      [attr.aria-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+    />
+    <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" id="email-error" class="text-red-500 text-sm mt-1">
+      <span *ngIf="loginForm.get('email')?.errors?.['required']">Email là bắt buộc.</span>
+      <span *ngIf="loginForm.get('email')?.errors?.['email']">Email không đúng định dạng.</span>
     </div>
   </div>
 
   <!-- Password -->
   <div>
-    <label class="block font-medium text-gray-700 mb-1">
-      Mật khẩu <span class="text-red-500">*</span>
-    </label>
-    <input type="password" formControlName="password" placeholder="Nhập mật khẩu của bạn"
-      class="input input-bordered w-full" />
-
-    <div *ngIf="loginForm.get('password')?.errors" class="text-red-500 text-sm mt-1">
-      {{ loginForm.get('password')?.errors?.['required'] ? 'Mật khẩu là bắt buộc.' : '' }}
-      {{ loginForm.get('password')?.errors?.['minlength'] ? 'Mật khẩu phải có ít nhất 8 ký tự.' : '' }}
-      {{ loginForm.get('password')?.errors?.['maxlength'] ? 'Mật khẩu quá dài.' : '' }}
-      {{ loginForm.get('password')?.errors?.['pattern'] ? 'Phải chứa chữ hoa, thường, số và ký tự đặc biệt.' : '' }}
+    <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu <span class="text-red-500">*</span></label>
+    <div class="relative">
+      <input
+        id="password"
+        [type]="showPassword ? 'text' : 'password'"
+        formControlName="password"
+        placeholder="Nhập mật khẩu của bạn"
+        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+        aria-describedby="password-error"
+        [attr.aria-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+      />
+      <button
+        type="button"
+        (click)="togglePassword()"
+        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+        aria-label="Toggle password visibility"
+      >
+        <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+      </button>
+    </div>
+    <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" id="password-error" class="text-red-500 text-sm mt-1">
+      <span *ngIf="loginForm.get('password')?.errors?.['required']">Mật khẩu là bắt buộc.</span>
+      <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Mật khẩu phải có ít nhất 8 ký tự.</span>
+      <span *ngIf="loginForm.get('password')?.errors?.['maxlength']">Mật khẩu không được quá 128 ký tự.</span>
+      <span *ngIf="loginForm.get('password')?.errors?.['pattern']">Mật khẩu phải chứa chữ hoa, chữ thường, số và ký tự đặc biệt.</span>
     </div>
   </div>
 
   <!-- Submit button -->
-  <button type="submit" class="w-full px-6 py-3 bg-primary-600 text-white rounded hover:bg-primary-700 flex justify-center items-center gap-2">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7l7 7-7 7" />
-    </svg>
+  <button
+    type="submit"
+    [disabled]="loginForm.invalid || isSubmitting"
+    class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    <i class="fas fa-sign-in-alt"></i>
     Đăng nhập
   </button>
 </form>

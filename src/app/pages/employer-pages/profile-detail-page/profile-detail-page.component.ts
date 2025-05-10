@@ -11,4 +11,6 @@ import { ProfileDetailCardComponent } from '../../_components/employers/profile-
   ],
   templateUrl: './profile-detail-page.component.html',
 })
-export class ProfileDetailPageComponent {}
+export class ProfileDetailPageComponent {
+
+}

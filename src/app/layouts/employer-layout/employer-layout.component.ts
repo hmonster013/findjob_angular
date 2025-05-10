@@ -2,44 +2,38 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../_components/employers/header/header.component';
-import { SidebarComponent } from '../_components/employers/slidebar/sidebar.component';
 import { fromEvent, Subject, takeUntil, debounceTime } from 'rxjs';
+import { SidebarComponent } from '../_components/employers/slidebar/sidebar.component';
 
 @Component({
   selector: 'app-employer-layout',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    HeaderComponent,
-    SidebarComponent
-  ],
+  imports: [CommonModule, RouterOutlet, HeaderComponent, SidebarComponent],
   templateUrl: './employer-layout.component.html',
   styleUrls: ['./employer-layout.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployerLayoutComponent implements OnInit, OnDestroy {
-  drawerWidth = 200;
+  drawerWidth = 240; // Đồng bộ với SidebarComponent
   mobileOpen = false;
-  isDesktop = window.innerWidth >= 1280;
+  isDesktop = window.innerWidth >= 1024; // Đổi từ 1280 (xl) sang 1024 (lg)
   private destroy$ = new Subject<void>();
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    fromEvent(window, 'resize').pipe(
-      debounceTime(100),
-      takeUntil(this.destroy$)
-    ).subscribe(() => {
-      const newIsDesktop = window.innerWidth >= 1280;
-      if (newIsDesktop !== this.isDesktop) {
-        this.isDesktop = newIsDesktop;
-        if (this.isDesktop) {
-          this.mobileOpen = false;
+    fromEvent(window, 'resize')
+      .pipe(debounceTime(100), takeUntil(this.destroy$))
+      .subscribe(() => {
+        const newIsDesktop = window.innerWidth >= 1024;
+        if (newIsDesktop !== this.isDesktop) {
+          this.isDesktop = newIsDesktop;
+          if (this.isDesktop) {
+            this.mobileOpen = false;
+          }
+          this.cdr.markForCheck();
         }
-        this.cdr.markForCheck();
-      }
-    });
+      });
   }
 
   ngOnDestroy() {

@@ -4,8 +4,7 @@ import { AuthStateService } from '../../../../_services/auth-state.service';
 import { NotificationCardComponent } from '../../../../_components/notification-card/notification-card.component';
 import { ChatCardComponent } from '../../../../_components/chat-card/chat-card.component';
 import { UserMenuComponent } from '../../commons/user-menu/user-menu.component';
-import { AccountSwitchMenuComponent } from '../../commons/account-switch-menu/account-switch-menu.component';
-import { Subject, fromEvent, takeUntil } from 'rxjs';
+import { Subject, fromEvent, takeUntil, debounceTime } from 'rxjs';
 
 /**
  * Header component for the application, displaying navigation and user-related actions.
@@ -18,15 +17,14 @@ import { Subject, fromEvent, takeUntil } from 'rxjs';
     NotificationCardComponent,
     ChatCardComponent,
     UserMenuComponent,
-    AccountSwitchMenuComponent
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   /** Width of the sidebar drawer */
-  @Input() drawerWidth: number = 200;
+  @Input() drawerWidth: number = 240; // Đồng bộ với Sidebar và Layout
   /** Function to toggle the sidebar drawer */
   @Input() handleDrawerToggle?: () => void;
 
@@ -36,8 +34,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated: boolean = false;
   /** Visibility state of the user menu */
   showUserMenu: boolean = false;
-  /** Visibility state of the notification menu */
-  showNotificationMenu: boolean = false;
+  /** Mobile state */
+  isMobile: boolean = window.innerWidth < 768;
   /** Subject to manage subscription cleanup */
   private destroy$ = new Subject<void>();
 
@@ -47,23 +45,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.authStateService.getAuthStatus().pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(isAuthenticated => {
+    this.authStateService.getAuthStatus().pipe(takeUntil(this.destroy$)).subscribe((isAuthenticated) => {
       this.isAuthenticated = isAuthenticated;
       this.currentUser = isAuthenticated ? this.authStateService.getCurrentUser() : null;
       this.cdr.markForCheck();
     });
 
-    fromEvent(document, 'click').pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((event: Event) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest('.user-menu-wrapper') && !target.closest('app-notification-card')) {
-        this.closeUserMenu();
-        this.closeNotificationMenu();
-      }
-    });
+    fromEvent(window, 'resize')
+      .pipe(debounceTime(100), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.isMobile = window.innerWidth < 768;
+        this.cdr.markForCheck();
+      });
+
+    fromEvent(document, 'click')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event: Event) => {
+        const target = event.target as HTMLElement;
+        if (!target.closest('.relative') && !target.closest('app-notification-card')) {
+          this.closeMenus();
+        }
+      });
   }
 
   ngOnDestroy() {
@@ -72,29 +74,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Toggles the visibility of the user menu and closes the notification menu if open.
+   * Toggles the visibility of the user menu.
    */
   toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
-    if (this.showUserMenu) {
-      this.closeNotificationMenu();
-    }
     this.cdr.markForCheck();
   }
 
   /**
-   * Closes the user menu.
+   * Closes all menus (user menu).
    */
-  closeUserMenu() {
+  closeMenus() {
     this.showUserMenu = false;
-    this.cdr.markForCheck();
-  }
-
-  /**
-   * Closes the notification menu.
-   */
-  closeNotificationMenu() {
-    this.showNotificationMenu = false;
     this.cdr.markForCheck();
   }
 }

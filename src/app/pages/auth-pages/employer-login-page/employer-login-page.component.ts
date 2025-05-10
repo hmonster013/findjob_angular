@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { EmployerLoginFormComponent } from '../../_components/auths/employer-login-form/employer-login-form.component';
 import { AuthenticationService } from '../../../_services/authentication.service';
@@ -11,15 +11,14 @@ import { ROLES_NAME } from '../../../_configs/constants';
 @Component({
   selector: 'app-employer-login-page',
   standalone: true,
-  imports: [
-    CommonModule,
-    EmployerLoginFormComponent
-  ],
+  imports: [CommonModule, EmployerLoginFormComponent, RouterModule],
   templateUrl: './employer-login-page.component.html',
   styleUrls: ['./employer-login-page.component.css'],
 })
 export class EmployerLoginPageComponent {
   isLoading = false;
+
+  @ViewChild(EmployerLoginFormComponent) employerLoginForm?: EmployerLoginFormComponent;
 
   constructor(
     private authService: AuthenticationService,
@@ -30,6 +29,12 @@ export class EmployerLoginPageComponent {
   ) {}
 
   onLogin(formData: { email: string; password: string }) {
+    if (!formData.email || !formData.password) {
+      this.toastr.error('Vui lòng nhập đầy đủ email và mật khẩu');
+      this.employerLoginForm?.resetSubmitting();
+      return;
+    }
+
     this.isLoading = true;
 
     const { email, password } = formData;
@@ -37,46 +42,62 @@ export class EmployerLoginPageComponent {
 
     this.authService.checkCreds(email, role).subscribe({
       next: (res) => {
-        if (res) {
+        console.log('checkCreds response:', res);
+        if (res && res.data && res.data.exists) {
+          if (res.data.email_verified === false) {
+            this.toastr.info('Vui lòng xác minh email để tiếp tục');
+            this.router.navigate(['/email-verification']);
+            this.isLoading = false;
+            this.employerLoginForm?.resetSubmitting();
+            return;
+          }
+
           this.authService.getToken(email, password, role).subscribe({
             next: (tokenRes) => {
+              console.log('getToken response:', tokenRes);
               this.tokenService.saveAccessTokenAndRefreshTokenToCookie(
                 tokenRes.data.access_token,
                 tokenRes.data.refresh_token,
-                'email' // provider mặc định email (nếu login normal)
+                'email'
               );
 
               this.authService.getUserInfo().subscribe({
                 next: (userInfo) => {
-                  if (userInfo.data?.is_verified === false) {
-                    this.router.navigate(['/email-verification']);
-                  } else {
-                    this.authStateService.setCurrentUser(userInfo.data);
-                    this.toastr.success('Đăng nhập thành công!');
-                    this.router.navigate(['/employer/dashboard']);
-                  }
+                  console.log('getUserInfo response:', userInfo);
+                  this.authStateService.setCurrentUser(userInfo.data);
+                  this.toastr.success('Đăng nhập thành công!');
+                  this.router.navigate(['']);
                   this.isLoading = false;
+                  this.employerLoginForm?.resetSubmitting();
                 },
-                error: () => {
-                  this.toastr.error('Không thể lấy thông tin tài khoản');
+                error: (err) => {
+                  console.log('getUserInfo error:', err);
+                  this.toastr.error('Không thể lấy thông tin tài khoản. Vui lòng thử lại sau.');
                   this.isLoading = false;
-                }
+                  this.employerLoginForm?.resetSubmitting();
+                },
               });
             },
-            error: () => {
-              this.toastr.error('Không thể đăng nhập, vui lòng kiểm tra lại thông tin');
+            error: (err) => {
+              console.log('getToken error:', err);
+              this.toastr.error('Email hoặc mật khẩu không đúng. Vui lòng kiểm tra lại.');
               this.isLoading = false;
-            }
+              this.employerLoginForm?.resetSubmitting();
+            },
           });
         } else {
-          this.toastr.error(res.message || 'Thông tin đăng nhập không hợp lệ');
+          console.log('checkCreds error: Email không tồn tại');
+          this.toastr.error('Email không tồn tại. Vui lòng kiểm tra lại hoặc đăng ký.');
           this.isLoading = false;
+          this.employerLoginForm?.resetSubmitting();
         }
       },
-      error: () => {
-        this.toastr.error('Đăng nhập thất bại');
+      error: (err) => {
+        console.log('checkCreds HTTP error:', err);
+        this.toastr.error('Có lỗi xảy ra khi kiểm tra thông tin. Vui lòng thử lại sau.');
         this.isLoading = false;
-      }
+        this.employerLoginForm?.resetSubmitting();
+      },
     });
   }
 }

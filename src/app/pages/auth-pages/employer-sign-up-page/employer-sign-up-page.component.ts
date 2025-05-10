@@ -11,10 +11,7 @@ import { ROLES_NAME } from '../../../_configs/constants';
 @Component({
   selector: 'app-employer-sign-up-page',
   standalone: true,
-  imports: [
-    CommonModule,
-    EmployerSignUpFormComponent
-  ],
+  imports: [CommonModule, EmployerSignUpFormComponent],
   templateUrl: './employer-sign-up-page.component.html',
   styleUrls: ['./employer-sign-up-page.component.css'],
 })
@@ -40,18 +37,20 @@ export class EmployerSignUpPageComponent implements OnInit {
       next: (res) => {
         if (res.status) {
           this.authStateService.setCurrentUser({ email: formData.email });
-          this.router.navigate(['/email-verification']);
           this.toastr.success('Đăng ký thành công. Vui lòng xác thực email.');
+          this.router.navigate(['/email-verification']);
         } else {
+          this.serverErrors = res.errors || { general: res.message || 'Đăng ký thất bại' };
           this.toastr.error(res.message || 'Đăng ký thất bại');
         }
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Lỗi đăng ký:', error);
-        this.toastr.error('Đăng ký thất bại');
+        this.serverErrors = { general: 'Có lỗi xảy ra. Vui lòng thử lại sau.' };
+        this.toastr.error('Có lỗi xảy ra. Vui lòng thử lại sau.');
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -66,8 +65,8 @@ export class EmployerSignUpPageComponent implements OnInit {
       },
       error: (error) => {
         console.error('Lỗi checkCreds:', error);
-        this.serverErrors = { email: 'Email đã tồn tại.' };
-      }
+        this.serverErrors = { email: 'Không thể kiểm tra email. Vui lòng thử lại.' };
+      },
     });
   }
 }

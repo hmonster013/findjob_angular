@@ -1,4 +1,4 @@
-<div class="p-6 rounded-lg border border-gray-100 shadow-md bg-white h-full flex flex-col space-y-6">
+<div class="p-6 rounded-lg border border-gray-100 shadow-md bg-white h-full flex flex-col space-y-6 chart-container">
   <div class="flex items-center justify-between">
     <h2 class="text-xl font-semibold text-gray-800">{{ title }}</h2>
     <div class="tooltip">
@@ -11,37 +11,57 @@
 
   <div class="border-t border-dashed"></div>
 
-  <div>
+  <div class="flex-1">
     <div class="flex justify-end mb-3 gap-2">
-      <input type="date" [value]="selectedDateRange[0].format('YYYY-MM-DD')" (change)="onDateChange($event, 'start')" class="border rounded px-2 py-1">
-      <input type="date" [value]="selectedDateRange[1].format('YYYY-MM-DD')" (change)="onDateChange($event, 'end')" class="border rounded px-2 py-1">
-      <button class="btn btn-primary" (click)="onSubmitDateChange()" [disabled]="!allowSubmit">Cập nhật</button>
+      <input
+        type="date"
+        [value]="selectedDateRange[0].format('YYYY-MM-DD')"
+        (change)="onDateChange($event, 'start')"
+        class="border rounded px-2 py-1"
+      />
+      <input
+        type="date"
+        [value]="selectedDateRange[1].format('YYYY-MM-DD')"
+        (change)="onDateChange($event, 'end')"
+        class="border rounded px-2 py-1"
+      />
+      <button
+        class="btn btn-primary"
+        (click)="onSubmitDateChange()"
+        [disabled]="!allowSubmit"
+      >
+        Cập nhật
+      </button>
     </div>
 
     <div class="relative min-h-[320px]">
-      <ng-container *ngIf="isLoading; else showChart">
-        <div class="flex items-center justify-center h-[320px]">
-          <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary-500"></div>
+      <!-- Loading state -->
+      <div *ngIf="isLoading" class="flex items-center justify-center h-[320px]">
+        <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary-500"></div>
+      </div>
+
+      <!-- Error state -->
+      <div *ngIf="!isLoading && errorMessage" class="flex items-center justify-center h-[320px] bg-gray-50 rounded-md error-state">
+        <div>
+          <h3>Lỗi tải dữ liệu</h3>
+          <p class="error-message">{{ errorMessage }}</p>
+          <img src="/assets/images/error.svg" alt="Error state">
         </div>
-      </ng-container>
+      </div>
 
-      <ng-template #showChart>
-        <ng-container *ngIf="data.length > 0; else noData">
-          <div class="h-[320px]">
-            <canvas #chartCanvas class="h-full w-full"></canvas>
-          </div>
-        </ng-container>
+      <!-- Empty state -->
+      <div *ngIf="!isLoading && !errorMessage && !data.length" class="flex items-center justify-center h-[320px] bg-gray-50 rounded-md empty-state">
+        <div>
+          <h3>Không có dữ liệu</h3>
+          <p>Không có dữ liệu để thống kê trong khoảng thời gian này</p>
+          <img src="/assets/images/empty.svg" alt="Empty state">
+        </div>
+      </div>
 
-        <ng-template #noData>
-          <div class="flex items-center justify-center h-[320px] bg-gray-50 rounded-md">
-            <app-empty-card
-              title="Không có dữ liệu"
-              description="Không có dữ liệu để thống kê"
-              imageUrl="/assets/images/empty.svg"
-            ></app-empty-card>
-          </div>
-        </ng-template>
-      </ng-template>
+      <!-- Chart -->
+      <div class="h-[320px] chart-wrapper" [ngClass]="{'visible': !isLoading && !errorMessage && data.length}">
+        <canvas #chartCanvas class="h-full w-full"></canvas>
+      </div>
     </div>
   </div>
 </div>

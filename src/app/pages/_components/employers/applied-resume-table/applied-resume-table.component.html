@@ -1,100 +1,104 @@
-<div class="overflow-x-auto bg-white shadow rounded-lg">
-  <table class="min-w-full table-auto">
-    <thead class="bg-gray-100 text-gray-700 text-sm">
+<div class="table-container">
+  <table>
+    <thead>
       <tr>
-        <th class="px-4 py-3 text-left font-medium">Ứng viên</th>
-        <th class="px-4 py-3 text-left font-medium">Công việc</th>
-        <th class="px-4 py-3 text-left font-medium">Ngày ứng tuyển</th>
-        <th class="px-4 py-3 text-left font-medium">Loại CV</th>
-        <th class="px-4 py-3 text-left font-medium">Trạng thái</th>
-        <th class="px-4 py-3 text-right font-medium">Hành động</th>
+        <th>Ứng viên</th>
+        <th class="hidden-mobile">Công việc</th>
+        <th class="hidden-mobile">Ngày ứng tuyển</th>
+        <th class="hidden-mobile">Loại CV</th>
+        <th>Trạng thái</th>
+        <th style="text-align: right;">Hành động</th>
       </tr>
     </thead>
 
     <tbody *ngIf="!isLoading && dataSource.length > 0; else noDataTemplate">
-      <tr *ngFor="let row of dataSource" class="border-b hover:bg-gray-50 text-sm">
-        <td class="px-4 py-3">
-          <span class="font-bold">{{ row?.resume?.userDict?.fullName || '---' }}</span>
-          <span *ngIf="row?.resume?.cvFile" class="ml-1 text-red-600">
-            <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z" />
-            </svg>
-          </span>
-          <span *ngIf="!row?.resume?.cvFile" class="ml-1 text-purple-600">
-            <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </span>
-          <span *ngIf="row?.resume?.title; else noTitle" class="ml-1 text-gray-400 italic text-xs">
-            {{ row.resume.title }}
-          </span>
-          <ng-template #noTitle>
-            <span class="ml-1 text-gray-400 italic text-xs">Chưa cập nhật</span>
-          </ng-template>
+      <tr *ngFor="let row of dataSource">
+        <td>
+          <div class="candidate-info">
+            <span class="candidate-name">{{ row?.fullName || '---' }}</span>
+            <i
+              *ngIf="row?.type === 'WEBSITE'"
+              class="fas fa-circle"
+              style="color: #8b5cf6;"
+            ></i>
+            <i
+              *ngIf="row?.type !== 'WEBSITE'"
+              class="fas fa-file-pdf"
+              style="color: #ef4444;"
+            ></i>
+            <span *ngIf="row?.title; else noTitle" class="candidate-title">
+              {{ row.title }}
+            </span>
+            <ng-template #noTitle>
+              <span class="candidate-title">Chưa cập nhật</span>
+            </ng-template>
+          </div>
         </td>
-        <td class="px-4 py-3">{{ row?.jobPostDict?.jobName || '---' }}</td>
-        <td class="px-4 py-3">{{ row?.createAt | date: 'dd/MM/yyyy' }}</td>
-        <td class="px-4 py-3">
-          <span *ngIf="row?.resume?.cvFile; else noCv" class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z" />
-            </svg>
+        <td class="hidden-mobile">{{ row?.jobName || '---' }}</td>
+        <td class="hidden-mobile">{{ formatDate(row?.createAt) }}</td>
+        <td class="hidden-mobile">
+          <span *ngIf="row?.type !== 'WEBSITE'; else noCv" class="cv-type">
+            <i class="fas fa-file-pdf" style="color: #ef4444;"></i>
             File CV
           </span>
           <ng-template #noCv>
-            <span class="flex items-center gap-1">
-              <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+            <span class="cv-type">
+              <i class="fas fa-circle" style="color: #8b5cf6;"></i>
               CV Website
             </span>
           </ng-template>
         </td>
-        <td class="px-4 py-3">
+        <td>
           <select
-            class="border rounded px-2 py-1 text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            [ngModel]="row.applicationStatus"
+            class="status-select"
+            [ngModel]="row.status?.toString() || ''"
             (ngModelChange)="handleChangeApplicationStatus($event, row)"
           >
-            <option *ngFor="let option of applicationStatusOptions" [value]="option.id">
+            <option
+              *ngFor="let option of applicationStatusOptions"
+              [value]="option.id"
+            >
               {{ option.name }}
             </option>
           </select>
-        </td>
-        <td class="px-4 py-3 flex justify-end gap-2">
-          <div class="group relative">
-            <button (click)="viewProfile(row.resume?.slug)" class="text-blue-500 hover:text-blue-700">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-            </button>
-            <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
-              Xem hồ sơ
-            </span>
+          <div
+            *ngIf="!applicationStatusDict[row.status?.toString()]"
+            class="error-message"
+            style="color: #ef4444; font-size: 12px; margin-top: 4px;"
+          >
+            Trạng thái không hợp lệ
           </div>
-          <div class="group relative">
+        </td>
+        <td class="actions">
+          <div style="position: relative;">
+            <button
+              (click)="viewProfile(row.resumeSlug)"
+              class="action-button view"
+            >
+              <i class="fas fa-eye"></i>
+            </button>
+            <span class="tooltip">Xem hồ sơ</span>
+          </div>
+          <div style="position: relative;">
             <button
               (click)="openSendMail(row)"
-              [ngClass]="row.isSentEmail ? 'text-green-600 hover:text-green-700' : 'text-green-500 hover:text-green-600'"
+              class="action-button email"
+              [ngClass]="{ sent: row.isSentEmail }"
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l9 6 9-6M3 8v8l9 6 9-6V8" />
-              </svg>
+              <i class="fas fa-envelope"></i>
             </button>
-            <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+            <span class="tooltip">
               {{ row.isSentEmail ? 'Gửi lại email' : 'Gửi email' }}
             </span>
           </div>
-          <div class="group relative">
-            <button (click)="confirmDelete(row.id)" class="text-red-500 hover:text-red-700">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4M3 7h18" />
-              </svg>
+          <div style="position: relative;">
+            <button
+              (click)="confirmDelete(row.id)"
+              class="action-button delete"
+            >
+              <i class="fas fa-trash"></i>
             </button>
-            <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
-              Xóa hồ sơ
-            </span>
+            <span class="tooltip">Xóa hồ sơ</span>
           </div>
         </td>
       </tr>
@@ -104,38 +108,43 @@
   <!-- No data -->
   <ng-template #noDataTemplate>
     <app-no-data-card title="Chưa có ứng viên ứng tuyển">
-      <div class="text-gray-400 text-sm mt-2">
+      <div class="no-data">
+        <i class="fas fa-users-slash"></i>
         Hiện tại chưa có ứng viên nào ứng tuyển vào công việc này.
       </div>
     </app-no-data-card>
   </ng-template>
 
   <!-- Pagination -->
-  <div *ngIf="!isLoading && dataSource.length > 0" class="flex justify-between items-center p-4 border-t bg-gray-50">
-    <div class="text-sm text-gray-600">
+  <div
+    *ngIf="!isLoading && dataSource.length > 0 && totalPages() > 1"
+    class="pagination"
+  >
+    <div>
       Hiển thị
       <select
         (ngModelChange)="rowsPerPageChange.emit(+$event)"
         [ngModel]="rowsPerPage"
-        class="border rounded px-2 py-1 mx-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">{{ size }}</option>
+        <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">
+          {{ size }}
+        </option>
       </select>
       mục
     </div>
-    <div class="flex items-center gap-2">
+    <div style="display: flex; align-items: center; gap: 8px;">
       <button
+        *ngIf="page > 0"
         (click)="pageChange.emit(page - 1)"
         [disabled]="page === 0"
-        class="px-3 py-1 text-sm border rounded bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Prev
       </button>
-      <span class="text-sm text-gray-600">Trang {{ page + 1 }} / {{ totalPages() }}</span>
+      <span>Trang {{ page + 1 }} / {{ totalPages() }}</span>
       <button
+        *ngIf="page < totalPages() - 1"
         (click)="pageChange.emit(page + 1)"
         [disabled]="page >= totalPages() - 1"
-        class="px-3 py-1 text-sm border rounded bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Next
       </button>
@@ -147,7 +156,7 @@
     *ngIf="openSendMailPopup"
     [openPopup]="openSendMailPopup"
     [sendMailData]="selectedSendData"
-    (handleSendEmail)="handleSendMail($event)"
+    (handleSendEmail)="sendEmail.emit($event)"
     (setOpenPopup)="openSendMailPopup = $event"
   ></app-send-mail-card>
 
