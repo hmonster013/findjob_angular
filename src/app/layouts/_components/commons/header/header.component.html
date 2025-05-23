@@ -1,10 +1,11 @@
-<header class="w-full sticky top-0 z-[999] bg-[#441da0] shadow">
+<header class="w-full sticky top-0 z-[999] bg-orange-600 shadow">
   <div class="container mx-auto flex items-center justify-between p-2">
 
     <!-- Logo -->
     <a [routerLink]="['/']" class="flex items-center gap-2">
-      <img src="/assets/images/logo-light.png" alt="MyJob Logo" class="h-10 hidden md:block"/>
-      <img src="/assets/images/logo-small.png" alt="MyJob Small Logo" class="h-10 md:hidden"/>
+      <img src="/assets/logo/logo-white.png" alt="FindJob Logo" class="h-10 hidden md:block"/>
+      <img src="/assets/logo/logo-white.png" alt="FindJob Small Logo" class="h-10 md:hidden"/>
+      <span class="text-white font-bold text-lg">FindJob</span>
     </a>
 
     <!-- Divider -->
@@ -14,8 +15,8 @@
     <nav class="hidden md:flex gap-4 ml-8 flex-grow">
       <a *ngFor="let page of pages[hostName]"
          [routerLink]="[page.path]"
-         routerLinkActive="text-white font-bold border-b-2 border-white"
-         class="text-white text-sm hover:opacity-80">
+         routerLinkActive="text-white border-b-2 border-white"
+         class="text-white font-bold text-sm hover:opacity-80">
         {{ page.label }}
       </a>
     </nav>
@@ -25,7 +26,7 @@
       <app-notification-card *ngIf="isAuthenticated"></app-notification-card>
       <app-chat-card *ngIf="isAuthenticated"></app-chat-card>
 
-      <div *ngIf="isAuthenticated; else guestButtons" class="relative flex items-center gap-2">
+      <div *ngIf="isAuthenticated; else guestButtons" class="relative flex items-center gap-2 border-2 border-white rounded-3xl p-1">
         <div class="flex items-center gap-2 cursor-pointer" (click)="toggleUserMenu()">
           <img [src]="currentUser?.avatarUrl" alt="Avatar" class="w-10 h-10 rounded-full"/>
           <span class="hidden md:block text-white font-semibold">{{ currentUser?.fullName }}</span>
@@ -36,9 +37,9 @@
       </div>
 
       <ng-template #guestButtons>
-        <button class="text-white text-sm border border-white px-3 py-1 rounded hover:bg-white hover:text-primary-600"
+        <button class="text-white font-bold text-sm border border-white px-3 py-1 rounded hover:bg-white hover:text-primary-600"
                 (click)="handleLogin()">Đăng nhập</button>
-        <button class="hidden md:inline-block text-white text-sm border border-white px-3 py-1 rounded hover:bg-white hover:text-primary-600"
+        <button class="hidden md:inline-block text-white font-bold text-sm border border-white px-3 py-1 rounded hover:bg-white hover:text-primary-600"
                 (click)="handleSignUp()">Đăng ký</button>
       </ng-template>
 
@@ -47,7 +48,7 @@
       </div>
 
       <!-- Mobile Menu Button -->
-      <button class="md:hidden text-white text-2xl" (click)="handleDrawerToggle()">📋</button>
+      <button class="md:hidden text-white text-2xl" (click)="handleDrawerToggle()"><i class="fas fa-briefcase text-white text-2xl mr-2"></i></button>
     </div>
   </div>
 

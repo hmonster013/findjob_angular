@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ROLES_NAME, ROUTES } from '../../../../_configs/constants';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../../_services/token.service';
 
 @Component({
   selector: 'app-user-menu',
@@ -29,7 +30,11 @@ export class UserMenuComponent {
     { label: 'Trang quản lý NTD', path: ROUTES.EMPLOYER.DASHBOARD },
   ];
 
-  constructor(private authService: AuthStateService, private router: Router) {}
+  constructor(
+    private authService: AuthStateService,
+    private router: Router,
+    private tokenService: TokenService,
+  ) {}
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
@@ -57,6 +62,7 @@ export class UserMenuComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.authService.clearUser();
+        this.tokenService.removeAccessTokenAndRefreshTokenFromCookie();
         this.router.navigate([`/${ROUTES.AUTH.LOGIN}`]);
       }
     });

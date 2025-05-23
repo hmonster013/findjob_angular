@@ -16,8 +16,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     ProfileSearchComponent,
     JobSeekerProfileComponent,
-    NoDataCardComponent,
-    BackdropLoadingComponent
+    NoDataCardComponent
   ],
   templateUrl: './profile-card.component.html'
 })

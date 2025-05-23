@@ -1,16 +1,8 @@
-<div class="mt-1">
-    <app-home-search></app-home-search>
-</div>
-
-<div class="mt-24">
-  <h2 class="text-xl mb-3 font-semibold">Các công ty nổi bật</h2>
-  <app-top-company-carousel />
-</div>
-
-<div class="mt-24">
-  <div class="border shadow-none">
-    <div class="flex items-center bg-[#441da0] p-4">
-      <div class="bg-white rounded-full p-2 mr-4 text-purple-600 text-xl">⏰</div>
+<!-- Việc làm tuyển gấp -->
+<div class="mt-16">
+  <div class="border border-gray-200 rounded-xl shadow-sm bg-white">
+    <div class="flex items-center bg-gradient-to-r from-orange-600 to-orange-700 p-4 rounded-t-xl">
+      <div class="bg-white rounded-full p-2.5 mr-4 text-xl shadow-sm">⏰</div>
       <h2 class="text-white text-xl font-semibold">Việc làm tuyển gấp</h2>
     </div>
     <div class="p-4">
@@ -19,48 +11,50 @@
   </div>
 </div>
 
-<div class="mt-24">
-  <h2 class="text-xl mb-3 font-semibold">Ngành nghề trọng điểm</h2>
-  <app-career-carousel />
+<!-- Các công ty nổi bật -->
+<div class="mt-16">
+  <h2 class="text-xl mb-4 font-semibold text-gray-900">Các công ty nổi bật</h2>
+  <app-top-company-carousel></app-top-company-carousel>
 </div>
 
-<div *ngIf="isJobSeeker" class="mt-24">
-  <div class="border">
+<!-- Việc làm gợi ý (cho job seeker) -->
+<div *ngIf="isJobSeeker" class="mt-16">
+  <div class="border border-gray-200 rounded-xl shadow-sm">
     <div
-      class="flex items-center p-4 bg-cover bg-no-repeat"
+      class="flex items-center p-4 bg-cover bg-no-repeat rounded-t-xl"
       style="background-image: url('/assets/images/banner-explore.png')"
     >
-      <div class="bg-white rounded-full p-2 mr-4 text-purple-600 text-xl">💡</div>
+      <div class="bg-white rounded-full p-2.5 mr-4 text-xl shadow-sm">💡</div>
       <h2 class="text-[#441da0] text-xl font-semibold">Việc làm gợi ý</h2>
     </div>
-    <div class="bg-[#e0f0ff] p-4">
+    <div class="bg-[#e6f3ff] p-4 rounded-b-xl">
       <app-suggested-job-post-card />
     </div>
   </div>
 </div>
 
+<!-- Banner khám phá -->
 <div
-  class="rounded p-6 mt-16 bg-cover bg-no-repeat"
+  class="rounded-xl p-6 mt-16 bg-cover bg-no-repeat shadow-md"
   style="background-image: url('/assets/images/banner-explore-pc.png')"
 >
   <div class="flex flex-col md:flex-row justify-between items-center gap-4">
     <h2 class="text-white text-2xl font-bold">Cần tìm việc làm phù hợp cho bạn?</h2>
     <button
       (click)="navigateToJobs()"
-      class="btn btn-primary flex items-center gap-2 text-white"
+      class="flex items-center gap-2 px-5 py-2.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-all shadow-sm hover:shadow-md"
     >
-      <span class="text-xl">🔍</span>
+      <span class="text-lg">🔍</span>
       Bắt đầu khám phá
     </button>
   </div>
 </div>
 
-<div class="mt-24">
-  <div class="border shadow-none">
-    <div class="flex items-center bg-[#441da0] p-4">
-      <div class="bg-white rounded-full p-2 mr-4">
-        {{ HOME_FILTER_CAREER[0].icon || '🧑‍💼' }}
-      </div>
+<!-- Việc làm ngành 1 -->
+<div class="mt-16">
+  <div class="border border-gray-200 rounded-xl shadow-sm bg-white">
+    <div class="flex items-center bg-gradient-to-r from-orange-600 to-orange-700 p-4 rounded-t-xl">
+      <div class="bg-white rounded-full p-2.5 mr-4 text-xl shadow-sm">🧑‍💼</div>
       <h2 class="text-white text-xl font-semibold">
         Việc làm ngành {{ HOME_FILTER_CAREER[0].name }}
       </h2>
@@ -73,12 +67,11 @@
   </div>
 </div>
 
-<div class="mt-24">
-  <div class="border shadow-none">
-    <div class="flex items-center bg-[#441da0] p-4">
-      <div class="bg-white rounded-full p-2 mr-4">
-        {{ HOME_FILTER_CAREER[1].icon || '💻' }}
-      </div>
+<!-- Việc làm ngành 2 -->
+<div class="mt-16">
+  <div class="border border-gray-200 rounded-xl shadow-sm bg-white">
+    <div class="flex items-center bg-gradient-to-r from-orange-600 to-orange-700 p-4 rounded-t-xl">
+      <div class="bg-white rounded-full p-2.5 mr-4 text-xl shadow-sm">💻</div>
       <h2 class="text-white text-xl font-semibold">
         Việc làm ngành {{ HOME_FILTER_CAREER[1].name }}
       </h2>
@@ -91,13 +84,15 @@
   </div>
 </div>
 
-<div class="mt-24">
-  <h2 class="text-xl mb-3 font-semibold">Người dùng đánh giá</h2>
+<!-- Người dùng đánh giá -->
+<div class="mt-16">
+  <h2 class="text-xl mb-4 font-semibold text-gray-900">Người dùng đánh giá</h2>
   <app-feedback-carousel />
 </div>
 
-<div class="mt-24">
-  <div class="bg-white rounded-xl">
+<!-- Việc làm theo danh mục -->
+<div class="mt-16">
+  <div class="bg-white rounded-xl shadow-sm">
     <app-job-by-category />
   </div>
 </div>

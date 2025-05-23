@@ -18,11 +18,11 @@
   <!-- Nếu chỉ hiển thị title -->
   <ng-template #titleOnly>
     <div class="flex items-center cursor-pointer" (click)="handleClick()">
-      <div class="text-blue-500 text-2xl mr-2">
-        <span *ngIf="hostname === HOST_NAME.MYJOB">💼</span>
-        <span *ngIf="hostname === HOST_NAME.EMPLOYER_MYJOB">👥</span>
+      <div class="text-white text-2xl mr-2">
+        <i *ngIf="hostname === HOST_NAME.MYJOB" class="fas fa-briefcase"></i>
+        <i *ngIf="hostname === HOST_NAME.EMPLOYER_MYJOB" class="fas fa-users"></i>
       </div>
-      <div class="flex flex-col text-gray-800 leading-tight">
+      <div class="flex flex-col text-white leading-tight">
         <span class="font-semibold text-sm">
           {{ hostname === HOST_NAME.MYJOB ? 'Nhà tuyển dụng' : 'Người tìm việc' }}
         </span>

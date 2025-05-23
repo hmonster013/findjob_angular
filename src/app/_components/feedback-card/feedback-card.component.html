@@ -9,7 +9,7 @@
   <!-- Nếu đã load dữ liệu -->
   <ng-template #showContent>
     <img
-      [src]="avatarUrl"
+      [src]="avatarUrl ? avatarUrl : 'assets/images/person-default.webp'"
       alt="Avatar"
       class="w-12 h-12 rounded-full object-cover mb-2"
     />

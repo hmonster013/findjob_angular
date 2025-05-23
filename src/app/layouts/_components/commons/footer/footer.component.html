@@ -1,16 +1,18 @@
 <!-- footer.component.html -->
-
-<footer class="bg-white border-t mt-10 pt-10 pb-4">
+<footer class="bg-orange-800 mt-10 pt-10 pb-4 text-gray-300">
   <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
 
     <!-- Cột 1 -->
     <div>
-      <img
-        [src]="IMAGES.getTextLogo('light')"
-        alt="Logo"
-        class="w-36 mb-4"
-      />
-      <ul class="space-y-2 text-gray-700">
+      <div class="flex flex-row items-center mb-4">
+        <img
+            src="assets/logo/logo-white.png"
+            alt="Logo"
+            class="w-12"
+          />
+          <p class="font-bold">FindJob</p>
+      </div>
+      <ul class="space-y-2">
         <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/gioi-thieu')">Về {{ APP_NAME }}</li>
         <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/lien-he')">Liên Hệ</li>
         <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/hoi-dap')">Hỏi Đáp</li>
@@ -22,7 +24,7 @@
     <!-- Cột 2 -->
     <div>
       <h3 class="font-semibold text-lg mb-3">Dành cho nhà tuyển dụng</h3>
-      <ul class="space-y-2 text-gray-700">
+      <ul class="space-y-2">
         <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/employer/job-post')">Đăng Tin Tuyển Dụng</li>
         <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/employer/profile')">Tìm Kiếm Hồ Sơ</li>
         <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/employer/dashboard')">Quản Lý Nhà Tuyển Dụng</li>
@@ -34,7 +36,7 @@
     <!-- Cột 3 -->
     <div>
       <h3 class="font-semibold text-lg mb-3">Dành cho ứng viên</h3>
-      <ul class="space-y-2 text-gray-700">
+      <ul class="space-y-2">
         <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/viec-lam')">Việc Làm</li>
         <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/cong-ty')">Công ty</li>
         <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/job-seeker/dashboard')">Quản Lý Ứng Viên</li>
@@ -67,7 +69,7 @@
 
   <hr class="my-6 border-gray-300" />
 
-  <p class="text-center text-gray-400 text-sm mt-4">
-    © {{ currentYear }} MyJob. Tất cả quyền được bảo lưu.
+  <p class="text-center text-sm mt-4">
+    © {{ currentYear }} FindJob. Tất cả quyền được bảo lưu.
   </p>
 </footer>

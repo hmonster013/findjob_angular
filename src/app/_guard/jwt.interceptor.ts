@@ -1,3 +1,4 @@
+import { TokenService } from './../_services/token.service';
 import {
   HttpEvent,
   HttpHandler,
@@ -6,12 +7,13 @@ import {
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TokenService } from '../_services/token.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
 
-  private tokenService = inject(TokenService);
+  constructor(
+    private tokenService: TokenService,
+  ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const accessToken = this.tokenService.getAccessTokenFromCookie();

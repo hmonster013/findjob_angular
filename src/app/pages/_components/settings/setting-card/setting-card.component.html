@@ -20,7 +20,6 @@
   <div *ngIf="!isLoadingSettings">
     <app-setting-form
       [editData]="editData"
-      [serverErrors]="serverErrors"
       (update)="handleUpdateUserSetting($event)"
     ></app-setting-form>
 

@@ -1,8 +1,7 @@
-<!-- notification-card.component.html -->
 <div class="relative">
   <!-- Icon Notification + Badge -->
-  <button (click)="toggleMenu()" class="relative p-2 hover:bg-gray-100 rounded-full">
-    🔔
+  <button (click)="toggleMenu()" class="relative p-2 hover:opacity-80 cursor-pointer">
+    <i class="fas fa-bell text-white text-lg" [ngClass]="unreadCount > 0 ? 'animate-bounce' : ''"></i>
     <span *ngIf="unreadCount > 0"
       class="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
       {{ unreadCount }}
@@ -16,7 +15,8 @@
   >
     <div class="flex justify-between items-center px-4 py-2 border-b">
       <h5 class="font-semibold text-gray-700">Thông báo</h5>
-      <button (click)="clearAll()" class="text-sm text-blue-600 hover:underline">
+      <button (click)="clearAll()" class="text-sm text-blue-600 hover:underline flex items-center gap-1">
+        <i class="fas fa-trash text-blue-600"></i>
         Xóa tất cả
       </button>
     </div>
@@ -33,15 +33,17 @@
         <button
           *ngIf="canLoadMore"
           (click)="loadMore()"
-          class="py-2 text-sm text-center text-blue-600 hover:underline"
+          class="py-2 text-sm text-center text-blue-600 hover:underline flex items-center justify-center gap-1"
         >
+          <i class="fas fa-chevron-down text-blue-600"></i>
           Xem thêm
         </button>
       </ng-container>
 
       <ng-template #noNoti>
-        <div class="text-center text-gray-400 py-8">
-          Không có thông báo nào
+        <div class="text-center text-gray-400 py-8 flex flex-col items-center gap-2">
+          <i class="fas fa-bell-slash text-gray-400 text-2xl"></i>
+          <p>Không có thông báo nào</p>
         </div>
       </ng-template>
     </div>

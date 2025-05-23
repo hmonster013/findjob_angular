@@ -1,6 +1,10 @@
 <div class="top-company-carousel max-w-[1452px] mx-auto py-5">
   <ng-container *ngIf="isLoading; else showRealData">
     <swiper-container
+      style="
+        --swiper-pagination-color: #f97316;
+        --swiper-pagination-bullet-size: 12px;
+      "
       [attr.slides-per-view]="col"
       space-between="16"
       pagination="true"
@@ -19,6 +23,10 @@
 
   <ng-template #showRealData>
     <swiper-container
+      style="
+        --swiper-pagination-color: #f97316;
+        --swiper-pagination-bullet-size: 13px;
+      "
       [attr.slides-per-view]="col"
       space-between="16"
       pagination="true"
@@ -32,7 +40,7 @@
           (click)="navigateToCompany(company.slug)"
         >
           <img
-            [src]="company.companyImageUrl"
+            [src]="company.companyImageUrl ? company.companyImageUrl : 'assets/images/companies/company-logo.jpg'"
             alt="{{ company.companyName }}"
             class="w-20 h-20 object-contain bg-gray-50 rounded-md mb-2"
           />

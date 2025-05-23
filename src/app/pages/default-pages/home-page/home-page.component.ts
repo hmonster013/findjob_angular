@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { TopCompanyCarouselComponent } from '../../../_components/top-company-carousel/top-company-carousel.component';
-import { CareerCarouselComponent } from '../../../_components/career-carousel/career-carousel.component';
 import { FeedbackCarouselComponent } from '../../../_components/feedback-carousel/feedback-carousel.component';
 import { FilterJobPostCardComponent } from '../../_components/defaults/filter-job-post-card/filter-job-post-card.component';
 import { JobByCategoryComponent } from '../../_components/defaults/job-by-category/job-by-category.component';
@@ -11,6 +10,8 @@ import { SuggestedJobPostCardComponent } from '../../_components/defaults/sugges
 import { HOME_FILTER_CAREER, ROLES_NAME, ROUTES } from '../../../_configs/constants';
 import { AuthStateService } from '../../../_services/auth-state.service';
 import { HomeSearchComponent } from "../../_components/defaults/home-search/home-search.component";
+import { SearchContainerComponent } from "../../_components/defaults/search-container/search-container.component";
+import { TopSlideComponent } from "../../../layouts/_components/commons/top-slide/top-slide.component";
 
 @Component({
   selector: 'app-home-page',
@@ -20,12 +21,10 @@ import { HomeSearchComponent } from "../../_components/defaults/home-search/home
     RouterModule,
     NgIf,
     TopCompanyCarouselComponent,
-    CareerCarouselComponent,
     FeedbackCarouselComponent,
     JobByCategoryComponent,
     FilterJobPostCardComponent,
-    SuggestedJobPostCardComponent,
-    HomeSearchComponent
+    SuggestedJobPostCardComponent
 ],
   templateUrl: './home-page.component.html',
 })

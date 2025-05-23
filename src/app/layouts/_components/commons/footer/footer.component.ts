@@ -12,10 +12,10 @@ import { CommonModule } from '@angular/common';
   styleUrl: './footer.component.css'
 })
 export class FooterComponent {
-  LINKS = LINKS;   // 🔥 THÊM DÒNG NÀY
-  ICONS = ICONS;   // nếu dùng ICONS
-  IMAGES = IMAGES; // nếu dùng IMAGES
-  APP_NAME = APP_NAME; // nếu dùng APP_NAME
+  LINKS = LINKS;
+  ICONS = ICONS;
+  IMAGES = IMAGES;
+  APP_NAME = APP_NAME;
 
   constructor(private router: Router) {}
 
