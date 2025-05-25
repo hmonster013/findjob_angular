@@ -1,52 +1,89 @@
-<div class="p-4 bg-white rounded-lg shadow-md relative">
+<div class="p-4 bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300">
+  <!-- Header -->
   <div class="flex justify-between items-center mb-4">
-    <h2 class="text-xl font-bold">CV đã tải lên</h2>
-    <button (click)="handleShowUpload()" class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
-      <i class="fa fa-plus"></i>
+    <h2 class="text-lg font-semibold text-amber-600 flex items-center">
+      <i class="fas fa-file-pdf mr-2"></i> CV đã tải lên
+    </h2>
+    <button
+      (click)="handleShowUpload()"
+      class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded-md text-sm flex items-center gap-1"
+    >
+      <i class="fas fa-plus"></i> Thêm CV
     </button>
   </div>
 
-  <hr class="mb-4">
+  <!-- Divider -->
+  <hr class="my-4 border-gray-200" />
 
   <!-- Loading skeleton -->
-  <div *ngIf="isLoadingResumes" class="space-y-4">
-    <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
-    <div class="h-5 bg-gray-200 rounded animate-pulse"></div>
+  <div *ngIf="isLoadingResumes" class="space-y-3">
+    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+      <div class="flex flex-col space-y-2">
+        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+        <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+        <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+      </div>
+      <div class="flex space-x-2">
+        <div class="h-8 w-16 bg-gray-200 rounded-md"></div>
+        <div class="h-8 w-16 bg-gray-200 rounded-md"></div>
+      </div>
+    </div>
+    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+      <div class="flex flex-col space-y-2">
+        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+        <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+        <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+      </div>
+      <div class="flex space-x-2">
+        <div class="h-8 w-16 bg-gray-200 rounded-md"></div>
+        <div class="h-8 w-16 bg-gray-200 rounded-md"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Empty state -->
-  <div *ngIf="!isLoadingResumes && resumes.length === 0" class="text-center text-gray-500">
-    Bạn chưa tải lên CV nào.
+  <div
+    *ngIf="!isLoadingResumes && resumes.length === 0"
+    class="text-center text-gray-600 p-4 bg-gray-50 rounded-lg text-sm"
+  >
+    <i class="fas fa-exclamation-circle mr-1"></i> Bạn chưa tải lên CV nào.
   </div>
 
   <!-- List CV -->
-  <div *ngIf="!isLoadingResumes && resumes.length > 0" class="grid gap-4">
-    <div *ngFor="let resume of resumes" class="flex justify-between items-center p-4 border rounded hover:shadow">
-      <div class="flex flex-col">
-        <h3 class="text-lg font-semibold">{{ resume.title }}</h3>
-        <p class="text-sm text-gray-500">Ngày cập nhật: {{ resume.updatedAt | date: 'dd/MM/yyyy' }}</p>
-        <span
-          class="text-xs mt-1 px-2 py-1 rounded-full"
-          [ngClass]="{
-            'bg-green-100 text-green-700': resume.isActive,
-            'bg-gray-200 text-gray-600': !resume.isActive
-          }"
-        >
-          {{ resume.isActive ? 'Hoạt động' : 'Không hoạt động' }}
-        </span>
+  <div *ngIf="!isLoadingResumes && resumes.length > 0" class="grid gap-3">
+    <div
+      *ngFor="let resume of resumes"
+      class="flex justify-between items-center p-3 bg-white border border-gray-100 rounded-lg hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer"
+    >
+      <div class="flex items-center space-x-3">
+        <i class="fas fa-file-pdf text-amber-600 text-xl"></i>
+        <div class="flex flex-col">
+          <h3 class="text-base font-semibold text-gray-800">{{ resume.title }}</h3>
+          <p class="text-sm text-gray-600">
+            Ngày cập nhật: {{ resume.updatedAt | date: 'dd/MM/yyyy' }}
+          </p>
+          <span
+            class="text-sm mt-1 px-2 py-0.5 rounded-full"
+            [ngClass]="{
+              'bg-amber-100 text-amber-700': resume.isActive,
+              'bg-gray-100 text-gray-600': !resume.isActive
+            }"
+          >
+            {{ resume.isActive ? 'Hoạt động' : 'Không hoạt động' }}
+          </span>
+        </div>
       </div>
-
       <div class="flex space-x-2">
         <button
           (click)="handleActiveResume(resume.slug)"
-          class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
+          class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded-md text-sm"
           [disabled]="resume.isActive"
         >
           Kích hoạt
         </button>
         <button
           (click)="handleDeleteResume(resume.slug)"
-          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+          class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm"
         >
           Xóa
         </button>
@@ -55,15 +92,18 @@
   </div>
 
   <!-- Modal Popup -->
-  <div *ngIf="openPopup" class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-[1000]">
-    <div class="bg-white rounded-lg p-6 max-w-lg w-full relative modal-content">
+  <div
+    *ngIf="openPopup"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000]"
+  >
+    <div class="bg-white rounded-lg p-6 max-w-md w-full relative">
       <!-- Nút đóng modal -->
       <button
         (click)="openPopup = false"
-        class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 close-button"
+        class="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
         aria-label="Đóng modal"
       >
-        <i class="fa fa-times"></i>
+        <i class="fas fa-times text-lg"></i>
       </button>
       <!-- Form chỉnh sửa -->
       <app-profile-upload-form
@@ -75,10 +115,10 @@
   </div>
 
   <!-- Fullscreen loading -->
-  <div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-[1000]">
-    <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-    </svg>
+  <div
+    *ngIf="isFullScreenLoading"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000]"
+  >
+    <i class="fas fa-spinner fa-spin text-white text-4xl"></i>
   </div>
 </div>

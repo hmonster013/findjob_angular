@@ -1,31 +1,23 @@
-<div class="bg-purple-800 p-4 rounded-lg border border-purple-900">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-wrap gap-2 items-center">
+<div class="bg-white p-6 rounded-xl shadow-sm">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-wrap gap-4 items-center">
     <!-- Keyword Search -->
-    <div class="flex-1 min-w-[400px]">
+    <div class="flex-1 min-w-[300px]">
       <div class="relative">
         <input
           type="text"
           formControlName="kw"
           placeholder="Tìm kiếm cơ hội việc làm"
-          class="w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none transition-all"
+          class="w-full pl-10 pr-4 py-3 rounded-full border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-md"
         />
-        <svg
-          class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
+        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-600 text-lg"></i>
       </div>
     </div>
 
     <!-- Career -->
-    <div class="w-40">
+    <div class="w-44">
       <select
         formControlName="careerId"
-        class="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none transition-all"
+        class="w-full px-3 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
       >
         <option value="">Tất cả ngành nghề</option>
         <option *ngFor="let item of careerOptions" [value]="item.id">{{ item.name }}</option>
@@ -33,10 +25,10 @@
     </div>
 
     <!-- City -->
-    <div class="w-40">
+    <div class="w-44">
       <select
         formControlName="cityId"
-        class="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none transition-all"
+        class="w-full px-3 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
       >
         <option value="">Tất cả tỉnh thành</option>
         <option *ngFor="let item of cityOptions" [value]="item.id">{{ item.name }}</option>
@@ -44,17 +36,17 @@
     </div>
 
     <!-- Buttons -->
-    <div class="flex gap-2">
+    <div class="flex gap-3 items-center">
       <button
         type="submit"
-        class="bg-blue-500 text-white px-4 py-2 rounded-md"
+        class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:bg-orange-700 transition-all duration-300"
       >
         Tìm kiếm
       </button>
       <button
         type="button"
         (click)="toggleAdvanceFilter()"
-        class="bg-orange-500 text-white px-4 py-2 rounded-md"
+        class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:bg-orange-700 transition-all duration-300"
       >
         {{ showAdvanceFilter ? 'Ẩn lọc nâng cao' : 'Lọc nâng cao' }}
       </button>
@@ -62,29 +54,27 @@
         *ngIf="isFormNotEmpty()"
         type="button"
         (click)="onReset()"
-        class="text-orange-500 px-2 py-2"
+        class="text-orange-600 hover:text-orange-700 p-2 transition-all"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        <i class="fas fa-times text-xl"></i>
       </button>
     </div>
   </form>
 </div>
 
 <!-- Advanced Filter -->
-<div *ngIf="showAdvanceFilter" class="bg-gray-50 p-4 rounded-md mt-4 border border-gray-200">
-  <div class="flex flex-wrap gap-2 items-center">
+<div *ngIf="showAdvanceFilter" class="bg-white p-6 rounded-xl mt-4 border border-gray-100 shadow-sm">
+  <div class="flex flex-wrap gap-4 items-center">
     <!-- Title "Lọc nâng cao" -->
-    <h3 class="text-base font-semibold text-purple-800 bg-purple-100 border border-purple-800 px-3 py-2 rounded-md">
+    <h3 class="text-base font-semibold text-orange-600 bg-orange-100 px-4 py-2 rounded-lg">
       Lọc nâng cao
     </h3>
 
     <!-- Position -->
-    <div class="w-40">
+    <div class="w-44">
       <select
         formControlName="positionId"
-        class="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none transition-all"
+        class="w-full px-3 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
       >
         <option value="">Tất cả vị trí</option>
         <option *ngFor="let item of positionOptions" [value]="item.id">{{ item.name }}</option>
@@ -92,10 +82,10 @@
     </div>
 
     <!-- Experience -->
-    <div class="w-40">
+    <div class="w-44">
       <select
         formControlName="experienceId"
-        class="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none transition-all"
+        class="w-full px-3 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
       >
         <option value="">Tất cả kinh nghiệm</option>
         <option *ngFor="let item of experienceOptions" [value]="item.id">{{ item.name }}</option>
@@ -103,10 +93,10 @@
     </div>
 
     <!-- Job Type -->
-    <div class="w-40">
+    <div class="w-44">
       <select
         formControlName="jobTypeId"
-        class="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none transition-all"
+        class="w-full px-3 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
       >
         <option value="">Tất cả hình thức</option>
         <option *ngFor="let item of jobTypeOptions" [value]="item.id">{{ item.name }}</option>
@@ -114,10 +104,10 @@
     </div>
 
     <!-- Type of Workplace -->
-    <div class="w-40">
+    <div class="w-44">
       <select
         formControlName="typeOfWorkplaceId"
-        class="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none transition-all"
+        class="w-full px-3 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
       >
         <option value="">Tất cả loại hình làm việc</option>
         <option *ngFor="let item of typeOfWorkplaceOptions" [value]="item.id">{{ item.name }}</option>
@@ -125,25 +115,23 @@
     </div>
 
     <!-- Gender -->
-    <div class="w-40">
+    <div class="w-44">
       <select
         formControlName="genderId"
-        class="w-full px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none transition-all"
+        class="w-full px-3 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
       >
         <option value="">Tất cả giới tính</option>
         <option *ngFor="let item of genderOptions" [value]="item.id">{{ item.name }}</option>
       </select>
     </div>
 
-    <!-- Reset Button (Trash Icon) -->
+    <!-- Reset Button -->
     <button
       type="button"
       (click)="onReset()"
-      class="bg-orange-500 border border-orange-600 text-white px-3 py-2 rounded-md hover:bg-orange-600 transition-all duration-300 flex items-center gap-1"
+      class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-3 rounded-lg hover:bg-orange-700 transition-all duration-300 flex items-center gap-2"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a1 1 0 011 1v1H9V4a1 1 0 011-1z" />
-      </svg>
+      <i class="fas fa-trash text-lg"></i>
       Xoá
     </button>
   </div>

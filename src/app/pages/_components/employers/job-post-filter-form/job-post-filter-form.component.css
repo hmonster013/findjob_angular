@@ -1,13 +1,15 @@
-/* Đảm bảo buttons căn chỉnh tốt trong flex */
-button {
-  white-space: nowrap;
+/* job-post-filter-form.component.css */
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out forwards;
 }
 
-/* Tùy chỉnh thêm nếu cần */
-.bg-secondary-500 {
-  background-color: #3b82f6;
-}
-
-.bg-secondary-600 {
-  background-color: #2563eb;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

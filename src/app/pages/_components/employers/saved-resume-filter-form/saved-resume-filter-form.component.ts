@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonService } from '../../../../_services/common.service';
-import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-saved-resume-filter-form',
@@ -21,8 +21,7 @@ export class SavedResumeFilterFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private commonService: CommonService,
-    private toastr: ToastrService
+    private commonService: CommonService
   ) {
     this.form = this.fb.group({
       kw: ['', [Validators.maxLength(100)]],
@@ -47,7 +46,16 @@ export class SavedResumeFilterFormComponent implements OnInit, OnDestroy {
         this.configs = res.data || {};
       },
       error: () => {
-        this.toastr.error('Không thể tải cấu hình bộ lọc!');
+        Swal.fire({
+          title: 'Lỗi',
+          text: 'Không thể tải cấu hình bộ lọc!',
+          icon: 'error',
+          confirmButtonText: 'Đóng',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+          }
+        });
       },
     });
   }
@@ -55,7 +63,7 @@ export class SavedResumeFilterFormComponent implements OnInit, OnDestroy {
   onSubmit() {
     if (this.form.valid) {
       const formValue = { ...this.form.value };
-      // Loại bỏ các giá trị rỗng hoặc null
+      // Remove empty or null values
       Object.keys(formValue).forEach((key) => {
         if (formValue[key] === '' || formValue[key] === null) {
           delete formValue[key];
@@ -63,7 +71,16 @@ export class SavedResumeFilterFormComponent implements OnInit, OnDestroy {
       });
       this.handleFilter.emit(formValue);
     } else {
-      this.toastr.warning('Vui lòng nhập dữ liệu hợp lệ!');
+      Swal.fire({
+        title: 'Cảnh báo',
+        text: 'Vui lòng nhập dữ liệu hợp lệ!',
+        icon: 'warning',
+        confirmButtonText: 'Đóng',
+        buttonsStyling: false,
+        customClass: {
+          confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+        }
+      });
     }
   }
 

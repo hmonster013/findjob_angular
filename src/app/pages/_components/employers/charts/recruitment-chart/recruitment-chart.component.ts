@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import dayjs from 'dayjs';
 import { StatisticService } from '../../../../../_services/statistic.service';
 
-// Đăng ký Chart.js registerables một lần
+// Đăng ký Chart.js registerables
 Chart.register(...registerables);
 
 interface ChartData {
@@ -41,15 +41,12 @@ export class RecruitmentChartComponent implements OnInit, OnDestroy, AfterViewIn
   ) {}
 
   ngOnInit(): void {
-    console.log('ngOnInit: Fetching statistics');
     this.fetchStatistics();
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit: Canvas ready, chartCanvas:', !!this.chartCanvas);
     this.isCanvasReady = true;
     if (this.dataReady && this.data.length > 0) {
-      console.log('ngAfterViewInit: Rendering chart with data:', this.data);
       this.renderChart();
     }
     this.cdr.detectChanges();
@@ -71,7 +68,6 @@ export class RecruitmentChartComponent implements OnInit, OnDestroy, AfterViewIn
     const endDate = this.selectedDateRange[1].format('YYYY-MM-DD');
 
     if (this.selectedDateRange[0].isAfter(this.selectedDateRange[1])) {
-      console.warn('fetchStatistics: Invalid date range');
       this.errorMessage = 'Ngày bắt đầu không thể lớn hơn ngày kết thúc';
       this.isLoading = false;
       this.dataReady = false;
@@ -79,26 +75,20 @@ export class RecruitmentChartComponent implements OnInit, OnDestroy, AfterViewIn
       return;
     }
 
-    console.log('fetchStatistics: Calling API with startDate:', startDate, 'endDate:', endDate);
     this.statisticService
       .employerRecruitmentStatistics({ startDate, endDate })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('fetchStatistics: API response:', response);
           this.data = response.data || [];
           this.isLoading = false;
           this.dataReady = true;
           if (this.isCanvasReady && this.data.length > 0) {
-            console.log('fetchStatistics: Rendering chart with data:', this.data);
             this.renderChart();
-          } else {
-            console.log('fetchStatistics: Canvas not ready or no data, waiting for canvas');
           }
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('fetchStatistics: Error fetching data:', error);
           this.errorMessage = error.message || 'Không thể tải dữ liệu thống kê. Vui lòng thử lại.';
           this.isLoading = false;
           this.dataReady = false;
@@ -109,67 +99,61 @@ export class RecruitmentChartComponent implements OnInit, OnDestroy, AfterViewIn
 
   renderChart() {
     if (!this.chartCanvas || !this.isCanvasReady || !this.chartCanvas.nativeElement) {
-      console.error('renderChart: Canvas not ready, chartCanvas:', !!this.chartCanvas, 'isCanvasReady:', this.isCanvasReady);
       return;
     }
     const ctx = this.chartCanvas.nativeElement.getContext('2d');
     if (!ctx) {
-      console.error('renderChart: Context not available');
       return;
     }
 
     if (this.chartInstance) {
-      console.log('renderChart: Destroying existing chart');
       this.chartInstance.destroy();
     }
 
     if (!this.data || !Array.isArray(this.data) || this.data.length === 0) {
-      console.error('renderChart: Invalid chart data:', this.data);
       return;
     }
 
-    console.log('renderChart: Preparing chart data, labels:', this.data.map(item => item.label));
     const colors = [
-      'rgba(255, 159, 64, 0.9)', // Orange
-      'rgba(255, 206, 86, 0.9)', // Yellow
-      'rgba(153, 102, 255, 0.9)', // Purple
-      'rgba(54, 162, 235, 0.9)', // Blue
-      'rgba(75, 192, 192, 0.9)', // Teal
-      'rgba(255, 99, 132, 0.9)', // Red
+      'rgba(249, 115, 22, 0.9)', // orange-600
+      'rgba(251, 146, 60, 0.9)', // orange-500
+      'rgba(253, 186, 116, 0.9)', // orange-300
+    ];
+    const hoverColors = [
+      'rgba(249, 115, 22, 1)', // orange-600 brighter
+      'rgba(251, 146, 60, 1)', // orange-500 brighter
+      'rgba(253, 186, 116, 1)', // orange-300 brighter
     ];
 
     const labels = this.data.map((item) => item.label);
-    // Tạo một dataset duy nhất với các giá trị số
     const dataset = {
       label: 'Số lượng',
-      data: this.data.map(item => item.data && item.data.length > 0 ? item.data[0] : 0),
+      data: this.data.map((item) => (item.data && item.data.length > 0 ? item.data[0] : 0)),
       backgroundColor: colors.slice(0, this.data.length),
+      hoverBackgroundColor: hoverColors.slice(0, this.data.length),
       borderRadius: 4,
-      barThickness: 20, // Giảm độ rộng cột
+      barThickness: 20,
       maxBarThickness: 20,
-      categoryPercentage: 0.6, // Tăng khoảng cách giữa các cột
+      categoryPercentage: 0.6,
       barPercentage: 0.7,
     };
 
-    console.log('renderChart: Creating chart with labels:', labels, 'dataset:', dataset);
     this.chartInstance = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: labels,
-        datasets: [dataset], // Chỉ dùng một dataset
+        datasets: [dataset],
       },
       options: {
         plugins: {
-          legend: {
-            display: false, // Ẩn legend vì chỉ có một dataset
-          },
+          legend: { display: false },
           tooltip: {
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            titleColor: '#212529',
-            bodyColor: '#212529',
+            titleColor: '#4B5563', // gray-600
+            bodyColor: '#4B5563',
             padding: 12,
             boxPadding: 6,
-            borderColor: 'rgba(0,0,0,0.1)',
+            borderColor: 'rgba(249, 115, 22, 0.2)', // orange-600
             borderWidth: 1,
             usePointStyle: true,
             filter: (tooltipItem) => tooltipItem.raw !== 0,
@@ -186,30 +170,34 @@ export class RecruitmentChartComponent implements OnInit, OnDestroy, AfterViewIn
             grid: { display: false },
             border: { display: false },
             ticks: {
-              font: { size: 12 },
-              autoSkip: false, // Đảm bảo tất cả nhãn hiển thị
+              font: { size: 10, family: "'Inter', sans-serif" },
+              autoSkip: false,
+              color: '#4B5563', // gray-600
             },
           },
           y: {
             beginAtZero: true,
             min: 0,
-            max: 2, // Giới hạn trục Y vì giá trị tối đa là 1
-            grid: { color: 'rgba(0,0,0,0.05)' },
+            max: 2,
+            grid: { color: 'rgba(249, 115, 22, 0.1)' }, // orange-600
             border: { display: false },
             ticks: {
-              font: { size: 12 },
+              font: { size: 10, family: "'Inter', sans-serif" },
               stepSize: 1,
+              color: '#4B5563', // gray-600
             },
           },
         },
+        animation: {
+          duration: 1000,
+          easing: 'easeOutQuart',
+        },
       },
     });
-    console.log('renderChart: Chart created successfully');
   }
 
   onSubmitDateChange() {
     if (this.allowSubmit) {
-      console.log('onSubmitDateChange: Fetching new statistics');
       this.fetchStatistics();
       this.allowSubmit = false;
     }
@@ -217,7 +205,6 @@ export class RecruitmentChartComponent implements OnInit, OnDestroy, AfterViewIn
 
   onDateChange(event: any, type: 'start' | 'end') {
     const newDate = dayjs(event.target.value);
-    console.log('onDateChange: New date:', newDate.format('YYYY-MM-DD'), 'type:', type);
     if (type === 'start') {
       this.selectedDateRange[0] = newDate;
     } else {

@@ -5,17 +5,14 @@ import Swal from 'sweetalert2';
 import { JobPostNotificationFormComponent } from '../job-post-notification-form/job-post-notification-form.component';
 import { JobPostNotificationService } from '../../../../_services/job-post-notification.service';
 import { FormsModule } from '@angular/forms';
+import { CommonService } from '../../../../_services/common.service';
 
 @Component({
   selector: 'app-job-post-notification-card',
   standalone: true,
   templateUrl: './job-post-notification-card.component.html',
   styleUrls: ['./job-post-notification-card.component.css'],
-  imports: [
-    CommonModule,
-    JobPostNotificationFormComponent,
-    FormsModule // Thêm FormsModule để dùng ngModel
-  ],
+  imports: [CommonModule, JobPostNotificationFormComponent, FormsModule],
 })
 export class JobPostNotificationCardComponent implements OnInit {
   jobPostNotifications: any[] = [];
@@ -26,38 +23,34 @@ export class JobPostNotificationCardComponent implements OnInit {
   page = 1;
   pageSize = 10;
   count = 0;
-
-  // Giả sử allConfig được cung cấp (cần điều chỉnh nếu lấy từ service hoặc input)
-  allConfig = {
-    careerOptions: [
-      { value: 8, label: 'Lập trình' }, // Ánh xạ career: 8
-      // Thêm các option khác nếu có
-    ],
-    cityOptions: [
-      { value: 1, label: 'Hà Nội' }, // Ánh xạ city: 1
-      // Thêm các option khác nếu có
-    ],
-    frequencyNotificationOptions: [
-      { id: 1, name: 'Hàng ngày' }, // Ánh xạ frequency: 1
-      // Thêm các option khác nếu có
-    ]
-  };
+  allConfig: any;
 
   constructor(
     private jobPostNotificationService: JobPostNotificationService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private commonService: CommonService
   ) {}
 
   ngOnInit(): void {
     this.loadJobPostNotifications();
+    this.getCareerOptions();
+  }
+
+  getCareerOptions() {
+    this.commonService.getConfigs().subscribe({
+      next: (res) => {
+        this.allConfig = res.data || [];
+      },
+      error: (err) => {
+        console.error('Error loading config:', err);
+        this.toastr.error('Không thể tải cấu hình!');
+      },
+    });
   }
 
   loadJobPostNotifications() {
     this.isLoadingJobPostNotifications = true;
-    const params = {
-      page: this.page,
-      pageSize: this.pageSize,
-    };
+    const params = { page: this.page, pageSize: this.pageSize };
     this.jobPostNotificationService.getJobPostNotifications(params).subscribe({
       next: (res) => {
         this.jobPostNotifications = res.data?.results || [];
@@ -66,6 +59,7 @@ export class JobPostNotificationCardComponent implements OnInit {
       error: (err) => {
         console.error('Error loading notifications:', err);
         this.toastr.error('Không thể tải danh sách thông báo!');
+        this.isLoadingJobPostNotifications = false;
       },
       complete: () => {
         this.isLoadingJobPostNotifications = false;
@@ -141,8 +135,7 @@ export class JobPostNotificationCardComponent implements OnInit {
       error: (err) => {
         console.error('Error toggling notification:', err);
         this.toastr.error('Không thể thay đổi trạng thái thông báo!');
-        // Hoàn nguyên trạng thái nếu lỗi
-        this.jobPostNotifications = this.jobPostNotifications.map(notification =>
+        this.jobPostNotifications = this.jobPostNotifications.map((notification) =>
           notification.id === id ? { ...notification, isActive: !isActive } : notification
         );
       },
@@ -160,6 +153,11 @@ export class JobPostNotificationCardComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Xóa',
       cancelButtonText: 'Hủy',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 mr-2',
+        cancelButton: 'bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.jobPostNotificationService.deleteJobPostNotificationDetailById(id).subscribe({
@@ -204,19 +202,18 @@ export class JobPostNotificationCardComponent implements OnInit {
     return pages;
   }
 
-  // Hàm ánh xạ ID sang tên
   getCareerName(careerId: number): string {
-    const career = this.allConfig.careerOptions?.find((opt: any) => opt.value === careerId);
-    return career ? career.label : 'Không xác định';
+    const career = this.allConfig?.careerOptions?.find((opt: any) => opt.id === careerId);
+    return career ? career.name : 'Không xác định';
   }
 
   getCityName(cityId: number): string {
-    const city = this.allConfig.cityOptions?.find((opt: any) => opt.value === cityId);
-    return city ? city.label : 'Không xác định';
+    const city = this.allConfig?.cityOptions?.find((opt: any) => opt.id === cityId);
+    return city ? city.name : 'Không xác định';
   }
 
   getFrequencyName(frequencyId: number): string {
-    const frequency = this.allConfig.frequencyNotificationOptions?.find((opt: any) => opt.id === frequencyId);
+    const frequency = this.allConfig?.frequencyNotificationOptions?.find((opt: any) => opt.id === frequencyId);
     return frequency ? frequency.name : 'Không xác định';
   }
 }

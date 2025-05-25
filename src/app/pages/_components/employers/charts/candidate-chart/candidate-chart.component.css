@@ -1,14 +1,6 @@
+/* candidate-chart.component.css */
 .chart-container {
-  transition: opacity 0.3s ease;
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  transition: box-shadow 0.3s ease;
 }
 
 .tooltip {
@@ -16,11 +8,11 @@
   display: inline-block;
 }
 
-.tooltip .tooltiptext {
+.tooltiptext {
   visibility: hidden;
   width: 200px;
-  background-color: #333;
-  color: #fff;
+  background-color: #ffffff;
+  color: #F97316; /* orange-600 */
   text-align: center;
   border-radius: 6px;
   padding: 8px;
@@ -30,74 +22,47 @@
   left: 50%;
   margin-left: -100px;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s, transform 0.3s;
+  transform: translateY(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(249, 115, 22, 0.2); /* orange-600 */
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
-}
-
-input[type="date"] {
-  border-color: #e5e7eb;
-  transition: border-color 0.2s ease;
-}
-
-input[type="date"]:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.btn-primary {
-  background-color: #3b82f6;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #2563eb;
-}
-
-.btn-primary:disabled {
-  background-color: #93c5fd;
-  cursor: not-allowed;
-}
-
-.error-message {
-  color: #dc2626;
-  font-size: 14px;
-  text-align: center;
-}
-
-.empty-state, .error-state {
-  text-align: center;
-  color: #6b7280;
-  font-size: 14px;
-}
-
-.empty-state h3, .error-state h3 {
-  color: #1f2937;
-  font-size: 18px;
-  margin-bottom: 8px;
-}
-
-.empty-state img, .error-state img {
-  max-width: 120px;
-  margin-top: 16px;
-}
-
-canvas {
-  width: 100% !important;
-  height: 100% !important;
+  transform: translateY(0);
 }
 
 .chart-wrapper {
-  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
 
 .chart-wrapper.visible {
-  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.error-state,
+.empty-state {
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out forwards;
 }

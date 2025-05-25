@@ -1,69 +1,68 @@
-<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-  <!-- LEFT content -->
-  <div class="md:col-span-7 lg:col-span-8 space-y-4">
-    <div class="bg-white rounded-xl shadow p-4">
-      <!-- Tabs header -->
-      <div class="flex border-b border-gray-200 mb-4">
-        <button
-          (click)="selectTab('saved')"
-          [class]="
-            'px-4 py-2 text-sm font-medium border-b-2 ' +
-            (selectedTab === 'saved'
-              ? 'text-primary border-primary'
-              : 'text-gray-500 border-transparent hover:text-primary')
-          "
-        >
-          Việc làm đã lưu
-        </button>
+<div class="">
+  <div class="container max-w-7xl mx-auto space-y-4">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- LEFT content -->
+      <div class="lg:col-span-8 space-y-4">
+        <div class="bg-white rounded-xl shadow-xl border border-gray-300 p-6">
+          <!-- Tabs header -->
+          <div class="flex flex-wrap gap-3 border-b-2 border-gray-300 mb-6">
+            <button
+              (click)="selectTab('saved')"
+              class="flex items-center whitespace-nowrap px-4 py-2 rounded-md text-sm font-medium text-gray-800 transition-all duration-300 ease-in-out"
+              [ngClass]="{
+                'bg-amber-100 text-amber-600 font-bold border-b-[4px] border-amber-600 shadow-md': selectedTab === 'saved',
+                'hover:bg-amber-50 hover:text-amber-600': selectedTab !== 'saved'
+              }"
+            >
+              <i class="fas fa-bookmark mr-2 text-xs"></i> Việc làm đã lưu
+            </button>
+            <button
+              (click)="selectTab('applied')"
+              class="flex items-center whitespace-nowrap px-4 py-2 rounded-md text-sm font-medium text-gray-800 transition-all duration-300 ease-in-out"
+              [ngClass]="{
+                'bg-amber-100 text-amber-600 font-bold border-b-[4px] border-amber-600 shadow-md': selectedTab === 'applied',
+                'hover:bg-amber-50 hover:text-amber-600': selectedTab !== 'applied'
+              }"
+            >
+              <i class="fas fa-paper-plane mr-2 text-xs"></i> Việc làm đã ứng tuyển
+            </button>
+            <button
+              (click)="selectTab('notified')"
+              class="flex items-center whitespace-nowrap px-4 py-2 rounded-md text-sm font-medium text-gray-800 transition-all duration-300 ease-in-out"
+              [ngClass]="{
+                'bg-amber-100 text-amber-600 font-bold border-b-[4px] border-amber-600 shadow-md': selectedTab === 'notified',
+                'hover:bg-amber-50 hover:text-amber-600': selectedTab !== 'notified'
+              }"
+            >
+              <i class="fas fa-bell mr-2 text-xs"></i> Thông báo việc làm
+            </button>
+          </div>
 
-        <button
-          (click)="selectTab('applied')"
-          [class]="
-            'ml-4 px-4 py-2 text-sm font-medium border-b-2 ' +
-            (selectedTab === 'applied'
-              ? 'text-primary border-primary'
-              : 'text-gray-500 border-transparent hover:text-primary')
-          "
-        >
-          Việc làm đã ứng tuyển
-        </button>
+          <!-- Tabs content -->
+          <div *ngIf="selectedTab === 'saved'">
+            <app-saved-job-card />
+            <p class="mt-2 text-sm text-amber-600 font-medium">
+              Lưu ý: Bạn không xem được việc làm đã hết hạn hoặc đã tạm ngưng nhận hồ sơ.
+            </p>
+          </div>
 
-        <button
-          (click)="selectTab('notified')"
-          [class]="
-            'ml-4 px-4 py-2 text-sm font-medium border-b-2 ' +
-            (selectedTab === 'notified'
-              ? 'text-primary border-primary'
-              : 'text-gray-500 border-transparent hover:text-primary')
-          "
-        >
-          Thông báo việc làm
-        </button>
+          <div *ngIf="selectedTab === 'applied'">
+            <app-applied-job-card />
+          </div>
+
+          <div *ngIf="selectedTab === 'notified'">
+            <app-job-post-notification-card />
+          </div>
+        </div>
       </div>
 
-      <!-- Tabs content -->
-      <div *ngIf="selectedTab === 'saved'">
-        <app-saved-job-card />
-        <p class="mt-2 text-xs text-gray-500">
-          Lưu ý: Bạn không xem được việc làm đã hết hạn hoặc đã tạm ngưng nhận hồ sơ.
-        </p>
+      <!-- RIGHT sidebar -->
+      <div class="lg:col-span-4 space-y-4">
+        <div class="bg-white rounded-xl shadow-xl border border-gray-300 p-6">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">Việc làm phù hợp</h2>
+          <app-suggested-job-post-card [fullWidth]="true" />
+        </div>
       </div>
-
-      <div *ngIf="selectedTab === 'applied'">
-        <app-applied-job-card />
-      </div>
-
-      <div *ngIf="selectedTab === 'notified'">
-        <app-job-post-notification-card />
-      </div>
-    </div>
-  </div>
-
-  <!-- RIGHT sidebar -->
-  <div class="md:col-span-5 lg:col-span-4 space-y-4">
-    <div class="bg-white rounded-xl shadow p-4">
-      <h2 class="text-lg font-semibold mb-4">Việc làm phù hợp</h2>
-      <app-suggested-job-post-card [fullWidth]="true" />
     </div>
   </div>
 </div>

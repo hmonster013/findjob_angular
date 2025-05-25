@@ -79,7 +79,7 @@ export const DATE_OPTIONS = {
 export const IMAGES = {
   getLogo: (size: string, mode: string) => `assets/logo/${mode}-logo-${size}.png`,
   getTextLogo: (mode: string) => `assets/logo/${mode}-text-logo.png`,
-  coverImageDefault: 'assets/images/cover-image-default.webp',
+  coverImageDefault: 'assets/images/companies/company-cover.avif',
   chPlayDownload: 'assets/images/app-android-download.png',
   appStoreDownload: 'assets/images/app-ios-download.png',
   notificationImageDefault: 'assets/images/noti-img-default.png',

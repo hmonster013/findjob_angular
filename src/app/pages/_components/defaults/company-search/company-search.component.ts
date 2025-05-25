@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CommonService } from '../../../../_services/common.service';
 
 @Component({
   selector: 'app-company-search',
@@ -12,24 +13,31 @@ import { Router } from '@angular/router';
   templateUrl: './company-search.component.html',
   styleUrl: './company-search.component.css'
 })
-export class CompanySearchComponent {
+export class CompanySearchComponent implements OnInit {
   @Output() search = new EventEmitter<any>();
   @Output() resetSearch = new EventEmitter<void>();
 
   form: FormGroup;
 
-  cityOptions = [
-    { id: 1, name: 'Hồ Chí Minh' },
-    { id: 2, name: 'Hà Nội' },
-    { id: 3, name: 'Đà Nẵng' },
-    // 🔥 bạn thay danh sách thành data API sau nhé
-  ];
+  cityOptions: any;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private commonService: CommonService,
+  ) {
     this.form = this.fb.group({
       kw: [''],
       cityId: ['']
     });
+  }
+
+  ngOnInit(): void {
+    this.commonService.getCities().subscribe({
+      next: (res) => {
+        this.cityOptions = res.data || [];
+      }
+    })
   }
 
   onSubmit() {

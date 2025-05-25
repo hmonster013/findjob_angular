@@ -1,50 +1,76 @@
-<div class="p-6 bg-white rounded-xl shadow-lg">
-  <h2 class="text-2xl font-bold text-gray-800 mb-6">Công việc đã lưu</h2>
-
+<div class="bg-white py-6">
   <!-- Loading skeleton -->
-  <div *ngIf="isLoading" class="space-y-4">
-    <div *ngFor="let _ of [1,2,3,4,5]" class="flex items-center p-4 bg-gray-100 rounded-lg animate-pulse">
-      <div class="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
+  <div *ngIf="isLoading" class="space-y-4 px-4 max-w-4xl mx-auto">
+    <div *ngFor="let _ of [1,2,3,4,5]" class="flex items-center p-4 bg-gray-50 rounded-lg animate-pulse shadow-sm">
+      <div class="w-12 h-12 bg-primary-100 rounded-md mr-4"></div>
       <div class="flex-1">
-        <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+        <div class="h-5 bg-primary-100 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-primary-100 rounded w-1/2"></div>
       </div>
-      <div class="w-20 h-8 bg-gray-200 rounded"></div>
+      <div class="w-20 h-8 bg-primary-100 rounded"></div>
     </div>
   </div>
 
   <!-- Empty state -->
-  <div *ngIf="!isLoading && savedJobs.length === 0" class="text-center text-gray-500 py-12 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
-    <svg class="mx-auto h-28 w-28 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-    </svg>
-    <p class="mt-4 text-lg font-medium">Bạn chưa lưu công việc nào.</p>
+  <div *ngIf="!isLoading && savedJobs.length === 0" class="text-center py-12 bg-gray-50 rounded-lg border border-gray-200 shadow-sm max-w-4xl mx-auto">
+    <i class="fas fa-briefcase text-6xl text-primary-400 mb-4"></i>
+    <p class="text-lg font-medium text-gray-700">Bạn chưa lưu công việc nào.</p>
+    <p class="text-sm text-gray-500 mt-2">Khám phá ngay các cơ hội việc làm phù hợp với bạn!</p>
+    <a
+      href="/viec-lam"
+      class="mt-4 inline-flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-700 transition-colors"
+    >
+      <i class="fas fa-search mr-2 text-sm"></i> Tìm việc ngay
+    </a>
   </div>
 
   <!-- List saved jobs -->
-  <div *ngIf="!isLoading && savedJobs.length > 0" class="space-y-4">
-    <div *ngFor="let job of savedJobs" class="flex items-center p-4 border border-gray-200 rounded-lg hover:shadow-md transition bg-white">
+  <div *ngIf="!isLoading && savedJobs.length > 0" class="space-y-4 px-4 max-w-4xl mx-auto">
+    <div
+      *ngFor="let job of savedJobs"
+      class="flex items-center p-4 border border-gray-200 rounded-lg bg-white hover:shadow-lg transition-shadow"
+    >
       <img
-        [src]="job.companyDict.companyImageUrl || 'https://via.placeholder.com/48'"
+        [src]="job.companyDict?.companyImageUrl || 'https://via.placeholder.com/48'"
         alt="Company Logo"
-        class="h-12 w-12 rounded-full object-cover mr-4"
+        class="h-12 w-12 rounded-md object-cover mr-4"
       />
       <div class="flex-1">
         <div class="flex items-center space-x-2">
-          <a [routerLink]="['/viec-lam', job.slug]" class="text-lg font-semibold text-blue-600 hover:underline">{{ job.jobName }}</a>
-          <span *ngIf="job.isUrgent" class="urgent-badge">Khẩn cấp</span>
-          <span *ngIf="job.isApplied" class="applied-badge">Đã ứng tuyển</span>
+          <a
+            [routerLink]="['/viec-lam', job.slug]"
+            class="text-lg font-semibold text-primary hover:underline"
+          >
+            {{ job.jobName }}
+          </a>
+          <span *ngIf="job.isUrgent" class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-red-500 rounded-full">
+            <i class="fas fa-exclamation-circle mr-1 text-xs"></i> Khẩn cấp
+          </span>
+          <span *ngIf="job.isApplied" class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-green-500 rounded-full">
+            <i class="fas fa-check-circle mr-1 text-xs"></i> Đã ứng tuyển
+          </span>
         </div>
-        <p class="text-sm text-gray-600 mt-1">{{ job.companyDict.companyName }}</p>
-        <p class="text-sm text-gray-500 mt-1">
-          Mức lương: {{ job.salaryMin }} - {{ job.salaryMax }} triệu | Hạn nộp: {{ job.deadline | date: 'dd/MM/yyyy' }}
-        </p>
+        <p class="text-sm text-gray-600 mt-1">{{ job.companyDict?.companyName || 'Không xác định' }}</p>
+        <div class="text-sm text-gray-500 mt-1 flex items-center gap-4">
+          <span class="flex items-center">
+            <i class="fas fa-money-bill-wave text-xs mr-1"></i>
+            {{ job.salaryMin / 1000000 }} - {{ job.salaryMax / 1000000 }} triệu
+          </span>
+          <span class="flex items-center">
+            <i class="fas fa-map-marker-alt text-xs mr-1"></i>
+            {{ getCityName(job.locationDict?.city) }}
+          </span>
+          <span class="flex items-center">
+            <i class="fas fa-clock text-xs mr-1"></i>
+            {{ job.deadline | date: 'dd/MM/yyyy' }}
+          </span>
+        </div>
       </div>
       <button
         (click)="handleUnsave(job.slug)"
-        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition"
+        class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors text-sm"
       >
-        Hủy lưu
+        <i class="fas fa-trash-alt mr-1 text-xs"></i> Hủy lưu
       </button>
     </div>
   </div>
@@ -54,16 +80,19 @@
     <button
       (click)="handleChangePage(page - 1)"
       [disabled]="page <= 1"
-      class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
     >
-      <i class="fas fa-chevron-left"></i>
+      <i class="fas fa-chevron-left text-sm"></i>
     </button>
     <div class="flex space-x-1">
       <button
         *ngFor="let p of pages"
         (click)="handleChangePage(p)"
-        [ngClass]="{'bg-blue-500 text-white': p === page, 'bg-gray-100 text-gray-700': p !== page}"
-        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-100 transition"
+        [ngClass]="{
+          'bg-primary text-white': p === page,
+          'bg-gray-100 text-gray-700': p !== page
+        }"
+        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary-100 transition-colors"
       >
         {{ p }}
       </button>
@@ -71,9 +100,9 @@
     <button
       (click)="handleChangePage(page + 1)"
       [disabled]="page >= totalPages"
-      class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
     >
-      <i class="fas fa-chevron-right"></i>
+      <i class="fas fa-chevron-right text-sm"></i>
     </button>
   </div>
 </div>

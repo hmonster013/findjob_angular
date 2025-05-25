@@ -30,9 +30,7 @@ export class ActivityChartComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.isCanvasReady = true;
-    console.log('ngAfterViewInit: Canvas ready, canvas element:', this.canvasRef?.nativeElement);
     if (this.dataChart?.labels?.length > 0 && this.canvasRef?.nativeElement) {
-      console.log('Rendering chart in ngAfterViewInit');
       this.renderChart();
     }
   }
@@ -41,13 +39,10 @@ export class ActivityChartComponent implements OnInit, AfterViewInit {
     this.isLoading = true;
     this.statisticService.jobSeekerActivityStatistics().subscribe({
       next: (res) => {
-        console.log('API response:', res);
         this.dataChart = res.data || null;
-        console.log('dataChart:', this.dataChart);
         this.isLoading = false;
-        this.cdr.detectChanges(); // Buộc cập nhật giao diện
+        this.cdr.detectChanges();
         if (this.dataChart?.labels?.length > 0 && this.isCanvasReady) {
-          console.log('Rendering chart in fetchData');
           this.renderChart();
         }
       },
@@ -56,9 +51,6 @@ export class ActivityChartComponent implements OnInit, AfterViewInit {
         this.dataChart = null;
         this.isLoading = false;
         this.cdr.detectChanges();
-      },
-      complete: () => {
-        console.log('fetchData complete, isLoading:', this.isLoading);
       },
     });
   }
@@ -98,8 +90,8 @@ export class ActivityChartComponent implements OnInit, AfterViewInit {
           {
             label: this.dataChart.title1 || 'Việc đã ứng tuyển',
             data: this.dataChart.data1,
-            borderColor: 'rgba(59, 130, 246, 1)',
-            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+            borderColor: '#d97706', // amber-600
+            backgroundColor: 'rgba(217, 119, 6, 0.2)', // amber-600/20%
             fill: false,
             tension: 0.4,
             pointRadius: 5,
@@ -108,8 +100,8 @@ export class ActivityChartComponent implements OnInit, AfterViewInit {
           {
             label: this.dataChart.title2 || 'Việc đã lưu',
             data: this.dataChart.data2,
-            borderColor: 'rgba(16, 185, 129, 1)',
-            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+            borderColor: '#059669', // green-600
+            backgroundColor: 'rgba(5, 150, 105, 0.2)', // green-600/20%
             fill: false,
             tension: 0.4,
             pointRadius: 5,
@@ -118,8 +110,8 @@ export class ActivityChartComponent implements OnInit, AfterViewInit {
           {
             label: this.dataChart.title3 || 'Công ty đang theo dõi',
             data: this.dataChart.data3,
-            borderColor: 'rgba(244, 63, 94, 1)',
-            backgroundColor: 'rgba(244, 63, 94, 0.2)',
+            borderColor: '#2563eb', // blue-600
+            backgroundColor: 'rgba(37, 99, 235, 0.2)', // blue-600/20%
             fill: false,
             tension: 0.4,
             pointRadius: 5,
@@ -133,8 +125,17 @@ export class ActivityChartComponent implements OnInit, AfterViewInit {
           legend: {
             display: true,
             position: 'top',
+            labels: {
+              color: '#1f2937', // gray-800
+              font: {
+                size: 14,
+              },
+            },
           },
           tooltip: {
+            backgroundColor: '#1f2937', // gray-800
+            titleColor: '#ffffff',
+            bodyColor: '#ffffff',
             callbacks: {
               label: (context) => `${context.dataset.label}: ${context.parsed.y}`,
             },
@@ -145,13 +146,18 @@ export class ActivityChartComponent implements OnInit, AfterViewInit {
             grid: {
               display: false,
             },
+            ticks: {
+              color: '#4b5563', // gray-600
+            },
           },
           y: {
             grid: {
               display: true,
+              color: '#e5e7eb', // gray-200
             },
             beginAtZero: true,
             ticks: {
+              color: '#4b5563', // gray-600
               stepSize: 1,
             },
           },
@@ -159,8 +165,6 @@ export class ActivityChartComponent implements OnInit, AfterViewInit {
       },
     };
 
-    console.log('Creating chart with config:', config);
     this.chart = new Chart(ctx, config);
-    console.log('Chart created:', this.chart);
   }
 }

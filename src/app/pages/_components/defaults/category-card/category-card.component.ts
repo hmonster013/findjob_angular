@@ -15,7 +15,7 @@ import { ROUTES } from '../../../../_configs/constants';
 })
 export class CategoryCardComponent {
   @Input() options: any[] = [];
-  @Input() type: 'CARRER' | 'CITY' | 'JOB_TYPE' = 'CARRER';  // 🔥 chú ý default
+  @Input() type: 'CAREER' | 'CITY' | 'JOB_TYPE' = 'CAREER';
 
   items: any[] = [];
   searchValue: string = '';
@@ -37,7 +37,7 @@ export class CategoryCardComponent {
   handleFilter(id: number) {
     const queryParams: any = {};
     switch (this.type) {
-      case 'CARRER':
+      case 'CAREER':
         queryParams['careerId'] = id;
         break;
       case 'CITY':

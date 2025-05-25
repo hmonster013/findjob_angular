@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import dayjs from 'dayjs';
 import { StatisticService } from '../../../../../_services/statistic.service';
 
-// Đăng ký Chart.js registerables một lần
+// Đăng ký Chart.js registerables
 Chart.register(...registerables);
 
 @Component({
@@ -120,7 +120,6 @@ export class ApplicationChartComponent implements OnInit, OnDestroy, AfterViewIn
       this.chartInstance.destroy();
     }
 
-    // Kiểm tra data không phải null và hợp lệ
     if (!this.data || !Array.isArray(this.data.labels) || this.data.labels.length === 0 ||
         !Array.isArray(this.data.data1) || !Array.isArray(this.data.data2) ||
         this.data.labels.length !== this.data.data1.length || this.data.labels.length !== this.data.data2.length) {
@@ -134,30 +133,32 @@ export class ApplicationChartComponent implements OnInit, OnDestroy, AfterViewIn
         type: 'line' as const,
         label: String(this.data.title2 || 'Ứng tuyển'),
         data: this.data.data2,
-        borderColor: this.data.backgroundColor2 || 'red',
-        backgroundColor: this.data.backgroundColor2 || 'rgba(255, 0, 0, 0.1)',
+        borderColor: '#F97316', // orange-600
+        backgroundColor: 'rgba(249, 115, 22, 0.5)',
+        hoverBorderColor: '#FB923C', // orange-500
         tension: 0.2,
         borderWidth: 2,
-        pointRadius: 5, // Tăng kích thước điểm
+        pointRadius: 5,
         pointHoverRadius: 7,
         pointBackgroundColor: '#fff',
-        pointBorderColor: 'red', // Viền điểm đỏ
+        pointBorderColor: '#F97316',
         pointHoverBackgroundColor: '#fff',
         pointStyle: 'circle',
         fill: false,
-        order: 1, // Đường hiển thị trên cùng
+        order: 1,
       },
       {
         type: 'bar' as const,
         label: String(this.data.title1 || 'Việc làm'),
         data: this.data.data1,
-        backgroundColor: this.data.backgroundColor1 ? `rgba(75, 192, 192, 0.7)` : 'rgba(75, 192, 192, 0.7)', // Thêm độ trong suốt
+        backgroundColor: 'rgba(59, 130, 246, 0.7)', // blue-500
+        hoverBackgroundColor: 'rgba(96, 165, 250, 0.7)', // blue-400
         borderRadius: 4,
-        barThickness: 18, // Độ rộng cột vừa phải
+        barThickness: 18,
         maxBarThickness: 18,
-        categoryPercentage: 0.4, // Khoảng cách giữa cột
+        categoryPercentage: 0.4,
         barPercentage: 0.8,
-        order: 2, // Cột hiển thị dưới đường
+        order: 2,
       },
     ];
 
@@ -177,16 +178,20 @@ export class ApplicationChartComponent implements OnInit, OnDestroy, AfterViewIn
               padding: 20,
               usePointStyle: true,
               pointStyle: 'circle',
-              font: { size: 12 },
+              font: { size: 10, family: "'Inter', sans-serif" },
+              color: '#4B5563',
             },
           },
           tooltip: {
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            titleColor: '#212529',
-            bodyColor: '#212529',
+            titleColor: '#4B5563',
+            bodyColor: '#4B5563',
             padding: 12,
             boxPadding: 6,
-            borderColor: 'rgba(0,0,0,0.1)',
+            borderColor: (context: any) => {
+              const datasetIndex = context.datasetIndex;
+              return datasetIndex === 0 ? 'rgba(249, 115, 22, 0.2)' : 'rgba(59, 130, 246, 0.2)';
+            },
             borderWidth: 1,
             usePointStyle: true,
             filter: (tooltipItem) => tooltipItem.raw !== 0,
@@ -197,26 +202,32 @@ export class ApplicationChartComponent implements OnInit, OnDestroy, AfterViewIn
             grid: { display: false },
             border: { display: false },
             ticks: {
-              font: { size: 12 },
+              font: { size: 10, family: "'Inter', sans-serif" },
               autoSkip: true,
-              maxTicksLimit: 15, // Tăng số nhãn hiển thị
+              maxTicksLimit: 15,
+              color: '#4B5563',
               callback: (value, index, values) => {
                 const label = this.data.labels[index];
-                return label ? label.replace(/\/0(\d)/, '/$1') : label; // Rút ngắn "10/04" thành "10/4"
+                return label ? label.replace(/\/0(\d)/, '/$1') : label;
               },
             },
           },
           y: {
             beginAtZero: true,
             min: 0,
-            max: 1.2, // Giảm max để nổi bật giá trị 1
-            grid: { color: 'rgba(0,0,0,0.05)' },
+            max: 1.2,
+            grid: { color: 'rgba(249, 115, 22, 0.1)' },
             border: { display: false },
             ticks: {
-              font: { size: 12 },
+              font: { size: 10, family: "'Inter', sans-serif" },
               stepSize: 0.5,
+              color: '#4B5563',
             },
           },
+        },
+        animation: {
+          duration: 1000,
+          easing: 'easeOutQuart',
         },
       },
     });

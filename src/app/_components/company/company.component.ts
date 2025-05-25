@@ -29,7 +29,7 @@ export class CompanyComponent {
 
   followed: boolean = false;
   loadingFollow: boolean = false;
-  defaultCoverImage = 'assets/images/cover-default.jpg';
+  defaultCoverImage = 'assets/images/companies/company-cover.avif';
 
   constructor(
     private companyService: CompanyService,

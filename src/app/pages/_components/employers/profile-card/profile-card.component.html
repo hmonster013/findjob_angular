@@ -1,84 +1,136 @@
-<div class="space-y-6 p-4 sm:p-6">
-  <!-- Search form -->
-  <app-profile-search (search)="onSearch($event)" (reset)="onReset()"></app-profile-search>
+<div class="flex flex-col gap-4 p-4 sm:p-5 bg-orange-50">
+  <!-- Full-Width Search Bar -->
+  <div class="flex flex-row flex-wrap gap-4 items-center">
+    <input
+      type="text"
+      [(ngModel)]="keyword"
+      (ngModelChange)="onSearch({ keyword: keyword, city: city })"
+      placeholder="Từ khóa (VD: lập trình viên, marketing...)"
+      class="flex-1 min-w-[200px] h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200"
+      aria-label="Từ khóa tìm kiếm"
+    />
+    <div class="relative min-w-[200px]">
+      <select
+        [(ngModel)]="city"
+        (ngModelChange)="onSearch({ keyword: keyword, city: city })"
+        class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 appearance-none"
+        aria-label="Tỉnh/Thành phố"
+      >
+        <option value="">Tỉnh/Thành phố</option>
+        <option *ngFor="let cityOption of cities" [value]="cityOption.value">{{ cityOption.label }}</option>
+      </select>
+      <i class="fas fa-chevron-down absolute right-2 top-1/2 transform -translate-y-1/2 text-orange-800 text-xs pointer-events-none"></i>
+    </div>
+    <div class="group relative tooltip">
+      <button
+        (click)="onSearch({ keyword: keyword, city: city })"
+        class="flex items-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-200"
+        aria-label="Tìm kiếm"
+      >
+        <i class="fas fa-search text-sm"></i> Tìm kiếm
+      </button>
+      <span class="tooltiptext absolute hidden group-hover:block -top-10 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+        Tìm kiếm
+      </span>
+    </div>
+  </div>
 
-  <!-- Results -->
-  <div class="bg-white shadow-md rounded-lg p-6">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-semibold text-gray-800">
-        Kết quả tìm thấy: <span class="text-red-500">{{ count }} hồ sơ</span>
-      </h2>
-      <div *ngIf="resumes.length > 0" class="flex items-center gap-2">
-        <label for="pageSize" class="text-sm text-gray-600">Hiển thị:</label>
-        <select
-          id="pageSize"
-          [(ngModel)]="pageSize"
-          (change)="onChangePageSize(pageSize)"
-          class="px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="50">50</option>
-        </select>
-      </div>
+  <!-- Two-Column Layout -->
+  <div class="flex flex-row gap-4">
+    <!-- Secondary Column: Search Form -->
+    <div class="w-1/3">
+      <app-profile-search (search)="onSearch($event)" (reset)="onReset()"></app-profile-search>
     </div>
 
-    <!-- Skeleton Loading -->
-    <div *ngIf="isLoading" class="grid gap-4">
-      <div *ngFor="let _ of [].constructor(pageSize)" class="p-4 bg-gray-50 border border-gray-200 rounded-lg animate-pulse">
-        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-      </div>
-    </div>
+    <!-- Primary Column: Results -->
+    <div class="w-2/3 flex flex-col gap-4">
+      <div class="rounded-lg shadow-md bg-orange-50 chart-container hover:shadow-md transition-shadow duration-300">
+        <div class="p-4">
+          <!-- Title -->
+          <div class="mb-4">
+            <h2 class="text-lg font-semibold text-gray-800">
+              Kết quả tìm thấy: <span class="text-orange-600">{{ count }} hồ sơ</span>
+            </h2>
+          </div>
 
-    <!-- No Data -->
-    <div *ngIf="!isLoading && resumes.length === 0" class="text-center py-10">
-      <app-no-data-card></app-no-data-card>
-    </div>
+          <!-- Page Size Selector -->
+          <div *ngIf="resumes.length > 0" class="flex justify-end mb-4">
+            <div class="flex items-center gap-2">
+              <label for="pageSize" class="text-sm text-gray-600">Hiển thị:</label>
+              <select
+                id="pageSize"
+                (change)="onChangePageSize($event)"
+                [value]="pageSize"
+                class="border border-orange-300 rounded px-1.5 sm:px-2 py-0.5 sm:py-1 bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
+              >
+                <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">{{ size }}</option>
+              </select>
+            </div>
+          </div>
 
-    <!-- Resume List -->
-    <div *ngIf="!isLoading && resumes.length > 0" class="space-y-4">
-      <div class="grid gap-4">
-        <app-job-seeker-profile
-          *ngFor="let resume of resumes"
-          [jobSeekerProfile]="resume"
-          (save)="onSave(resume.slug)"
-          class="hover:shadow-lg transition-shadow duration-200"
-        ></app-job-seeker-profile>
-      </div>
+          <!-- Skeleton Loading -->
+          <div *ngIf="isLoading" class="grid gap-4">
+            <div *ngFor="let _ of [].constructor(pageSize)" class="p-4 bg-orange-50 border border-gray-200 rounded-lg animate-pulse">
+              <div class="h-6 bg-orange-100 rounded w-3/4 mb-2"></div>
+              <div class="h-4 bg-orange-100 rounded w-1/2 mb-2"></div>
+              <div class="h-4 bg-orange-100 rounded w-1/3"></div>
+            </div>
+          </div>
 
-      <!-- Pagination -->
-      <div class="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
-        <div class="text-sm text-gray-600">
-          Trang {{ page }} / {{ totalPages() }} ({{ count }} hồ sơ)
-        </div>
-        <div class="flex items-center gap-2">
-          <button
-            (click)="onChangePage(page - 1)"
-            [disabled]="page === 1"
-            class="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Trang trước"
-          >
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <button
-            *ngFor="let pageNum of getPageNumbers()"
-            (click)="onChangePage(pageNum)"
-            class="px-3 py-1 border border-gray-300 rounded-md"
-            [ngClass]="{'bg-blue-500 text-white border-blue-500': pageNum === page, 'hover:bg-gray-100': pageNum !== page}"
-            attr.aria-label="Trang {{ pageNum }}"
-          >
-            {{ pageNum }}
-          </button>
-          <button
-            (click)="onChangePage(page + 1)"
-            [disabled]="page >= totalPages()"
-            class="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Trang sau"
-          >
-            <i class="fas fa-chevron-right"></i>
-          </button>
+          <!-- No Data -->
+          <div *ngIf="!isLoading && resumes.length === 0" class="py-8">
+            <app-no-data-card title="Không tìm thấy hồ sơ" class="animate-fadeInUp">
+              <div class="text-orange-600 text-sm mt-2">
+                Hãy thử thay đổi bộ lọc để tìm hồ sơ phù hợp!
+              </div>
+            </app-no-data-card>
+          </div>
+
+          <!-- Resume List -->
+          <div *ngIf="!isLoading && resumes.length > 0" class="grid gap-4">
+            <div *ngFor="let resume of resumes">
+              <app-job-seeker-profile
+                [jobSeekerProfile]="resume"
+                (save)="confirmSave(resume)"
+                class="hover:shadow-lg transition-shadow duration-200"
+              ></app-job-seeker-profile>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div *ngIf="!isLoading && resumes.length > 0" class="flex justify-between items-center p-4 border-t border-gray-200 bg-gray-50 mt-4">
+            <div class="text-sm text-gray-600">
+              Hiển thị {{ pageSize }} mục
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                (click)="onChangePage(page - 1)"
+                [disabled]="page === 0"
+                class="px-2 sm:px-3 py-1 sm:py-1.5 text-sm border border-orange-300 rounded bg-orange-50 hover:bg-orange-100 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              >
+                Previous
+              </button>
+              <button
+                *ngFor="let pageNum of getPageNumbers()"
+                (click)="onChangePage(pageNum)"
+                class="px-2 sm:px-3 py-1 sm:py-1.5 text-sm border border-orange-300 rounded"
+                [ngClass]="{
+                  'bg-orange-600 text-white border-orange-600': pageNum === page,
+                  'bg-orange-50 hover:bg-orange-100 hover:shadow-md': pageNum !== page
+                }"
+                attr.aria-label="Trang {{ pageNum }}"
+              >
+                {{ pageNum }}
+              </button>
+              <button
+                (click)="onChangePage(page + 1)"
+                [disabled]="page >= totalPages()"
+                class="px-2 sm:px-3 py-1 sm:py-1.5 text-sm border border-orange-300 rounded bg-orange-50 hover:bg-orange-100 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              >
+                Next
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

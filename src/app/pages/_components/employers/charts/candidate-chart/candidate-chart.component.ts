@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import dayjs from 'dayjs';
 import { StatisticService } from '../../../../../_services/statistic.service';
 
-// Đăng ký Chart.js registerables một lần
+// Đăng ký Chart.js registerables
 Chart.register(...registerables);
 
 @Component({
@@ -36,18 +36,13 @@ export class CandidateChartComponent implements OnInit, OnDestroy, AfterViewInit
   ) {}
 
   ngOnInit(): void {
-    console.log('ngOnInit: Fetching statistics');
     this.fetchStatistics();
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit: Canvas ready, chartCanvas:', !!this.chartCanvas);
     this.isCanvasReady = true;
     if (this.dataReady && this.data !== null && this.data.labels && this.data.labels.length > 0) {
-      console.log('ngAfterViewInit: Rendering chart with data:', this.data);
       this.renderChart();
-    } else {
-      console.log('ngAfterViewInit: No valid data to render chart, data:', this.data);
     }
     this.cdr.detectChanges();
   }
@@ -68,7 +63,6 @@ export class CandidateChartComponent implements OnInit, OnDestroy, AfterViewInit
     const endDate = this.selectedDateRange[1].format('YYYY-MM-DD');
 
     if (this.selectedDateRange[0].isAfter(this.selectedDateRange[1])) {
-      console.warn('fetchStatistics: Invalid date range');
       this.errorMessage = 'Ngày bắt đầu không thể lớn hơn ngày kết thúc';
       this.isLoading = false;
       this.dataReady = false;
@@ -76,26 +70,20 @@ export class CandidateChartComponent implements OnInit, OnDestroy, AfterViewInit
       return;
     }
 
-    console.log('fetchStatistics: Calling API with startDate:', startDate, 'endDate:', endDate);
     this.statisticService
       .employerCandidateStatistics({ startDate, endDate })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('fetchStatistics: API response:', response);
           this.data = response.data || null;
           this.isLoading = false;
           this.dataReady = true;
           if (this.isCanvasReady && this.data !== null && this.data.labels && this.data.labels.length > 0) {
-            console.log('fetchStatistics: Rendering chart with data:', this.data);
             this.renderChart();
-          } else {
-            console.log('fetchStatistics: Canvas not ready or no valid data, data:', this.data);
           }
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('fetchStatistics: Error fetching data:', error);
           this.errorMessage = error.message || 'Không thể tải dữ liệu thống kê. Vui lòng thử lại.';
           this.isLoading = false;
           this.dataReady = false;
@@ -106,29 +94,23 @@ export class CandidateChartComponent implements OnInit, OnDestroy, AfterViewInit
 
   renderChart() {
     if (!this.chartCanvas || !this.isCanvasReady || !this.chartCanvas.nativeElement) {
-      console.error('renderChart: Canvas not ready, chartCanvas:', !!this.chartCanvas, 'isCanvasReady:', this.isCanvasReady);
       return;
     }
     const ctx = this.chartCanvas.nativeElement.getContext('2d');
     if (!ctx) {
-      console.error('renderChart: Context not available');
       return;
     }
 
     if (this.chartInstance) {
-      console.log('renderChart: Destroying existing chart');
       this.chartInstance.destroy();
     }
 
-    // Kiểm tra data không phải null và hợp lệ
     if (!this.data || !Array.isArray(this.data.labels) || this.data.labels.length === 0 ||
         !Array.isArray(this.data.data1) || !Array.isArray(this.data.data2) ||
         this.data.labels.length !== this.data.data1.length || this.data.labels.length !== this.data.data2.length) {
-      console.error('renderChart: Invalid chart data:', this.data);
       return;
     }
 
-    console.log('renderChart: Preparing chart data, labels:', this.data.labels);
     this.chartInstance = new Chart(ctx, {
       type: 'line',
       data: {
@@ -137,8 +119,9 @@ export class CandidateChartComponent implements OnInit, OnDestroy, AfterViewInit
           {
             label: String(this.data.title1 || 'Năm 2025'),
             data: this.data.data1,
-            borderColor: this.data.borderColor1 || 'rgba(53, 162, 235, 1)',
-            backgroundColor: this.data.backgroundColor1 || 'rgba(53, 162, 235, 0.5)',
+            borderColor: '#F97316', // orange-600
+            backgroundColor: 'rgba(249, 115, 22, 0.5)',
+            hoverBorderColor: '#FB923C', // orange-500
             tension: 0.3,
             borderWidth: 2,
             pointRadius: 3,
@@ -150,8 +133,9 @@ export class CandidateChartComponent implements OnInit, OnDestroy, AfterViewInit
           {
             label: String(this.data.title2 || 'Năm 2024'),
             data: this.data.data2,
-            borderColor: this.data.borderColor2 || 'rgba(255, 99, 132, 1)',
-            backgroundColor: this.data.backgroundColor2 || 'rgba(255, 99, 132, 0.5)',
+            borderColor: '#3B82F6', // blue-500
+            backgroundColor: 'rgba(59, 130, 246, 0.5)',
+            hoverBorderColor: '#60A5FA', // blue-400
             tension: 0.3,
             borderWidth: 2,
             pointRadius: 3,
@@ -172,16 +156,20 @@ export class CandidateChartComponent implements OnInit, OnDestroy, AfterViewInit
               padding: 20,
               usePointStyle: true,
               pointStyle: 'circle',
-              font: { size: 12 },
+              font: { size: 10, family: "'Inter', sans-serif" },
+              color: '#4B5563', // gray-600
             },
           },
           tooltip: {
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            titleColor: '#212529',
-            bodyColor: '#212529',
+            titleColor: '#4B5563',
+            bodyColor: '#4B5563',
             padding: 12,
             boxPadding: 6,
-            borderColor: 'rgba(0,0,0,0.1)',
+            borderColor: (context: any) => {
+              const datasetIndex = context.datasetIndex;
+              return datasetIndex === 0 ? 'rgba(249, 115, 22, 0.2)' : 'rgba(59, 130, 246, 0.2)';
+            },
             borderWidth: 1,
             usePointStyle: true,
             filter: (tooltipItem) => tooltipItem.raw !== 0,
@@ -192,31 +180,35 @@ export class CandidateChartComponent implements OnInit, OnDestroy, AfterViewInit
             grid: { display: false },
             border: { display: false },
             ticks: {
-              font: { size: 12 },
+              font: { size: 10, family: "'Inter', sans-serif" },
               autoSkip: true,
               maxTicksLimit: 10,
+              color: '#4B5563',
             },
           },
           y: {
             beginAtZero: true,
             min: 0,
             max: 2,
-            grid: { color: 'rgba(0,0,0,0.05)' },
+            grid: { color: 'rgba(249, 115, 22, 0.1)' },
             border: { display: false },
             ticks: {
-              font: { size: 12 },
+              font: { size: 10, family: "'Inter', sans-serif" },
               stepSize: 1,
+              color: '#4B5563',
             },
           },
         },
+        animation: {
+          duration: 1000,
+          easing: 'easeOutQuart',
+        },
       },
     });
-    console.log('renderChart: Chart created successfully');
   }
 
   onSubmitDateChange() {
     if (this.allowSubmit) {
-      console.log('onSubmitDateChange: Fetching new statistics');
       this.fetchStatistics();
       this.allowSubmit = false;
     }
@@ -224,7 +216,6 @@ export class CandidateChartComponent implements OnInit, OnDestroy, AfterViewInit
 
   onDateChange(event: any, type: 'start' | 'end') {
     const newDate = dayjs(event.target.value);
-    console.log('onDateChange: New date:', newDate.format('YYYY-MM-DD'), 'type:', type);
     if (type === 'start') {
       this.selectedDateRange[0] = newDate;
     } else {

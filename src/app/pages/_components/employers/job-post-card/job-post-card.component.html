@@ -1,42 +1,38 @@
-<div class="bg-white rounded-lg shadow flex flex-col flex-1 h-full w-full">
+<div class="bg-orange-50 rounded-lg shadow flex flex-col flex-1 h-full w-full">
   <!-- Header -->
-  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6">
-    <h1 class="text-2xl font-semibold text-gray-800">Quản lý tin tuyển dụng</h1>
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 sm:p-6 bg-orange-50">
+    <h1 class="text-2xl font-semibold text-orange-800">Quản lý tin tuyển dụng</h1>
     <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
       <button
-        class="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md text-sm"
+        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300"
         (click)="onExport()"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-        </svg>
-        Xuất Excel
+        <i class="fas fa-download text-lg"></i>
+        Tải danh sách
       </button>
       <button
-        class="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-sm"
+        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300"
         (click)="onOpenCreate()"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
+        <i class="fas fa-plus text-lg"></i>
         Thêm mới
       </button>
     </div>
   </div>
 
   <!-- Filter Form -->
-  <div class="p-6 pt-0">
-    <h2 class="text-sm font-medium text-gray-600 mb-2">Bộ lọc:</h2>
+  <div class="p-4 sm:p-6 pt-0 bg-orange-50">
+    <h2 class="text-sm font-medium text-orange-800 mb-2">Bộ lọc:</h2>
     <app-job-post-filter-form (filter)="onFilter($event)"></app-job-post-filter-form>
   </div>
 
   <!-- Loading Progress -->
-  <div *ngIf="isLoadingList && !isFullScreenLoading" class="w-full h-1 bg-gray-200 rounded-full overflow-hidden mx-6">
-    <div class="h-full bg-blue-500 animate-pulse"></div>
+  <div *ngIf="isLoadingList && !isFullScreenLoading" class="w-full h-1 bg-orange-200 rounded-full overflow-hidden mx-4 sm:mx-6">
+    <div class="h-full bg-orange-600 animate-pulse"></div>
   </div>
 
   <!-- Table -->
-  <div class="flex-1 mx-6 mb-6">
+  <div class="flex-1 mx-4 sm:mx-6 mb-4 sm:mb-6">
     <app-job-posts-table
       [dataSource]="list"
       [total]="total"
@@ -55,22 +51,20 @@
   </div>
 
   <!-- Popup Modal Tailwind -->
-  <div *ngIf="openPopup" class="fixed inset-0 bg-sky-500/50 flex justify-center items-center z-[1000] p-4">
+  <div *ngIf="openPopup" class="fixed inset-0 bg-orange-500/50 flex justify-center items-center z-[1000] p-4 animate-fadeInUp">
     <div class="bg-white w-full max-w-4xl rounded-lg relative max-h-[90vh] flex flex-col overflow-hidden">
       <button
         (click)="openPopup = false"
-        class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 z-10"
+        class="absolute top-4 right-4 text-gray-500 hover:text-orange-800 z-10"
       >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        <i class="fas fa-times text-xl"></i>
       </button>
 
-      <h2 class="text-xl font-bold p-6 pb-0">
+      <h2 class="text-xl font-bold p-4 sm:p-6 pb-0 text-orange-800">
         {{ editData ? 'Cập nhật tin tuyển dụng' : 'Tạo mới tin tuyển dụng' }}
       </h2>
 
-      <div class="flex-1 overflow-y-auto p-6">
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6">
         <app-job-post-form
           [editData]="editData"
           [serverErrors]="serverErrors"

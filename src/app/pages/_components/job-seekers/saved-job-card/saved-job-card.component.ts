@@ -19,6 +19,14 @@ export class SavedJobCardComponent implements OnInit {
   pageSize = 5;
   count = 0;
 
+  // Ánh xạ city ID sang tên thành phố (giả định)
+  private cityMap: { [key: number]: string } = {
+    1: 'Hà Nội',
+    2: 'TP. Hồ Chí Minh',
+    3: 'Đà Nẵng',
+    // Thêm các thành phố khác nếu cần
+  };
+
   constructor(
     private jobService: JobService,
     private toastr: ToastrService,
@@ -48,6 +56,11 @@ export class SavedJobCardComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  // Hàm ánh xạ city ID sang tên thành phố
+  getCityName(cityId?: number): string {
+    return cityId && this.cityMap[cityId] ? this.cityMap[cityId] : 'Không xác định';
   }
 
   handleUnsave(slug: string) {

@@ -30,9 +30,9 @@ export class JobPostsTableComponent {
   @Output() sortChange = new EventEmitter<string>();
 
   JOB_POST_STATUS_BG_COLOR: { [key: string]: string } = {
-    active: 'bg-green-100 text-green-800',
-    inactive: 'bg-gray-100 text-gray-800',
-    expired: 'bg-red-100 text-red-800'
+    active: 'bg-orange-100 text-orange-800',
+    inactive: 'bg-orange-100 text-orange-800',
+    expired: 'bg-orange-100 text-orange-800'
   };
 
   formatDate(date: string): string {
@@ -68,8 +68,8 @@ export class JobPostsTableComponent {
       cancelButtonText: 'Hủy',
       buttonsStyling: false,
       customClass: {
-        confirmButton: 'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700',
-        cancelButton: 'bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 mr-2'
+        confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
+        cancelButton: 'bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 mr-2'
       }
     }).then((result) => {
       if (result.isConfirmed) {

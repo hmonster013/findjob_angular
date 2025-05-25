@@ -7,7 +7,6 @@ import { JobService } from '../../../../_services/job.service';
 import { CommonService } from '../../../../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { errorModal, confirmModal } from '../../../../_utils/sweetalert2-modal';
-import { BackdropLoadingComponent } from '../../../../_components/backdrop-loading/backdrop-loading.component';
 import { AppliedResumeTableComponent } from '../applied-resume-table/applied-resume-table.component';
 import { exportToXLSX } from '../../../../_utils/xlsx-utils';
 
@@ -18,7 +17,6 @@ import { exportToXLSX } from '../../../../_utils/xlsx-utils';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    BackdropLoadingComponent,
     AppliedResumeTableComponent,
   ],
   templateUrl: './applied-resume-card.component.html',
@@ -45,8 +43,8 @@ export class AppliedResumeCardComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) {
     this.filterForm = this.fb.group({
-      jobPostId: [null], // Khởi tạo null thay vì ''
-      applicationStatus: [null], // Khởi tạo null thay vì ''
+      jobPostId: [null],
+      applicationStatus: [null],
     });
   }
 

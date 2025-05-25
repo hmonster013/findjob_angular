@@ -1,21 +1,19 @@
-<div class="flex flex-col">
+<div class="p-4 sm:p-5 rounded-lg border border-gray-200 shadow-md bg-gray-50 flex flex-col chart-container hover:shadow-md transition-shadow duration-300">
   <!-- Alert -->
-  <div *ngIf="editData" class="mb-6 p-4 bg-yellow-100 text-yellow-800 rounded-md flex items-center gap-2">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
+  <div *ngIf="editData" class="mb-4 sm:mb-6 p-4 bg-blue-50 text-gray-700 rounded-md flex items-center gap-2 animate-fadeInUp">
+    <i class="fas fa-redo text-lg text-gray-700"></i>
     Khi bạn cập nhật bài đăng, nó sẽ ở trạng thái chờ kiểm duyệt!
   </div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
     <!-- Job Name -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Tên công việc <span class="text-red-500">*</span></label>
         <input
           formControlName="jobName"
           placeholder="Nhập tên công việc"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('jobName')?.touched && form.get('jobName')?.invalid}"
         />
         <div *ngIf="form.get('jobName')?.touched && form.get('jobName')?.invalid" class="text-red-500 text-xs mt-1">
@@ -30,7 +28,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Ngành nghề <span class="text-red-500">*</span></label>
         <select
           formControlName="career"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('career')?.touched && form.get('career')?.invalid}"
         >
           <option value="">Chọn ngành nghề</option>
@@ -47,7 +45,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Vị trí/Chức vụ <span class="text-red-500">*</span></label>
         <select
           formControlName="position"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('position')?.touched && form.get('position')?.invalid}"
         >
           <option value="">Chọn vị trí</option>
@@ -64,7 +62,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Kinh nghiệm <span class="text-red-500">*</span></label>
         <select
           formControlName="experience"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('experience')?.touched && form.get('experience')?.invalid}"
         >
           <option value="">Chọn kinh nghiệm</option>
@@ -81,7 +79,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Nơi làm việc <span class="text-red-500">*</span></label>
         <select
           formControlName="typeOfWorkplace"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('typeOfWorkplace')?.touched && form.get('typeOfWorkplace')?.invalid}"
         >
           <option value="">Chọn nơi làm việc</option>
@@ -98,7 +96,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Hình thức làm việc <span class="text-red-500">*</span></label>
         <select
           formControlName="jobType"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('jobType')?.touched && form.get('jobType')?.invalid}"
         >
           <option value="">Chọn hình thức</option>
@@ -117,7 +115,7 @@
           formControlName="quantity"
           type="number"
           placeholder="Nhập số lượng tuyển"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('quantity')?.touched && form.get('quantity')?.invalid}"
         />
         <div *ngIf="form.get('quantity')?.touched && form.get('quantity')?.invalid" class="text-red-500 text-xs mt-1">
@@ -132,7 +130,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Yêu cầu giới tính <span class="text-red-500">*</span></label>
         <select
           formControlName="genderRequired"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('genderRequired')?.touched && form.get('genderRequired')?.invalid}"
         >
           <option value="">Chọn giới tính</option>
@@ -152,7 +150,7 @@
             formControlName="salaryMin"
             placeholder="Nhập lương tối thiểu"
             type="number"
-            class="input-text"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
             [ngClass]="{'border-red-500': form.get('salaryMin')?.touched && form.get('salaryMin')?.invalid}"
           />
           <div *ngIf="form.get('salaryMin')?.touched && form.get('salaryMin')?.invalid" class="text-red-500 text-xs mt-1">
@@ -168,7 +166,7 @@
             formControlName="salaryMax"
             placeholder="Nhập lương tối đa"
             type="number"
-            class="input-text"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
             [ngClass]="{'border-red-500': form.get('salaryMax')?.touched && form.get('salaryMax')?.invalid}"
           />
           <div *ngIf="form.get('salaryMax')?.touched && form.get('salaryMax')?.invalid" class="text-red-500 text-xs mt-1">
@@ -185,7 +183,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Bằng cấp <span class="text-red-500">*</span></label>
         <select
           formControlName="academicLevel"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('academicLevel')?.touched && form.get('academicLevel')?.invalid}"
         >
           <option value="">Chọn bằng cấp</option>
@@ -203,7 +201,7 @@
         <input
           type="date"
           formControlName="deadline"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('deadline')?.touched && form.get('deadline')?.invalid}"
         />
         <div *ngIf="form.get('deadline')?.touched && form.get('deadline')?.invalid" class="text-red-500 text-xs mt-1">
@@ -215,14 +213,14 @@
     </div>
 
     <!-- Rich Text Editors -->
-    <div class="grid grid-cols-1 gap-4">
+    <div class="grid grid-cols-1 gap-4 sm:gap-6">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả công việc <span class="text-red-500">*</span></label>
         <quill-editor
           formControlName="jobDescription"
-          [styles]="{ minHeight: '200px' }"
+          [styles]="{ 'min-height': '150px', 'height': 'auto' }"
           placeholder="Nhập mô tả công việc"
-          class="border rounded-md"
+          class="border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('jobDescription')?.touched && form.get('jobDescription')?.invalid}"
         ></quill-editor>
         <div *ngIf="form.get('jobDescription')?.touched && form.get('jobDescription')?.invalid" class="text-red-500 text-xs mt-1">
@@ -235,9 +233,9 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Yêu cầu công việc <span class="text-red-500">*</span></label>
         <quill-editor
           formControlName="jobRequirement"
-          [styles]="{ minHeight: '200px' }"
+          [styles]="{ 'min-height': '150px', 'height': 'auto' }"
           placeholder="Nhập yêu cầu công việc"
-          class="border rounded-md"
+          class="border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('jobRequirement')?.touched && form.get('jobRequirement')?.invalid}"
         ></quill-editor>
         <div *ngIf="form.get('jobRequirement')?.touched && form.get('jobRequirement')?.invalid" class="text-red-500 text-xs mt-1">
@@ -250,9 +248,9 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Quyền lợi được hưởng <span class="text-red-500">*</span></label>
         <quill-editor
           formControlName="benefitsEnjoyed"
-          [styles]="{ minHeight: '200px' }"
+          [styles]="{ 'min-height': '150px', 'height': 'auto' }"
           placeholder="Nhập quyền lợi được hưởng"
-          class="border rounded-md"
+          class="border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('benefitsEnjoyed')?.touched && form.get('benefitsEnjoyed')?.invalid}"
         ></quill-editor>
         <div *ngIf="form.get('benefitsEnjoyed')?.touched && form.get('benefitsEnjoyed')?.invalid" class="text-red-500 text-xs mt-1">
@@ -264,13 +262,13 @@
     </div>
 
     <!-- Location -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" formGroupName="location">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6" formGroupName="location">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Tỉnh/Thành phố <span class="text-red-500">*</span></label>
         <select
           formControlName="city"
           (change)="onCityChange($event)"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('location.city')?.touched && form.get('location.city')?.invalid}"
         >
           <option value="">Chọn tỉnh thành</option>
@@ -286,7 +284,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Quận/Huyện <span class="text-red-500">*</span></label>
         <select
           formControlName="district"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('location.district')?.touched && form.get('location.district')?.invalid}"
         >
           <option value="">Chọn quận huyện</option>
@@ -303,7 +301,7 @@
         <input
           formControlName="address"
           placeholder="Nhập địa chỉ"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('location.address')?.touched && form.get('location.address')?.invalid}"
         />
         <div *ngIf="form.get('location.address')?.touched && form.get('location.address')?.invalid" class="text-red-500 text-xs mt-1">
@@ -320,7 +318,7 @@
           placeholder="Nhập vĩ độ"
           type="number"
           step="any"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('location.lat')?.touched && form.get('location.lat')?.invalid}"
         />
         <div *ngIf="form.get('location.lat')?.touched && form.get('location.lat')?.invalid" class="text-red-500 text-xs mt-1">
@@ -337,7 +335,7 @@
           placeholder="Nhập kinh độ"
           type="number"
           step="any"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('location.lng')?.touched && form.get('location.lng')?.invalid}"
         />
         <div *ngIf="form.get('location.lng')?.touched && form.get('location.lng')?.invalid" class="text-red-500 text-xs mt-1">
@@ -349,13 +347,13 @@
     </div>
 
     <!-- Contact -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Tên người liên hệ <span class="text-red-500">*</span></label>
         <input
           formControlName="contactPersonName"
           placeholder="Nhập tên người liên hệ"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('contactPersonName')?.touched && form.get('contactPersonName')?.invalid}"
         />
         <div *ngIf="form.get('contactPersonName')?.touched && form.get('contactPersonName')?.invalid" class="text-red-500 text-xs mt-1">
@@ -369,7 +367,7 @@
         <input
           formControlName="contactPersonPhone"
           placeholder="Nhập số điện thoại liên hệ"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('contactPersonPhone')?.touched && form.get('contactPersonPhone')?.invalid}"
         />
         <div *ngIf="form.get('contactPersonPhone')?.touched && form.get('contactPersonPhone')?.invalid" class="text-red-500 text-xs mt-1">
@@ -383,7 +381,7 @@
         <input
           formControlName="contactPersonEmail"
           placeholder="Nhập email liên hệ"
-          class="input-text"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-md bg-white text-sm text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-300"
           [ngClass]="{'border-red-500': form.get('contactPersonEmail')?.touched && form.get('contactPersonEmail')?.invalid}"
         />
         <div *ngIf="form.get('contactPersonEmail')?.touched && form.get('contactPersonEmail')?.invalid" class="text-red-500 text-xs mt-1">
@@ -397,14 +395,32 @@
 
     <!-- Urgent Recruitment -->
     <div class="flex items-center gap-2 pb-6">
-      <input type="checkbox" formControlName="isUrgent" id="isUrgent" class="h-4 w-4 text-blue-600 border-gray-300 rounded" />
+      <input
+        type="checkbox"
+        formControlName="isUrgent"
+        id="isUrgent"
+        class="h-4 w-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500 transition-all duration-300"
+      />
       <label for="isUrgent" class="text-sm text-gray-700">Tuyển gấp</label>
     </div>
   </form>
 
   <!-- Sticky Buttons -->
-  <div class="sticky bottom-0 bg-white p-4 border-t border-gray-200 flex justify-end gap-4 shadow-sm z-10">
-    <button type="button" class="btn-secondary" (click)="onCancel()">Hủy</button>
-    <button type="submit" class="btn-primary" (click)="onSubmit()" [disabled]="form.invalid">Lưu tin tuyển dụng</button>
+  <div class="sticky bottom-0 bg-gray-50 p-3 sm:p-4 border-t border-gray-200 flex justify-end gap-3 shadow-sm z-10">
+    <button
+      type="button"
+      class="px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-200 text-gray-800 rounded-md text-sm font-medium hover:bg-gray-300 hover:shadow-md transition-all duration-300"
+      (click)="onCancel()"
+    >
+      Hủy
+    </button>
+    <button
+      type="submit"
+      class="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600 hover:shadow-md transition-all duration-300 disabled:bg-gray-300 disabled:cursor-not-allowed"
+      (click)="onSubmit()"
+      [disabled]="form.invalid"
+    >
+      Lưu tin tuyển dụng
+    </button>
   </div>
 </div>

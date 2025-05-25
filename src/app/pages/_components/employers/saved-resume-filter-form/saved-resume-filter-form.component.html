@@ -1,18 +1,18 @@
 <form
   [formGroup]="form"
   (ngSubmit)="onSubmit()"
-  class="flex flex-row items-center gap-2 p-4 overflow-x-auto"
+  class="filter-form flex flex-row items-center gap-4 p-3 sm:p-4 bg-orange-50 rounded-md border border-gray-200 overflow-x-auto"
 >
   <div class="flex-1 min-w-[120px]">
     <input
       type="text"
       formControlName="kw"
       placeholder="Tên tin đăng hoặc ứng viên"
-      class="w-full h-10 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-xs"
+      class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 sm:text-xs"
     />
     <div
       *ngIf="form.get('kw')?.touched && form.get('kw')?.errors?.['maxlength']"
-      class="text-red-500 text-xs mt-1"
+      class="text-orange-600 text-xs mt-1"
     >
       Tên không được vượt quá 100 ký tự
     </div>
@@ -23,58 +23,62 @@
       type="number"
       formControlName="salaryMax"
       placeholder="Lương tối đa"
-      class="w-full h-10 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-xs"
+      class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 sm:text-xs"
     />
     <div
-      *ngIf="
-        form.get('salaryMax')?.touched && form.get('salaryMax')?.errors?.['min']
-      "
-      class="text-red-500 text-xs mt-1"
+      *ngIf="form.get('salaryMax')?.touched && form.get('salaryMax')?.errors?.['min']"
+      class="text-orange-600 text-xs mt-1"
     >
       Lương tối đa phải ≥ 0
     </div>
   </div>
 
-  <div class="w-32 min-w-[80px]">
+  <div class="w-32 min-w-[80px] relative">
     <select
       formControlName="experienceId"
-      class="w-full h-10 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-xs"
+      class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 sm:text-xs appearance-none"
     >
       <option [ngValue]="null">Kinh nghiệm</option>
       <option *ngFor="let option of configs?.experienceOptions" [ngValue]="option.id">
         {{ option.name }}
       </option>
     </select>
+    <i class="fas fa-chevron-down absolute right-2 top-1/2 transform -translate-y-1/2 text-orange-800 text-xs pointer-events-none"></i>
   </div>
 
-  <div class="w-32 min-w-[80px]">
+  <div class="w-32 min-w-[80px] relative">
     <select
       formControlName="cityId"
-      class="w-full h-10 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-xs"
+      class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 sm:text-xs appearance-none"
     >
       <option [ngValue]="null">Địa điểm</option>
       <option *ngFor="let option of configs?.cityOptions" [ngValue]="option.id">
         {{ option.name }}
       </option>
     </select>
+    <i class="fas fa-chevron-down absolute right-2 top-1/2 transform -translate-y-1/2 text-orange-800 text-xs pointer-events-none"></i>
   </div>
 
   <div class="flex items-center gap-2">
-    <button
-      type="button"
-      (click)="onReset()"
-      class="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full text-gray-600"
-      title="Đặt lại"
-    >
-      <i class="fas fa-sync-alt"></i>
-    </button>
+    <div class="group relative tooltip">
+      <button
+        type="button"
+        (click)="onReset()"
+        class="w-8 h-8 flex items-center justify-center bg-orange-50 hover:bg-orange-100 rounded-full text-orange-800 hover:shadow-sm transition-all duration-200"
+      >
+        <i class="fas fa-redo text-sm"></i>
+      </button>
+      <span class="tooltiptext absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+        Đặt lại
+      </span>
+    </div>
 
     <button
       type="submit"
-      class="h-10 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-sm font-medium flex items-center gap-2 disabled:bg-gray-400 min-w-[80px] sm:text-xs"
+      class="h-10 px-3 sm:px-4 py-2 sm:py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium flex items-center gap-2 disabled:bg-orange-300 disabled:cursor-not-allowed hover:shadow-md transition-all duration-200 min-w-[80px] sm:text-xs"
       [disabled]="!form.valid"
     >
-      <i class="fas fa-search"></i> Tìm kiếm
+      <i class="fas fa-search text-sm"></i> Tìm kiếm
     </button>
   </div>
 </form>

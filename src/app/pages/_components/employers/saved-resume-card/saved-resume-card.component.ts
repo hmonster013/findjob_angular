@@ -3,14 +3,15 @@ import { CommonModule } from '@angular/common';
 import { ResumeSavedService } from '../../../../_services/resume-saved.service';
 import { ResumeService } from '../../../../_services/resume.service';
 import { ToastrService } from 'ngx-toastr';
-import { errorModal, confirmModal } from '../../../../_utils/sweetalert2-modal';
 import { BackdropLoadingComponent } from '../../../../_components/backdrop-loading/backdrop-loading.component';
 import { exportToXLSX } from '../../../../_utils/xlsx-utils';
 import { SavedResumeFilterFormComponent } from '../saved-resume-filter-form/saved-resume-filter-form.component';
 import { SavedResumeTableComponent } from '../saved-resume-table/saved-resume-table.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-saved-resume-card',
+  standalone: true,
   imports: [
     CommonModule,
     BackdropLoadingComponent,
@@ -18,9 +19,9 @@ import { SavedResumeTableComponent } from '../saved-resume-table/saved-resume-ta
     SavedResumeTableComponent
   ],
   templateUrl: './saved-resume-card.component.html',
-  styleUrl: './saved-resume-card.component.css'
+  styleUrls: ['./saved-resume-card.component.css']
 })
-export class SavedResumeCardComponent {
+export class SavedResumeCardComponent implements OnInit {
   resumes: any[] = [];
   isLoading: boolean = false;
   isFullScreenLoading: boolean = false;
@@ -56,9 +57,18 @@ export class SavedResumeCardComponent {
         this.count = res.data?.count || 0;
         this.isLoading = false;
       },
-      error: (err) => {
+      error: () => {
         this.isLoading = false;
-        errorModal('Lỗi', 'Không thể load danh sách hồ sơ đã lưu');
+        Swal.fire({
+          title: 'Lỗi',
+          text: 'Không thể load danh sách hồ sơ đã lưu',
+          icon: 'error',
+          confirmButtonText: 'Đóng',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+          }
+        });
       }
     });
   }
@@ -81,29 +91,65 @@ export class SavedResumeCardComponent {
   }
 
   handleSave(slug: string) {
-    confirmModal(() => {
-      this.resumeService.saveResume(slug).subscribe({
-        next: (res) => {
-          this.toastr.success('Đã hủy lưu hồ sơ thành công');
-          this.fetchResumes();
-        },
-        error: () => {
-          errorModal('Lỗi', 'Hủy lưu hồ sơ thất bại');
-        }
-      });
-    }, 'Bạn có chắc chắn muốn hủy lưu hồ sơ này?', '', 'warning');
+    Swal.fire({
+      title: 'Hủy lưu hồ sơ?',
+      text: 'Bạn có chắc muốn hủy lưu hồ sơ này?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Hủy lưu',
+      cancelButtonText: 'Hủy',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
+        cancelButton: 'bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 mr-2'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.resumeService.saveResume(slug).subscribe({
+          next: () => {
+            this.toastr.success('Đã hủy lưu hồ sơ thành công');
+            this.fetchResumes();
+          },
+          error: () => {
+            Swal.fire({
+              title: 'Lỗi',
+              text: 'Hủy lưu hồ sơ thất bại',
+              icon: 'error',
+              confirmButtonText: 'Đóng',
+              buttonsStyling: false,
+              customClass: {
+                confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+              }
+            });
+          }
+        });
+      }
+    });
   }
 
   handleExport() {
+    if (this.count === 0) {
+      this.toastr.warning('Không có dữ liệu để xuất!');
+      return;
+    }
     this.isFullScreenLoading = true;
     this.resumeSavedService.exportResumesSaved(this.filterData).subscribe({
       next: (res) => {
         exportToXLSX(res.data, 'ho-so-da-luu');
         this.isFullScreenLoading = false;
       },
-      error: (err) => {
+      error: () => {
         this.isFullScreenLoading = false;
-        errorModal('Lỗi', 'Không thể xuất Excel');
+        Swal.fire({
+          title: 'Lỗi',
+          text: 'Không thể xuất Excel',
+          icon: 'error',
+          confirmButtonText: 'Đóng',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+          }
+        });
       }
     });
   }

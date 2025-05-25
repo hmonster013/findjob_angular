@@ -33,11 +33,21 @@ export class JobPostLargeComponent {
     }
   }
 
-  salaryStringFn(min?: number, max?: number): string {
+  salaryString(min?: number, max?: number): string {
     if (!min && !max) return 'Thỏa thuận';
-    if (min && max) return `${min.toLocaleString()} - ${max.toLocaleString()} đ`;
-    if (min) return `Từ ${min.toLocaleString()} đ`;
-    return `Đến ${max?.toLocaleString()} đ`;
+
+    const formatNumber = (num: number): string => {
+      const million = num / 1_000_000;
+      return million % 1 === 0 ? million.toString() : million.toFixed(2);
+    };
+
+    if (min && max) {
+      return `${formatNumber(min)} - ${formatNumber(max)} tr`;
+    }
+    if (min) {
+      return `Từ ${formatNumber(min)} tr`;
+    }
+    return `Đến ${formatNumber(max!)} tr`;
   }
 
   get deadlineFormatted(): string {

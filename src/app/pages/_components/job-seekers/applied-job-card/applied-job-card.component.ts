@@ -19,6 +19,14 @@ export class AppliedJobCardComponent implements OnInit {
   pageSize = 10;
   count = 0;
 
+  // Ánh xạ city ID sang tên thành phố (giả định, đồng bộ với SavedJobCard)
+  private cityMap: { [key: number]: string } = {
+    1: 'Hà Nội',
+    2: 'TP. Hồ Chí Minh',
+    3: 'Đà Nẵng',
+    // Thêm các thành phố khác nếu cần
+  };
+
   constructor(
     private jobPostActivityService: JobPostActivityService,
     private toastr: ToastrService
@@ -38,15 +46,21 @@ export class AppliedJobCardComponent implements OnInit {
       error: (err) => {
         console.error('Error fetching job post activities:', err);
         this.toastr.error('Không thể tải danh sách công việc đã ứng tuyển!');
+        this.isLoading = false;
       },
       complete: () => {
         this.isLoading = false;
-      }
+      },
     });
   }
 
   formatDateDisplay(dateStr: string): string {
     return formatDate(dateStr, 'dd/MM/yyyy', 'en-US');
+  }
+
+  // Hàm ánh xạ city ID sang tên thành phố
+  getCityName(cityId?: number): string {
+    return cityId && this.cityMap[cityId] ? this.cityMap[cityId] : 'Không xác định';
   }
 
   handleChangePage(newPage: number) {

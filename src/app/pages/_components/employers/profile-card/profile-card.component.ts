@@ -5,8 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { ProfileSearchComponent } from '../profile-search/profile-search.component';
 import { JobSeekerProfileComponent } from '../../../../_components/job-seeker-profile/job-seeker-profile.component';
 import { NoDataCardComponent } from '../../../../_components/no-data-card/no-data-card.component';
-import { BackdropLoadingComponent } from '../../../../_components/backdrop-loading/backdrop-loading.component';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile-card',
@@ -18,7 +18,8 @@ import { FormsModule } from '@angular/forms';
     JobSeekerProfileComponent,
     NoDataCardComponent
   ],
-  templateUrl: './profile-card.component.html'
+  templateUrl: './profile-card.component.html',
+  styleUrls: ['./profile-card.component.css']
 })
 export class ProfileCardComponent implements OnInit {
   page: number = 1;
@@ -27,6 +28,14 @@ export class ProfileCardComponent implements OnInit {
   isLoading: boolean = false;
   resumes: any[] = [];
   resumeFilter: any = {};
+  keyword: string = '';
+  city: string = '';
+  cities: any[] = [
+    { value: '', label: 'Tỉnh/Thành phố' },
+    { value: 'Hà Nội', label: 'Hà Nội' },
+    { value: 'Hồ Chí Minh', label: 'Hồ Chí Minh' },
+    { value: 'Đà Nẵng', label: 'Đà Nẵng' }
+  ];
 
   constructor(
     private resumeService: ResumeService,
@@ -41,6 +50,8 @@ export class ProfileCardComponent implements OnInit {
     this.isLoading = true;
     const params = {
       ...this.resumeFilter,
+      keyword: this.keyword,
+      city: this.city,
       page: this.page,
       pageSize: this.pageSize
     };
@@ -53,35 +64,39 @@ export class ProfileCardComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
-        this.toastr.error('Không thể load danh sách hồ sơ', 'Lỗi');
+        Swal.fire({
+          title: 'Lỗi',
+          text: 'Không thể load danh sách hồ sơ',
+          icon: 'error',
+          confirmButtonText: 'Đóng',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+          }
+        });
       }
     });
   }
 
-  onChangePage(newPage: number) {
-    if (newPage >= 1 && newPage <= this.totalPages()) {
-      this.page = newPage;
-      this.fetchResumes();
-    }
-  }
-
-  onChangePageSize(newSize: number) {
-    this.pageSize = newSize;
-    this.page = 1;
-    this.fetchResumes();
-  }
-
-  onSearch(filter: any) {
-    this.resumeFilter = filter;
-    this.page = 1;
-    this.fetchResumes();
-  }
-
-  onReset() {
-    this.resumeFilter = {};
-    this.page = 1;
-    this.pageSize = 10;
-    this.fetchResumes();
+  confirmSave(resume: any) {
+    const action = resume.isSaved ? 'Hủy lưu' : 'Lưu';
+    Swal.fire({
+      title: `${action} hồ sơ?`,
+      text: `Bạn có chắc muốn ${action.toLowerCase()} hồ sơ này?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: action,
+      cancelButtonText: 'Hủy',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
+        cancelButton: 'bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 mr-2'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.onSave(resume.slug);
+      }
+    });
   }
 
   onSave(slug: string) {
@@ -94,9 +109,48 @@ export class ProfileCardComponent implements OnInit {
         this.toastr.success(isSaved ? 'Lưu thành công' : 'Hủy lưu thành công');
       },
       error: () => {
-        this.toastr.error('Không thể lưu hồ sơ', 'Lỗi');
+        Swal.fire({
+          title: 'Lỗi',
+          text: 'Không thể lưu hồ sơ',
+          icon: 'error',
+          confirmButtonText: 'Đóng',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+          }
+        });
       }
     });
+  }
+
+  onChangePage(newPage: number) {
+    if (newPage >= 1 && newPage <= this.totalPages()) {
+      this.page = newPage;
+      this.fetchResumes();
+    }
+  }
+
+  onChangePageSize(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const size = +target.value;
+    this.pageSize = size;
+    this.page = 1;
+    this.fetchResumes();
+  }
+
+  onSearch(filter: any) {
+    this.resumeFilter = { ...this.resumeFilter, ...filter };
+    this.page = 1;
+    this.fetchResumes();
+  }
+
+  onReset() {
+    this.resumeFilter = {};
+    this.keyword = '';
+    this.city = '';
+    this.page = 1;
+    this.pageSize = 10;
+    this.fetchResumes();
   }
 
   totalPages(): number {

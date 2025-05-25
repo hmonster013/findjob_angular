@@ -1,32 +1,43 @@
-<div class="space-y-4 relative">
+<div class="bg-orange-50 rounded-lg shadow flex flex-col flex-1 h-full w-full">
   <app-backdrop-loading *ngIf="isFullScreenLoading"></app-backdrop-loading>
 
-  <!-- Filter -->
-  <app-saved-resume-filter-form (filter)="handleFilter($event)"></app-saved-resume-filter-form>
-
-  <!-- Top Buttons -->
-  <div class="flex justify-between items-center">
-    <div class="font-bold text-lg">
-      Tổng cộng: <span class="text-red-500">{{ count }} hồ sơ</span>
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 sm:p-5 bg-orange-50">
+    <h1 class="text-2xl font-semibold text-gray-800">Hồ sơ đã lưu</h1>
+    <div class="group relative tooltip">
+      <button
+        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-200 disabled:bg-orange-300 disabled:cursor-not-allowed"
+        (click)="handleExport()"
+        [disabled]="count === 0"
+      >
+        <i class="fas fa-download text-sm"></i> Tải danh sách
+      </button>
+      <span class="tooltiptext absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+        Tải danh sách
+      </span>
     </div>
+  </div>
 
-    <button
-      class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md"
-      (click)="handleExport()"
-    >
-      📥 Xuất Excel
-    </button>
+  <!-- Filter and Count -->
+  <div class="p-4 sm:p-5 pt-0">
+    <h2 class="text-sm font-medium text-gray-800 mb-2">Bộ lọc:</h2>
+    <app-saved-resume-filter-form (handleFilter)="handleFilter($event)"></app-saved-resume-filter-form>
+    <div class="font-bold text-lg text-gray-800 mt-4">
+      Tổng cộng: <span class="text-orange-600">{{ count }} hồ sơ</span>
+    </div>
   </div>
 
   <!-- Table -->
-  <app-saved-resume-table
-    [dataSource]="resumes"
-    [isLoading]="isLoading"
-    [total]="count"
-    [page]="page"
-    [rowsPerPage]="rowsPerPage"
-    (edit)="handleSave($event)"
-    (pageChange)="handleChangePage($event)"
-    (rowsPerPageChange)="handleChangeRowsPerPage($event)"
-  ></app-saved-resume-table>
+  <div class="mx-4 sm:mx-5 mb-4 sm:mb-5">
+    <app-saved-resume-table
+      [dataSource]="resumes"
+      [isLoading]="isLoading"
+      [total]="count"
+      [page]="page"
+      [rowsPerPage]="rowsPerPage"
+      (edit)="handleSave($event)"
+      (pageChange)="handleChangePage($event)"
+      (rowsPerPageChange)="handleChangeRowsPerPage($event)"
+    ></app-saved-resume-table>
+  </div>
 </div>

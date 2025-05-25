@@ -1,15 +1,15 @@
-<div class="overflow-x-auto bg-white rounded-lg shadow">
+<div class="p-4 sm:p-5 rounded-lg border border-gray-200 shadow-md bg-gray-50 overflow-x-auto chart-container hover:shadow-md transition-shadow duration-300">
   <table class="min-w-full table-auto">
     <thead>
-      <tr class="bg-gray-100 text-gray-700 text-sm">
+      <tr class="bg-gray-50 text-gray-800 text-sm">
         <th
           *ngFor="let head of headCells"
-          class="px-4 py-3 font-medium"
+          class="px-3 sm:px-4 py-2 sm:py-3 font-medium"
           [ngClass]="{
             'text-left': !head.numeric,
             'text-right': head.numeric,
             'cursor-pointer': head.showOrder,
-            'pl-0': head.disablePadding
+            'pl-2': head.disablePadding
           }"
           (click)="head.showOrder && onSort(head.id)"
         >
@@ -22,47 +22,43 @@
     </thead>
 
     <tbody *ngIf="!isLoading && dataSource.length > 0; else noData">
-      <tr *ngFor="let row of dataSource" class="border-b hover:bg-gray-50 text-sm transition-colors">
-        <td class="px-4 py-3" [ngClass]="{'pl-0': headCells[0].disablePadding}">
+      <tr *ngFor="let row of dataSource" class="border-b border-gray-200 hover:bg-gray-100 text-sm transition-colors">
+        <td class="px-3 sm:px-4 py-2 sm:py-3" [ngClass]="{'pl-2': headCells[0].disablePadding}">
           {{ row.jobName }}
-          <span *ngIf="row.isUrgent" class="inline-block ml-2 px-2 py-0.5 text-xs font-medium text-red-700 bg-red-100 rounded-full">
+          <span *ngIf="row.isUrgent" class="inline-block ml-2 px-2 py-0.5 text-xs font-medium text-orange-800 bg-orange-100 rounded-full">
             Tuyển gấp
           </span>
         </td>
-        <td class="px-4 py-3">{{ formatDate(row.createAt) }}</td>
-        <td class="px-4 py-3">
-          <span [ngClass]="row.isExpired ? 'text-red-600' : 'text-blue-600'">
+        <td class="px-3 sm:px-4 py-2 sm:py-3">{{ formatDate(row.createAt) }}</td>
+        <td class="px-3 sm:px-4 py-2 sm:py-3">
+          <span [ngClass]="row.isExpired ? 'text-orange-600' : 'text-orange-600'">
             {{ formatDate(row.deadline) }}
           </span>
         </td>
-        <td class="px-4 py-3">{{ row.appliedNumber }}</td>
-        <td class="px-4 py-3">{{ row.views }}</td>
-        <td class="px-4 py-3">
+        <td class="px-3 sm:px-4 py-2 sm:py-3">{{ row.appliedNumber }}</td>
+        <td class="px-3 sm:px-4 py-2 sm:py-3">{{ row.views }}</td>
+        <td class="px-3 sm:px-4 py-2 sm:py-3">
           <span
             class="inline-block px-2 py-0.5 text-xs font-medium rounded-full"
-            [ngClass]="JOB_POST_STATUS_BG_COLOR[row.status] || 'bg-gray-100 text-gray-800'"
+            [ngClass]="JOB_POST_STATUS_BG_COLOR[row.status] || 'bg-orange-100 text-orange-800'"
           >
             {{ allConfig?.jobPostStatusDict?.[row.status] || '---' }}
           </span>
         </td>
-        <td class="px-4 py-3 flex justify-end gap-2">
+        <td class="px-3 sm:px-4 py-2 sm:py-3 flex justify-end gap-2">
           <div class="group relative">
-            <button (click)="edit.emit(row)" class="text-blue-500 hover:text-blue-700 transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-              </svg>
+            <button (click)="edit.emit(row)" class="text-orange-600 hover:text-orange-700 hover:shadow-md transition-all duration-300">
+              <i class="fas fa-edit text-lg"></i>
             </button>
-            <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+            <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
               Cập nhật
             </span>
           </div>
           <div class="group relative">
-            <button (click)="confirmDelete(row)" class="text-red-500 hover:text-red-700 transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4M3 7h18" />
-              </svg>
+            <button (click)="confirmDelete(row)" class="text-orange-600 hover:text-orange-700 hover:shadow-md transition-all duration-300">
+              <i class="fas fa-trash text-lg"></i>
             </button>
-            <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+            <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
               Xóa
             </span>
           </div>
@@ -73,21 +69,21 @@
 
   <!-- No data -->
   <ng-template #noData>
-    <app-no-data-card title="Bạn chưa có tin tuyển dụng nào">
-      <div class="text-gray-400 text-sm mt-2">
+    <app-no-data-card title="Bạn chưa có tin tuyển dụng nào" class="animate-fadeInUp">
+      <div class="text-orange-600 text-sm mt-2">
         Hãy tạo tin tuyển dụng đầu tiên của bạn!
       </div>
     </app-no-data-card>
   </ng-template>
 
   <!-- Pagination -->
-  <div class="flex justify-between items-center p-4 border-t bg-gray-50">
+  <div class="flex justify-between items-center p-4 border-t border-gray-200 bg-gray-50">
     <div class="text-sm text-gray-600">
       Hiển thị
       <select
         (change)="onChangeRowsPerPage($event)"
         [value]="rowsPerPage"
-        class="border rounded px-2 py-1 mx-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="border border-orange-300 rounded px-1.5 sm:px-2 py-0.5 sm:py-1 mx-2 bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
       >
         <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">{{ size }}</option>
       </select>
@@ -97,15 +93,15 @@
       <button
         (click)="goToPage(page - 1)"
         [disabled]="page === 0"
-        class="px-3 py-1 text-sm border rounded bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        class="px-2 sm:px-3 py-1 sm:py-1.5 text-sm border border-orange-300 rounded bg-orange-50 hover:bg-orange-100 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
       >
         Prev
       </button>
-      <span class="text-sm text-gray-600">Trang {{ page + 1 }} / {{ totalPages() }}</span>
+      <span class="text-sm text-orange-600">Trang {{ page + 1 }} / {{ totalPages() }}</span>
       <button
         (click)="goToPage(page + 1)"
         [disabled]="page === totalPages() - 1"
-        class="px-3 py-1 text-sm border rounded bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        class="px-2 sm:px-3 py-1 sm:py-1.5 text-sm border border-orange-300 rounded bg-orange-50 hover:bg-orange-100 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
       >
         Next
       </button>

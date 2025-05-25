@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { NoDataCardComponent } from "../../../../_components/no-data-card/no-data-card.component";
+import Swal from 'sweetalert2';
 
 interface Resume {
   slug?: string;
@@ -22,7 +23,9 @@ interface ResumeRow {
   selector: 'app-saved-resume-table',
   standalone: true,
   imports: [CommonModule, NoDataCardComponent, DatePipe],
-  templateUrl: './saved-resume-table.component.html'
+  templateUrl: './saved-resume-table.component.html',
+  styleUrls: ['./saved-resume-table.component.css'],
+  providers: [DatePipe]
 })
 export class SavedResumeTableComponent {
   @Input() dataSource: ResumeRow[] = [];
@@ -43,6 +46,27 @@ export class SavedResumeTableComponent {
     }
   }
 
+  confirmUnsave(slug: string | undefined) {
+    if (!slug) return;
+    Swal.fire({
+      title: 'Hủy lưu hồ sơ?',
+      text: 'Bạn có chắc muốn hủy lưu hồ sơ này?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Hủy lưu',
+      cancelButtonText: 'Hủy',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
+        cancelButton: 'bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 mr-2'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.edit.emit(slug);
+      }
+    });
+  }
+
   totalPages(): number {
     return Math.ceil(this.total / this.rowsPerPage) || 1;
   }
@@ -50,5 +74,10 @@ export class SavedResumeTableComponent {
   formatSalary(min: number | undefined, max: number | undefined): string {
     if (!min && !max) return '---';
     return `${min?.toLocaleString() || ''} - ${max?.toLocaleString() || ''}`;
+  }
+
+  onChangeRowsPerPage(event: Event) {
+    const value = +(event.target as HTMLSelectElement).value;
+    this.rowsPerPageChange.emit(value);
   }
 }

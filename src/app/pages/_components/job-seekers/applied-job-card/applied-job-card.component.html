@@ -1,46 +1,79 @@
-<div class="p-6 bg-white rounded-xl shadow-lg">
-  <h2 class="text-2xl font-bold text-gray-800 mb-6">Việc làm đã ứng tuyển</h2>
-
+<div class="bg-white py-6">
   <!-- Loading skeleton -->
-  <div *ngIf="isLoading" class="space-y-4">
-    <div *ngFor="let _ of [1,2,3,4,5]" class="flex items-center p-4 bg-gray-100 rounded-lg animate-pulse">
-      <div class="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
+  <div *ngIf="isLoading" class="space-y-4 px-4 max-w-4xl mx-auto">
+    <div *ngFor="let _ of [1,2,3,4,5]" class="flex items-center p-4 bg-gray-50 rounded-lg animate-pulse shadow-sm">
+      <div class="w-12 h-12 bg-primary-100 rounded-md mr-4"></div>
       <div class="flex-1">
-        <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+        <div class="h-5 bg-primary-100 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-primary-100 rounded w-1/2"></div>
       </div>
     </div>
   </div>
 
   <!-- Empty state -->
-  <div *ngIf="!isLoading && jobPostsApplied.length === 0" class="text-center text-gray-500 py-12 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
-    <svg class="mx-auto h-28 w-28 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-    </svg>
-    <p class="mt-4 text-lg font-medium">Bạn chưa ứng tuyển công việc nào.</p>
+  <div *ngIf="!isLoading && jobPostsApplied.length === 0" class="text-center py-12 bg-gray-50 rounded-lg border border-gray-200 shadow-sm max-w-4xl mx-auto">
+    <i class="fas fa-briefcase text-6xl text-primary-400 mb-4"></i>
+    <p class="text-lg font-medium text-gray-700">Bạn chưa ứng tuyển công việc nào.</p>
+    <p class="text-sm text-gray-500 mt-2">Khám phá ngay các cơ hội việc làm phù hợp với bạn!</p>
+    <a
+      href="/viec-lam"
+      class="mt-4 inline-flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-700 transition-colors text-sm"
+    >
+      <i class="fas fa-search mr-1 text-xs"></i> Tìm việc ngay
+    </a>
   </div>
 
   <!-- List applied jobs -->
-  <div *ngIf="!isLoading && jobPostsApplied.length > 0" class="space-y-4">
-    <div *ngFor="let item of jobPostsApplied" class="flex items-center p-4 border border-gray-200 rounded-lg hover:shadow-md transition bg-white">
+  <div *ngIf="!isLoading && jobPostsApplied.length > 0" class="space-y-4 px-4 max-w-4xl mx-auto">
+    <div
+      *ngFor="let item of jobPostsApplied"
+      class="flex items-center p-4 border border-gray-200 rounded-lg bg-white hover:shadow-lg transition-shadow"
+    >
       <img
-        [src]="item.jobPostDict.companyDict.companyImageUrl || 'https://via.placeholder.com/48'"
+        [src]="item.jobPostDict.companyDict?.companyImageUrl || 'https://via.placeholder.com/48'"
         alt="Company Logo"
-        class="h-12 w-12 rounded-full object-cover mr-4"
+        class="h-12 w-12 rounded-md object-cover mr-4"
       />
       <div class="flex-1">
-        <div class="flex items-center space-x-2">
-          <a [routerLink]="['/viec-lam', item.jobPostDict.slug]" class="text-lg font-semibold text-blue-600 hover:underline">{{ item.jobPostDict.jobName }}</a>
-          <span *ngIf="item.jobPostDict.isUrgent" class="urgent-badge">Khẩn cấp</span>
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+          <div>
+            <div class="flex items-center space-x-2">
+              <a
+                [routerLink]="['/viec-lam', item.jobPostDict.slug]"
+                class="text-lg font-semibold text-primary hover:underline"
+              >
+                {{ item.jobPostDict.jobName }}
+              </a>
+              <span *ngIf="item.jobPostDict.isUrgent" class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-red-500 rounded-full">
+                <i class="fas fa-exclamation-circle mr-1 text-xs"></i> Khẩn cấp
+              </span>
+            </div>
+            <p class="text-sm text-gray-600 mt-1">{{ item.jobPostDict.companyDict?.companyName || 'Không xác định' }}</p>
+            <div class="text-sm text-gray-500 mt-1 flex items-center gap-4 flex-wrap">
+              <span class="flex items-center">
+                <i class="fas fa-money-bill-wave text-xs mr-1"></i>
+                {{ item.jobPostDict.salaryMin / 1000000 }} - {{ item.jobPostDict.salaryMax / 1000000 }} triệu
+              </span>
+              <span class="flex items-center">
+                <i class="fas fa-map-marker-alt text-xs mr-1"></i>
+                {{ getCityName(item.jobPostDict.locationDict?.city) }}
+              </span>
+              <span class="flex items-center">
+                <i class="fas fa-clock text-xs mr-1"></i>
+                {{ item.jobPostDict.deadline | date: 'dd/MM/yyyy' }}
+              </span>
+            </div>
+          </div>
+          <div class="flex flex-col items-start sm:items-end">
+            <span class="inline-flex items-center px-2 py-1 text-base font-semibold text-primary bg-primary-100 rounded-md">
+              <i class="fas fa-calendar-check text-xs mr-1"></i>
+              {{ formatDateDisplay(item.createAt) }}
+            </span>
+            <span *ngIf="item.resumeDict.type === 'WEBSITE'" class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-blue-500 rounded-full mt-1">
+              <i class="fas fa-globe text-xs mr-1"></i> Hồ sơ trực tuyến
+            </span>
+          </div>
         </div>
-        <p class="text-sm text-gray-600 mt-2">{{ item.jobPostDict.companyDict.companyName }}</p>
-        <p class="text-sm text-gray-500 mt-2">
-          Mức lương: {{ item.jobPostDict.salaryMin }} - {{ item.jobPostDict.salaryMax }} triệu | Hạn nộp: {{ item.jobPostDict.deadline | date: 'dd/MM/yyyy' }}
-        </p>
-        <p class="text-sm mt-2">
-          <span class="font-semibold text-blue-600">Ứng tuyển ngày: {{ formatDateDisplay(item.createAt) }}</span>
-          <span *ngIf="item.resumeDict.type === 'WEBSITE'" class="online-resume-badge ml-2">Hồ sơ trực tuyến</span>
-        </p>
       </div>
     </div>
   </div>
@@ -50,16 +83,19 @@
     <button
       (click)="handleChangePage(page - 1)"
       [disabled]="page <= 1"
-      class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
     >
-      <i class="fas fa-chevron-left"></i>
+      <i class="fas fa-chevron-left text-xs"></i>
     </button>
     <div class="flex space-x-1">
       <button
         *ngFor="let p of pages"
         (click)="handleChangePage(p)"
-        [ngClass]="{'bg-blue-500 text-white': p === page, 'bg-gray-100 text-gray-700': p !== page}"
-        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-100 transition"
+        [ngClass]="{
+          'bg-primary text-white': p === page,
+          'bg-gray-100 text-gray-700': p !== page
+        }"
+        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary-100 transition-colors text-sm"
       >
         {{ p }}
       </button>
@@ -67,9 +103,9 @@
     <button
       (click)="handleChangePage(page + 1)"
       [disabled]="page >= totalPages"
-      class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
     >
-      <i class="fas fa-chevron-right"></i>
+      <i class="fas fa-chevron-right text-xs"></i>
     </button>
   </div>
 </div>

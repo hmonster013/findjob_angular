@@ -10,6 +10,7 @@ import { SendMailCardComponent } from '../send-mail-card/send-mail-card.componen
 import { NoDataCardComponent } from '../../../../_components/no-data-card/no-data-card.component';
 import { BackdropLoadingComponent } from '../../../../_components/backdrop-loading/backdrop-loading.component';
 import { DatePipe } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-applied-resume-table',
@@ -96,14 +97,23 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
   }
 
   confirmDelete(id: number) {
-    confirmModal(
-      () => {
+    Swal.fire({
+      title: 'Xóa ứng viên?',
+      text: 'Bạn có chắc muốn xóa hồ sơ ứng viên này?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
+        cancelButton: 'bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 mr-2'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.delete.emit(id);
-      },
-      'Bạn có chắc chắn muốn xóa ứng viên này?',
-      'Hành động này không thể hoàn tác.',
-      'warning'
-    );
+      }
+    });
   }
 
   handleChangeApplicationStatus(event: Event, row: any) {
@@ -113,22 +123,39 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
 
     const statusOrder = ['1', '2', '3', '4', '5', '6'];
     if (statusOrder.indexOf(newStatus) < statusOrder.indexOf(currentStatus)) {
-      errorModal(
-        'Không hợp lệ',
-        `Không thể chuyển trạng thái từ "${this.applicationStatusDict[currentStatus]}" sang "${this.applicationStatusDict[newStatus]}"!`
-      );
+      Swal.fire({
+        title: 'Không hợp lệ',
+        text: `Không thể chuyển trạng thái từ "${this.applicationStatusDict[currentStatus]}" sang "${this.applicationStatusDict[newStatus]}"!`,
+        icon: 'error',
+        confirmButtonText: 'Đóng',
+        buttonsStyling: false,
+        customClass: {
+          confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+        }
+      });
       target.value = currentStatus;
       return;
     }
 
-    confirmModal(
-      () => {
+    Swal.fire({
+      title: 'Thay đổi trạng thái?',
+      text: `Trạng thái sẽ được cập nhật thành "${this.applicationStatusDict[newStatus]}".`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Cập nhật',
+      cancelButtonText: 'Hủy',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
+        cancelButton: 'bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 mr-2'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.changeStatus.emit({ id: row.id, status: newStatus });
-      },
-      'Bạn có chắc muốn thay đổi trạng thái ứng viên?',
-      `Trạng thái sẽ được cập nhật thành "${this.applicationStatusDict[newStatus]}".`,
-      'question'
-    );
+      } else {
+        target.value = currentStatus;
+      }
+    });
   }
 
   openSendMail(row: any) {
@@ -153,5 +180,16 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
 
   formatDate(date: string): string {
     return this.datePipe.transform(date, 'dd/MM/yyyy') || '---';
+  }
+
+  onChangeRowsPerPage(event: Event) {
+    const value = +(event.target as HTMLSelectElement).value;
+    this.rowsPerPageChange.emit(value);
+  }
+
+  goToPage(page: number) {
+    if (page >= 0 && page < this.totalPages()) {
+      this.pageChange.emit(page);
+    }
   }
 }

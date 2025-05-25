@@ -1,20 +1,21 @@
-<div class="bg-purple-800 p-4 rounded-lg w-full">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+<div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm w-full">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
     <!-- Input Search -->
-    <div class="col-span-1 md:col-span-7">
+    <div class="col-span-1 md:col-span-6 relative">
       <input
         formControlName="kw"
         type="text"
         placeholder="Nhập tên công ty hoặc lĩnh vực cần tìm kiếm"
-        class="w-full p-2 rounded-md border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none transition-all"
+        class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 bg-white text-base leading-normal text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-md box-border"
       />
+      <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-600 text-lg"></i>
     </div>
 
     <!-- Select City -->
-    <div class="col-span-1 md:col-span-3">
+    <div class="col-span-1 md:col-span-4">
       <select
         formControlName="cityId"
-        class="w-full p-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none transition-all"
+        class="w-full px-3 py-3 rounded-lg border border-gray-200 bg-white text-base leading-normal text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all box-border"
       >
         <option value="">Tất cả tỉnh thành</option>
         <option *ngFor="let city of cityOptions" [value]="city.id">
@@ -24,19 +25,29 @@
     </div>
 
     <!-- Buttons -->
-    <div class="col-span-1 md:col-span-2 flex gap-2 justify-end">
+    <div class="col-span-1 md:col-span-2 flex gap-3 justify-end items-center">
       <button
         type="submit"
-        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-all"
+        class="
+          bg-gradient-to-r from-orange-500 to-orange-600 text-white
+          px-5 py-3 rounded-lg hover:bg-orange-700 transition-all
+          duration-300 text-base leading-normal box-border whitespace-nowrap
+          cursor-pointer
+        "
       >
         Tìm kiếm
       </button>
       <button
         type="button"
         (click)="onReset()"
-        class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-all"
+        class="
+          bg-gray-100 text-gray-600 px-4 py-3
+          rounded-lg hover:bg-gray-200 transition-all duration-300
+          flex items-center gap-2 text-base leading-normal box-border
+          cursor-pointer
+        "
       >
-        Xóa
+        <i class="fas fa-times text-sm"></i> Xóa
       </button>
     </div>
   </form>

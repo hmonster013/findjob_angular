@@ -19,7 +19,7 @@ export class JobsByCareerPageComponent implements OnInit {
   constructor(private commonService: CommonService) {}
 
   ngOnInit(): void {
-    this.commonService.getTop10Careers().subscribe({
+    this.commonService.getCareers(true).subscribe({
       next: (res) => {
         this.allCareerOptions = res.data || [];
         this.isLoading = false;

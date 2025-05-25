@@ -1,22 +1,24 @@
 <header
-  class="fixed top-0 z-50 bg-blue-600 text-white shadow-lg flex items-center justify-between h-16 w-full lg:w-[calc(100%-240px)]"
+  class="w-full sticky top-0 z-[999] bg-orange-600 text-white shadow h-16 flex items-center justify-between"
 >
-  <!-- Left side: Menu toggle + Logo -->
-  <div class="flex items-center h-full px-3 sm:px-4 gap-2 sm:gap-3">
+  <!-- Left side: Menu toggle + Account Switch -->
+  <div class="flex items-center h-full px-4 sm:px-6 gap-3">
+    <!-- Mobile Menu Button -->
     <button
-      class="lg:hidden p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      class="lg:hidden p-2 rounded-lg bg-orange-700 hover:bg-orange-800 hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
       (click)="handleDrawerToggle?.()"
       aria-label="Mở sidebar"
     >
-      <i class="fas fa-bars text-lg"></i>
+      <i class="fas fa-bars text-white text-xl"></i>
     </button>
-    <a href="/" class="flex items-center">
-      <span class="text-sm font-semibold hidden sm:block">MyJob</span>
-    </a>
+    <!-- Account Switch Menu -->
+    <div class="hidden md:block">
+      <app-account-switch-menu></app-account-switch-menu>
+    </div>
   </div>
 
   <!-- Right side: Notifications + Chat + Avatar -->
-  <div class="flex items-center h-full px-3 sm:px-4 gap-2 sm:gap-3">
+  <div class="flex items-center h-full px-4 sm:px-6 gap-3">
     <!-- NotificationCard -->
     <app-notification-card
       *ngIf="isAuthenticated"
@@ -24,16 +26,16 @@
       (closed)="closeMenus()"
     ></app-notification-card>
 
-    <!-- ChatCard (ẩn trên mobile) -->
+    <!-- ChatCard -->
     <app-chat-card
-      *ngIf="isAuthenticated && !isMobile"
-      class="flex-shrink-0"
+      *ngIf="isAuthenticated"
+      class="flex-shrink-0 hidden md:block"
     ></app-chat-card>
 
     <!-- Avatar + UserMenu -->
     <div *ngIf="isAuthenticated" class="relative">
       <div
-        class="flex items-center gap-2 border border-white rounded-full p-1 cursor-pointer hover:bg-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="flex items-center gap-2 border-2 border-white rounded-3xl p-1 cursor-pointer hover:bg-gradient-to-r hover:from-orange-500 hover:to-orange-600 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
         (click)="toggleUserMenu()"
         [attr.aria-expanded]="showUserMenu"
         aria-controls="user-menu"
@@ -42,10 +44,10 @@
         <img
           [src]="currentUser?.avatarUrl || '/assets/images/avatar-default.png'"
           alt="Avatar của {{ currentUser?.fullName || 'người dùng' }}"
-          class="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover"
+          class="w-10 h-10 rounded-full object-cover"
           loading="lazy"
         />
-        <span class="hidden lg:block text-sm font-medium truncate max-w-[120px]">
+        <span class="hidden md:block text-white font-semibold text-sm truncate max-w-[120px]">
           {{ currentUser?.fullName || 'Người dùng' }}
         </span>
       </div>

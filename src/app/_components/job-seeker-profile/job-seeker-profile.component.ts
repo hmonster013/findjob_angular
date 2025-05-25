@@ -3,15 +3,15 @@ import { Router } from '@angular/router';
 import { ROUTES } from '../../_configs/constants';
 import { formatRoute } from '../../_utils/func-utils';
 import { salaryString } from '../../_utils/custom-data';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-job-seeker-profile',
-  imports: [
-    CommonModule
-  ],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './job-seeker-profile.component.html',
-  styleUrl: './job-seeker-profile.component.css'
+  styleUrls: ['./job-seeker-profile.component.css'],
+  providers: [DatePipe]
 })
 export class JobSeekerProfileComponent {
   @Input() id!: number;

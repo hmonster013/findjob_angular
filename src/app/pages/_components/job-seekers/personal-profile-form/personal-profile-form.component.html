@@ -7,10 +7,13 @@
         formControlName="fullName"
         type="text"
         placeholder="Nhập họ và tên"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base transition-colors duration-200"
-        [ngClass]="{'border-red-600': form.get('user.fullName')?.errors && form.get('user.fullName')?.touched}"
+        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
+        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('user.fullName')?.errors && form.get('user.fullName')?.touched}"
       />
-      <div *ngIf="form.get('user.fullName')?.errors && form.get('user.fullName')?.touched" class="text-red-600 text-xs mt-1">
+      <div
+        *ngIf="form.get('user.fullName')?.errors && form.get('user.fullName')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
         <div *ngIf="form.get('user.fullName')?.errors?.['required']">Họ và tên là bắt buộc.</div>
         <div *ngIf="form.get('user.fullName')?.errors?.['maxlength']">Họ và tên không được vượt quá 100 ký tự.</div>
       </div>
@@ -23,10 +26,13 @@
         formControlName="phone"
         type="text"
         placeholder="Nhập số điện thoại"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base transition-colors duration-200"
-        [ngClass]="{'border-red-600': form.get('phone')?.errors && form.get('phone')?.touched}"
+        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
+        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('phone')?.errors && form.get('phone')?.touched}"
       />
-      <div *ngIf="form.get('phone')?.errors && form.get('phone')?.touched" class="text-red-600 text-xs mt-1">
+      <div
+        *ngIf="form.get('phone')?.errors && form.get('phone')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
         <div *ngIf="form.get('phone')?.errors?.['required']">Số điện thoại là bắt buộc.</div>
         <div *ngIf="form.get('phone')?.errors?.['maxlength']">Số điện thoại không được vượt quá 15 ký tự.</div>
       </div>
@@ -39,10 +45,13 @@
         formControlName="birthday"
         type="date"
         [max]="maxYesterday"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base transition-colors duration-200"
-        [ngClass]="{'border-red-600': form.get('birthday')?.errors && form.get('birthday')?.touched}"
+        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
+        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('birthday')?.errors && form.get('birthday')?.touched}"
       />
-      <div *ngIf="form.get('birthday')?.errors && form.get('birthday')?.touched" class="text-red-600 text-xs mt-1">
+      <div
+        *ngIf="form.get('birthday')?.errors && form.get('birthday')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
         <div *ngIf="form.get('birthday')?.errors?.['required']">Ngày sinh là bắt buộc.</div>
       </div>
     </div>
@@ -52,13 +61,16 @@
       <label class="text-sm font-medium text-gray-800">Giới tính <span class="text-red-600">*</span></label>
       <select
         formControlName="gender"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base transition-colors duration-200"
-        [ngClass]="{'border-red-600': form.get('gender')?.errors && form.get('gender')?.touched}"
+        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
+        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('gender')?.errors && form.get('gender')?.touched}"
       >
         <option value="">Chọn giới tính</option>
         <option *ngFor="let option of allConfig?.genderOptions" [value]="option.value">{{ option.label }}</option>
       </select>
-      <div *ngIf="form.get('gender')?.errors && form.get('gender')?.touched" class="text-red-600 text-xs mt-1">
+      <div
+        *ngIf="form.get('gender')?.errors && form.get('gender')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
         <div *ngIf="form.get('gender')?.errors?.['required']">Giới tính là bắt buộc.</div>
       </div>
     </div>
@@ -68,13 +80,16 @@
       <label class="text-sm font-medium text-gray-800">Tình trạng hôn nhân <span class="text-red-600">*</span></label>
       <select
         formControlName="maritalStatus"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base transition-colors duration-200"
-        [ngClass]="{'border-red-600': form.get('maritalStatus')?.errors && form.get('maritalStatus')?.touched}"
+        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
+        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('maritalStatus')?.errors && form.get('maritalStatus')?.touched}"
       >
         <option value="">Chọn tình trạng hôn nhân</option>
         <option *ngFor="let option of allConfig?.maritalStatusOptions" [value]="option.value">{{ option.label }}</option>
       </select>
-      <div *ngIf="form.get('maritalStatus')?.errors && form.get('maritalStatus')?.touched" class="text-red-600 text-xs mt-1">
+      <div
+        *ngIf="form.get('maritalStatus')?.errors && form.get('maritalStatus')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
         <div *ngIf="form.get('maritalStatus')?.errors?.['required']">Tình trạng hôn nhân là bắt buộc.</div>
       </div>
     </div>
@@ -84,14 +99,17 @@
       <label class="text-sm font-medium text-gray-800">Tỉnh/Thành phố <span class="text-red-600">*</span></label>
       <select
         formControlName="city"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base transition-colors duration-200"
+        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
         (change)="onCityChange($event)"
-        [ngClass]="{'border-red-600': form.get('location.city')?.errors && form.get('location.city')?.touched}"
+        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('location.city')?.errors && form.get('location.city')?.touched}"
       >
         <option value="">Chọn tỉnh thành phố</option>
         <option *ngFor="let option of allConfig?.cityOptions" [value]="option.value">{{ option.label }}</option>
       </select>
-      <div *ngIf="form.get('location.city')?.errors && form.get('location.city')?.touched" class="text-red-600 text-xs mt-1">
+      <div
+        *ngIf="form.get('location.city')?.errors && form.get('location.city')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
         <div *ngIf="form.get('location.city')?.errors?.['required']">Tỉnh/Thành phố là bắt buộc.</div>
       </div>
     </div>
@@ -101,13 +119,16 @@
       <label class="text-sm font-medium text-gray-800">Quận/Huyện <span class="text-red-600">*</span></label>
       <select
         formControlName="district"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base transition-colors duration-200"
-        [ngClass]="{'border-red-600': form.get('location.district')?.errors && form.get('location.district')?.touched}"
+        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
+        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('location.district')?.errors && form.get('location.district')?.touched}"
       >
         <option value="">Chọn Quận/Huyện</option>
         <option *ngFor="let option of districtOptions" [value]="option.value">{{ option.label }}</option>
       </select>
-      <div *ngIf="form.get('location.district')?.errors && form.get('location.district')?.touched" class="text-red-600 text-xs mt-1">
+      <div
+        *ngIf="form.get('location.district')?.errors && form.get('location.district')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
         <div *ngIf="form.get('location.district')?.errors?.['required']">Quận/Huyện là bắt buộc.</div>
       </div>
     </div>
@@ -119,10 +140,13 @@
         formControlName="address"
         type="text"
         placeholder="Nhập địa chỉ"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base transition-colors duration-200"
-        [ngClass]="{'border-red-600': form.get('location.address')?.errors && form.get('location.address')?.touched}"
+        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
+        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('location.address')?.errors && form.get('location.address')?.touched}"
       />
-      <div *ngIf="form.get('location.address')?.errors && form.get('location.address')?.touched" class="text-red-600 text-xs mt-1">
+      <div
+        *ngIf="form.get('location.address')?.errors && form.get('location.address')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
         <div *ngIf="form.get('location.address')?.errors?.['required']">Địa chỉ là bắt buộc.</div>
         <div *ngIf="form.get('location.address')?.errors?.['maxlength']">Địa chỉ không được vượt quá 255 ký tự.</div>
       </div>

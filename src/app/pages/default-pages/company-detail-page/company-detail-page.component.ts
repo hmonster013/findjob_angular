@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { MuiImageCustomComponent } from '../../../_components/mui-image-custom/mui-image-custom.component';
 import { FilterJobPostCardComponent } from '../../_components/defaults/filter-job-post-card/filter-job-post-card.component';
 import { NoDataCardComponent } from '../../../_components/no-data-card/no-data-card.component';
 import { ImageGalleryCustomComponent } from '../../../_components/image-gallery-custom/image-gallery-custom.component';
@@ -10,20 +9,12 @@ import { CompanyService } from '../../../_services/company.service';
 import { AuthStateService } from '../../../_services/auth-state.service';
 import { IMAGES, ROLES_NAME } from '../../../_configs/constants';
 
-// TODO: Bạn cần tạo QrCodeComponent thay cho QRCodeModule
-// import { QrCodeComponent } from '@/components/qr-code.component';
-// TODO: Bạn cần tạo MapComponent (bản đồ) như bên React
-// import { MapComponent } from '@/components/map.component';
-// TODO: Bạn cần tạo LoadingButtonComponent thay LoadingButton bên MUI
-// import { LoadingButtonComponent } from '@/components/loading-button.component';
-
 @Component({
   selector: 'app-company-detail-page',
   standalone: true,
   imports: [
     CommonModule,
     // QRCodeModule,
-    MuiImageCustomComponent,
     FilterJobPostCardComponent,
     NoDataCardComponent,
     // MapComponent,
@@ -55,6 +46,10 @@ export class CompanyDetailPageComponent implements OnInit {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.currentUser = this.authService.getCurrentUser();
 
+    this.getCompanyDetailData();
+  }
+
+  getCompanyDetailData() {
     this.companyService.getCompanyDetailById(this.slug).subscribe({
       next: (res) => {
         this.companyDetail = res.data;

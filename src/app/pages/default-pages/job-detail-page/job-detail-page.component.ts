@@ -7,10 +7,7 @@ import { ApplyCardComponent } from '../../../_components/apply-card/apply-card.c
 import { AuthStateService } from '../../../_services/auth-state.service';
 import { ROLES_NAME } from '../../../_configs/constants';
 import { JobService } from '../../../_services/job.service';
-// TODO: Bạn cần tự tạo 3 component này nếu chưa có
-// import { QrCodeComponent } from '@/components/qr-code.component';
-// import { MapComponent } from '@/components/map.component';
-// import { LoadingButtonComponent } from '@/components/loading-button.component';
+import { FilterJobPostCardComponent } from "../../_components/defaults/filter-job-post-card/filter-job-post-card.component";
 
 @Component({
   selector: 'app-job-detail-page',
@@ -19,10 +16,8 @@ import { JobService } from '../../../_services/job.service';
     CommonModule,
     SocialNetworkSharingPopupComponent,
     ApplyCardComponent,
-    // QrCodeComponent,
-    // MapComponent,
-    // LoadingButtonComponent,
-  ],
+    FilterJobPostCardComponent
+],
   templateUrl: './job-detail-page.component.html',
   styleUrls: ['./job-detail-page.component.css'],
 })
@@ -106,11 +101,19 @@ export class JobDetailPageComponent implements OnInit {
   }
 
   formatSalary(min: number, max: number): string {
-    if (!min && !max) return 'Thoả thuận';
+    if (!min && !max) return 'Thỏa thuận';
+
+    const formatNumber = (num: number): string => {
+      const million = num / 1_000_000;
+      return million % 1 === 0 ? million.toString() : million.toFixed(2);
+    };
+
     if (min && max) {
-      return `${(min / 1000000).toFixed(1)} - ${(max / 1000000).toFixed(1)} triệu`;
+      return `${formatNumber(min)} - ${formatNumber(max)} tr`;
     }
-    if (min) return `Từ ${(min / 1000000).toFixed(1)} triệu`;
-    return `Lên đến ${(max / 1000000).toFixed(1)} triệu`;
+    if (min) {
+      return `Từ ${formatNumber(min)} tr`;
+    }
+    return `Đến ${formatNumber(max!)} tr`;
   }
 }

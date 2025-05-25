@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import dayjs from 'dayjs';
 import { StatisticService } from '../../../../../_services/statistic.service';
 
-// Đăng ký Chart.js registerables một lần
+// Đăng ký Chart.js registerables
 Chart.register(...registerables);
 
 @Component({
@@ -60,7 +60,6 @@ export class HiringAcademicChartComponent implements OnInit, OnDestroy, AfterVie
     }
   }
 
-  // Kiểm tra xem tất cả giá trị trong data.data có bằng 0 không
   isDataEmpty(): boolean {
     return this.data && Array.isArray(this.data.data) && this.data.data.every((value: number) => value === 0);
   }
@@ -125,22 +124,35 @@ export class HiringAcademicChartComponent implements OnInit, OnDestroy, AfterVie
       this.chartInstance.destroy();
     }
 
-    // Kiểm tra data không phải null và hợp lệ
     if (!this.data || !Array.isArray(this.data.labels) || !Array.isArray(this.data.data) ||
         this.data.labels.length === 0 || this.data.labels.length !== this.data.data.length) {
       console.error('renderChart: Invalid chart data:', this.data);
       return;
     }
 
-    // Lọc dữ liệu để chỉ hiển thị các phần có giá trị > 0
+    const colors = [
+      '#F97316', // orange-600
+      '#FB923C', // orange-500
+      '#FDBA74', // orange-300
+      '#3B82F6', // blue-500
+    ];
+    const hoverColors = [
+      '#FB923C', // orange-500
+      '#FDBA74', // orange-300
+      '#F97316', // orange-600
+      '#60A5FA', // blue-400
+    ];
+
     const filteredLabels: string[] = [];
     const filteredData: number[] = [];
     const filteredColors: string[] = [];
+    const filteredHoverColors: string[] = [];
     this.data.labels.forEach((label: string, index: number) => {
       if (this.data.data[index] > 0) {
         filteredLabels.push(label);
         filteredData.push(this.data.data[index]);
-        filteredColors.push(this.data.backgroundColor[index] || `rgba(255, 99, 132, 0.9)`);
+        filteredColors.push(colors[index % colors.length]);
+        filteredHoverColors.push(hoverColors[index % colors.length]);
       }
     });
 
@@ -152,8 +164,9 @@ export class HiringAcademicChartComponent implements OnInit, OnDestroy, AfterVie
         datasets: [
           {
             label: 'Số lượng ứng tuyển',
-            data: filteredData.length > 0 ? filteredData : [1], // Giá trị giả nếu không có dữ liệu
-            backgroundColor: filteredColors.length > 0 ? filteredColors : ['rgba(200, 200, 200, 0.5)'], // Màu xám nếu không có dữ liệu
+            data: filteredData.length > 0 ? filteredData : [1],
+            backgroundColor: filteredColors.length > 0 ? filteredColors : ['rgba(254, 215, 170, 0.5)'], // orange-200
+            hoverBackgroundColor: filteredHoverColors.length > 0 ? filteredHoverColors : ['rgba(254, 215, 170, 0.7)'],
             borderWidth: 1,
             borderColor: '#fff',
             borderRadius: 4,
@@ -172,20 +185,25 @@ export class HiringAcademicChartComponent implements OnInit, OnDestroy, AfterVie
               padding: 20,
               usePointStyle: true,
               pointStyle: 'circle',
-              font: { size: 14 },
+              font: { size: 10, family: "'Inter', sans-serif" },
+              color: '#4B5563',
             },
           },
           tooltip: {
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            titleColor: '#212529',
-            bodyColor: '#212529',
+            titleColor: '#4B5563',
+            bodyColor: '#4B5563',
             padding: 12,
             boxPadding: 6,
-            borderColor: 'rgba(0,0,0,0.1)',
+            borderColor: 'rgba(249, 115, 22, 0.2)', // orange-600
             borderWidth: 1,
             usePointStyle: true,
             filter: (tooltipItem) => tooltipItem.raw !== 0,
           },
+        },
+        animation: {
+          duration: 1000,
+          easing: 'easeOutQuart',
         },
       },
     });

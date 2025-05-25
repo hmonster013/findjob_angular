@@ -1,56 +1,56 @@
-<div class="table-container">
-  <table>
+<div class="p-4 sm:p-5 rounded-lg border border-gray-200 shadow-md bg-gray-50 overflow-x-auto chart-container hover:shadow-md transition-shadow duration-300">
+  <table class="min-w-full table-auto">
     <thead>
-      <tr>
-        <th>Ứng viên</th>
-        <th class="hidden-mobile">Công việc</th>
-        <th class="hidden-mobile">Ngày ứng tuyển</th>
-        <th class="hidden-mobile">Loại CV</th>
-        <th>Trạng thái</th>
-        <th style="text-align: right;">Hành động</th>
+      <tr class="bg-gray-50 text-gray-800 text-sm">
+        <th class="px-3 sm:px-4 py-2 sm:py-3 font-medium text-left">Ứng viên</th>
+        <th class="px-3 sm:px-4 py-2 sm:py-3 font-medium text-left hidden md:table-cell">Công việc</th>
+        <th class="px-3 sm:px-4 py-2 sm:py-3 font-medium text-left hidden md:table-cell">Ngày ứng tuyển</th>
+        <th class="px-3 sm:px-4 py-2 sm:py-3 font-medium text-left hidden md:table-cell">Loại CV</th>
+        <th class="px-3 sm:px-4 py-2 sm:py-3 font-medium text-left">Trạng thái</th>
+        <th class="px-3 sm:px-4 py-2 sm:py-3 font-medium text-right">Hành động</th>
       </tr>
     </thead>
 
     <tbody *ngIf="!isLoading && dataSource.length > 0; else noDataTemplate">
-      <tr *ngFor="let row of dataSource">
-        <td>
-          <div class="candidate-info">
-            <span class="candidate-name">{{ row?.fullName || '---' }}</span>
-            <i
-              *ngIf="row?.type === 'WEBSITE'"
-              class="fas fa-circle"
-              style="color: #8b5cf6;"
-            ></i>
-            <i
-              *ngIf="row?.type !== 'WEBSITE'"
-              class="fas fa-file-pdf"
-              style="color: #ef4444;"
-            ></i>
-            <span *ngIf="row?.title; else noTitle" class="candidate-title">
+      <tr *ngFor="let row of dataSource" class="border-b border-gray-200 hover:bg-gray-100 text-sm transition-colors duration-200">
+        <td class="px-3 sm:px-4 py-2 sm:py-3">
+          <div class="candidate-info flex flex-col gap-1">
+            <div class="flex items-center gap-2">
+              <span class="candidate-name text-orange-800 font-medium">{{ row?.fullName || '---' }}</span>
+              <i
+                *ngIf="row?.type === 'WEBSITE'"
+                class="fas fa-circle text-orange-600 text-xs"
+              ></i>
+              <i
+                *ngIf="row?.type !== 'WEBSITE'"
+                class="fas fa-file-pdf text-orange-600 text-base"
+              ></i>
+            </div>
+            <span *ngIf="row?.title; else noTitle" class="candidate-title text-xs text-orange-600">
               {{ row.title }}
             </span>
             <ng-template #noTitle>
-              <span class="candidate-title">Chưa cập nhật</span>
+              <span class="candidate-title text-xs text-orange-600">Chưa cập nhật</span>
             </ng-template>
           </div>
         </td>
-        <td class="hidden-mobile">{{ row?.jobName || '---' }}</td>
-        <td class="hidden-mobile">{{ formatDate(row?.createAt) }}</td>
-        <td class="hidden-mobile">
-          <span *ngIf="row?.type !== 'WEBSITE'; else noCv" class="cv-type">
-            <i class="fas fa-file-pdf" style="color: #ef4444;"></i>
+        <td class="px-3 sm:px-4 py-2 sm:py-3 hidden md:table-cell">{{ row?.jobName || '---' }}</td>
+        <td class="px-3 sm:px-4 py-2 sm:py-3 hidden md:table-cell">{{ formatDate(row?.createAt) }}</td>
+        <td class="px-3 sm:px-4 py-2 sm:py-3 hidden md:table-cell">
+          <span *ngIf="row?.type !== 'WEBSITE'; else noCv" class="cv-type inline-flex items-center gap-1 text-xs text-orange-800 bg-orange-100 rounded-full px-2 py-0.5">
+            <i class="fas fa-file-pdf text-orange-600"></i>
             File CV
           </span>
           <ng-template #noCv>
-            <span class="cv-type">
-              <i class="fas fa-circle" style="color: #8b5cf6;"></i>
+            <span class="cv-type inline-flex items-center gap-1 text-xs text-orange-800 bg-orange-100 rounded-full px-2 py-0.5">
+              <i class="fas fa-circle text-orange-600 text-xs"></i>
               CV Website
             </span>
           </ng-template>
         </td>
-        <td>
+        <td class="px-3 sm:px-4 py-2 sm:py-3">
           <select
-            class="status-select"
+            class="status-select w-full px-2 py-1 border border-orange-300 rounded-md bg-orange-50 text-sm text-orange-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200"
             [ngModel]="row.status?.toString() || ''"
             (ngModelChange)="handleChangeApplicationStatus($event, row)"
           >
@@ -63,42 +63,45 @@
           </select>
           <div
             *ngIf="!applicationStatusDict[row.status?.toString()]"
-            class="error-message"
-            style="color: #ef4444; font-size: 12px; margin-top: 4px;"
+            class="error-message text-orange-600 text-xs mt-1"
           >
             Trạng thái không hợp lệ
           </div>
         </td>
-        <td class="actions">
-          <div style="position: relative;">
+        <td class="px-3 sm:px-4 py-2 sm:py-3 flex justify-end gap-2 actions">
+          <div class="group relative">
             <button
               (click)="viewProfile(row.resumeSlug)"
-              class="action-button view"
+              class="text-orange-600 hover:text-orange-700 hover:shadow-md transition-all duration-300"
             >
-              <i class="fas fa-eye"></i>
+              <i class="fas fa-eye text-lg"></i>
             </button>
-            <span class="tooltip">Xem hồ sơ</span>
+            <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+              Xem hồ sơ
+            </span>
           </div>
-          <div style="position: relative;">
+          <div class="group relative">
             <button
               (click)="openSendMail(row)"
-              class="action-button email"
-              [ngClass]="{ sent: row.isSentEmail }"
+              class="text-orange-600 hover:text-orange-700 hover:shadow-md transition-all duration-200"
+              [ngClass]="{ 'bg-orange-100': row.isSentEmail }"
             >
-              <i class="fas fa-envelope"></i>
+              <i class="fas fa-envelope text-lg"></i>
             </button>
-            <span class="tooltip">
+            <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
               {{ row.isSentEmail ? 'Gửi lại email' : 'Gửi email' }}
             </span>
           </div>
-          <div style="position: relative;">
+          <div class="group relative">
             <button
               (click)="confirmDelete(row.id)"
-              class="action-button delete"
+              class="text-orange-600 hover:text-orange-700 hover:shadow-md transition-all duration-300"
             >
-              <i class="fas fa-trash"></i>
+              <i class="fas fa-trash text-lg"></i>
             </button>
-            <span class="tooltip">Xóa hồ sơ</span>
+            <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+              Xóa hồ sơ
+            </span>
           </div>
         </td>
       </tr>
@@ -107,24 +110,21 @@
 
   <!-- No data -->
   <ng-template #noDataTemplate>
-    <app-no-data-card title="Chưa có ứng viên ứng tuyển">
-      <div class="no-data">
-        <i class="fas fa-users-slash"></i>
-        Hiện tại chưa có ứng viên nào ứng tuyển vào công việc này.
+    <app-no-data-card title="Chưa có ứng viên ứng tuyển" class="animate-fadeInUp">
+      <div class="text-orange-600 text-sm mt-2">
+        Hiện tại chưa có ứng viên nào ứng tuyển.
       </div>
     </app-no-data-card>
   </ng-template>
 
   <!-- Pagination -->
-  <div
-    *ngIf="!isLoading && dataSource.length > 0 && totalPages() > 1"
-    class="pagination"
-  >
-    <div>
+  <div class="flex justify-between items-center p-4 border-t border-gray-200 bg-gray-50">
+    <div class="text-sm text-gray-600">
       Hiển thị
       <select
-        (ngModelChange)="rowsPerPageChange.emit(+$event)"
-        [ngModel]="rowsPerPage"
+        (change)="onChangeRowsPerPage($event)"
+        [value]="rowsPerPage"
+        class="border border-orange-300 rounded px-1.5 sm:px-2 py-0.5 sm:py-1 mx-2 bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
       >
         <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">
           {{ size }}
@@ -132,19 +132,19 @@
       </select>
       mục
     </div>
-    <div style="display: flex; align-items: center; gap: 8px;">
+    <div class="flex items-center gap-2">
       <button
-        *ngIf="page > 0"
-        (click)="pageChange.emit(page - 1)"
+        (click)="goToPage(page - 1)"
         [disabled]="page === 0"
+        class="px-2 sm:px-3 py-1 sm:py-1.5 text-sm border border-orange-300 rounded bg-orange-50 hover:bg-orange-100 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
       >
         Prev
       </button>
-      <span>Trang {{ page + 1 }} / {{ totalPages() }}</span>
+      <span class="text-sm text-orange-600">Trang {{ page + 1 }} / {{ totalPages() }}</span>
       <button
-        *ngIf="page < totalPages() - 1"
-        (click)="pageChange.emit(page + 1)"
+        (click)="goToPage(page + 1)"
         [disabled]="page >= totalPages() - 1"
+        class="px-2 sm:px-3 py-1 sm:py-1.5 text-sm border border-orange-300 rounded bg-orange-50 hover:bg-orange-100 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
       >
         Next
       </button>

@@ -8,7 +8,12 @@ import { SidebarComponent } from '../_components/employers/slidebar/sidebar.comp
 @Component({
   selector: 'app-employer-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HeaderComponent, SidebarComponent],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    HeaderComponent,
+    SidebarComponent
+  ],
   templateUrl: './employer-layout.component.html',
   styleUrls: ['./employer-layout.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
