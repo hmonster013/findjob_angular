@@ -1,23 +1,23 @@
-<div class="card-container relative">
+<div class="card-container relative rounded-lg shadow-sm p-4 sm:p-5 bg-orange-50 border border-gray-200">
   <app-backdrop-loading *ngIf="isFullScreenLoading"></app-backdrop-loading>
 
   <!-- Skeleton Loading -->
   <ng-container *ngIf="isLoadingCompany">
-    <div class="card-section">
+    <div class="card-section space-y-6">
       <!-- Logo Skeleton -->
-      <div class="mb-8">
+      <div>
         <h3 class="font-semibold text-lg mb-4 text-gray-800">Logo công ty</h3>
         <div class="flex flex-col items-center">
-          <div class="w-32 h-32 skeleton-pulse"></div>
-          <div class="h-10 w-32 skeleton-pulse mt-4"></div>
+          <div class="w-16 h-16 bg-orange-100 rounded-lg animate-pulse"></div>
+          <div class="h-10 w-32 bg-orange-100 rounded-md animate-pulse mt-4"></div>
         </div>
       </div>
       <!-- Cover Skeleton -->
-      <div class="mb-8">
+      <div>
         <h3 class="font-semibold text-lg mb-4 text-gray-800">Ảnh bìa công ty</h3>
         <div class="flex flex-col items-center">
-          <div class="w-full max-w-3xl h-40 skeleton-pulse"></div>
-          <div class="h-10 w-32 skeleton-pulse mt-4"></div>
+          <div class="w-full max-w-3xl h-32 sm:h-40 bg-orange-100 rounded-lg animate-pulse"></div>
+          <div class="h-10 w-32 bg-orange-100 rounded-md animate-pulse mt-4"></div>
         </div>
       </div>
       <!-- Form Skeleton -->
@@ -27,66 +27,51 @@
 
   <!-- Content -->
   <ng-container *ngIf="!isLoadingCompany">
-    <!-- Company Overview -->
-    <div class="card-section">
-      <h2 class="text-xl font-semibold text-gray-800 mb-6">Tổng quan công ty</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div class="space-y-2">
-          <p class="text-sm text-gray-600"><strong>Tên công ty:</strong> {{ editData?.companyName || 'Chưa cập nhật' }}</p>
-          <p class="text-sm text-gray-600"><strong>Mã số thuế:</strong> {{ editData?.taxCode || 'Chưa cập nhật' }}</p>
-          <p class="text-sm text-gray-600"><strong>Lĩnh vực:</strong> {{ editData?.fieldOperation || 'Chưa cập nhật' }}</p>
-          <p class="text-sm text-gray-600"><strong>Quy mô:</strong> {{ editData?.employeeSize || 'Chưa cập nhật' }} nhân sự</p>
-          <p class="text-sm text-gray-600"><strong>Thành lập:</strong> {{ editData?.since ? (editData.since | date: 'dd/MM/yyyy') : 'Chưa cập nhật' }}</p>
-        </div>
-        <div class="space-y-2">
-          <p class="text-sm text-gray-600"><strong>Địa chỉ:</strong> {{ editData?.location?.address || 'Chưa cập nhật' }}</p>
-          <p class="text-sm text-gray-600"><strong>Email:</strong> {{ editData?.companyEmail || 'Chưa cập nhật' }}</p>
-          <p class="text-sm text-gray-600"><strong>Số điện thoại:</strong> {{ editData?.companyPhone || 'Chưa cập nhật' }}</p>
-          <p class="text-sm text-gray-600"><strong>Website:</strong> <a [href]="editData?.websiteUrl" target="_blank" class="text-blue-600 hover:underline">{{ editData?.websiteUrl || 'Chưa cập nhật' }}</a></p>
-        </div>
-        <div class="sm:col-span-2 space-y-2">
-          <p class="text-sm text-gray-600"><strong>Số người theo dõi:</strong> {{ editData?.followNumber || 0 }}</p>
-          <p class="text-sm text-gray-600"><strong>Số bài đăng tuyển:</strong> {{ editData?.jobPostNumber || 0 }}</p>
-          <p class="text-sm text-gray-600"><strong>Trạng thái theo dõi:</strong> {{ editData?.isFollowed ? 'Đang theo dõi' : 'Chưa theo dõi' }}</p>
-        </div>
-      </div>
-    </div>
-
     <!-- Logo công ty -->
-    <div class="card-section">
-      <h3 class="font-semibold text-lg mb-6 text-gray-800">Logo công ty</h3>
+    <div class="card-section space-y-4">
+      <h3 class="font-semibold text-lg text-gray-800">Logo công ty</h3>
       <div class="flex flex-col items-center">
         <img
           [src]="companyImageUrl || '/assets/default-logo.png'"
           alt="Company Logo"
-          class="w-32 h-32 sm:w-40 sm:h-40 object-cover rounded-lg border border-gray-200 shadow-sm mb-6"
+          class="w-16 h-16 object-cover rounded-lg border border-orange-200 shadow-sm mb-4"
         />
-        <label class="upload-button">
-          <i class="fas fa-upload"></i> Thay đổi logo
-          <input type="file" (change)="handleUploadLogo($event)" accept="image/jpeg,image/png" hidden aria-label="Upload logo công ty" />
-        </label>
+        <div class="group relative tooltip">
+          <label class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-200 cursor-pointer">
+            <i class="fas fa-upload text-sm"></i> Thay đổi logo
+            <input type="file" (change)="handleUploadLogo($event)" accept="image/jpeg,image/png" hidden aria-label="Upload logo công ty" />
+          </label>
+          <span class="tooltiptext absolute hidden group-hover:block -top-10 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+            Thay đổi logo
+          </span>
+        </div>
       </div>
     </div>
 
     <!-- Ảnh bìa công ty -->
-    <div class="card-section">
-      <h3 class="font-semibold text-lg mb-6 text-gray-800">Ảnh bìa công ty</h3>
+    <div class="card-section space-y-4">
+      <h3 class="font-semibold text-lg text-gray-800">Ảnh bìa công ty</h3>
       <div class="flex flex-col items-center">
         <img
           [src]="companyCoverImageUrl || '/assets/default-cover.png'"
           alt="Company Cover"
-          class="w-full max-w-3xl h-40 sm:h-48 object-cover rounded-lg border border-gray-200 shadow-sm mb-6"
+          class="w-full max-w-3xl h-32 sm:h-40 object-cover rounded-lg border border-orange-200 shadow-sm mb-4"
         />
-        <label class="upload-button">
-          <i class="fas fa-upload"></i> Thay đổi ảnh bìa
-          <input type="file" (change)="handleUploadCover($event)" accept="image/jpeg,image/png" hidden aria-label="Upload ảnh bìa công ty" />
-        </label>
+        <div class="group relative tooltip">
+          <label class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-200 cursor-pointer">
+            <i class="fas fa-upload text-sm"></i> Thay đổi ảnh bìa
+            <input type="file" (change)="handleUploadCover($event)" accept="image/jpeg,image/png" hidden aria-label="Upload ảnh bìa công ty" />
+          </label>
+          <span class="tooltiptext absolute hidden group-hover:block -top-10 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+            Thay đổi ảnh bìa
+          </span>
+        </div>
       </div>
     </div>
 
     <!-- Form chỉnh sửa công ty -->
-    <div class="card-section">
-      <h2 class="text-xl font-semibold text-gray-800 mb-6">Chỉnh sửa thông tin công ty</h2>
+    <div class="card-section space-y-4">
+      <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Chỉnh sửa thông tin công ty</h2>
       <app-company-form
         [editData]="editData"
         [serverErrors]="serverErrors"

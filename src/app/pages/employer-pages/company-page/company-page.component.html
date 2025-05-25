@@ -1,28 +1,18 @@
-<div class="bg-white rounded-xl shadow-md p-4">
+<div class="w-full bg-orange-50 rounded-lg shadow-sm p-4 sm:p-5">
   <!-- Tabs -->
-  <div class="flex border-b border-gray-300">
+  <div class="container mx-auto flex flex-wrap gap-3 items-center justify-center md:justify-start border-b border-gray-200">
     <button
-      (click)="selectTab('company')"
+      *ngFor="let tab of tabItems"
+      (click)="selectTab(tab.id)"
       [class]="
-        'px-4 py-2 font-semibold text-sm rounded-t border-b-2 transition-all ' +
-        (selectedTab === 'company'
-          ? 'text-primary border-primary'
-          : 'text-gray-500 border-transparent hover:text-primary')
+        'flex items-center whitespace-nowrap px-4 py-2 rounded-md text-gray-800 text-sm font-medium transition-all duration-300 ease-in-out ' +
+        (selectedTab === tab.id
+          ? 'bg-orange-100 text-orange-600 font-bold border-b-4 border-orange-600 shadow-sm'
+          : 'hover:bg-orange-50 hover:text-orange-600')
       "
     >
-      Thông tin công ty
-    </button>
-
-    <button
-      (click)="selectTab('media')"
-      [class]="
-        'ml-4 px-4 py-2 font-semibold text-sm rounded-t border-b-2 transition-all ' +
-        (selectedTab === 'media'
-          ? 'text-primary border-primary'
-          : 'text-gray-500 border-transparent hover:text-primary')
-      "
-    >
-      Đa phương tiện
+      <i class="fas fa-{{tab.icon}} mr-2 text-base"></i>
+      {{ tab.label }}
     </button>
   </div>
 

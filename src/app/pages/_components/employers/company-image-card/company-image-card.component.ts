@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CompanyImageService } from '../../../../_services/company-image.service';
 import { BackdropLoadingComponent } from '../../../../_components/backdrop-loading/backdrop-loading.component';
-import { confirmModal, errorModal } from '../../../../_utils/sweetalert2-modal';
-import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-company-image-card',
@@ -13,17 +12,14 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./company-image-card.component.css']
 })
 export class CompanyImageCardComponent implements OnInit {
-  isLoadingCompany: boolean = true; // Renamed from isLoading for consistency
+  isLoadingCompany: boolean = true;
   isFullScreenLoading: boolean = false;
-  // fileList: Array<{ uid: number, url: string }>
   fileList: any[] = [];
   previewImage: string = '';
   previewVisible: boolean = false;
+  Math = Math; // Expose Math object to template
 
-  constructor(
-    private companyImageService: CompanyImageService,
-    private toastrMessages: ToastrService
-  ) {}
+  constructor(private companyImageService: CompanyImageService) {}
 
   ngOnInit(): void {
     this.fetchImages();
@@ -40,9 +36,17 @@ export class CompanyImageCardComponent implements OnInit {
         }));
         this.isLoadingCompany = false;
       },
-      error: (err) => {
-        console.error('Fetch images error:', err);
-        this.toastrMessages.error('Không thể tải danh sách ảnh', 'Lỗi');
+      error: () => {
+        Swal.fire({
+          title: 'Lỗi',
+          text: 'Không thể tải danh sách ảnh',
+          icon: 'error',
+          confirmButtonText: 'Đóng',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+          }
+        });
         this.isLoadingCompany = false;
       }
     });
@@ -57,11 +61,29 @@ export class CompanyImageCardComponent implements OnInit {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       if (!['image/jpeg', 'image/png'].includes(file.type)) {
-        this.toastrMessages.error(`File ${file.name} phải là .jpg hoặc .png`, 'Lỗi');
+        Swal.fire({
+          title: 'Lỗi',
+          text: `File ${file.name} phải là .jpg hoặc .png`,
+          icon: 'error',
+          confirmButtonText: 'Đóng',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+          }
+        });
         continue;
       }
       if (file.size > 5 * 1024 * 1024) {
-        this.toastrMessages.error(`File ${file.name} vượt quá 5MB`, 'Lỗi');
+        Swal.fire({
+          title: 'Lỗi',
+          text: `File ${file.name} vượt quá 5MB`,
+          icon: 'error',
+          confirmButtonText: 'Đóng',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+          }
+        });
         continue;
       }
       validFiles.push(file);
@@ -85,34 +107,82 @@ export class CompanyImageCardComponent implements OnInit {
           url: item.imageUrl
         }));
         this.fileList = [...this.fileList, ...newImages];
-        this.toastrMessages.success('Tải ảnh lên thành công');
+        Swal.fire({
+          title: 'Thành công',
+          text: 'Tải ảnh lên thành công',
+          icon: 'success',
+          confirmButtonText: 'Đóng',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+          }
+        });
         this.isFullScreenLoading = false;
         input.value = ''; // Reset input
       },
-      error: (err) => {
-        errorModal('Lỗi', 'Không thể tải ảnh lên');
-        console.error('Upload error:', err);
+      error: () => {
+        Swal.fire({
+          title: 'Lỗi',
+          text: 'Không thể tải ảnh lên',
+          icon: 'error',
+          confirmButtonText: 'Đóng',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+          }
+        });
         this.isFullScreenLoading = false;
       }
     });
   }
 
   onDeleteImage(image: any): void {
-    confirmModal(() => {
-      this.isFullScreenLoading = true;
-      this.companyImageService.deleteCompanyImage(image.uid).subscribe({
-        next: () => {
-          this.fileList = this.fileList.filter(item => item.uid !== image.uid);
-          this.toastrMessages.success('Xóa ảnh thành công');
-          this.isFullScreenLoading = false;
-        },
-        error: (err) => {
-          errorModal('Lỗi', 'Không thể xóa ảnh');
-          console.error('Delete error:', err);
-          this.isFullScreenLoading = false;
-        }
-      });
-    }, 'Xóa hình ảnh', 'Bạn có chắc chắn muốn xóa ảnh này?', 'warning');
+    Swal.fire({
+      title: 'Xóa hình ảnh',
+      text: 'Bạn có chắc chắn muốn xóa ảnh này?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
+        cancelButton: 'bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 mr-2'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isFullScreenLoading = true;
+        this.companyImageService.deleteCompanyImage(image.uid).subscribe({
+          next: () => {
+            this.fileList = this.fileList.filter(item => item.uid !== image.uid);
+            Swal.fire({
+              title: 'Thành công',
+              text: 'Xóa ảnh thành công',
+              icon: 'success',
+              confirmButtonText: 'Đóng',
+              buttonsStyling: false,
+              customClass: {
+                confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+              }
+            });
+            this.isFullScreenLoading = false;
+          },
+          error: () => {
+            Swal.fire({
+              title: 'Lỗi',
+              text: 'Không thể xóa ảnh',
+              icon: 'error',
+              confirmButtonText: 'Đóng',
+              buttonsStyling: false,
+              customClass: {
+                confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+              }
+            });
+            this.isFullScreenLoading = false;
+          }
+        });
+      }
+    });
   }
 
   onPreviewImage(image: any): void {

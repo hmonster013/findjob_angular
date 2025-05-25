@@ -1,8 +1,7 @@
-<div class="container mx-auto p-6 space-y-8">
+<div class="w-full h-full">
   <app-backdrop-loading *ngIf="isLoading"></app-backdrop-loading>
 
-  <div class="bg-white shadow rounded-lg p-6">
-    <h1 class="text-2xl font-bold mb-4">Quản lý tài khoản</h1>
+  <div class="bg-white">
     <app-account-card
       (profileUpdated)="fetchUserProfile()"
       (logout)="logout()"
