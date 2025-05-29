@@ -7,16 +7,14 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-apply-card',
   standalone: true,
-  imports: [
-    CommonModule,
-    ApplyFormComponent
-  ],
+  imports: [CommonModule, ApplyFormComponent],
   templateUrl: './apply-card.component.html',
 })
 export class ApplyCardComponent {
   @Input() jobPostId!: number;
   @Input() jobPost!: any;
   @Input() openPopup = false;
+  @Input() isApplied = false; // Thêm Input để nhận trạng thái ứng tuyển
 
   @Output() setOpenPopup = new EventEmitter<boolean>();
   @Output() applySuccess = new EventEmitter<boolean>();
@@ -30,19 +28,18 @@ export class ApplyCardComponent {
 
   handleApplyJob(data: any) {
     this.isFullScreenLoading = true;
-    this.jobPostActivityService.applyJob({ ...data, job_post: this.jobPostId })
-      .subscribe({
-        next: () => {
-          this.toastr.success('Ứng tuyển thành công.');
-          this.applySuccess.emit(true);
-          this.setOpenPopup.emit(false);
-          this.isFullScreenLoading = false;
-        },
-        error: (err) => {
-          this.toastr.error('Ứng tuyển thất bại. Vui lòng thử lại!');
-          console.error(err);
-          this.isFullScreenLoading = false;
-        },
-      });
+    this.jobPostActivityService.applyJob({ ...data, job_post: this.jobPostId }).subscribe({
+      next: () => {
+        this.toastr.success('Ứng tuyển thành công.');
+        this.applySuccess.emit(true);
+        this.setOpenPopup.emit(false);
+        this.isFullScreenLoading = false;
+      },
+      error: (err) => {
+        this.toastr.error('Ứng tuyển thất bại. Vui lòng thử lại!');
+        console.error(err);
+        this.isFullScreenLoading = false;
+      },
+    });
   }
 }

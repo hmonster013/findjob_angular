@@ -7,7 +7,9 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-company-image-card',
   standalone: true,
-  imports: [CommonModule, BackdropLoadingComponent],
+  imports: [
+    CommonModule
+  ],
   templateUrl: './company-image-card.component.html',
   styleUrls: ['./company-image-card.component.css']
 })

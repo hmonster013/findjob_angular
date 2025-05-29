@@ -12,7 +12,6 @@ export class CompanyService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ Private APIs
   getCompany(): Observable<any> {
     return this.http.get(`${this.baseUrl}/company/`);
   }
@@ -23,14 +22,12 @@ export class CompanyService {
 
   updateCompanyImageUrl(data: FormData): Observable<any> {
     return this.http.put(`${this.baseUrl}/private-companies/company-image-url/`, data);
-    // Không cần set Content-Type, Angular tự xử lý với FormData
   }
 
   updateCompanyCoverImageUrl(data: FormData): Observable<any> {
     return this.http.put(`${this.baseUrl}/private-companies/company-cover-image-url/`, data);
   }
 
-  // ✅ Public APIs
   getCompanies(params: any = {}): Observable<any> {
     let httpParams = new HttpParams();
     for (const key in params) {

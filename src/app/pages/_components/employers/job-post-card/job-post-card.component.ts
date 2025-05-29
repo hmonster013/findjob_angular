@@ -6,7 +6,6 @@ import { JobService } from '../../../../_services/job.service';
 import { JobPostsTableComponent } from "../job-posts-table/job-posts-table.component";
 import { JobPostFormComponent } from "../job-post-form/job-post-form.component";
 import { JobPostFilterFormComponent } from "../job-post-filter-form/job-post-filter-form.component";
-import { BackdropLoadingComponent } from "../../../../_components/backdrop-loading/backdrop-loading.component";
 import { confirmModal, errorModal } from '../../../../_utils/sweetalert2-modal';
 import { exportToXLSX } from '../../../../_utils/xlsx-utils';
 
@@ -29,12 +28,12 @@ export class JobPostCardComponent implements OnInit, OnDestroy {
   editData: any = null;
   serverErrors: any = {};
 
-  page: number = 0; // 0-based như React
-  rowsPerPage: number = 5; // Mặc định 5 như React
+  page: number = 0;
+  rowsPerPage: number = 5;
   total: number = 0;
   filterData: any = {};
-  order: 'asc' | 'desc' = 'asc'; // Mặc định như React
-  orderBy: string = 'createAt'; // Mặc định như React
+  order: 'asc' | 'desc' = 'asc';
+  orderBy: string = 'createAt';
   list: any[] = [];
 
   headCells = [
@@ -119,7 +118,6 @@ export class JobPostCardComponent implements OnInit, OnDestroy {
   }
 
   onSave(formData: any) {
-    // Giả định formData đã là HTML từ ngx-quill, không cần convert
     const formSubmit = { ...formData };
     this.isFullScreenLoading = true;
 
@@ -155,11 +153,7 @@ export class JobPostCardComponent implements OnInit, OnDestroy {
   }
 
   onFilter(filter: any) {
-    const filterData = {
-      ...filter,
-      isUrgent: filter.isUrgent === 1 ? true : filter.isUrgent === 2 ? false : ''
-    };
-    this.filterData = filterData;
+    this.filterData = filter;
     this.page = 0;
     this.fetchJobPosts();
   }
@@ -187,9 +181,7 @@ export class JobPostCardComponent implements OnInit, OnDestroy {
   }
 
   onExport() {
-    const params = {
-      ...this.filterData
-    };
+    const params = { ...this.filterData };
     this.isFullScreenLoading = true;
     this.jobService.exportEmployerJobPosts(params).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {

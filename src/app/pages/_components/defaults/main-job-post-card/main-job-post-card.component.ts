@@ -1,22 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { JobService } from '../../../../_services/job.service';
 import { Subject, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { JobPostLargeComponent } from "../../../../_components/job-post-large/job-post-large.component";
-import { NoDataCardComponent } from "../../../../_components/no-data-card/no-data-card.component";
+import { JobPostLargeComponent } from '../../../../_components/job-post-large/job-post-large.component';
+import { NoDataCardComponent } from '../../../../_components/no-data-card/no-data-card.component';
 
 @Component({
   selector: 'app-main-job-post-card',
+  standalone: true,
   imports: [
     CommonModule,
     JobPostLargeComponent,
     NoDataCardComponent
   ],
   templateUrl: './main-job-post-card.component.html',
-  styleUrl: './main-job-post-card.component.css'
+  styleUrls: ['./main-job-post-card.component.css']
 })
-export class MainJobPostCardComponent {
+export class MainJobPostCardComponent implements OnInit, OnDestroy {
   isLoading = true;
   jobPosts: any[] = [];
   page: number = 1;
@@ -24,11 +25,28 @@ export class MainJobPostCardComponent {
   totalPages: number = 0;
   pageSize = 10;
   destroy$ = new Subject<void>();
+  jobPostFilter: any = {};
 
-  constructor(private jobService: JobService) {}
+  constructor(
+    private jobService: JobService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-    this.getJobPosts();
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      this.jobPostFilter = {
+        kw: params['kw'] || '',
+        careerId: params['careerId'] || '',
+        cityId: params['cityId'] || '',
+        positionId: params['positionId'] || '',
+        experienceId: params['experienceId'] || '',
+        jobTypeId: params['jobTypeId'] || '',
+        typeOfWorkplaceId: params['typeOfWorkplaceId'] || '',
+        genderId: params['genderId'] || ''
+      };
+      this.page = 1;
+      this.getJobPosts();
+    });
   }
 
   ngOnDestroy() {
@@ -38,15 +56,13 @@ export class MainJobPostCardComponent {
 
   getJobPosts() {
     this.isLoading = true;
-    const jobPostFilter = {}; // 🔥 bạn cần lấy từ service lưu trạng thái filter hoặc để tạm
-
-    this.jobService.getJobPosts({ ...jobPostFilter, page: this.page })
+    this.jobService.getJobPosts({ ...this.jobPostFilter, page: this.page })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
           this.count = res.data?.count || 0;
           this.jobPosts = res.data?.results || [];
-          this.totalPages = this.pageCount; // Gán totalPages từ pageCount
+          this.totalPages = this.pageCount;
           this.isLoading = false;
         },
         error: (err) => {
@@ -64,14 +80,11 @@ export class MainJobPostCardComponent {
   }
 
   getVisiblePages(): number[] {
-    const maxVisiblePages = 5; // Số trang tối đa hiển thị (VD: 1, 2, 3, 4, 5)
-    const half = Math.floor(maxVisiblePages / 2); // Số trang hiển thị trước/sau trang hiện tại
+    const maxVisiblePages = 5;
+    const half = Math.floor(maxVisiblePages / 2);
     let start = Math.max(1, this.page - half);
     let end = Math.min(this.totalPages, start + maxVisiblePages - 1);
-
-    // Điều chỉnh start nếu end đạt giới hạn
     start = Math.max(1, end - maxVisiblePages + 1);
-
     const pages: number[] = [];
     for (let i = start; i <= end; i++) {
       pages.push(i);

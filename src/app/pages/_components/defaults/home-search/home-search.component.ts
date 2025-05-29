@@ -1,29 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonService } from '../../../../_services/common.service';
+import { ROUTES } from '../../../../_configs/constants';
 
 @Component({
   selector: 'app-home-search',
+  standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    ReactiveFormsModule
   ],
   templateUrl: './home-search.component.html',
-  styleUrl: './home-search.component.css'
+  styleUrls: ['./home-search.component.css']
 })
-export class HomeSearchComponent {
+export class HomeSearchComponent implements OnInit {
+  form: FormGroup;
   careers: any[] = [];
   cities: any[] = [];
-  keyword: string = '';
-  selectedCareer: string = '';
-  selectedCity: string = '';
+  ROUTES = ROUTES;
 
   constructor(
+    private fb: FormBuilder,
     private commonService: CommonService,
     private router: Router
-  ) {}
+  ) {
+    this.form = this.fb.group({
+      kw: [''],
+      careerId: [''],
+      cityId: ['']
+    });
+  }
 
   ngOnInit() {
     this.loadCareers();
@@ -53,18 +61,7 @@ export class HomeSearchComponent {
   }
 
   onSearch() {
-    const queryParams: any = {};
-    if (this.keyword) {
-      queryParams.keyword = this.keyword;
-    }
-    if (this.selectedCareer) {
-      queryParams.careerId = this.selectedCareer;
-    }
-    if (this.selectedCity) {
-      queryParams.cityId = this.selectedCity;
-    }
-
-    // Chuyển hướng đến trang /viec-lam với query params
-    this.router.navigate(['/viec-lam'], { queryParams });
+    const data = this.form.value;
+    this.router.navigate([ROUTES.JOB_SEEKER.JOBS], { queryParams: data });
   }
 }

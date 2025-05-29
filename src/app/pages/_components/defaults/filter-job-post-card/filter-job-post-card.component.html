@@ -18,7 +18,7 @@
           [companyImageUrl]="job?.companyDict?.companyImageUrl"
           [companyName]="job?.companyDict?.companyName"
           [jobName]="job?.jobName"
-          [cityName]="job?.locationDict?.city"
+          [cityName]="getCityName(job?.locationDict?.city)"
           [deadline]="job?.deadline"
           [isUrgent]="job?.isUrgent"
           [isHot]="job?.isHot"
@@ -55,7 +55,7 @@
         *ngFor="let p of getVisiblePages()"
         (click)="changePage(p)"
         [ngClass]="{
-          'bg-amber-600 text-white border-amber-600 shadow-md scale-105': p === page,
+          'bg-orange-600 text-white border-orange-600 shadow-md scale-105': p === page,
           'bg-white text-gray-700 border-gray-200': p !== page,
           'px-4 py-2 text-base': mode === 'responsive',
           'px-3 py-1 text-sm': mode === 'fixed'

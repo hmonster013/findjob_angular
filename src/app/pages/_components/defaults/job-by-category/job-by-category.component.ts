@@ -14,10 +14,13 @@ import { ROUTES } from '../../../../_configs/constants';
   styleUrl: './job-by-category.component.css'
 })
 export class JobByCategoryComponent implements OnInit{
+  careerOptions: any[] = [];
+  cityOptions: any[] = [];
+  jobTypeOptions: any[] = [];
+
+  readonly maxItem = 6;
+
   ROUTES = ROUTES;
-  careerOptions: any;
-  cityOptions: any;
-  jobTypeOptions: any;
 
   constructor(
     private router: Router,
@@ -40,8 +43,6 @@ export class JobByCategoryComponent implements OnInit{
       }
     })
   }
-
-  readonly maxItem = 6;
 
   handleFilter(id: number, type: 'CAREER' | 'CITY' | 'JOB_TYPE') {
     const queryParams: any = {};

@@ -12,14 +12,12 @@ export class JobService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ Search job by keyword
   searchJobSuggestTitle(keyword: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/seach/job-suggest-title/`, {
       params: new HttpParams().set('q', keyword)
     });
   }
 
-  // ✅ Employer job posts (private)
   getEmployerJobPost(params: any = {}): Observable<any> {
     return this.http.get(`${this.baseUrl}/private-job-posts/`, {
       params: this.toHttpParams(params)
@@ -63,14 +61,12 @@ export class JobService {
     return this.http.get(`${this.baseUrl}/job-posts/${slug}/`);
   }
 
-  // ✅ Suggested jobs for employer
   getSuggestedJobPosts(params: any = {}): Observable<any> {
     return this.http.get(`${this.baseUrl}/private-job-posts/suggested-job-posts/`, {
       params: this.toHttpParams(params)
     });
   }
 
-  // ✅ Saved jobs
   getJobPostsSaved(params: any = {}): Observable<any> {
     return this.http.get(`${this.baseUrl}/job-posts/job-posts-saved/`, {
       params: this.toHttpParams(params)
@@ -81,7 +77,6 @@ export class JobService {
     return this.http.post(`${this.baseUrl}/job-posts/${slug}/job-saved/`, {});
   }
 
-  // ✅ Utility method to build HttpParams from object
   private toHttpParams(params: any): HttpParams {
     let httpParams = new HttpParams();
     for (const key in params) {

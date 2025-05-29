@@ -1,17 +1,17 @@
-<div class="bg-orange-50 rounded-lg shadow flex flex-col flex-1 h-full w-full">
+<div class="bg-white rounded-lg shadow flex flex-col flex-1 h-full w-full">
   <!-- Header -->
-  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 sm:p-6 bg-orange-50">
-    <h1 class="text-2xl font-semibold text-orange-800">Quản lý tin tuyển dụng</h1>
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 sm:p-6 bg-white border-b border-gray-100">
+    <h1 class="text-2xl font-semibold text-orange-600">Quản lý tin tuyển dụng</h1>
     <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
       <button
-        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300"
+        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300"
         (click)="onExport()"
       >
         <i class="fas fa-download text-lg"></i>
         Tải danh sách
       </button>
       <button
-        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300"
+        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300"
         (click)="onOpenCreate()"
       >
         <i class="fas fa-plus text-lg"></i>
@@ -21,8 +21,7 @@
   </div>
 
   <!-- Filter Form -->
-  <div class="p-4 sm:p-6 pt-0 bg-orange-50">
-    <h2 class="text-sm font-medium text-orange-800 mb-2">Bộ lọc:</h2>
+  <div class="p-4 sm:p-6 bg-white">
     <app-job-post-filter-form (filter)="onFilter($event)"></app-job-post-filter-form>
   </div>
 
@@ -50,7 +49,7 @@
     ></app-job-posts-table>
   </div>
 
-  <!-- Popup Modal Tailwind -->
+  <!-- Popup Modal -->
   <div *ngIf="openPopup" class="fixed inset-0 bg-orange-500/50 flex justify-center items-center z-[1000] p-4 animate-fadeInUp">
     <div class="bg-white w-full max-w-4xl rounded-lg relative max-h-[90vh] flex flex-col overflow-hidden">
       <button
@@ -60,7 +59,7 @@
         <i class="fas fa-times text-xl"></i>
       </button>
 
-      <h2 class="text-xl font-bold p-4 sm:p-6 pb-0 text-orange-800">
+      <h2 class="text-xl font-bold p-4 sm:p-6 pb-0 text-orange-600">
         {{ editData ? 'Cập nhật tin tuyển dụng' : 'Tạo mới tin tuyển dụng' }}
       </h2>
 

@@ -41,7 +41,6 @@ export class SearchContainerComponent {
   }
 
   handleFilter(careerId: number) {
-    // Navigate to jobs page with selected careerId
     this.router.navigate([`/${ROUTES.JOB_SEEKER.JOBS}`], { queryParams: { careerId } });
   }
 

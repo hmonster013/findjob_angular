@@ -1,57 +1,59 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col md:flex-row gap-4 sm:gap-5 items-center bg-orange-50 p-3 sm:p-4 rounded-md">
-  <div class="w-full md:flex-1">
-    <input
-      type="text"
-      formControlName="kw"
-      placeholder="Nhập tên tin đăng"
-      class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-orange-300 rounded-md bg-white text-sm text-orange-800 placeholder-orange-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200"
-    />
-  </div>
+<div class="bg-white p-6 rounded-xl border-2 border-gray-300 shadow-lg">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-wrap gap-4 items-center">
+    <!-- Keyword Search -->
+    <div class="flex-1 min-w-[200px]">
+      <div class="relative">
+        <input
+          type="text"
+          formControlName="kw"
+          placeholder="Nhập tên tin đăng"
+          class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-md"
+        />
+        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-600 text-lg"></i>
+      </div>
+    </div>
 
-  <div class="w-full md:flex-1">
-    <select
-      formControlName="isUrgent"
-      class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200"
-    >
-      <option value="">Trạng thái tuyển dụng</option>
-      <option *ngFor="let option of urgentOptions" [value]="option.id">
-        {{ option.name }}
-      </option>
-    </select>
-  </div>
+    <!-- Urgent Status -->
+    <div class="w-44">
+      <select
+        formControlName="isUrgent"
+        class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+      >
+        <option value="">Trạng thái tuyển dụng</option>
+        <option *ngFor="let option of urgentOptions" [value]="option.id">
+          {{ option.name }}
+        </option>
+      </select>
+    </div>
 
-  <div class="w-full md:flex-1">
-    <select
-      formControlName="statusId"
-      class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200"
-    >
-      <option value="">Trạng thái duyệt</option>
-      <option *ngFor="let option of statusOptions" [value]="option.id">
-        {{ option.name }}
-      </option>
-    </select>
-  </div>
+    <!-- Approval Status -->
+    <div class="w-44">
+      <select
+        formControlName="statusId"
+        class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+      >
+        <option value="">Trạng thái duyệt</option>
+        <option *ngFor="let option of statusOptions" [value]="option.id">
+          {{ option.name }}
+        </option>
+      </select>
+    </div>
 
-  <div class="w-full md:flex-1 flex items-center justify-end gap-2">
-    <div class="group relative">
+    <!-- Buttons -->
+    <div class="flex gap-3 items-center">
+      <button
+        type="submit"
+        class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg"
+      >
+        Tìm kiếm
+      </button>
       <button
         type="button"
         (click)="onReset()"
-        class="p-1.5 sm:p-2 rounded-full bg-orange-100 hover:bg-orange-200 text-orange-800 focus:outline-none hover:shadow-sm transition-all duration-200"
+        class="text-orange-600 hover:text-orange-700 p-2 transition-all"
       >
-        <i class="fas fa-redo text-lg"></i>
+        <i class="fas fa-times text-xl"></i>
       </button>
-      <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
-        Đặt lại
-      </span>
     </div>
-
-    <button
-      type="submit"
-      class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium hover:shadow-sm transition-all duration-200"
-    >
-      <i class="fas fa-search text-lg"></i>
-      Tìm kiếm
-    </button>
-  </div>
-</form>
+  </form>
+</div>

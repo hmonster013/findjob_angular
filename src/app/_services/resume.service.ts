@@ -12,7 +12,6 @@ export class ResumeService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ Public Resumes
   sendEmail(slug: string, data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/resumes/${slug}/send-email/`, data);
   }
@@ -33,7 +32,6 @@ export class ResumeService {
     return this.http.post(`${this.baseUrl}/resumes/${slug}/view-resume/`, {});
   }
 
-  // ✅ Private Resumes
   getResumeOwner(resumeSlug: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/private-resumes/${resumeSlug}/resume-owner/`);
   }

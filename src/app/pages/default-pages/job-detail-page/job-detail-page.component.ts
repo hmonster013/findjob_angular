@@ -7,7 +7,8 @@ import { ApplyCardComponent } from '../../../_components/apply-card/apply-card.c
 import { AuthStateService } from '../../../_services/auth-state.service';
 import { ROLES_NAME } from '../../../_configs/constants';
 import { JobService } from '../../../_services/job.service';
-import { FilterJobPostCardComponent } from "../../_components/defaults/filter-job-post-card/filter-job-post-card.component";
+import { FilterJobPostCardComponent } from '../../_components/defaults/filter-job-post-card/filter-job-post-card.component';
+import { CommonService } from '../../../_services/common.service';
 
 @Component({
   selector: 'app-job-detail-page',
@@ -17,9 +18,9 @@ import { FilterJobPostCardComponent } from "../../_components/defaults/filter-jo
     SocialNetworkSharingPopupComponent,
     ApplyCardComponent,
     FilterJobPostCardComponent
-],
+  ],
   templateUrl: './job-detail-page.component.html',
-  styleUrls: ['./job-detail-page.component.css'],
+  styleUrls: ['./job-detail-page.component.css']
 })
 export class JobDetailPageComponent implements OnInit {
   slug = '';
@@ -33,25 +34,16 @@ export class JobDetailPageComponent implements OnInit {
   isAuthenticated = false;
   currentUser: any;
 
-  // Ánh xạ các giá trị số thành text
-  positionMap: { [key: number]: string } = {
-    9: 'Nhân viên' // Ví dụ, dựa trên jobPost.position = 9
-  };
-
-  jobTypeMap: { [key: number]: string } = {
-    3: 'Toàn thời gian' // Ví dụ, dựa trên jobPost.jobType = 3
-  };
-
-  genderMap: { [key: string]: string } = {
-    'M': 'Nam',
-    'F': 'Nữ',
-    'O': 'Không yêu cầu'
-  };
+  genderDict: { [key: string]: string } | null = null;
+  positionDict: { [key: string]: string } | null = null;
+  jobTypeDict: { [key: string]: string } | null = null;
+  experienceDict: { [key: string]: string } | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private jobService: JobService,
     private authService: AuthStateService,
+    private commonService: CommonService,
     private toastr: ToastrService
   ) {}
 
@@ -60,6 +52,26 @@ export class JobDetailPageComponent implements OnInit {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.currentUser = this.authService.getCurrentUser();
 
+    this.getConfigs();
+    this.getJobPostDetailById();
+  }
+
+  getConfigs() {
+    this.commonService.getConfigs().subscribe({
+      next: (res) => {
+        const data = res.data;
+        this.genderDict = data.genderDict;
+        this.positionDict = data.positionDict;
+        this.jobTypeDict = data.jobTypeDict;
+        this.experienceDict = data.experienceDict;
+      },
+      error: () => {
+        this.toastr.error('Không thể tải cấu hình');
+      }
+    });
+  }
+
+  getJobPostDetailById() {
     this.jobService.getJobPostDetailById(this.slug).subscribe({
       next: (res) => {
         this.jobPost = res.data;
@@ -67,7 +79,25 @@ export class JobDetailPageComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
+        this.toastr.error('Không thể tải chi tiết công việc');
+      }
+    });
+  }
+
+  handleApplySuccess() {
+    this.isApplySuccess = true;
+    this.jobPost = {
+      ...this.jobPost,
+      isApplied: true
+    };
+
+    this.jobService.getJobPostDetailById(this.slug).subscribe({
+      next: (res) => {
+        this.jobPost = res.data;
       },
+      error: () => {
+        this.toastr.error('Không thể cập nhật trạng thái ứng tuyển');
+      }
     });
   }
 
@@ -80,7 +110,7 @@ export class JobDetailPageComponent implements OnInit {
         this.jobPost = {
           ...current,
           isSaved,
-          saveNumber: isSaved ? current.saveNumber + 1 : current.saveNumber - 1,
+          saveNumber: isSaved ? current.saveNumber + 1 : current.saveNumber - 1
         };
         this.toastr.success(isSaved ? 'Đã lưu tin' : 'Đã hủy lưu tin');
         this.isLoadingSave = false;
@@ -88,7 +118,7 @@ export class JobDetailPageComponent implements OnInit {
       error: () => {
         this.toastr.error('Có lỗi xảy ra');
         this.isLoadingSave = false;
-      },
+      }
     });
   }
 
@@ -115,5 +145,17 @@ export class JobDetailPageComponent implements OnInit {
       return `Từ ${formatNumber(min)} tr`;
     }
     return `Đến ${formatNumber(max!)} tr`;
+  }
+
+  getPositionName(positionId: number): string {
+    return this.positionDict?.[positionId] || 'Chưa cập nhật';
+  }
+
+  getJobTypeName(jobTypeId: number): string {
+    return this.jobTypeDict?.[jobTypeId] || 'Chưa cập nhật';
+  }
+
+  getGenderName(genderId: string): string {
+    return this.genderDict?.[genderId] || 'Chưa cập nhật';
   }
 }

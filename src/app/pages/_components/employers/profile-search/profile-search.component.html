@@ -1,154 +1,177 @@
-<form
-  [formGroup]="searchForm"
-  (ngSubmit)="onSubmit()"
-  class="filter-form p-3 sm:p-4 bg-white rounded-md border border-gray-200"
->
-  <!-- Header -->
-  <div class="flex justify-between items-center mb-4">
-    <h2 class="text-sm font-medium text-gray-800">Bộ lọc nâng cao</h2>
-    <div class="group relative tooltip">
-      <button
-        type="button"
-        (click)="onReset()"
-        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-50 hover:bg-orange-100 text-orange-800 rounded-md text-sm font-medium hover:shadow-md transition-all duration-200"
-        aria-label="Khôi phục"
-      >
-        <i class="fas fa-redo text-sm"></i> Khôi phục
-      </button>
-      <span class="tooltiptext absolute hidden group-hover:block -top-10 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
-        Khôi phục
-      </span>
-    </div>
-  </div>
+<div class="bg-white p-6 rounded-xl border-2 border-gray-300 shadow-lg">
+  <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+    <!-- Basic Search -->
+    <div class="flex flex-wrap gap-4 items-center">
+      <!-- Keyword Search -->
+      <div class="flex-1 min-w-[200px]">
+        <div class="relative">
+          <input
+            type="text"
+            formControlName="kw"
+            placeholder="Từ khóa (VD: lập trình viên, marketing...)"
+            class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-md"
+          />
+          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-600 text-lg"></i>
+        </div>
+      </div>
 
-  <div class="flex flex-col gap-4">
+      <!-- City -->
+      <div class="w-44">
+        <select
+          formControlName="cityId"
+          class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+        >
+          <option [ngValue]="null">Tất cả tỉnh thành</option>
+          <option *ngFor="let city of configs?.cityOptions" [ngValue]="city.id">
+            {{ city.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex gap-3 items-center">
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <i *ngIf="isLoading" class="fas fa-spinner fa-spin mr-2"></i>
+          Tìm kiếm
+        </button>
+        <button
+          type="button"
+          (click)="toggleAdvanced()"
+          class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg"
+        >
+          {{ showAdvanced ? 'Ẩn lọc nâng cao' : 'Lọc nâng cao' }}
+        </button>
+        <button
+          *ngIf="isFormNotEmpty()"
+          type="button"
+          (click)="onReset()"
+          class="text-orange-600 hover:text-orange-700 p-2 transition-all"
+        >
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+    </div>
+
     <!-- Advanced Filters -->
-    <div>
-      <label class="block text-sm font-medium text-gray-800 mb-1">
-        <i class="fas fa-briefcase mr-1"></i> Ngành nghề
-      </label>
-      <div class="relative">
-        <select
-          formControlName="career"
-          class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 appearance-none"
-          aria-label="Ngành nghề"
-        >
-          <option *ngFor="let career of careers" [value]="career.value">{{ career.label }}</option>
-        </select>
-        <i class="fas fa-chevron-down absolute right-2 top-1/2 transform -translate-y-1/2 text-orange-800 text-xs pointer-events-none"></i>
-      </div>
-    </div>
+    <div *ngIf="showAdvanced" class="mt-6 border-t-2 border-gray-300 pt-6">
+      <h3 class="text-lg font-semibold text-orange-600 mb-4">Bộ lọc nâng cao</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Career -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Ngành Nghề</label>
+          <select
+            formControlName="careerId"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+          >
+            <option [ngValue]="null">Tất cả ngành nghề</option>
+            <option *ngFor="let career of configs?.careerOptions" [ngValue]="career.id">
+              {{ career.name }}
+            </option>
+          </select>
+        </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-800 mb-1">
-        <i class="fas fa-clock mr-1"></i> Kinh nghiệm
-      </label>
-      <div class="relative">
-        <select
-          formControlName="experience"
-          class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 appearance-none"
-          aria-label="Kinh nghiệm"
-        >
-          <option *ngFor="let exp of experiences" [value]="exp.value">{{ exp.label }}</option>
-        </select>
-        <i class="fas fa-chevron-down absolute right-2 top-1/2 transform -translate-y-1/2 text-orange-800 text-xs pointer-events-none"></i>
-      </div>
-    </div>
+        <!-- Experience -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Kinh Nghiệm</label>
+          <select
+            formControlName="experienceId"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+          >
+            <option [ngValue]="null">Tất cả kinh nghiệm</option>
+            <option *ngFor="let exp of configs?.experienceOptions" [ngValue]="exp.id">
+              {{ exp.name }}
+            </option>
+          </select>
+        </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-800 mb-1">
-        <i class="fas fa-user-tie mr-1"></i> Vị trí mong muốn
-      </label>
-      <div class="relative">
-        <select
-          formControlName="position"
-          class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 appearance-none"
-          aria-label="Vị trí mong muốn"
-        >
-          <option *ngFor="let pos of positions" [value]="pos.value">{{ pos.label }}</option>
-        </select>
-        <i class="fas fa-chevron-down absolute right-2 top-1/2 transform -translate-y-1/2 text-orange-800 text-xs pointer-events-none"></i>
-      </div>
-    </div>
+        <!-- Position -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Vị trí</label>
+          <select
+            formControlName="positionId"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+          >
+            <option [ngValue]="null">Tất cả vị trí</option>
+            <option *ngFor="let pos of configs?.positionOptions" [ngValue]="pos.id">
+              {{ pos.name }}
+            </option>
+          </select>
+        </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-800 mb-1">
-        <i class="fas fa-user-graduate mr-1"></i> Trình độ học vấn
-      </label>
-      <div class="relative">
-        <select
-          formControlName="academicLevel"
-          class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 appearance-none"
-          aria-label="Trình độ học vấn"
-        >
-          <option *ngFor="let level of academicLevels" [value]="level.value">{{ level.label }}</option>
-        </select>
-        <i class="fas fa-chevron-down absolute right-2 top-1/2 transform -translate-y-1/2 text-orange-800 text-xs pointer-events-none"></i>
-      </div>
-    </div>
+        <!-- Academic Level -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Trình độ học vấn</label>
+          <select
+            formControlName="academicLevelId"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+          >
+            <option [ngValue]="null">Tất cả trình độ</option>
+            <option *ngFor="let level of configs?.academicLevelOptions" [ngValue]="level.id">
+              {{ level.name }}
+            </option>
+          </select>
+        </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-800 mb-1">
-        <i class="fas fa-building mr-1"></i> Hình thức làm việc
-      </label>
-      <div class="relative">
-        <select
-          formControlName="workplace"
-          class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 appearance-none"
-          aria-label="Hình thức làm việc"
-        >
-          <option *ngFor="let wp of workplaces" [value]="wp.value">{{ wp.label }}</option>
-        </select>
-        <i class="fas fa-chevron-down absolute right-2 top-1/2 transform -translate-y-1/2 text-orange-800 text-xs pointer-events-none"></i>
-      </div>
-    </div>
+        <!-- Workplace -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Hình thức làm việc</label>
+          <select
+            formControlName="typeOfWorkplaceId"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+          >
+            <option [ngValue]="null">Tất cả hình thức</option>
+            <option *ngFor="let wp of configs?.typeOfWorkplaceOptions" [ngValue]="wp.id">
+              {{ wp.name }}
+            </option>
+          </select>
+        </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-800 mb-1">
-        <i class="fas fa-suitcase mr-1"></i> Loại công việc
-      </label>
-      <div class="relative">
-        <select
-          formControlName="jobType"
-          class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 appearance-none"
-          aria-label="Loại công việc"
-        >
-          <option *ngFor="let jt of jobTypes" [value]="jt.value">{{ jt.label }}</option>
-        </select>
-        <i class="fas fa-chevron-down absolute right-2 top-1/2 transform -translate-y-1/2 text-orange-800 text-xs pointer-events-none"></i>
-      </div>
-    </div>
+        <!-- Job Type -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Loại công việc</label>
+          <select
+            formControlName="jobTypeId"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+          >
+            <option [ngValue]="null">Tất cả loại công việc</option>
+            <option *ngFor="let jt of configs?.jobTypeOptions" [ngValue]="jt.id">
+              {{ jt.name }}
+            </option>
+          </select>
+        </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-800 mb-1">
-        <i class="fas fa-venus-mars mr-1"></i> Giới tính
-      </label>
-      <div class="relative">
-        <select
-          formControlName="gender"
-          class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 appearance-none"
-          aria-label="Giới tính"
-        >
-          <option *ngFor="let gender of genders" [value]="gender.value">{{ gender.label }}</option>
-        </select>
-        <i class="fas fa-chevron-down absolute right-2 top-1/2 transform -translate-y-1/2 text-orange-800 text-xs pointer-events-none"></i>
-      </div>
-    </div>
+        <!-- Gender -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Giới tính</label>
+          <select
+            formControlName="genderId"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+          >
+            <option [ngValue]="null">Tất cả giới tính</option>
+            <option *ngFor="let gender of configs?.genderOptions" [ngValue]="gender.id">
+              {{ gender.name }}
+            </option>
+          </select>
+        </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-800 mb-1">
-        <i class="fas fa-heart mr-1"></i> Tình trạng hôn nhân
-      </label>
-      <div class="relative">
-        <select
-          formControlName="maritalStatus"
-          class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 pr-10 border border-orange-300 rounded-md bg-white text-sm text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-400 transition-all duration-200 appearance-none"
-          aria-label="Tình trạng hôn nhân"
-        >
-          <option *ngFor="let status of maritalStatuses" [value]="status.value">{{ status.label }}</option>
-        </select>
-        <i class="fas fa-chevron-down absolute right-2 top-1/2 transform -translate-y-1/2 text-orange-800 text-xs pointer-events-none"></i>
+        <!-- Marital Status -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Tình trạng hôn nhân</label>
+          <select
+            formControlName="maritalStatusId"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+          >
+            <option [ngValue]="null">Tất cả tình trạng</option>
+            <option *ngFor="let status of configs?.maritalStatusOptions" [ngValue]="status.id">
+              {{ status.name }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
-  </div>
-</form>
+  </form>
+</div>

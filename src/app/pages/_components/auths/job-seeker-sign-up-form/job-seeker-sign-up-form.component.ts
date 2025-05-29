@@ -12,6 +12,7 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { PLATFORM } from '../../../../_configs/constants';
 
 @Component({
   selector: 'app-job-seeker-sign-up-form',
@@ -33,7 +34,8 @@ export class JobSeekerSignUpFormComponent implements OnInit {
         fullName: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required]],
-        confirmPassword: ['', [Validators.required]]
+        confirmPassword: ['', [Validators.required]],
+        platform: PLATFORM
       },
       { validators: this.passwordMatchValidator }
     );

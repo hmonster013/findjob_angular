@@ -8,7 +8,6 @@ import { CommonService } from '../../../../_services/common.service';
 import { confirmModal, errorModal } from '../../../../_utils/sweetalert2-modal';
 import { SendMailCardComponent } from '../send-mail-card/send-mail-card.component';
 import { NoDataCardComponent } from '../../../../_components/no-data-card/no-data-card.component';
-import { BackdropLoadingComponent } from '../../../../_components/backdrop-loading/backdrop-loading.component';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
 
@@ -21,7 +20,6 @@ import Swal from 'sweetalert2';
     ReactiveFormsModule,
     SendMailCardComponent,
     NoDataCardComponent,
-    BackdropLoadingComponent,
   ],
   templateUrl: './applied-resume-table.component.html',
   styleUrls: ['./applied-resume-table.component.css'],
@@ -32,7 +30,7 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
   @Input() isLoading: boolean = false;
   @Input() total: number = 0;
   @Input() page: number = 0;
-  @Input() rowsPerPage: number = 10; // Đồng bộ với pageSize
+  @Input() rowsPerPage: number = 5; // Đồng bộ với pageSize=5
   @Output() delete = new EventEmitter<number>();
   @Output() changeStatus = new EventEmitter<{ id: number; status: string }>();
   @Output() sendEmail = new EventEmitter<any>();
@@ -41,7 +39,6 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
 
   openSendMailPopup: boolean = false;
   selectedSendData: any = null;
-  isFullScreenLoading: boolean = false;
   applicationStatusOptions: any[] = [];
   applicationStatusDict: { [key: string]: string } = {};
   private destroy$ = new Subject<void>();
@@ -65,22 +62,8 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
   fetchStatusOptions() {
     this.commonService.getConfigs().pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
-        this.applicationStatusOptions = res.data?.applicationStatusOptions || [
-          { id: '1', name: 'Chờ xác nhận' },
-          { id: '2', name: 'Đã liên hệ' },
-          { id: '3', name: 'Đã test' },
-          { id: '4', name: 'Đã phỏng vấn' },
-          { id: '5', name: 'Trúng tuyển' },
-          { id: '6', name: 'Không trúng tuyển' },
-        ];
-        this.applicationStatusDict = res.data?.applicationStatusDict || {
-          '1': 'Chờ xác nhận',
-          '2': 'Đã liên hệ',
-          '3': 'Đã test',
-          '4': 'Đã phỏng vấn',
-          '5': 'Trúng tuyển',
-          '6': 'Không trúng tuyển',
-        };
+        this.applicationStatusOptions = res.data?.applicationStatusOptions || [];
+        this.applicationStatusDict = res.data?.applicationStatusDict || {};
       },
       error: () => {
         this.toastr.error('Không thể tải danh sách trạng thái!');
@@ -116,9 +99,8 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
     });
   }
 
-  handleChangeApplicationStatus(event: Event, row: any) {
-    const target = event.target as HTMLSelectElement;
-    const newStatus = target.value;
+  handleChangeApplicationStatus(event: any, row: any) {
+    const newStatus = event.target.value;
     const currentStatus = row.status.toString();
 
     const statusOrder = ['1', '2', '3', '4', '5', '6'];
@@ -133,7 +115,7 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
           confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
         }
       });
-      target.value = currentStatus;
+      event.target.value = currentStatus;
       return;
     }
 
@@ -153,7 +135,7 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         this.changeStatus.emit({ id: row.id, status: newStatus });
       } else {
-        target.value = currentStatus;
+        event.target.value = currentStatus;
       }
     });
   }
@@ -164,7 +146,7 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
       return;
     }
     this.selectedSendData = {
-      id: row.id, // Thêm id để gửi email
+      id: row.id,
       fullName: row.fullName,
       email: row.email,
       title: `Thư mời ứng tuyển: ${row.jobName || 'Công việc'}`,
@@ -174,8 +156,21 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
     this.openSendMailPopup = true;
   }
 
-  totalPages(): number {
+  get totalPages(): number {
     return Math.ceil(this.total / this.rowsPerPage) || 1;
+  }
+
+  getVisiblePages(): number[] {
+    const maxVisiblePages = 5;
+    const half = Math.floor(maxVisiblePages / 2);
+    let start = Math.max(1, this.page + 1 - half);
+    let end = Math.min(this.totalPages, start + maxVisiblePages - 1);
+    start = Math.max(1, end - maxVisiblePages + 1);
+    const pages: number[] = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   formatDate(date: string): string {
@@ -188,7 +183,7 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
   }
 
   goToPage(page: number) {
-    if (page >= 0 && page < this.totalPages()) {
+    if (page >= 0 && page < this.totalPages) {
       this.pageChange.emit(page);
     }
   }

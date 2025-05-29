@@ -11,7 +11,7 @@ import { CommonModule, DatePipe } from '@angular/common';
   imports: [CommonModule],
   templateUrl: './job-seeker-profile.component.html',
   styleUrls: ['./job-seeker-profile.component.css'],
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
 export class JobSeekerProfileComponent {
   @Input() id!: number;
@@ -32,7 +32,7 @@ export class JobSeekerProfileComponent {
   @Input() experienceName?: string;
   @Input() isLoading: boolean = false;
 
-  @Output() saveToggled = new EventEmitter<string>();
+  @Output() save = new EventEmitter<string>();
 
   constructor(private router: Router) {}
 
@@ -43,7 +43,7 @@ export class JobSeekerProfileComponent {
   }
 
   toggleSave() {
-    this.saveToggled.emit(this.slug);
+    this.save.emit(this.slug);
   }
 
   salaryStringFn(min?: number, max?: number): string {

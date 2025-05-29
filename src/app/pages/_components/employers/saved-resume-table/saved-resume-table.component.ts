@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { NoDataCardComponent } from "../../../../_components/no-data-card/no-data-card.component";
+import { NoDataCardComponent } from '../../../../_components/no-data-card/no-data-card.component';
 import Swal from 'sweetalert2';
 
 interface Resume {
@@ -25,7 +25,7 @@ interface ResumeRow {
   imports: [CommonModule, NoDataCardComponent, DatePipe],
   templateUrl: './saved-resume-table.component.html',
   styleUrls: ['./saved-resume-table.component.css'],
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
 export class SavedResumeTableComponent {
   @Input() dataSource: ResumeRow[] = [];
@@ -58,8 +58,8 @@ export class SavedResumeTableComponent {
       buttonsStyling: false,
       customClass: {
         confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
-        cancelButton: 'bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 mr-2'
-      }
+        cancelButton: 'bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 mr-2',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.edit.emit(slug);
@@ -67,8 +67,21 @@ export class SavedResumeTableComponent {
     });
   }
 
-  totalPages(): number {
+  get totalPages(): number {
     return Math.ceil(this.total / this.rowsPerPage) || 1;
+  }
+
+  getVisiblePages(): number[] {
+    const maxVisiblePages = 5;
+    const half = Math.floor(maxVisiblePages / 2);
+    let start = Math.max(1, this.page - half);
+    let end = Math.min(this.totalPages, start + maxVisiblePages - 1);
+    start = Math.max(1, end - maxVisiblePages + 1);
+    const pages: number[] = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   formatSalary(min: number | undefined, max: number | undefined): string {
@@ -79,5 +92,11 @@ export class SavedResumeTableComponent {
   onChangeRowsPerPage(event: Event) {
     const value = +(event.target as HTMLSelectElement).value;
     this.rowsPerPageChange.emit(value);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.pageChange.emit(page);
+    }
   }
 }

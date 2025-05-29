@@ -1,36 +1,80 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
-import { JobService } from '../../../../_services/job.service';
 import { CommonModule } from '@angular/common';
-import { NoDataCardComponent } from "../../../../_components/no-data-card/no-data-card.component";
-import { JobPostComponent } from "../../../../_components/job-post/job-post.component";
+import { JobService } from '../../../../_services/job.service';
+import { CommonService } from '../../../../_services/common.service';
+import { ToastrService } from 'ngx-toastr';
+import { NoDataCardComponent } from '../../../../_components/no-data-card/no-data-card.component';
+import { JobPostComponent } from '../../../../_components/job-post/job-post.component';
 
 @Component({
   selector: 'app-filter-job-post-card',
+  standalone: true,
   imports: [
     CommonModule,
     NoDataCardComponent,
     JobPostComponent
   ],
   templateUrl: './filter-job-post-card.component.html',
-  styleUrl: './filter-job-post-card.component.css'
+  styleUrls: ['./filter-job-post-card.component.css']
 })
 export class FilterJobPostCardComponent implements OnInit {
   @Input() params: any = {};
-  @Input() mode: 'fixed' | 'responsive' = 'responsive'; // 'fixed' cho 1 cột, 'responsive' cho 3/2/1 cột
+  @Input() mode: 'fixed' | 'responsive' = 'responsive';
 
   jobPosts: any[] = [];
   isLoading: boolean = true;
   page: number = 1;
   count: number = 0;
   totalPages: number = 0;
-  col: number = 3; // Mặc định cho responsive
+  col: number = 3;
   readonly pageSize = 12;
 
-  constructor(private jobService: JobService) {}
+  cityDict: { [key: string]: string } | null = null; // Biến lưu cityDict
+
+  constructor(
+    private jobService: JobService,
+    private commonService: CommonService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() {
     this.handleResize();
+    this.getConfigs();
     this.getJobPosts();
+  }
+
+  getConfigs() {
+    this.commonService.getConfigs().subscribe({
+      next: (res) => {
+        this.cityDict = res.data.cityDict;
+      },
+      error: () => {
+        this.toastr.error('Không thể tải cấu hình thành phố');
+      }
+    });
+  }
+
+  getJobPosts() {
+    this.isLoading = true;
+    this.jobService.getJobPosts({
+      ...this.params,
+      pageSize: this.pageSize,
+      page: this.page
+    }).subscribe({
+      next: (res) => {
+        const data = res.data;
+        this.count = data.count;
+        this.totalPages = Math.ceil(this.count / this.pageSize);
+        this.jobPosts = data.results;
+      },
+      error: (err) => {
+        console.error('Lỗi lấy job posts:', err);
+        this.toastr.error('Không thể tải danh sách công việc');
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
   @HostListener('window:resize')
@@ -47,28 +91,6 @@ export class FilterJobPostCardComponent implements OnInit {
     } else {
       this.col = 3;
     }
-  }
-
-  getJobPosts() {
-    this.isLoading = true;
-    this.jobService.getJobPosts({
-      ...this.params,
-      pageSize: this.pageSize,
-      page: this.page
-    }).subscribe({
-      next: (res) => {
-        const data = res.data;
-        this.count = data.count;
-        this.totalPages = Math.ceil(this.count / this.pageSize);
-        this.jobPosts = data.results || [];
-      },
-      error: (err) => {
-        console.error('Lỗi lấy job posts:', err);
-      },
-      complete: () => {
-        this.isLoading = false;
-      }
-    });
   }
 
   changePage(newPage: number) {
@@ -90,5 +112,10 @@ export class FilterJobPostCardComponent implements OnInit {
       pages.push(i);
     }
     return pages;
+  }
+
+  // Hàm tiện ích để lấy tên thành phố
+  getCityName(cityId: number): string {
+    return this.cityDict?.[cityId] || 'Chưa cập nhật';
   }
 }

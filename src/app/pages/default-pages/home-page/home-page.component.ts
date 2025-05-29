@@ -9,9 +9,6 @@ import { JobByCategoryComponent } from '../../_components/defaults/job-by-catego
 import { SuggestedJobPostCardComponent } from '../../_components/defaults/suggested-job-post-card/suggested-job-post-card.component';
 import { HOME_FILTER_CAREER, ROLES_NAME, ROUTES } from '../../../_configs/constants';
 import { AuthStateService } from '../../../_services/auth-state.service';
-import { HomeSearchComponent } from "../../_components/defaults/home-search/home-search.component";
-import { SearchContainerComponent } from "../../_components/defaults/search-container/search-container.component";
-import { TopSlideComponent } from "../../../layouts/_components/commons/top-slide/top-slide.component";
 
 @Component({
   selector: 'app-home-page',

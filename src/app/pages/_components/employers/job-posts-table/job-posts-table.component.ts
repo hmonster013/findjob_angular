@@ -44,13 +44,26 @@ export class JobPostsTableComponent {
   }
 
   goToPage(page: number) {
-    if (page >= 0 && page < this.totalPages()) {
+    if (page >= 0 && page < this.totalPages) {
       this.pageChange.emit(page);
     }
   }
 
-  totalPages(): number {
+  get totalPages(): number {
     return Math.ceil(this.total / this.rowsPerPage) || 1;
+  }
+
+  getVisiblePages(): number[] {
+    const maxVisiblePages = 5;
+    const half = Math.floor(maxVisiblePages / 2);
+    let start = Math.max(1, this.page + 1 - half);
+    let end = Math.min(this.totalPages, start + maxVisiblePages - 1);
+    start = Math.max(1, end - maxVisiblePages + 1);
+    const pages: number[] = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   onChangeRowsPerPage(event: Event) {

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
 import { ResumeSavedService } from '../../../../_services/resume-saved.service';
 import { ResumeService } from '../../../../_services/resume.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router, ActivatedRoute } from '@angular/router';
 import { BackdropLoadingComponent } from '../../../../_components/backdrop-loading/backdrop-loading.component';
 import { exportToXLSX } from '../../../../_utils/xlsx-utils';
 import { SavedResumeFilterFormComponent } from '../saved-resume-filter-form/saved-resume-filter-form.component';
@@ -16,12 +18,12 @@ import Swal from 'sweetalert2';
     CommonModule,
     BackdropLoadingComponent,
     SavedResumeFilterFormComponent,
-    SavedResumeTableComponent
+    SavedResumeTableComponent,
   ],
   templateUrl: './saved-resume-card.component.html',
-  styleUrls: ['./saved-resume-card.component.css']
+  styleUrls: ['./saved-resume-card.component.css'],
 })
-export class SavedResumeCardComponent implements OnInit {
+export class SavedResumeCardComponent implements OnInit, OnDestroy {
   resumes: any[] = [];
   isLoading: boolean = false;
   isFullScreenLoading: boolean = false;
@@ -30,26 +32,59 @@ export class SavedResumeCardComponent implements OnInit {
   count: number = 0;
   filterData: any = {};
   order: any = { updatedAt: 'desc' };
+  private destroy$ = new Subject<void>();
 
   constructor(
     private resumeSavedService: ResumeSavedService,
     private resumeService: ResumeService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.fetchResumes();
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      this.filterData = {
+        kw: params['kw'] || '',
+        salaryMax: params['salaryMax'] ? +params['salaryMax'] : null,
+        experienceId: params['experienceId'] ? +params['experienceId'] : null,
+        cityId: params['cityId'] ? +params['cityId'] : null,
+      };
+      this.fetchResumes();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   fetchResumes() {
     this.isLoading = true;
 
-    const params = {
+    type FilterParams = {
+      kw?: string;
+      salaryMax?: number | null;
+      experienceId?: number | null;
+      cityId?: number | null;
+      page: number;
+      limit: number;
+      order?: { updatedAt: string };
+    };
+
+    const params: FilterParams = {
       ...this.filterData,
       page: this.page,
       limit: this.rowsPerPage,
       order: this.order,
     };
+
+    // Loại bỏ các trường null hoặc rỗng
+    Object.keys(params).forEach(key => {
+      if (params[key as keyof FilterParams] === null || params[key as keyof FilterParams] === '') {
+        delete params[key as keyof FilterParams];
+      }
+    });
 
     this.resumeSavedService.getResumesSaved(params).subscribe({
       next: (res) => {
@@ -61,21 +96,25 @@ export class SavedResumeCardComponent implements OnInit {
         this.isLoading = false;
         Swal.fire({
           title: 'Lỗi',
-          text: 'Không thể load danh sách hồ sơ đã lưu',
+          text: 'Không thể tải danh sách hồ sơ đã lưu',
           icon: 'error',
           confirmButtonText: 'Đóng',
           buttonsStyling: false,
           customClass: {
-            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
-          }
+            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
+          },
         });
-      }
+      },
     });
   }
 
   handleFilter(filter: any) {
     this.filterData = filter;
     this.page = 1;
+    const queryParams = Object.fromEntries(
+      Object.entries(filter).filter(([_, v]) => v !== null && v !== '')
+    );
+    this.router.navigate([], { queryParams, relativeTo: this.route });
     this.fetchResumes();
   }
 
@@ -101,8 +140,8 @@ export class SavedResumeCardComponent implements OnInit {
       buttonsStyling: false,
       customClass: {
         confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
-        cancelButton: 'bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 mr-2'
-      }
+        cancelButton: 'bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 mr-2',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.resumeService.saveResume(slug).subscribe({
@@ -118,10 +157,10 @@ export class SavedResumeCardComponent implements OnInit {
               confirmButtonText: 'Đóng',
               buttonsStyling: false,
               customClass: {
-                confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
-              }
+                confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
+              },
             });
-          }
+          },
         });
       }
     });
@@ -133,7 +172,21 @@ export class SavedResumeCardComponent implements OnInit {
       return;
     }
     this.isFullScreenLoading = true;
-    this.resumeSavedService.exportResumesSaved(this.filterData).subscribe({
+    type FilterParams = {
+      kw?: string;
+      salaryMax?: number | null;
+      experienceId?: number | null;
+      cityId?: number | null;
+    };
+
+    const params: FilterParams = { ...this.filterData };
+    Object.keys(params).forEach(key => {
+      if (params[key as keyof FilterParams] === null || params[key as keyof FilterParams] === '') {
+        delete params[key as keyof FilterParams];
+      }
+    });
+
+    this.resumeSavedService.exportResumesSaved(params).subscribe({
       next: (res) => {
         exportToXLSX(res.data, 'ho-so-da-luu');
         this.isFullScreenLoading = false;
@@ -147,14 +200,10 @@ export class SavedResumeCardComponent implements OnInit {
           confirmButtonText: 'Đóng',
           buttonsStyling: false,
           customClass: {
-            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
-          }
+            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
+          },
         });
-      }
+      },
     });
-  }
-
-  totalPages(): number {
-    return Math.ceil(this.count / this.rowsPerPage) || 1;
   }
 }

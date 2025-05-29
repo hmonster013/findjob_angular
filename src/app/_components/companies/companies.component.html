@@ -1,82 +1,77 @@
-<!-- Container -->
-<div class="bg-white rounded-xl p-6">
+<div class="p-6 bg-white rounded-xl">
   <!-- Header -->
-  <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-    <div class="flex items-center gap-2">
-      <h2 class="text-2xl font-bold tracking-tight">Công ty nổi bật</h2>
-      <span class="text-orange-600 bg-orange-100 px-3 py-1 rounded-full text-base font-semibold">
-        {{ count }} công ty
+  <div class="flex items-center border-b border-gray-100 pb-3 mb-6">
+    <h2 class="text-2xl font-bold tracking-tight flex items-center gap-2">
+      Công ty nổi bật
+      <span class="bg-orange-100 text-orange-600 text-sm font-semibold px-3 py-1 rounded-full">
+        {{ count | number }} công ty
       </span>
-    </div>
+    </h2>
   </div>
 
   <!-- Nội dung -->
-  <div *ngIf="isLoading; else dataContent">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div *ngFor="let i of skeletonArray" class="h-80 border border-gray-100 rounded-xl shadow-sm animate-pulse bg-gray-100"></div>
-    </div>
-  </div>
-
-  <ng-template #dataContent>
-    <ng-container *ngIf="companies.length > 0; else noData">
+  <div class="space-y-4">
+    <ng-container *ngIf="isLoading; else loaded">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <app-company
-          *ngFor="let company of companies"
-          [slug]="company.slug"
-          [companyImageUrl]="company.companyImageUrl"
-          [companyCoverImageUrl]="company.companyCoverImageUrl"
-          [companyName]="company.companyName"
-          [employeeSize]="company.employeeSize"
-          [fieldOperation]="company.fieldOperation"
-          [city]="company.locationDict?.city"
-          [followNumber]="company.followNumber"
-          [jobPostNumber]="company.jobPostNumber"
-          [isFollowed]="company.isFollowed"
-        ></app-company>
-      </div>
-
-      <!-- Pagination -->
-      <div *ngIf="totalPages > 1" class="flex justify-center mt-8">
-        <nav class="inline-flex rounded-lg border border-gray-100 shadow-sm" aria-label="Pagination">
-          <!-- Previous Button -->
-          <button
-            (click)="changePage(page - 1)"
-            [disabled]="page === 1"
-            class="px-3 py-2 border-r border-gray-100 rounded-l-lg text-orange-600 hover:bg-orange-600 hover:text-white disabled:text-gray-400 disabled:hover:bg-white disabled:hover:text-gray-400 transition-all duration-300"
-          >
-            <i class="fas fa-chevron-left text-sm"></i>
-          </button>
-
-          <!-- Page Numbers -->
-          <button
-            *ngFor="let p of getVisiblePages()"
-            (click)="changePage(p)"
-            class="px-4 py-2 border-r border-gray-100 text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-300"
-            [class.bg-orange-600]="p === page"
-            [class.text-white]="p === page"
-          >
-            {{ p }}
-          </button>
-
-          <!-- Next Button -->
-          <button
-            (click)="changePage(page + 1)"
-            [disabled]="page === totalPages"
-            class="px-3 py-2 rounded-r-lg text-orange-600 hover:bg-orange-600 hover:text-white disabled:text-gray-400 disabled:hover:bg-white disabled:hover:text-gray-400 transition-all duration-300"
-          >
-            <i class="fas fa-chevron-right text-sm"></i>
-          </button>
-        </nav>
+        <div *ngFor="let i of skeletonArray" class="h-80 border border-gray-100 rounded-xl shadow-sm animate-pulse bg-gray-100"></div>
       </div>
     </ng-container>
 
-    <ng-template #noData>
-      <div class="flex justify-center">
-        <app-no-data-card
-          [title]="'Hiện chưa tìm công ty phù hợp với tiêu chí của bạn'"
-          [imgComponentSvg]="'/assets/images/no-data.svg'"
-        ></app-no-data-card>
+    <ng-template #loaded>
+      <div *ngIf="companies.length === 0" class="flex justify-center">
+        <app-no-data-card>
+          <div class="text-center text-gray-600 py-8">
+            Không tìm thấy công ty phù hợp
+          </div>
+        </app-no-data-card>
+      </div>
+
+      <div *ngIf="companies.length > 0" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <app-company
+            *ngFor="let company of companies"
+            [slug]="company.slug"
+            [companyImageUrl]="company.companyImageUrl"
+            [companyCoverImageUrl]="company.companyCoverImageUrl"
+            [companyName]="company.companyName"
+            [employeeSize]="getEmployeeSizeName(company.employeeSize)"
+            [fieldOperation]="company.fieldOperation"
+            [city]="getCityName(company?.locationDict?.city)"
+            [followNumber]="company.followNumber"
+            [jobPostNumber]="company.jobPostNumber"
+            [isFollowed]="company.isFollowed"
+          ></app-company>
+        </div>
+
+        <!-- Pagination -->
+        <div *ngIf="totalPages > 1" class="flex justify-center mt-8">
+          <nav class="inline-flex rounded-lg border border-gray-100 shadow-sm" aria-label="Pagination">
+            <button
+              (click)="changePage(page - 1)"
+              [disabled]="page === 1"
+              class="px-3 py-2 border-r border-gray-100 rounded-l-lg text-orange-600 hover:bg-orange-600 hover:text-white disabled:text-gray-400 disabled:hover:bg-white disabled:hover:text-gray-400 transition-all duration-300"
+            >
+              <i class="fas fa-chevron-left text-sm"></i>
+            </button>
+            <button
+              *ngFor="let p of getVisiblePages()"
+              (click)="changePage(p)"
+              class="px-4 py-2 border-r border-gray-100 text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-300"
+              [class.bg-orange-600]="p === page"
+              [class.text-white]="p === page"
+            >
+              {{ p }}
+            </button>
+            <button
+              (click)="changePage(page + 1)"
+              [disabled]="page === totalPages"
+              class="px-3 py-2 rounded-r-lg text-orange-600 hover:bg-orange-600 hover:text-white disabled:text-gray-400 disabled:hover:bg-white disabled:hover:text-gray-400 transition-all duration-300"
+            >
+              <i class="fas fa-chevron-right text-sm"></i>
+            </button>
+          </nav>
+        </div>
       </div>
     </ng-template>
-  </ng-template>
+  </div>
 </div>

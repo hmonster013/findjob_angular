@@ -9,8 +9,8 @@ import { CompaniesComponent } from '../../../_components/companies/companies.com
   imports: [
     CommonModule,
     CompanySearchComponent,
-    CompaniesComponent,
+    CompaniesComponent
   ],
-  templateUrl: './company-page.component.html',
+  templateUrl: './company-page.component.html'
 })
 export class CompanyPageComponent {}
