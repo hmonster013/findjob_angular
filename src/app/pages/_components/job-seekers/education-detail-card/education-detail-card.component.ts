@@ -11,7 +11,6 @@ import { EducationDetailService } from '../../../../_services/education-detail.s
   selector: 'app-education-detail-card',
   standalone: true,
   templateUrl: './education-detail-card.component.html',
-  styleUrls: ['./education-detail-card.component.css'],
   imports: [CommonModule, EducationDetailFormComponent],
 })
 export class EducationDetailCardComponent implements OnInit {
@@ -20,7 +19,6 @@ export class EducationDetailCardComponent implements OnInit {
   isFullScreenLoading = false;
   openPopup = false;
   editData: any = null;
-  serverErrors: any = null;
   resumeSlug: string | null = null;
 
   constructor(
@@ -57,7 +55,6 @@ export class EducationDetailCardComponent implements OnInit {
   }
 
   handleShowAdd() {
-    this.serverErrors = null;
     this.editData = null;
     this.openPopup = true;
   }
@@ -79,10 +76,11 @@ export class EducationDetailCardComponent implements OnInit {
     });
   }
 
-  handleAddOrUpdate = (data: any) => {
+  handleAddOrUpdate = (data: any, id?: number) => {
     this.isFullScreenLoading = true;
-    if (data.id) {
-      this.educationDetailService.updateEducationDetailById(data.id, data).subscribe({
+    const payload = { ...data, resume: this.resumeSlug };
+    if (id) {
+      this.educationDetailService.updateEducationDetailById(id, payload).subscribe({
         next: () => {
           this.toastr.success('Cập nhật học vấn thành công!');
           this.loadEducationsDetail();
@@ -90,14 +88,14 @@ export class EducationDetailCardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Update education detail error:', err);
-          this.toastr.error('Có lỗi khi cập nhật học vấn!');
+          this.toastr.error(err.error?.message || 'Có lỗi khi cập nhật học vấn!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
         },
       });
     } else {
-      this.educationDetailService.addEducationsDetail(data).subscribe({
+      this.educationDetailService.addEducationsDetail(payload).subscribe({
         next: () => {
           this.toastr.success('Thêm học vấn thành công!');
           this.loadEducationsDetail();
@@ -105,7 +103,7 @@ export class EducationDetailCardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Add education detail error:', err);
-          this.toastr.error('Có lỗi khi thêm học vấn!');
+          this.toastr.error(err.error?.message || 'Có lỗi khi thêm học vấn!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -120,6 +118,8 @@ export class EducationDetailCardComponent implements OnInit {
       text: 'Bạn có chắc muốn xóa học vấn này không?',
       icon: 'warning',
       showCancelButton: true,
+      confirmButtonColor: '#ea580c',
+      cancelButtonColor: '#d1d5db',
       confirmButtonText: 'Xóa',
       cancelButtonText: 'Hủy',
     }).then((result) => {

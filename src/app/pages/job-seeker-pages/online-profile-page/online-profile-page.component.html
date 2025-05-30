@@ -1,47 +1,49 @@
-<div class="grid grid-cols-1 md:grid-cols-12 gap-6 px-4 py-6">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 px-6 py-8 max-w-7xl mx-auto">
   <!-- Left content -->
-  <div class="md:col-span-9 space-y-6">
-    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+  <div class="md:col-span-9 space-y-8">
+    <div #sectionRef>
       <app-personal-info-card [title]="'Thông tin cá nhân'" />
     </div>
 
-    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+    <div #sectionRef>
       <app-general-info-card [title]="'Thông tin chung'" />
     </div>
 
-    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+    <div #sectionRef>
       <app-experience-detail-card [title]="'Kinh nghiệm làm việc'" />
     </div>
 
-    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+    <div #sectionRef>
       <app-education-detail-card [title]="'Thông tin học vấn'" />
     </div>
 
-    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+    <div #sectionRef>
       <app-certificate-card [title]="'Chứng chỉ'" />
     </div>
 
-    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+    <div #sectionRef>
       <app-language-skill-card [title]="'Kỹ năng ngôn ngữ'" />
     </div>
 
-    <div #sectionRef class="bg-white p-4 rounded-xl shadow">
+    <div #sectionRef>
       <app-advanced-skill-card [title]="'Kỹ năng chuyên môn'" />
     </div>
   </div>
 
   <!-- Sidebar -->
   <div class="hidden md:block md:col-span-3">
-    <div class="sticky top-20">
-      <div class="bg-gradient-to-r from-primary to-blue-500 text-white rounded-xl shadow p-4">
-        <h2 class="text-base font-semibold mb-4">Hồ sơ trực tuyến của bạn</h2>
-        <ul class="space-y-2">
+    <div class="sticky top-24">
+      <div class="bg-gradient-to-r from-orange-600 to-orange-400 text-white rounded-xl p-6 shadow-lg">
+        <h2 class="text-lg font-semibold mb-6 flex items-center gap-2">
+          <i class="fas fa-user-circle"></i> Hồ sơ trực tuyến của bạn
+        </h2>
+        <ul class="space-y-3">
           <li *ngFor="let label of sections; let i = index">
             <button
-              class="w-full flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/10 transition text-sm"
+              class="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-orange-700/50 transition text-sm font-medium"
               (click)="scrollTo(i)"
             >
-              {{ label }}
+              <i class="fas fa-chevron-right text-orange-200"></i> {{ label }}
             </button>
           </li>
         </ul>

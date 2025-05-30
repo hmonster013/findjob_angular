@@ -1,12 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { ProfileUploadFormComponent } from '../profile-upload-form/profile-upload-form.component';
 import { CV_TYPES } from '../../../../_configs/constants';
 import { ResumeService } from '../../../../_services/resume.service';
 import { JobSeekerProfileService } from '../../../../_services/job-seeker-profile.service';
+
+interface Resume {
+  slug: string;
+  title: string;
+  updatedAt: string;
+  isActive: boolean;
+}
 
 @Component({
   selector: 'app-profile-upload',
@@ -17,9 +23,9 @@ import { JobSeekerProfileService } from '../../../../_services/job-seeker-profil
 })
 export class ProfileUploadComponent implements OnInit {
   @Input() allConfig: any = {};
-  @Input() jobSeekerProfileId: any;
+  @Input() jobSeekerProfileId!: number; // Đổi từ any thành number
 
-  resumes: any[] = [];
+  resumes: Resume[] = [];
   isLoadingResumes = true;
   isFullScreenLoading = false;
   openPopup = false;
@@ -32,16 +38,17 @@ export class ProfileUploadComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.jobSeekerProfileId) {
+    if (this.jobSeekerProfileId && !isNaN(this.jobSeekerProfileId)) {
       this.loadResumes();
+    } else {
+      this.toastr.error('ID hồ sơ không hợp lệ!');
+      this.isLoadingResumes = false;
     }
   }
 
-  loadResumes() {
+  loadResumes(): void {
     this.isLoadingResumes = true;
-    const params = {
-      resumeType: this.CV_UPLOAD
-    };
+    const params = { resumeType: this.CV_UPLOAD };
     this.jobSeekerProfileService.getResumes(this.jobSeekerProfileId, params).subscribe({
       next: (res) => {
         this.resumes = res.data || [];
@@ -52,30 +59,27 @@ export class ProfileUploadComponent implements OnInit {
       },
       complete: () => {
         this.isLoadingResumes = false;
-      }
+      },
     });
   }
 
-  handleShowUpload() {
-    console.log('Opening popup'); // Debug log
+  handleShowUpload(): void {
     this.openPopup = true;
   }
 
-  handleUpload(data: any) {
+  handleUpload(data: any): void {
+    if (!data.file || data.file.type !== 'application/pdf') {
+      this.toastr.error('Vui lòng chọn file PDF!');
+      return;
+    }
+
     const formData = new FormData();
-    formData.append('file', data.file);
+    Object.keys(data).forEach((key) => {
+      if (data[key] !== null && data[key] !== undefined) {
+        formData.append(key, data[key]);
+      }
+    });
     formData.append('resumeType', this.CV_UPLOAD);
-    formData.append('title', data.title);
-    formData.append('position', data.position);
-    formData.append('academicLevel', data.academicLevel);
-    formData.append('experience', data.experience);
-    formData.append('career', data.career);
-    formData.append('city', data.city);
-    formData.append('salaryMin', data.salaryMin);
-    formData.append('salaryMax', data.salaryMax);
-    formData.append('typeOfWorkplace', data.typeOfWorkplace);
-    formData.append('jobType', data.jobType);
-    formData.append('description', data.description);
 
     this.isFullScreenLoading = true;
     this.resumeService.addResume(formData).subscribe({
@@ -90,18 +94,23 @@ export class ProfileUploadComponent implements OnInit {
       },
       complete: () => {
         this.isFullScreenLoading = false;
-      }
+      },
     });
   }
 
-  handleDeleteResume(slug: string) {
+  handleDeleteResume(slug: string): void {
     Swal.fire({
       title: 'Xác nhận xóa',
       text: 'Bạn có chắc chắn muốn xóa CV này không?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Xóa',
-      cancelButtonText: 'Hủy'
+      cancelButtonText: 'Hủy',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md',
+        cancelButton: 'bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-md',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.resumeService.deleteResume(slug).subscribe({
@@ -112,13 +121,13 @@ export class ProfileUploadComponent implements OnInit {
           error: (err) => {
             console.error('Error deleting resume:', err);
             this.toastr.error('Có lỗi khi xóa CV!');
-          }
+          },
         });
       }
     });
   }
 
-  handleActiveResume(slug: string) {
+  handleActiveResume(slug: string): void {
     this.isFullScreenLoading = true;
     this.resumeService.activeResume(slug).subscribe({
       next: () => {
@@ -131,7 +140,7 @@ export class ProfileUploadComponent implements OnInit {
       },
       complete: () => {
         this.isFullScreenLoading = false;
-      }
+      },
     });
   }
 }

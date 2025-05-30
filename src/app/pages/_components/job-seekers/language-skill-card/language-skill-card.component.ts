@@ -6,12 +6,12 @@ import Swal from 'sweetalert2';
 import { LanguageSkillFormComponent } from '../language-skill-form/language-skill-form.component';
 import { ResumeService } from '../../../../_services/resume.service';
 import { LanguageSkillService } from '../../../../_services/language-skill.service';
+import { CommonService } from '../../../../_services/common.service';
 
 @Component({
   selector: 'app-language-skill-card',
   standalone: true,
   templateUrl: './language-skill-card.component.html',
-  styleUrls: ['./language-skill-card.component.css'],
   imports: [CommonModule, LanguageSkillFormComponent],
 })
 export class LanguageSkillCardComponent implements OnInit {
@@ -21,26 +21,31 @@ export class LanguageSkillCardComponent implements OnInit {
   openPopup = false;
   editData: any = null;
   resumeSlug: string | null = null;
-  allConfig: any = {
-    languageOptions: [
-      { value: 'EN', label: 'Tiếng Anh' },
-      { value: 'FR', label: 'Tiếng Pháp' },
-      { value: 'JP', label: 'Tiếng Nhật' },
-      { value: 'CN', label: 'Tiếng Trung' },
-      { value: 'KR', label: 'Tiếng Hàn' },
-    ],
-  };
+  allConfig: any = {};
 
   constructor(
     private route: ActivatedRoute,
     private resumeService: ResumeService,
     private languageSkillService: LanguageSkillService,
+    private commonService: CommonService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
     this.resumeSlug = this.route.snapshot.paramMap.get('slug');
+    this.getConfigs();
     this.loadLanguageSkills();
+  }
+
+  getConfigs() {
+    this.commonService.getConfigs().subscribe({
+      next: (res) => {
+        this.allConfig = res.data;
+      },
+      error: (err) => {
+        this.toastr.error('Lỗi khi tải cấu hình!');
+      },
+    });
   }
 
   loadLanguageSkills() {
@@ -86,10 +91,11 @@ export class LanguageSkillCardComponent implements OnInit {
     });
   }
 
-  handleAddOrUpdate = (data: any) => {
+  handleAddOrUpdate = (data: any, id?: number) => {
     this.isFullScreenLoading = true;
-    if (data.id) {
-      this.languageSkillService.updateLanguageSkillById(data.id, data).subscribe({
+    const payload = { ...data, resume: this.resumeSlug };
+    if (id) {
+      this.languageSkillService.updateLanguageSkillById(id, payload).subscribe({
         next: () => {
           this.toastr.success('Cập nhật kỹ năng ngôn ngữ thành công!');
           this.loadLanguageSkills();
@@ -97,14 +103,14 @@ export class LanguageSkillCardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error updating language skill:', err);
-          this.toastr.error('Có lỗi khi cập nhật kỹ năng ngôn ngữ!');
+          this.toastr.error(err.error?.message || 'Có lỗi khi cập nhật kỹ năng ngôn ngữ!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
         },
       });
     } else {
-      this.languageSkillService.addLanguageSkills(data).subscribe({
+      this.languageSkillService.addLanguageSkills(payload).subscribe({
         next: () => {
           this.toastr.success('Thêm kỹ năng ngôn ngữ thành công!');
           this.loadLanguageSkills();
@@ -112,7 +118,7 @@ export class LanguageSkillCardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error adding language skill:', err);
-          this.toastr.error('Có lỗi khi thêm kỹ năng ngôn ngữ!');
+          this.toastr.error(err.error?.message || 'Có lỗi khi thêm kỹ năng ngôn ngữ!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -127,6 +133,8 @@ export class LanguageSkillCardComponent implements OnInit {
       text: 'Bạn có chắc muốn xóa kỹ năng ngôn ngữ này không?',
       icon: 'warning',
       showCancelButton: true,
+      confirmButtonColor: '#ea580c',
+      cancelButtonColor: '#d1d5db',
       confirmButtonText: 'Xóa',
       cancelButtonText: 'Hủy',
     }).then((result) => {

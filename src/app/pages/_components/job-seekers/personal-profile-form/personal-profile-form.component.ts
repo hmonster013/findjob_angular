@@ -8,7 +8,6 @@ import { CommonService } from '../../../../_services/common.service';
   selector: 'app-personal-profile-form',
   standalone: true,
   templateUrl: './personal-profile-form.component.html',
-  styleUrls: ['./personal-profile-form.component.css'],
   imports: [CommonModule, ReactiveFormsModule],
 })
 export class PersonalProfileFormComponent implements OnInit, OnChanges {
@@ -31,10 +30,10 @@ export class PersonalProfileFormComponent implements OnInit, OnChanges {
       user: this.fb.group({
         fullName: ['', [Validators.required, Validators.maxLength(100)]],
       }),
-      phone: ['', [Validators.required, Validators.maxLength(15)]],
+      phone: ['', [Validators.required, Validators.pattern(/^(0[3|5|7|8|9])+([0-9]{8})$/)]],
       birthday: ['', Validators.required],
-      gender: ['', [Validators.required, Validators.maxLength(1)]],
-      maritalStatus: ['', [Validators.required, Validators.maxLength(1)]],
+      gender: ['', Validators.required],
+      maritalStatus: ['', Validators.required],
       location: this.fb.group({
         city: ['', Validators.required],
         district: ['', Validators.required],
@@ -49,32 +48,32 @@ export class PersonalProfileFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['editData'] && !changes['editData'].firstChange) {
-      if (this.editData) {
-        this.patchFormData(this.editData);
-      } else {
-        this.form.reset();
-      }
+    if (changes['editData'] && !changes['editData'].firstChange && this.editData) {
+      this.patchFormData(this.editData);
     }
   }
 
   patchFormData(data: any) {
+    const birthday = data?.birthday ? new Date(data.birthday).toISOString().split('T')[0] : '';
     this.form.patchValue({
-      phone: data?.phone || '',
-      birthday: data?.birthDate || '', // Sửa birthDate thành birthday
-      gender: data?.gender || '',
-      maritalStatus: data?.maritalStatus || '',
       user: {
         fullName: data?.user?.fullName || '',
       },
+      phone: data?.phone || '',
+      birthday: birthday,
+      gender: data?.gender || '',
+      maritalStatus: data?.maritalStatus || '',
       location: {
         city: data?.location?.city || '',
         district: data?.location?.district || '',
         address: data?.location?.address || '',
       },
     });
+
     if (data?.location?.city) {
       this.loadDistricts(Number(data.location.city));
+    } else {
+      this.districtOptions = [];
     }
   }
 
@@ -87,22 +86,26 @@ export class PersonalProfileFormComponent implements OnInit, OnChanges {
   loadDistricts(cityId: number) {
     this.commonService.getDistrictsByCityId(cityId).subscribe({
       next: (res) => {
-        this.districtOptions = res.data;
+        this.districtOptions = (res.data || []).map((district: any) => ({
+          value: district.id,
+          label: district.name,
+        }));
       },
       error: (err) => {
         console.error('Error loading districts:', err);
+        this.districtOptions = [];
       },
     });
   }
 
   onCityChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const value = selectElement?.value;
-
-    if (value) {
-      const cityId = Number(value);
-      this.loadDistricts(cityId);
-      this.form.get('location')?.get('district')?.setValue('');
+    const cityId = (event.target as HTMLSelectElement).value;
+    if (cityId) {
+      this.loadDistricts(Number(cityId));
+      this.form.get('location.district')?.setValue('');
+    } else {
+      this.districtOptions = [];
+      this.form.get('location.district')?.setValue('');
     }
   }
 
@@ -112,8 +115,7 @@ export class PersonalProfileFormComponent implements OnInit, OnChanges {
     }
   }
 
-  cancel() {
-    this.form.reset();
-    this.cancelForm.emit();
+  close() {
+    this.cancelForm.emit(); // Chỉ phát sự kiện để đóng modal
   }
 }

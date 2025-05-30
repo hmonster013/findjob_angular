@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -14,6 +14,7 @@ export class JobPostNotificationFormComponent implements OnInit, OnChanges {
   @Input() editData: any = null;
   @Input() handleAddOrUpdate!: (data: any) => void;
   @Input() allConfig: any = {};
+  @Output() cancelForm = new EventEmitter<void>();
 
   form!: FormGroup;
 
@@ -22,23 +23,21 @@ export class JobPostNotificationFormComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.form = this.fb.group({
       jobName: ['', [Validators.required, Validators.maxLength(200)]],
-      career: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Phải là số
-      city: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Phải là số
+      career: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      city: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       position: [''],
       experience: [''],
-      salary: [null, [Validators.min(0)]], // Chấp nhận null, kiểm tra số dương
-      frequency: ['', Validators.required], // Bắt buộc
+      salary: [null, [Validators.min(0)]],
+      frequency: ['', Validators.required],
     });
 
-    // Đặt giá trị mặc định cho frequency
     const defaultFrequency = (this.allConfig?.frequencyNotificationOptions || [])[0]?.id || '';
     this.form.patchValue({ frequency: defaultFrequency });
 
-    // Patch editData nếu có
     if (this.editData) {
       this.form.patchValue({
         ...this.editData,
-        salary: this.editData.salary || null, // Chuyển chuỗi rỗng thành null
+        salary: this.editData.salary || null,
       });
     }
   }
@@ -48,7 +47,7 @@ export class JobPostNotificationFormComponent implements OnInit, OnChanges {
       if (this.editData) {
         this.form.patchValue({
           ...this.editData,
-          salary: this.editData.salary || null, // Chuyển chuỗi rỗng thành null
+          salary: this.editData.salary || null,
         });
       } else {
         this.form.reset({
@@ -68,9 +67,23 @@ export class JobPostNotificationFormComponent implements OnInit, OnChanges {
     if (this.form.valid && this.handleAddOrUpdate) {
       const formValue = {
         ...this.form.value,
-        salary: this.form.value.salary || null, // Chuyển chuỗi rỗng thành null
+        salary: this.form.value.salary || null,
+        id: this.editData?.id,
       };
       this.handleAddOrUpdate(formValue);
     }
+  }
+
+  cancel() {
+    this.form.reset({
+      jobName: '',
+      career: '',
+      city: '',
+      position: '',
+      experience: '',
+      salary: null,
+      frequency: (this.allConfig?.frequencyNotificationOptions || [])[0]?.id || '',
+    });
+    this.cancelForm.emit();
   }
 }

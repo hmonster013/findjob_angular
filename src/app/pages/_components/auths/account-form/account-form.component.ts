@@ -1,18 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-account-form',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './account-form.component.html',
   styleUrls: ['./account-form.component.css'],
-  standalone: true
+  standalone: true,
 })
-export class AccountFormComponent {
+export class AccountFormComponent implements OnInit {
   @Input() serverErrors: any = null;
   @Output() update = new EventEmitter<any>();
 
@@ -21,13 +18,7 @@ export class AccountFormComponent {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-    const user = JSON.parse(localStorage.getItem('current_user') || '{}');
-
-    this.accountForm = this.fb.group({
-      fullName: [user?.fullName || '', [Validators.required, Validators.maxLength(100)]],
-      email: [{ value: user?.email || '', disabled: true }],
-      password: [{ value: '*****************', disabled: true }],
-    });
+    this.initializeForm();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -40,9 +31,20 @@ export class AccountFormComponent {
     }
   }
 
+  initializeForm() {
+    const user = JSON.parse(localStorage.getItem('current_user') || '{}');
+
+    this.accountForm = this.fb.group({
+      fullName: [user?.fullName || '', [Validators.required, Validators.maxLength(100)]],
+      email: [{ value: user?.email || '', disabled: true }],
+      password: [{ value: '*****************', disabled: true }],
+    });
+  }
+
   onSubmit() {
     if (this.accountForm.valid) {
       this.update.emit(this.accountForm.getRawValue());
+      this.accountForm.markAsPristine(); // Đánh dấu form là sạch sau khi submit
     }
   }
 }

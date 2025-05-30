@@ -80,8 +80,7 @@ export class AuthenticationService {
   }
 
   updateAvatar(data: FormData): Observable<any> {
-    const headers = new HttpHeaders().set('Content-Type', 'multipart/form-data');
-    return this.http.put(`${this.baseUrl}/avatar/`, data, { headers });
+    return this.http.put(`${this.baseUrl}/avatar/`, data);
   }
 
   deleteAvatar(): Observable<any> {

@@ -1,19 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { AdvancedSkillFormComponent } from '../advanced-skill-form/advanced-skill-form.component';
 import { ResumeService } from '../../../../_services/resume.service';
 import { AdvancedSkillService } from '../../../../_services/advanced-skill.service';
-import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-advanced-skill-card',
   standalone: true,
-  imports: [CommonModule, FormsModule, AdvancedSkillFormComponent],
+  imports: [CommonModule, AdvancedSkillFormComponent],
   templateUrl: './advanced-skill-card.component.html',
-  styleUrls: ['./advanced-skill-card.component.css'],
 })
 export class AdvancedSkillCardComponent implements OnInit {
   advancedSkills: any[] = [];
@@ -21,7 +19,6 @@ export class AdvancedSkillCardComponent implements OnInit {
   isFullScreenLoading = false;
   openPopup = false;
   editData: any = null;
-  serverErrors: any = null;
   resumeSlug: string | null = null;
 
   constructor(
@@ -60,7 +57,6 @@ export class AdvancedSkillCardComponent implements OnInit {
   handleShowAdd() {
     this.editData = null;
     this.openPopup = true;
-    this.serverErrors = null;
   }
 
   handleShowUpdate(skillId: number) {
@@ -69,7 +65,6 @@ export class AdvancedSkillCardComponent implements OnInit {
       next: (res) => {
         this.editData = res.data;
         this.openPopup = true;
-        this.serverErrors = null;
       },
       error: (err) => {
         console.error('Error loading advanced skill:', err);
@@ -81,37 +76,34 @@ export class AdvancedSkillCardComponent implements OnInit {
     });
   }
 
-  handleAddOrUpdate = (data: any) => {
+  handleAddOrUpdate = (data: any, id?: number) => {
     this.isFullScreenLoading = true;
-    if (data.id) {
-      this.advancedSkillService.updateAdvancedSkillById(data.id, data).subscribe({
+    const payload = { ...data, resume: this.resumeSlug };
+    if (id) {
+      this.advancedSkillService.updateAdvancedSkillById(id, payload).subscribe({
         next: () => {
           this.toastr.success('Cập nhật kỹ năng thành công!');
           this.loadAdvancedSkills();
           this.openPopup = false;
-          this.serverErrors = null;
         },
         error: (err) => {
           console.error('Update error:', err);
-          this.toastr.error('Có lỗi khi cập nhật kỹ năng!');
-          this.serverErrors = err.error?.errors || null;
+          this.toastr.error(err.error?.message || 'Có lỗi khi cập nhật kỹ năng!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
         },
       });
     } else {
-      this.advancedSkillService.addAdvancedSkills(data).subscribe({
+      this.advancedSkillService.addAdvancedSkills(payload).subscribe({
         next: () => {
           this.toastr.success('Thêm kỹ năng thành công!');
           this.loadAdvancedSkills();
           this.openPopup = false;
-          this.serverErrors = null;
         },
         error: (err) => {
           console.error('Add error:', err);
-          this.toastr.error('Có lỗi khi thêm kỹ năng!');
-          this.serverErrors = err.error?.errors || null;
+          this.toastr.error(err.error?.message || 'Có lỗi khi thêm kỹ năng!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -126,6 +118,8 @@ export class AdvancedSkillCardComponent implements OnInit {
       text: 'Bạn có chắc chắn muốn xóa kỹ năng này không?',
       icon: 'warning',
       showCancelButton: true,
+      confirmButtonColor: '#ea580c',
+      cancelButtonColor: '#d1d5db',
       confirmButtonText: 'Xóa',
       cancelButtonText: 'Hủy',
     }).then((result) => {

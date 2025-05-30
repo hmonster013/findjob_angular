@@ -13,7 +13,7 @@
       <div class="flex space-x-2">
         <!-- Upload button -->
         <label class="cursor-pointer">
-          <input type="file" class="hidden" (change)="onSelectFile($event)" />
+          <input type="file" class="hidden" accept="image/png,image/jpeg" (change)="onSelectFile($event)" />
           <div
             class="bg-amber-100 p-2 rounded-full shadow-md hover:bg-amber-200 hover:shadow-lg text-amber-600 text-base transition-all duration-300 ease-in-out"
           >
@@ -26,6 +26,7 @@
           type="button"
           (click)="onDelete()"
           class="bg-amber-100 p-2 rounded-full shadow-md hover:bg-amber-200 hover:shadow-lg text-amber-600 text-base transition-all duration-300 ease-in-out"
+          [disabled]="!currentUser?.avatarUrl"
         >
           <i class="fas fa-trash"></i>
         </button>
@@ -38,7 +39,7 @@
   </div>
 
   <!-- Loading Full Screen -->
-  <div *ngIf="isFullScreenLoading" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 z-50 bg-gray-500/50 flex items-center justify-center">
     <div class="animate-spin rounded-full h-10 w-10 border-4 border-amber-600 border-t-transparent shadow-lg"></div>
   </div>
 </div>

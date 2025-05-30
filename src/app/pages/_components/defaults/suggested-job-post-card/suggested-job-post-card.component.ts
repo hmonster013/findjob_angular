@@ -1,57 +1,58 @@
-import { Component, HostListener, Input } from '@angular/core';
-import { JobService } from '../../../../_services/job.service';
-import { ROLES_NAME } from '../../../../_configs/constants';
-import { Subject, takeUntil } from 'rxjs';
-import { JobPostComponent } from "../../../../_components/job-post/job-post.component";
-import { NoDataCardComponent } from "../../../../_components/no-data-card/no-data-card.component";
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { JobService } from '../../../../_services/job.service';
+import { CommonService } from '../../../../_services/common.service';
 import { AuthStateService } from '../../../../_services/auth-state.service';
+import { ToastrService } from 'ngx-toastr';
+import { ROLES_NAME } from '../../../../_configs/constants';
+import { JobPostComponent } from '../../../../_components/job-post/job-post.component';
+import { NoDataCardComponent } from '../../../../_components/no-data-card/no-data-card.component';
 
 @Component({
   selector: 'app-suggested-job-post-card',
+  standalone: true,
   imports: [
+    CommonModule,
     JobPostComponent,
     NoDataCardComponent,
-    CommonModule
   ],
   templateUrl: './suggested-job-post-card.component.html',
-  styleUrl: './suggested-job-post-card.component.css'
+  styleUrls: ['./suggested-job-post-card.component.css'],
 })
-export class SuggestedJobPostCardComponent {
+export class SuggestedJobPostCardComponent implements OnInit {
   @Input() pageSize: number = 12;
-  @Input() fullWidth: boolean = false;
+  @Input() mode: 'fixed' | 'responsive' = 'responsive';
 
   jobPosts: any[] = [];
-  isLoading = true;
-  page = 1;
-  pageCount = 0;
-  colClass = 'w-full md:w-1/2 lg:w-1/3';
+  isLoading: boolean = true;
+  page: number = 1;
+  count: number = 0;
+  totalPages: number = 0;
+  col: number = 3;
+  cityDict: { [key: string]: string } | null = null;
 
   constructor(
     private jobService: JobService,
-    private authService: AuthStateService
+    private commonService: CommonService,
+    private authService: AuthStateService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.updateColClass();
+    this.handleResize();
+    this.getConfigs();
     this.loadJobs();
   }
 
-  @HostListener('window:resize', [])
-  onResize() {
-    this.updateColClass();
-  }
-
-  updateColClass() {
-    if (this.fullWidth) {
-      this.colClass = 'w-full md:w-1/2 lg:w-1/3';
-    } else {
-      const width = document.getElementById('suggested-job-post-card')?.offsetWidth || 1200;
-      if (width < 600) this.colClass = 'w-full';
-      else if (width < 900) this.colClass = 'w-full md:w-1/2';
-      else if (width < 1200) this.colClass = 'w-full md:w-1/2';
-      else this.colClass = 'w-full md:w-1/2 lg:w-1/3';
-    }
+  getConfigs() {
+    this.commonService.getConfigs().subscribe({
+      next: (res) => {
+        this.cityDict = res.data.cityDict;
+      },
+      error: () => {
+        this.toastr.error('Không thể tải cấu hình thành phố');
+      },
+    });
   }
 
   loadJobs() {
@@ -60,6 +61,7 @@ export class SuggestedJobPostCardComponent {
 
     if (!isAuthenticated || currentUser?.roleName !== ROLES_NAME.JOB_SEEKER) {
       this.isLoading = false;
+      this.jobPosts = [];
       return;
     }
 
@@ -73,17 +75,57 @@ export class SuggestedJobPostCardComponent {
       .subscribe({
         next: (res) => {
           this.jobPosts = res.data.results;
-          this.pageCount = Math.ceil(res.data.count / this.pageSize);
+          this.count = res.data.count;
+          this.totalPages = Math.ceil(this.count / this.pageSize);
           this.isLoading = false;
         },
-        error: () => {
+        error: (err) => {
+          console.error('Error loading jobs:', err);
+          this.toastr.error('Không thể tải danh sách công việc');
           this.isLoading = false;
+          this.jobPosts = [];
         },
       });
   }
 
-  handleChangePage(newPage: number) {
-    this.page = newPage;
-    this.loadJobs();
+  @HostListener('window:resize')
+  handleResize() {
+    if (this.mode === 'fixed') {
+      this.col = 1; // Luôn 1 cột cho mode fixed
+      return;
+    }
+    const width = window.innerWidth;
+    if (width < 900) {
+      this.col = 1;
+    } else if (width < 1200) {
+      this.col = 2;
+    } else {
+      this.col = 3;
+    }
+  }
+
+  changePage(newPage: number) {
+    if (newPage >= 1 && newPage <= this.totalPages) {
+      this.page = newPage;
+      this.loadJobs();
+    }
+  }
+
+  getVisiblePages(): number[] {
+    const maxVisiblePages = 5;
+    const half = Math.floor(maxVisiblePages / 2);
+    let start = Math.max(1, this.page - half);
+    let end = Math.min(this.totalPages, start + maxVisiblePages - 1);
+    start = Math.max(1, end - maxVisiblePages + 1);
+
+    const pages: number[] = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  getCityName(cityId: number): string {
+    return this.cityDict?.[Number(cityId)] || '--';
   }
 }

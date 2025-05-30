@@ -11,7 +11,6 @@ import { CertificateService } from '../../../../_services/certificate.service';
   selector: 'app-certificate-card',
   standalone: true,
   templateUrl: './certificate-card.component.html',
-  styleUrls: ['./certificate-card.component.css'],
   imports: [CommonModule, CertificateFormComponent],
 })
 export class CertificateCardComponent implements OnInit {
@@ -20,7 +19,6 @@ export class CertificateCardComponent implements OnInit {
   isFullScreenLoading = false;
   openPopup = false;
   editData: any = null;
-  serverErrors: any = null;
   resumeSlug: string | null = null;
 
   constructor(
@@ -57,7 +55,6 @@ export class CertificateCardComponent implements OnInit {
   }
 
   handleShowAdd() {
-    this.serverErrors = null;
     this.editData = null;
     this.openPopup = true;
   }
@@ -79,37 +76,34 @@ export class CertificateCardComponent implements OnInit {
     });
   }
 
-  handleAddOrUpdate = (data: any) => {
+  handleAddOrUpdate = (data: any, id?: number) => {
     this.isFullScreenLoading = true;
-    if (data.id) {
-      this.certificateService.updateCertificateById(data.id, data).subscribe({
+    const payload = { ...data, resume: this.resumeSlug };
+    if (id) {
+      this.certificateService.updateCertificateById(id, payload).subscribe({
         next: () => {
           this.toastr.success('Cập nhật chứng chỉ thành công!');
           this.loadCertificates();
           this.openPopup = false;
-          this.serverErrors = null;
         },
         error: (err) => {
           console.error('Error updating certificate:', err);
-          this.toastr.error('Có lỗi khi cập nhật chứng chỉ!');
-          this.serverErrors = err.error?.errors || null;
+          this.toastr.error(err.error?.message || 'Có lỗi khi cập nhật chứng chỉ!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
         },
       });
     } else {
-      this.certificateService.addCertificates(data).subscribe({
+      this.certificateService.addCertificates(payload).subscribe({
         next: () => {
           this.toastr.success('Thêm chứng chỉ thành công!');
           this.loadCertificates();
           this.openPopup = false;
-          this.serverErrors = null;
         },
         error: (err) => {
           console.error('Error adding certificate:', err);
-          this.toastr.error('Có lỗi khi thêm chứng chỉ!');
-          this.serverErrors = err.error?.errors || null;
+          this.toastr.error(err.error?.message || 'Có lỗi khi thêm chứng chỉ!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -124,6 +118,8 @@ export class CertificateCardComponent implements OnInit {
       text: 'Bạn có chắc muốn xóa chứng chỉ này không?',
       icon: 'warning',
       showCancelButton: true,
+      confirmButtonColor: '#ea580c',
+      cancelButtonColor: '#d1d5db',
       confirmButtonText: 'Xóa',
       cancelButtonText: 'Hủy',
     }).then((result) => {

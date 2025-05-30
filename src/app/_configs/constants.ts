@@ -167,7 +167,7 @@ export const ROUTES = {
     JOBS_BY_TYPE: 'viec-lam-theo-hinh-thuc-lam-viec',
     DASHBOARD: 'bang-dieu-khien',
     PROFILE: 'ho-so',
-    STEP_PROFILE: 'ho-so-tung-buoc/:slug',
+    STEP_PROFILE: 'ho-so-tung-buoc',
     ATTACHED_PROFILE: 'ho-so-dinh-kem/:slug',
     MY_JOB: 'viec-lam-cua-toi',
     MY_COMPANY: 'cong-ty-cua-toi',

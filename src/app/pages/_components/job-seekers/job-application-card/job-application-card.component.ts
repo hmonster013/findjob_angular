@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { JobSeekerProfileService } from '../../../../_services/job-seeker-profile.service';
+import { ROUTES } from '../../../../_configs/constants';
 
 @Component({
   selector: 'app-job-application-card',
@@ -44,11 +45,11 @@ export class JobApplicationCardComponent implements OnInit {
   }
 
   handleNavigate(slug: string) {
-    this.router.navigate(['/bang-dieu-khien/ho-so', slug]);
+    this.router.navigate([ROUTES.JOB_SEEKER.DASHBOARD + "/" + ROUTES.JOB_SEEKER.STEP_PROFILE, slug]);
   }
 
   navigateToProfile() {
-    this.router.navigate(['/bang-dieu-khien/ho-so']);
+    this.router.navigate([ROUTES.JOB_SEEKER.DASHBOARD + "/" + ROUTES.JOB_SEEKER.PROFILE]);
   }
 
   formatDateDisplay(dateStr: string): string {

@@ -1,19 +1,28 @@
-<div class="p-6 bg-white rounded-lg shadow-xl border-2 border-gray-300 relative">
+<div class="p-6 bg-white rounded-lg shadow-xl border border-gray-300">
   <!-- Title -->
-  <h2 class="text-2xl font-semibold text-gray-800 mb-4">Thông tin cá nhân</h2>
-  <hr class="border-gray-300 mb-4">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+    <i class="fas fa-user text-amber-600"></i> Thông tin cá nhân
+  </h2>
+  <hr class="border-gray-200 mb-4">
 
   <!-- Loading Skeleton -->
-  <div *ngIf="isLoadingProfile" class="space-y-3">
-    <div class="h-6 bg-gray-200 rounded-md animate-pulse"></div>
-    <div class="h-6 bg-gray-200 rounded-md animate-pulse"></div>
+  <div *ngIf="isLoadingProfile" class="space-y-3 animate-pulse">
+    <div class="h-6 bg-gray-200 rounded-md"></div>
+    <div class="h-6 bg-gray-200 rounded-md"></div>
+    <div class="h-6 bg-gray-200 rounded-md"></div>
   </div>
 
   <!-- No Profile -->
-  <div *ngIf="!isLoadingProfile && !profile" class="text-center text-gray-600 py-12 bg-gray-50 rounded-lg border-2 border-gray-300 shadow-md">
-    <i class="fas fa-user mx-auto text-6xl text-gray-400 mb-4"></i>
+  <div *ngIf="!isLoadingProfile && !profile" class="text-center py-12 bg-gray-50 rounded-lg border-2 border-gray-300 shadow-md">
+    <i class="fas fa-user-circle text-5xl text-gray-400 mb-4"></i>
     <p class="text-lg font-medium text-gray-700">Bạn chưa có thông tin cá nhân.</p>
     <p class="text-sm text-gray-500 mt-2">Cập nhật thông tin để hoàn thiện hồ sơ!</p>
+    <button
+      (click)="handleShowEdit()"
+      class="mt-4 px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-all flex items-center gap-2 mx-auto"
+    >
+      <i class="fas fa-plus"></i> Thêm thông tin
+    </button>
   </div>
 
   <!-- Profile Info -->
@@ -23,28 +32,39 @@
         <span class="font-semibold text-gray-800">Họ tên:</span> {{ profile.user.fullName || 'Chưa cập nhật' }}
       </div>
       <div>
-        <span class="font-semibold text-gray-800">Email:</span> {{ profile.email || 'Chưa cập nhật' }}
-      </div>
-      <div>
         <span class="font-semibold text-gray-800">Số điện thoại:</span> {{ profile.phone || 'Chưa cập nhật' }}
       </div>
       <div>
-        <span class="font-semibold text-gray-800">Ngày sinh:</span>{{ profile.birthDate ? (profile.birthDate | date: 'dd/MM/yyyy') : 'Chưa cập nhật' }}
+        <span class="font-semibold text-gray-800">Ngày sinh:</span>
+        {{ profile.birthday ? (profile.birthday | date: 'dd/MM/yyyy') : 'Chưa cập nhật' }}
       </div>
       <div>
-        <span class="font-semibold text-gray-800">Giới tính:</span> {{ profile.genderText || 'Chưa cập nhật' }}
+        <span class="font-semibold text-gray-800">Giới tính:</span>
+        {{ allConfig?.genderDict[profile.gender] || 'Chưa cập nhật' }}
       </div>
       <div>
-        <span class="font-semibold text-gray-800">Địa chỉ:</span> {{ profile.address || 'Chưa cập nhật' }}
+        <span class="font-semibold text-gray-800">Tình trạng hôn nhân:</span>
+        {{ allConfig?.maritalStatusDict[profile.maritalStatus] || 'Chưa cập nhật' }}
+      </div>
+      <div>
+        <span class="font-semibold text-gray-800">Tỉnh/Thành phố:</span>
+        {{ allConfig?.cityDict[profile.location?.city] || 'Chưa cập nhật' }}
+      </div>
+      <div>
+        <span class="font-semibold text-gray-800">Quận/Huyện:</span>
+        {{ profile.location?.district ? getDistrictName(profile.location.district) : 'Chưa cập nhật' }}
+      </div>
+      <div>
+        <span class="font-semibold text-gray-800">Địa chỉ:</span> {{ profile.location?.address || 'Chưa cập nhật' }}
       </div>
     </div>
 
     <div class="mt-6 flex justify-end">
       <button
         (click)="handleShowEdit()"
-        class="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-md shadow-md hover:bg-amber-700 hover:shadow-lg border-2 border-amber-600 text-sm font-medium transition-all duration-300 ease-in-out flex items-center gap-2"
+        class="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-all flex items-center gap-2"
       >
-        <i class="fas fa-edit text-xs"></i> Chỉnh sửa
+        <i class="fas fa-edit"></i> Chỉnh sửa
       </button>
     </div>
   </div>
@@ -52,41 +72,24 @@
   <!-- Modal Popup -->
   <div
     *ngIf="openPopup"
-    class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50 transition-opacity duration-300"
+    class="fixed inset-0 bg-gray-500/75 flex items-center justify-center z-50 transition-opacity duration-300"
   >
-    <div class="bg-white rounded-lg p-6 max-w-md w-full relative max-h-[80vh] overflow-y-auto shadow-xl border-2 border-gray-300">
-      <!-- Close Button -->
-      <button
-        (click)="openPopup = false"
-        class="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-all duration-300 ease-in-out"
-        aria-label="Đóng modal"
-      >
-        <i class="fas fa-times text-base"></i>
-      </button>
+    <div class="bg-white rounded-lg p-8 max-w-xl w-full max-h-[80vh] overflow-y-auto shadow-2xl border-2 border-gray-300 relative">
       <!-- Form -->
       <app-personal-profile-form
         [editData]="profile"
         [handleUpdateProfile]="handleUpdate"
         [allConfig]="allConfig"
+        (cancelForm)="openPopup = false"
       ></app-personal-profile-form>
-      <!-- Save Button -->
-      <div class="flex justify-end mt-4">
-        <button
-          type="submit"
-          form="modal-form"
-          class="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-md shadow-md hover:bg-amber-700 hover:shadow-lg border-2 border-amber-600 text-sm font-medium transition-all duration-300 ease-in-out flex items-center gap-2"
-        >
-          <i class="fas fa-save text-xs"></i> Lưu
-        </button>
-      </div>
     </div>
   </div>
 
   <!-- Fullscreen Loading -->
   <div
     *ngIf="isFullScreenLoading"
-    class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50"
+    class="fixed inset-0 bg-gray-500/75 flex items-center justify-center z-50"
   >
-    <div class="animate-spin rounded-full h-10 w-10 border-4 border-amber-600 border-t-transparent shadow-lg"></div>
+    <div class="animate-spin rounded-full h-12 w-12 border-4 border-amber-600 border-t-transparent"></div>
   </div>
 </div>

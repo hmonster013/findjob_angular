@@ -11,7 +11,6 @@ import { ExperienceDetailService } from '../../../../_services/expericen-detail.
   selector: 'app-experience-detail-card',
   standalone: true,
   templateUrl: './experience-detail-card.component.html',
-  styleUrls: ['./experience-detail-card.component.css'],
   imports: [CommonModule, ExperienceDetailFormComponent],
 })
 export class ExperienceDetailCardComponent implements OnInit {
@@ -79,8 +78,9 @@ export class ExperienceDetailCardComponent implements OnInit {
 
   handleAddOrUpdate = (data: any) => {
     this.isFullScreenLoading = true;
+    const payload = { ...data, resume: this.resumeSlug };
     if (data.id) {
-      this.experienceDetailService.updateExperienceDetailById(data.id, data).subscribe({
+      this.experienceDetailService.updateExperienceDetailById(data.id, payload).subscribe({
         next: () => {
           this.toastr.success('Cập nhật kinh nghiệm làm việc thành công!');
           this.loadExperiencesDetail();
@@ -88,14 +88,14 @@ export class ExperienceDetailCardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error updating experience:', err);
-          this.toastr.error('Có lỗi khi cập nhật kinh nghiệm!');
+          this.toastr.error(err.error?.message || 'Có lỗi khi cập nhật kinh nghiệm!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
         },
       });
     } else {
-      this.experienceDetailService.addExperienceDetail(data).subscribe({
+      this.experienceDetailService.addExperienceDetail(payload).subscribe({
         next: () => {
           this.toastr.success('Thêm kinh nghiệm làm việc thành công!');
           this.loadExperiencesDetail();
@@ -103,7 +103,7 @@ export class ExperienceDetailCardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error adding experience:', err);
-          this.toastr.error('Có lỗi khi thêm kinh nghiệm!');
+          this.toastr.error(err.error?.message || 'Có lỗi khi thêm kinh nghiệm!');
         },
         complete: () => {
           this.isFullScreenLoading = false;
@@ -118,6 +118,8 @@ export class ExperienceDetailCardComponent implements OnInit {
       text: 'Bạn có chắc muốn xóa kinh nghiệm làm việc này không?',
       icon: 'warning',
       showCancelButton: true,
+      confirmButtonColor: '#ea580c',
+      cancelButtonColor: '#d1d5db',
       confirmButtonText: 'Xóa',
       cancelButtonText: 'Hủy',
     }).then((result) => {

@@ -1,18 +1,22 @@
-:host {
-  display: block;
-}
-
-/* Gradient background */
-.bg-gradient-to-r {
-  background: linear-gradient(to right, #3b82f6, #8b5cf6);
-}
-
-/* Hover effect for avatar */
-.transform:hover {
-  transform: scale(1.05);
-}
-
-/* Tooltip */
+/* Đảm bảo tooltip không bị cắt */
 .group:hover .group-hover\:block {
-  display: block;
+  display: block !important;
+}
+
+/* Căn chỉnh icon và text */
+.fa-briefcase,
+.fa-user-tie,
+.fa-dollar-sign,
+.fa-calendar-alt,
+.fa-exclamation-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.5; /* Đảm bảo icon căn giữa theo chiều dọc */
+}
+
+/* Đảm bảo flex container căn chỉnh đúng */
+div[ngIf="resume"] .flex.items-center {
+  display: flex;
+  align-items: center;
 }

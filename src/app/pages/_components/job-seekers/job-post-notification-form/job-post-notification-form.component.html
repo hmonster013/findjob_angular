@@ -6,10 +6,10 @@
         formControlName="jobName"
         placeholder="Nhập từ khóa (tên công việc hoặc liên quan)"
         type="text"
-        class="input-field"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
         [ngClass]="{'border-red-500': form.get('jobName')?.invalid && form.get('jobName')?.touched}"
       />
-      <span *ngIf="form.get('jobName')?.invalid && form.get('jobName')?.touched" class="error-text">
+      <span *ngIf="form.get('jobName')?.invalid && form.get('jobName')?.touched" class="text-red-500 text-xs mt-2">
         {{ form.get('jobName')?.errors?.['required'] ? 'Từ khóa là bắt buộc.' : 'Từ khóa tối đa 200 ký tự.' }}
       </span>
     </div>
@@ -18,13 +18,13 @@
       <label class="mb-3 font-semibold text-gray-700">Ngành nghề <span class="text-red-500 text-base">*</span></label>
       <select
         formControlName="career"
-        class="input-field"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
         [ngClass]="{'border-red-500': form.get('career')?.invalid && form.get('career')?.touched}"
       >
         <option value="">Chọn ngành nghề</option>
-        <option *ngFor="let option of allConfig?.careerOptions" [value]="option.value">{{ option.label }}</option>
+        <option *ngFor="let option of allConfig?.careerOptions" [value]="option.id">{{ option.name }}</option>
       </select>
-      <span *ngIf="form.get('career')?.invalid && form.get('career')?.touched" class="error-text">
+      <span *ngIf="form.get('career')?.invalid && form.get('career')?.touched" class="text-red-500 text-xs mt-2">
         Ngành nghề là bắt buộc.
       </span>
     </div>
@@ -33,30 +33,36 @@
       <label class="mb-3 font-semibold text-gray-700">Tỉnh/Thành phố <span class="text-red-500 text-base">*</span></label>
       <select
         formControlName="city"
-        class="input-field"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
         [ngClass]="{'border-red-500': form.get('city')?.invalid && form.get('city')?.touched}"
       >
         <option value="">Chọn tỉnh/thành phố</option>
-        <option *ngFor="let option of allConfig?.cityOptions" [value]="option.value">{{ option.label }}</option>
+        <option *ngFor="let option of allConfig?.cityOptions" [value]="option.id">{{ option.name }}</option>
       </select>
-      <span *ngIf="form.get('city')?.invalid && form.get('city')?.touched" class="error-text">
+      <span *ngIf="form.get('city')?.invalid && form.get('city')?.touched" class="text-red-500 text-xs mt-2">
         Tỉnh/Thành phố là bắt buộc.
       </span>
     </div>
 
     <div class="flex flex-col">
       <label class="mb-3 font-semibold text-gray-700">Vị trí/Chức vụ</label>
-      <select formControlName="position" class="input-field">
+      <select
+        formControlName="position"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
+      >
         <option value="">Chọn vị trí/chức vụ</option>
-        <option *ngFor="let option of allConfig?.positionOptions" [value]="option.value">{{ option.label }}</option>
+        <option *ngFor="let option of allConfig?.positionOptions" [value]="option.id">{{ option.name }}</option>
       </select>
     </div>
 
     <div class="flex flex-col">
       <label class="mb-3 font-semibold text-gray-700">Kinh nghiệm</label>
-      <select formControlName="experience" class="input-field">
+      <select
+        formControlName="experience"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
+      >
         <option value="">Chọn kinh nghiệm</option>
-        <option *ngFor="let option of allConfig?.experienceOptions" [value]="option.value">{{ option.label }}</option>
+        <option *ngFor="let option of allConfig?.experienceOptions" [value]="option.id">{{ option.name }}</option>
       </select>
     </div>
 
@@ -66,10 +72,10 @@
         formControlName="salary"
         placeholder="Nhập mức lương mong muốn (triệu VNĐ)"
         type="number"
-        class="input-field"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
         [ngClass]="{'border-red-500': form.get('salary')?.invalid && form.get('salary')?.touched}"
       />
-      <span *ngIf="form.get('salary')?.invalid && form.get('salary')?.touched" class="error-text">
+      <span *ngIf="form.get('salary')?.invalid && form.get('salary')?.touched" class="text-red-500 text-xs mt-2">
         Mức lương không hợp lệ.
       </span>
     </div>
@@ -83,15 +89,32 @@
               type="radio"
               [value]="option.id"
               formControlName="frequency"
-              class="radio-field"
+              class="h-4 w-4 text-amber-600 border-gray-300 focus:ring-amber-600"
             />
             <span class="text-gray-600">{{ option.name }}</span>
           </label>
         </ng-container>
       </div>
-      <span *ngIf="form.get('frequency')?.invalid && form.get('frequency')?.touched" class="error-text">
+      <span *ngIf="form.get('frequency')?.invalid && form.get('frequency')?.touched" class="text-red-500 text-xs mt-2">
         Tần suất thông báo là bắt buộc.
       </span>
     </div>
+  </div>
+
+  <!-- Submit / Cancel Buttons -->
+  <div class="flex justify-end space-x-3 mt-6">
+    <button
+      type="submit"
+      class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-md transition-colors duration-200"
+    >
+      {{ editData ? 'Cập nhật' : 'Lưu' }}
+    </button>
+    <button
+      type="button"
+      (click)="cancel()"
+      class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-md transition-colors duration-200"
+    >
+      Hủy
+    </button>
   </div>
 </form>

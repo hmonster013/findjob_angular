@@ -4,12 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GeneralInfoFormComponent } from '../general-info-form/general-info-form.component';
 import { ResumeService } from '../../../../_services/resume.service';
+import { CommonService } from '../../../../_services/common.service';
 
 @Component({
   selector: 'app-general-info-card',
   standalone: true,
   templateUrl: './general-info-card.component.html',
-  styleUrls: ['./general-info-card.component.css'],
   imports: [CommonModule, GeneralInfoFormComponent],
 })
 export class GeneralInfoCardComponent implements OnInit {
@@ -18,49 +18,30 @@ export class GeneralInfoCardComponent implements OnInit {
   isFullScreenLoading = false;
   openPopup = false;
   resumeSlug: string | null = null;
-  allConfig: any = {
-    positionOptions: [
-      { value: 'INTERN', label: 'Thực tập sinh' },
-      { value: 'JUNIOR', label: 'Nhân viên' },
-      { value: 'SENIOR', label: 'Chuyên viên' },
-    ],
-    academicLevelOptions: [
-      { value: 'HIGH_SCHOOL', label: 'Trung học' },
-      { value: 'BACHELOR', label: 'Cử nhân' },
-      { value: 'MASTER', label: 'Thạc sĩ' },
-    ],
-    experienceOptions: [
-      { value: '0', label: 'Chưa có kinh nghiệm' },
-      { value: '1', label: '1-2 năm' },
-      { value: '2', label: 'Trên 2 năm' },
-    ],
-    careerOptions: [
-      { value: 'IT', label: 'Công nghệ thông tin' },
-      { value: 'MARKETING', label: 'Marketing' },
-    ],
-    cityOptions: [
-      { value: '1', label: 'Hà Nội' },
-      { value: '2', label: 'TP. Hồ Chí Minh' },
-    ],
-    typeOfWorkplaceOptions: [
-      { value: 'ONSITE', label: 'Tại văn phòng' },
-      { value: 'REMOTE', label: 'Từ xa' },
-    ],
-    jobTypeOptions: [
-      { value: 'FULL_TIME', label: 'Toàn thời gian' },
-      { value: 'PART_TIME', label: 'Bán thời gian' },
-    ],
-  };
+  allConfig: any;
 
   constructor(
     private route: ActivatedRoute,
     private resumeService: ResumeService,
+    private commonService: CommonService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
+    this.getConfigs();
     this.resumeSlug = this.route.snapshot.paramMap.get('slug');
     this.fetchResumeDetail();
+  }
+
+  getConfigs() {
+    this.commonService.getConfigs().subscribe({
+      next: (res) => {
+        this.allConfig = res.data;
+      },
+      error: (err) => {
+        this.toastr.error('Lỗi khi tải cấu hình!');
+      },
+    });
   }
 
   fetchResumeDetail() {
@@ -102,7 +83,7 @@ export class GeneralInfoCardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error updating resume:', err);
-        this.toastr.error('Có lỗi xảy ra khi cập nhật thông tin!');
+        this.toastr.error(err.error?.message || 'Có lỗi khi cập nhật thông tin!');
       },
       complete: () => {
         this.isFullScreenLoading = false;

@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { PersonalProfileFormComponent } from '../personal-profile-form/personal-profile-form.component';
 import { JobSeekerProfileService } from '../../../../_services/job-seeker-profile.service';
+import { CommonService } from '../../../../_services/common.service';
 
 @Component({
   selector: 'app-personal-info-card',
   standalone: true,
   templateUrl: './personal-info-card.component.html',
-  styleUrls: ['./personal-info-card.component.css'],
   imports: [CommonModule, PersonalProfileFormComponent],
 })
 export class PersonalInfoCardComponent implements OnInit {
@@ -16,28 +16,29 @@ export class PersonalInfoCardComponent implements OnInit {
   isLoadingProfile = true;
   isFullScreenLoading = false;
   openPopup = false;
-  allConfig: any = {
-    genderOptions: [
-      { value: 'M', label: 'Nam' },
-      { value: 'F', label: 'Nữ' },
-    ],
-    maritalStatusOptions: [
-      { value: 'S', label: 'Độc thân' },
-      { value: 'M', label: 'Đã kết hôn' },
-    ],
-    cityOptions: [
-      { value: '1', label: 'Hà Nội' },
-      { value: '2', label: 'TP. Hồ Chí Minh' },
-    ],
-  };
+  allConfig: any;
+  districtOptions: any[] = [];
 
   constructor(
     private jobSeekerProfileService: JobSeekerProfileService,
+    private commonService: CommonService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
+    this.getConfigs();
     this.fetchProfile();
+  }
+
+  getConfigs() {
+    this.commonService.getConfigs().subscribe({
+      next: (res) => {
+        this.allConfig = res.data;
+      },
+      error: (err) => {
+        this.toastr.error('Lỗi khi tải cấu hình!');
+      },
+    });
   }
 
   fetchProfile() {
@@ -45,6 +46,9 @@ export class PersonalInfoCardComponent implements OnInit {
     this.jobSeekerProfileService.getProfile().subscribe({
       next: (res) => {
         this.profile = res.data || null;
+        if (this.profile?.location?.city) {
+          this.loadDistricts(Number(this.profile.location.city));
+        }
       },
       error: (err) => {
         console.error('Error fetching profile:', err);
@@ -54,6 +58,28 @@ export class PersonalInfoCardComponent implements OnInit {
         this.isLoadingProfile = false;
       },
     });
+  }
+
+  loadDistricts(cityId: number) {
+    this.commonService.getDistrictsByCityId(cityId).subscribe({
+      next: (res) => {
+        // Ánh xạ id -> value, name -> label để đồng bộ với code hiện tại
+        this.districtOptions = (res.data || []).map((district: any) => ({
+          value: district.id,
+          label: district.name,
+        }));
+      },
+      error: (err) => {
+        console.error('Error loading districts:', err);
+        this.toastr.error('Lỗi khi tải danh sách quận/huyện!');
+        this.districtOptions = [];
+      },
+    });
+  }
+
+  getDistrictName(districtId: number | string): string {
+    const district = this.districtOptions.find(d => d.value == districtId);
+    return district ? district.label : 'Chưa cập nhật';
   }
 
   handleShowEdit() {
@@ -70,7 +96,7 @@ export class PersonalInfoCardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error updating profile:', err);
-        this.toastr.error('Có lỗi xảy ra khi cập nhật thông tin!');
+        this.toastr.error(err.error?.message || 'Có lỗi khi cập nhật thông tin!');
       },
       complete: () => {
         this.isFullScreenLoading = false;

@@ -1,14 +1,31 @@
-<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()" class="space-y-4">
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()" class="space-y-6">
+  <!-- Close Button -->
+  <div class="flex justify-end">
+    <button
+      type="button"
+      (click)="close()"
+      class="text-gray-600 hover:text-amber-600 transition-all duration-200"
+      aria-label="Đóng form"
+    >
+      <i class="fas fa-times text-xl"></i>
+    </button>
+  </div>
+
+  <!-- Form Title -->
+  <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+    <i class="fas fa-user-edit text-amber-600"></i> Chỉnh sửa thông tin cá nhân
+  </h3>
+
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <!-- Full Name -->
-    <div class="flex flex-col col-span-2 space-y-1" formGroupName="user">
-      <label class="text-sm font-medium text-gray-800">Họ và tên <span class="text-red-600">*</span></label>
+    <div class="col-span-2" formGroupName="user">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Họ và tên <span class="text-red-600">*</span></label>
       <input
         formControlName="fullName"
         type="text"
         placeholder="Nhập họ và tên"
-        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
-        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('user.fullName')?.errors && form.get('user.fullName')?.touched}"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('user.fullName')?.errors && form.get('user.fullName')?.touched}"
       />
       <div
         *ngIf="form.get('user.fullName')?.errors && form.get('user.fullName')?.touched"
@@ -20,33 +37,33 @@
     </div>
 
     <!-- Phone -->
-    <div class="flex flex-col space-y-1">
-      <label class="text-sm font-medium text-gray-800">Số điện thoại <span class="text-red-600">*</span></label>
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Số điện thoại <span class="text-red-600">*</span></label>
       <input
         formControlName="phone"
         type="text"
         placeholder="Nhập số điện thoại"
-        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
-        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('phone')?.errors && form.get('phone')?.touched}"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('phone')?.errors && form.get('phone')?.touched}"
       />
       <div
         *ngIf="form.get('phone')?.errors && form.get('phone')?.touched"
         class="text-red-600 text-xs mt-1"
       >
         <div *ngIf="form.get('phone')?.errors?.['required']">Số điện thoại là bắt buộc.</div>
-        <div *ngIf="form.get('phone')?.errors?.['maxlength']">Số điện thoại không được vượt quá 15 ký tự.</div>
+        <div *ngIf="form.get('phone')?.errors?.['pattern']">Số điện thoại không hợp lệ.</div>
       </div>
     </div>
 
     <!-- Birthday -->
-    <div class="flex flex-col space-y-1">
-      <label class="text-sm font-medium text-gray-800">Ngày sinh <span class="text-red-600">*</span></label>
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Ngày sinh <span class="text-red-600">*</span></label>
       <input
         formControlName="birthday"
         type="date"
         [max]="maxYesterday"
-        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
-        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('birthday')?.errors && form.get('birthday')?.touched}"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('birthday')?.errors && form.get('birthday')?.touched}"
       />
       <div
         *ngIf="form.get('birthday')?.errors && form.get('birthday')?.touched"
@@ -57,15 +74,15 @@
     </div>
 
     <!-- Gender -->
-    <div class="flex flex-col space-y-1">
-      <label class="text-sm font-medium text-gray-800">Giới tính <span class="text-red-600">*</span></label>
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Giới tính <span class="text-red-600">*</span></label>
       <select
         formControlName="gender"
-        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
-        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('gender')?.errors && form.get('gender')?.touched}"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('gender')?.errors && form.get('gender')?.touched}"
       >
         <option value="">Chọn giới tính</option>
-        <option *ngFor="let option of allConfig?.genderOptions" [value]="option.value">{{ option.label }}</option>
+        <option *ngFor="let option of allConfig?.genderOptions" [value]="option.id">{{ option.name }}</option>
       </select>
       <div
         *ngIf="form.get('gender')?.errors && form.get('gender')?.touched"
@@ -76,15 +93,15 @@
     </div>
 
     <!-- Marital Status -->
-    <div class="flex flex-col space-y-1">
-      <label class="text-sm font-medium text-gray-800">Tình trạng hôn nhân <span class="text-red-600">*</span></label>
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Tình trạng hôn nhân <span class="text-red-600">*</span></label>
       <select
         formControlName="maritalStatus"
-        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
-        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('maritalStatus')?.errors && form.get('maritalStatus')?.touched}"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('maritalStatus')?.errors && form.get('maritalStatus')?.touched}"
       >
         <option value="">Chọn tình trạng hôn nhân</option>
-        <option *ngFor="let option of allConfig?.maritalStatusOptions" [value]="option.value">{{ option.label }}</option>
+        <option *ngFor="let option of allConfig?.maritalStatusOptions" [value]="option.id">{{ option.name }}</option>
       </select>
       <div
         *ngIf="form.get('maritalStatus')?.errors && form.get('maritalStatus')?.touched"
@@ -95,16 +112,16 @@
     </div>
 
     <!-- City -->
-    <div class="flex flex-col space-y-1" formGroupName="location">
-      <label class="text-sm font-medium text-gray-800">Tỉnh/Thành phố <span class="text-red-600">*</span></label>
+    <div formGroupName="location">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Tỉnh/Thành phố <span class="text-red-600">*</span></label>
       <select
         formControlName="city"
-        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
         (change)="onCityChange($event)"
-        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('location.city')?.errors && form.get('location.city')?.touched}"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('location.city')?.errors && form.get('location.city')?.touched}"
       >
-        <option value="">Chọn tỉnh thành phố</option>
-        <option *ngFor="let option of allConfig?.cityOptions" [value]="option.value">{{ option.label }}</option>
+        <option value="">Chọn tỉnh/thành phố</option>
+        <option *ngFor="let option of allConfig?.cityOptions" [value]="option.id">{{ option.name }}</option>
       </select>
       <div
         *ngIf="form.get('location.city')?.errors && form.get('location.city')?.touched"
@@ -115,14 +132,14 @@
     </div>
 
     <!-- District -->
-    <div class="flex flex-col space-y-1" formGroupName="location">
-      <label class="text-sm font-medium text-gray-800">Quận/Huyện <span class="text-red-600">*</span></label>
+    <div formGroupName="location">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Quận/Huyện <span class="text-red-600">*</span></label>
       <select
         formControlName="district"
-        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
-        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('location.district')?.errors && form.get('location.district')?.touched}"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('location.district')?.errors && form.get('location.district')?.touched}"
       >
-        <option value="">Chọn Quận/Huyện</option>
+        <option value="">Chọn quận/huyện</option>
         <option *ngFor="let option of districtOptions" [value]="option.value">{{ option.label }}</option>
       </select>
       <div
@@ -134,14 +151,14 @@
     </div>
 
     <!-- Address -->
-    <div class="flex flex-col col-span-2 space-y-1" formGroupName="location">
-      <label class="text-sm font-medium text-gray-800">Địa chỉ <span class="text-red-600">*</span></label>
+    <div class="col-span-2" formGroupName="location">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Địa chỉ <span class="text-red-600">*</span></label>
       <input
         formControlName="address"
         type="text"
         placeholder="Nhập địa chỉ"
-        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
-        [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': form.get('location.address')?.errors && form.get('location.address')?.touched}"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('location.address')?.errors && form.get('location.address')?.touched}"
       />
       <div
         *ngIf="form.get('location.address')?.errors && form.get('location.address')?.touched"
@@ -151,5 +168,16 @@
         <div *ngIf="form.get('location.address')?.errors?.['maxlength']">Địa chỉ không được vượt quá 255 ký tự.</div>
       </div>
     </div>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex justify-end gap-4 mt-6">
+    <button
+      type="submit"
+      class="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-all flex items-center gap-2 disabled:bg-amber-400 disabled:cursor-not-allowed"
+      [disabled]="form.invalid"
+    >
+      <i class="fas fa-save"></i> Lưu
+    </button>
   </div>
 </form>

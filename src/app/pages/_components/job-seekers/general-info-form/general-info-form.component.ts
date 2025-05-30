@@ -7,7 +7,6 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'app-general-info-form',
   standalone: true,
   templateUrl: './general-info-form.component.html',
-  styleUrls: ['./general-info-form.component.css'],
   imports: [CommonModule, ReactiveFormsModule],
 })
 export class GeneralInfoFormComponent implements OnInit, OnChanges {
@@ -33,21 +32,43 @@ export class GeneralInfoFormComponent implements OnInit, OnChanges {
       typeOfWorkplace: ['', Validators.required],
       jobType: ['', Validators.required],
       description: ['', [Validators.required, Validators.maxLength(800)]],
-    });
+    }, { validators: this.salaryValidator });
 
     if (this.editData) {
-      this.form.patchValue(this.editData);
+      this.patchFormData(this.editData);
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['editData'] && !changes['editData'].firstChange) {
-      if (this.editData) {
-        this.form.patchValue(this.editData);
-      } else {
-        this.form.reset();
-      }
+    if (changes['editData'] && !changes['editData'].firstChange && this.editData) {
+      this.patchFormData(this.editData);
     }
+  }
+
+  patchFormData(data: any) {
+    this.form.patchValue({
+      title: data?.title || '',
+      position: data?.position || '',
+      academicLevel: data?.academicLevel || '',
+      experience: data?.experience || '',
+      career: data?.career || '',
+      city: data?.city || '',
+      salaryMin: data?.salaryMin || '',
+      salaryMax: data?.salaryMax || '',
+      typeOfWorkplace: data?.typeOfWorkplace || '',
+      jobType: data?.jobType || '',
+      description: data?.description || '',
+    });
+  }
+
+  salaryValidator(form: FormGroup) {
+    const salaryMin = form.get('salaryMin')?.value;
+    const salaryMax = form.get('salaryMax')?.value;
+    if (salaryMin && salaryMax && salaryMin > salaryMax) {
+      form.get('salaryMax')?.setErrors({ invalidRange: true });
+      return { invalidSalaryRange: true };
+    }
+    return null;
   }
 
   onSubmit() {

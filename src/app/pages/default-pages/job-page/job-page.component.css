@@ -1,0 +1,24 @@
+:host {
+  display: block;
+}
+
+/* Đảm bảo grid không có khoảng cách thừa */
+.grid {
+  margin: -0.5rem;
+}
+
+.grid > * {
+  padding: 0.5rem;
+}
+
+/* Tùy chỉnh shadow và border */
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .lg\:col-span-4 {
+    margin-top: 1.5rem;
+  }
+}

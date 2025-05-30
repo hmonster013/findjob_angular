@@ -44,7 +44,7 @@ export class OnlineProfilePageComponent implements AfterViewInit {
 
   scrollTo(index: number) {
     const el = this.sectionRefs.toArray()[index];
-    el?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   ngAfterViewInit(): void {}

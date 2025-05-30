@@ -16,22 +16,26 @@ export class ProfileUploadFormComponent {
 
   form: FormGroup;
   fileError = '';
+  maxFileSize = 5 * 1024 * 1024; // 5MB
 
   constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({
-      file: [null, Validators.required],
-      title: ['', [Validators.required, Validators.maxLength(200)]],
-      position: ['', Validators.required],
-      academicLevel: ['', Validators.required],
-      experience: ['', Validators.required],
-      career: ['', Validators.required],
-      city: ['', Validators.required],
-      salaryMin: [null, [Validators.required, Validators.min(0)]],
-      salaryMax: [null, [Validators.required, Validators.min(0)]],
-      typeOfWorkplace: ['', Validators.required],
-      jobType: ['', Validators.required],
-      description: ['', [Validators.required, Validators.maxLength(800)]],
-    }, { validators: [this.salaryValidator()] });
+    this.form = this.fb.group(
+      {
+        file: [null, Validators.required],
+        title: ['', [Validators.required, Validators.maxLength(200)]],
+        position: ['', Validators.required],
+        academicLevel: ['', Validators.required],
+        experience: ['', Validators.required],
+        career: ['', Validators.required],
+        city: ['', Validators.required],
+        salaryMin: [null, [Validators.required, Validators.min(0)]],
+        salaryMax: [null, [Validators.required, Validators.min(0)]],
+        typeOfWorkplace: ['', Validators.required],
+        jobType: ['', Validators.required],
+        description: ['', [Validators.required, Validators.maxLength(800)]],
+      },
+      { validators: [this.salaryValidator()] }
+    );
   }
 
   salaryValidator() {
@@ -41,18 +45,26 @@ export class ProfileUploadFormComponent {
       if (min !== null && max !== null && min >= max) {
         group.controls['salaryMin'].setErrors({ invalid: true });
         group.controls['salaryMax'].setErrors({ invalid: true });
-      } else {
-        group.controls['salaryMin'].setErrors(null);
-        group.controls['salaryMax'].setErrors(null);
+        return { salaryInvalid: true };
       }
       return null;
     };
   }
 
-  onFileChange(event: Event) {
+  onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
+      if (file.type !== 'application/pdf') {
+        this.fileError = 'Chỉ chấp nhận file PDF.';
+        this.form.patchValue({ file: null });
+        return;
+      }
+      if (file.size > this.maxFileSize) {
+        this.fileError = 'Kích thước file không được vượt quá 5MB.';
+        this.form.patchValue({ file: null });
+        return;
+      }
       this.form.patchValue({ file });
       this.fileError = '';
     } else {
@@ -61,7 +73,7 @@ export class ProfileUploadFormComponent {
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.form.invalid) {
       this.fileError = this.form.controls['file'].errors ? 'Tập tin là bắt buộc.' : '';
       this.form.markAllAsTouched();
@@ -70,7 +82,7 @@ export class ProfileUploadFormComponent {
     this.submitForm.emit(this.form.value);
   }
 
-  cancel() {
+  cancel(): void {
     this.form.reset();
     this.fileError = '';
     this.cancelForm.emit();
