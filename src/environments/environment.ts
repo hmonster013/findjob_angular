@@ -17,8 +17,20 @@ export const environment = {
   GOONGAPI_KEY: '',
   GOONGAPI_ACCESS_TOKEN: '',
 
-  JOB_SEEKER_BOT_AGENT_ID: 'job-seeker-uppi',
-  EMPLOYER_BOT_AGENT_ID: 'employer-yu9k',
+  chatbot: {
+    jobSeeker: {
+      agentId: 'f84ddd77-d671-419f-af3e-dca32b8dff90',
+      chatTitle: 'Chatbot Ứng Viên',
+      chatIcon: 'https://example.com/job-seeker-icon.png',
+      languageCode: 'vi'
+    },
+    employer: {
+      agentId: 'ff0a08e0-e310-47e1-9d30-0c10c0284313',
+      chatTitle: 'Chatbot Nhà Tuyển Dụng',
+      chatIcon: 'https://example.com/employer-icon.png',
+      languageCode: 'vi'
+    }
+  },
 
   firebaseConfig: {
     apiKey: "AIzaSyDdJbQedfwBGsklTNqfoPnjnJrInML8x8k",

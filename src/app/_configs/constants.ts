@@ -34,16 +34,16 @@ export const AUTH_CONFIG = {
   GOONGAPI_KEY: environment.GOONGAPI_KEY,
   GOONGAPI_ACCESS_TOKEN: environment.GOONGAPI_ACCESS_TOKEN,
 
-  JOB_SEEKER_BOT: {
-    AGENT_ID: environment.JOB_SEEKER_BOT_AGENT_ID || '3658b10a-faaf-4e27-beea-99adaa33664e',
-    CHAT_TITLE: 'MyJob AI',
-    CHAT_ICON: 'assets/icons/job_seeker_chatbot_icon.gif',
-  },
-  EMPLOYER_BOT: {
-    AGENT_ID: environment.EMPLOYER_BOT_AGENT_ID || 'a49623dc-cfa1-49b1-8b2f-0f7eabdf7f6d',
-    CHAT_TITLE: 'MyJob AI',
-    CHAT_ICON: 'assets/icons/employer_chatbot_icon.gif',
-  },
+  // JOB_SEEKER_BOT: {
+  //   AGENT_ID: environment.JOB_SEEKER_BOT_AGENT_ID || '3658b10a-faaf-4e27-beea-99adaa33664e',
+  //   CHAT_TITLE: 'MyJob AI',
+  //   CHAT_ICON: 'assets/icons/job_seeker_chatbot_icon.gif',
+  // },
+  // EMPLOYER_BOT: {
+  //   AGENT_ID: environment.EMPLOYER_BOT_AGENT_ID || 'a49623dc-cfa1-49b1-8b2f-0f7eabdf7f6d',
+  //   CHAT_TITLE: 'MyJob AI',
+  //   CHAT_ICON: 'assets/icons/employer_chatbot_icon.gif',
+  // },
 };
 
 export const ROLES_NAME = {
