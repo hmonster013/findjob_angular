@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { EmployerSignUpFormComponent } from '../../_components/auths/employer-sign-up-form/employer-sign-up-form.component';
-import { AuthenticationService } from '../../../_services/authentication.service';
 import { AuthStateService } from '../../../_services/auth-state.service';
 import { ROLES_NAME } from '../../../_configs/constants';
+import { AuthenticationService } from '../../../_services/authentication.service';
 
 @Component({
   selector: 'app-employer-sign-up-page',
@@ -33,12 +33,36 @@ export class EmployerSignUpPageComponent implements OnInit {
 
   onSubmit(formData: any) {
     this.isLoading = true;
-    this.authService.employerRegister(formData).subscribe({
+    // Chuẩn hóa dữ liệu theo serializer
+    const payload = {
+      fullName: formData.fullName,
+      email: formData.email,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+      platform: formData.platform,
+      company: {
+        companyName: formData.companyName,
+        companyEmail: formData.companyEmail,
+        companyPhone: formData.companyPhone,
+        taxCode: formData.taxCode,
+        fieldOperation: formData.fieldOperation,
+        since: formData.since,
+        employeeSize: formData.employeeSize,
+        websiteUrl: formData.websiteUrl,
+        location: {
+          city: formData.city,
+          district: formData.district,
+          address: formData.address
+        }
+      }
+    };
+
+    this.authService.employerRegister(payload).subscribe({
       next: (res) => {
         if (res.status) {
           this.authStateService.setCurrentUser({ email: formData.email });
           this.toastr.success('Đăng ký thành công. Vui lòng xác thực email.');
-          this.router.navigate(['/email-verification']);
+          this.router.navigate(['/email-verification-required']);
         } else {
           this.serverErrors = res.errors || { general: res.message || 'Đăng ký thất bại' };
           this.toastr.error(res.message || 'Đăng ký thất bại');
@@ -57,14 +81,14 @@ export class EmployerSignUpPageComponent implements OnInit {
   checkCreds(email: string) {
     this.authService.checkCreds(email, ROLES_NAME.EMPLOYER).subscribe({
       next: (res) => {
-        if (!res.status) {
-          this.serverErrors = { email: res.message || 'Email đã tồn tại.' };
+        if (res.data?.exists) {
+          this.serverErrors = { email: 'Email này đã được sử dụng.' };
         } else {
           this.serverErrors = {};
         }
       },
       error: (error) => {
-        console.error('Lỗi checkCreds:', error);
+        console.error('Lỗi kiểm tra email:', error);
         this.serverErrors = { email: 'Không thể kiểm tra email. Vui lòng thử lại.' };
       },
     });

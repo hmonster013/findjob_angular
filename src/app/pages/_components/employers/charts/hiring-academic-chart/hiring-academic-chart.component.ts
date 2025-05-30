@@ -36,18 +36,14 @@ export class HiringAcademicChartComponent implements OnInit, OnDestroy, AfterVie
   ) {}
 
   ngOnInit(): void {
-    console.log('ngOnInit: Fetching statistics');
     this.fetchStatistics();
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit: Canvas ready, chartCanvas:', !!this.chartCanvas);
     this.isCanvasReady = true;
     if (this.dataReady && this.data !== null && this.data.labels && this.data.labels.length > 0) {
-      console.log('ngAfterViewInit: Rendering chart with data:', this.data);
       this.renderChart();
     } else {
-      console.log('ngAfterViewInit: No valid data to render chart, data:', this.data);
     }
     this.cdr.detectChanges();
   }
@@ -72,7 +68,6 @@ export class HiringAcademicChartComponent implements OnInit, OnDestroy, AfterVie
     const endDate = this.selectedDateRange[1].format('YYYY-MM-DD');
 
     if (this.selectedDateRange[0].isAfter(this.selectedDateRange[1])) {
-      console.warn('fetchStatistics: Invalid date range');
       this.errorMessage = 'Ngày bắt đầu không thể lớn hơn ngày kết thúc';
       this.isLoading = false;
       this.dataReady = false;
@@ -80,26 +75,21 @@ export class HiringAcademicChartComponent implements OnInit, OnDestroy, AfterVie
       return;
     }
 
-    console.log('fetchStatistics: Calling API with startDate:', startDate, 'endDate:', endDate);
     this.statisticService
       .employerRecruitmentStatisticsByRank({ startDate, endDate })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('fetchStatistics: API response:', response);
           this.data = response.data || null;
           this.isLoading = false;
           this.dataReady = true;
           if (this.isCanvasReady && this.data !== null && this.data.labels && this.data.labels.length > 0) {
-            console.log('fetchStatistics: Rendering chart with data:', this.data);
             this.renderChart();
           } else {
-            console.log('fetchStatistics: Canvas not ready or no valid data, data:', this.data);
           }
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('fetchStatistics: Error fetching data:', error);
           this.errorMessage = error.message || 'Không thể tải dữ liệu thống kê. Vui lòng thử lại.';
           this.isLoading = false;
           this.dataReady = false;
@@ -110,23 +100,19 @@ export class HiringAcademicChartComponent implements OnInit, OnDestroy, AfterVie
 
   renderChart() {
     if (!this.chartCanvas || !this.isCanvasReady || !this.chartCanvas.nativeElement) {
-      console.error('renderChart: Canvas not ready, chartCanvas:', !!this.chartCanvas, 'isCanvasReady:', this.isCanvasReady);
       return;
     }
     const ctx = this.chartCanvas.nativeElement.getContext('2d');
     if (!ctx) {
-      console.error('renderChart: Context not available');
       return;
     }
 
     if (this.chartInstance) {
-      console.log('renderChart: Destroying existing chart');
       this.chartInstance.destroy();
     }
 
     if (!this.data || !Array.isArray(this.data.labels) || !Array.isArray(this.data.data) ||
         this.data.labels.length === 0 || this.data.labels.length !== this.data.data.length) {
-      console.error('renderChart: Invalid chart data:', this.data);
       return;
     }
 
@@ -156,7 +142,6 @@ export class HiringAcademicChartComponent implements OnInit, OnDestroy, AfterVie
       }
     });
 
-    console.log('renderChart: Preparing chart data, labels:', filteredLabels, 'data:', filteredData);
     this.chartInstance = new Chart(ctx, {
       type: 'pie',
       data: {
@@ -207,12 +192,10 @@ export class HiringAcademicChartComponent implements OnInit, OnDestroy, AfterVie
         },
       },
     });
-    console.log('renderChart: Chart created successfully');
   }
 
   onSubmitDateChange() {
     if (this.allowSubmit) {
-      console.log('onSubmitDateChange: Fetching new statistics');
       this.fetchStatistics();
       this.allowSubmit = false;
     }
@@ -220,7 +203,6 @@ export class HiringAcademicChartComponent implements OnInit, OnDestroy, AfterVie
 
   onDateChange(event: any, type: 'start' | 'end') {
     const newDate = dayjs(event.target.value);
-    console.log('onDateChange: New date:', newDate.format('YYYY-MM-DD'), 'type:', type);
     if (type === 'start') {
       this.selectedDateRange[0] = newDate;
     } else {

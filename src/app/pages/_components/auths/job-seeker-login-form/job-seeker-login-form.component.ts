@@ -1,15 +1,5 @@
-import {
-  Component,
-  Output,
-  EventEmitter,
-  OnInit
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -20,10 +10,14 @@ import { CommonModule } from '@angular/common';
 })
 export class JobSeekerLoginFormComponent implements OnInit {
   form: FormGroup;
+  isLoadingEmail = false;
+  isLoadingFacebook = false;
+  isLoadingGoogle = false;
+  showPassword = false; // Thêm trạng thái showPassword
 
   @Output() submitForm = new EventEmitter<{ email: string; password: string }>();
-  @Output() facebookLogin = new EventEmitter<string>(); // token
-  @Output() googleLogin = new EventEmitter<string>();   // token
+  @Output() facebookLogin = new EventEmitter<string>();
+  @Output() googleLogin = new EventEmitter<string>();
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -32,51 +26,49 @@ export class JobSeekerLoginFormComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    window.addEventListener('message', this.handleSocialLoginMessage.bind(this));
+  }
 
   handleSubmit() {
-    if (this.form.valid) {
+    if (this.form.valid && !this.isLoadingEmail) {
+      this.isLoadingEmail = true;
       this.submitForm.emit(this.form.value);
+    } else {
+      this.form.markAllAsTouched();
     }
   }
 
   handleFacebookLogin() {
-    const fbLoginWindow = window.open('/auth/facebook', '_blank', 'width=500,height=600');
-
-    const interval = setInterval(() => {
-      try {
-        if (fbLoginWindow?.closed) {
-          clearInterval(interval);
-        }
-
-        const token = localStorage.getItem('fb_access_token');
-        if (token) {
-          localStorage.removeItem('fb_access_token');
-          this.facebookLogin.emit(token);
-          fbLoginWindow?.close();
-          clearInterval(interval);
-        }
-      } catch (_) {}
-    }, 500);
+    if (this.isLoadingFacebook) return;
+    this.isLoadingFacebook = true;
+    window.open('/auth/facebook', '_blank', 'width=500,height=600');
   }
 
   handleGoogleLogin() {
-    const ggLoginWindow = window.open('/auth/google', '_blank', 'width=500,height=600');
+    if (this.isLoadingGoogle) return;
+    this.isLoadingGoogle = true;
+    window.open('/auth/google', '_blank', 'width=500,height=600');
+  }
 
-    const interval = setInterval(() => {
-      try {
-        if (ggLoginWindow?.closed) {
-          clearInterval(interval);
-        }
+  private handleSocialLoginMessage(event: MessageEvent) {
+    if (event.data.type === 'social_login') {
+      const { provider, token } = event.data;
+      if (provider === 'facebook') {
+        this.facebookLogin.emit(token);
+        this.isLoadingFacebook = false;
+      } else if (provider === 'google') {
+        this.googleLogin.emit(token);
+        this.isLoadingGoogle = false;
+      }
+    }
+  }
 
-        const token = localStorage.getItem('google_access_token');
-        if (token) {
-          localStorage.removeItem('google_access_token');
-          this.googleLogin.emit(token);
-          ggLoginWindow?.close();
-          clearInterval(interval);
-        }
-      } catch (_) {}
-    }, 500);
+  togglePassword() {
+    this.showPassword = !this.showPassword; // Thêm phương thức toggle
+  }
+
+  resetLoadingEmail() {
+    this.isLoadingEmail = false;
   }
 }

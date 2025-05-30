@@ -126,10 +126,6 @@ export class JobDetailPageComponent implements OnInit {
     return this.isAuthenticated && this.currentUser?.roleName === ROLES_NAME.JOB_SEEKER;
   }
 
-  get currentUrl(): string {
-    return window.location.href;
-  }
-
   formatSalary(min: number, max: number): string {
     if (!min && !max) return 'Thỏa thuận';
 

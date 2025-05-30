@@ -30,4 +30,12 @@ export class ChatPageComponent {
   get isEmployer(): boolean {
     return this.auth.getCurrentUser()?.roleName !== 'JOB_SEEKER';
   }
+
+  toggleLeftDrawer() {
+    this.openLeftDrawer = !this.openLeftDrawer;
+  }
+
+  toggleRightDrawer() {
+    this.openRightDrawer = !this.openRightDrawer;
+  }
 }

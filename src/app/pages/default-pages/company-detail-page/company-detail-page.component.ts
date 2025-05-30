@@ -8,6 +8,7 @@ import { SocialNetworkSharingPopupComponent } from '../../../_components/social-
 import { CompanyService } from '../../../_services/company.service';
 import { AuthStateService } from '../../../_services/auth-state.service';
 import { IMAGES, ROLES_NAME } from '../../../_configs/constants';
+import { ToastrService } from 'ngx-toastr'; // Thêm Toastr
 
 @Component({
   selector: 'app-company-detail-page',
@@ -35,10 +36,20 @@ export class CompanyDetailPageComponent implements OnInit {
   openSharePopup = false;
 
   IMAGES = IMAGES;
+
+  // Dictionary để ánh xạ employeeSize
+  employeeSizeDict: { [key: number]: string } = {
+    1: 'Dưới 10 nhân viên',
+    2: '10 - 150 nhân viên',
+    3: '150 - 300 nhân viên',
+    4: 'Trên 300 nhân viên',
+  };
+
   constructor(
     private route: ActivatedRoute,
     private companyService: CompanyService,
-    private authService: AuthStateService
+    private authService: AuthStateService,
+    private toastr: ToastrService // Thêm Toastr
   ) {}
 
   ngOnInit(): void {
@@ -60,12 +71,15 @@ export class CompanyDetailPageComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
+        this.toastr.error('Không tải được dữ liệu công ty');
         this.isLoading = false;
       },
     });
   }
 
   handleFollow(): void {
+    if (this.isLoadingFollow) return; // Ngăn gọi API khi đang loading
+
     this.isLoadingFollow = true;
     this.companyService.followCompany(this.slug).subscribe({
       next: (res) => {
@@ -78,11 +92,13 @@ export class CompanyDetailPageComponent implements OnInit {
             ? current.followNumber + 1
             : current.followNumber - 1,
         };
-        alert(isFollowed ? 'Theo dõi thành công.' : 'Hủy theo dõi thành công.');
+        this.toastr.success(
+          isFollowed ? 'Theo dõi thành công' : 'Hủy theo dõi thành công'
+        );
         this.isLoadingFollow = false;
       },
       error: () => {
-        alert('Có lỗi xảy ra');
+        this.toastr.error('Có lỗi xảy ra khi theo dõi');
         this.isLoadingFollow = false;
       },
     });
@@ -102,5 +118,17 @@ export class CompanyDetailPageComponent implements OnInit {
 
   get currentUrl(): string {
     return window.location.href;
+  }
+
+  get employeeSizeDisplay(): string {
+    return this.companyDetail?.employeeSize
+      ? this.employeeSizeDict[this.companyDetail.employeeSize] || 'Chưa cập nhật'
+      : 'Chưa cập nhật';
+  }
+
+  get sinceDisplay(): string {
+    return this.companyDetail?.since
+      ? new Date(this.companyDetail.since).toLocaleDateString('vi-VN')
+      : 'Chưa cập nhật';
   }
 }

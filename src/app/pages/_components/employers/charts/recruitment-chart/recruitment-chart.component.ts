@@ -6,7 +6,6 @@ import { takeUntil } from 'rxjs/operators';
 import dayjs from 'dayjs';
 import { StatisticService } from '../../../../../_services/statistic.service';
 
-// Đăng ký Chart.js registerables
 Chart.register(...registerables);
 
 interface ChartData {

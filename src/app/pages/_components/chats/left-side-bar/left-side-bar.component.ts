@@ -1,106 +1,190 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subject, debounceTime } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { AuthStateService } from '../../../../_services/auth-state.service';
 import { FirebaseService } from '../../../../_services/firebase.service';
-import { ReactiveFormsModule } from '@angular/forms';
-import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+import { ChatStateService } from '../../../../_services/chat-state.service';
+import { ROUTES } from '../../../../_configs/constants';
 
 @Component({
   selector: 'app-left-side-bar',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    InfiniteScrollDirective
-  ],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './left-side-bar.component.html',
-  styleUrl: './left-side-bar.component.css'
+  styleUrls: ['./left-side-bar.component.css'],
 })
-export class LeftSideBarComponent {
+export class LeftSideBarComponent implements OnInit, OnDestroy {
   @Input() isEmployer: boolean = false;
 
   rooms: any[] = [];
-  searchText = '';
   hasMore = true;
-  loading = false;
+  loading = true;
   lastDoc: any = null;
   page = 0;
   count = 0;
   private readonly pageSize = 20;
-  private searchSubject = new Subject<string>();
+  private readonly defaultAvatar = 'https://via.placeholder.com/54';
   private unsubscribeSnapshot: any;
 
   currentUser: any;
+  searchText: string = '';
 
   constructor(
     private firebaseService: FirebaseService,
     private authStateService: AuthStateService,
+    private chatStateService: ChatStateService,
+    private toastr: ToastrService,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.currentUser = this.authStateService.getCurrentUser();
-
-    this.searchSubject.pipe(debounceTime(500)).subscribe((text) => {
-      this.searchText = text;
-      this.listenRooms();
-    });
-
+    if (!this.currentUser?.id) {
+      this.toastr.error('Vui lòng đăng nhập để xem danh sách trò chuyện!');
+      this.loading = false;
+      return;
+    }
     this.listenRooms();
   }
 
   ngOnDestroy() {
-    if (this.unsubscribeSnapshot) this.unsubscribeSnapshot();
+    if (this.unsubscribeSnapshot) {
+      this.unsubscribeSnapshot();
+    }
+  }
+
+  onSearch() {
+    this.rooms = [];
+    this.hasMore = true;
+    this.lastDoc = null;
+    this.page = 0;
+    this.listenRooms();
   }
 
   listenRooms() {
-    if (!this.currentUser) return;
-    if (this.unsubscribeSnapshot) this.unsubscribeSnapshot();
+    const userId = this.currentUser?.id?.toString();
+    if (!userId) {
+      this.toastr.error('Không tìm thấy thông tin người dùng!');
+      this.loading = false;
+      return;
+    }
+
+    if (this.unsubscribeSnapshot) {
+      this.unsubscribeSnapshot();
+    }
 
     this.loading = true;
     this.page = 0;
 
-    this.unsubscribeSnapshot = this.firebaseService.listenChatRooms(
-      this.currentUser.userId,
-      this.pageSize,
-      this.searchText,
-      (chatRooms: any[], lastDoc: any, count: number) => {
-        this.rooms = chatRooms;
-        this.lastDoc = lastDoc;
-        this.count = count;
-        this.hasMore = true;
-        this.page = 1;
-        this.loading = false;
-      }
-    );
+    try {
+      this.unsubscribeSnapshot = this.firebaseService.listenChatRooms(
+        userId,
+        this.pageSize,
+        this.searchText,
+        async (chatRooms: any[], lastDoc: any, count: number) => {
+          const roomsData: any[] = [];
+          for (const room of chatRooms) {
+            try {
+              const partnerId =
+                room.members[0] === userId ? room.members[1] : room.members[0];
+              const userAccount = await this.firebaseService.getUserAccount('accounts', partnerId);
+
+              const matchesSearch = this.searchText
+                ? this.isEmployer
+                  ? userAccount?.name?.toLowerCase().includes(this.searchText.toLowerCase())
+                  : userAccount?.company?.companyName?.toLowerCase().includes(this.searchText.toLowerCase())
+                : true;
+
+              if (matchesSearch) {
+                roomsData.push({
+                  ...room,
+                  user: userAccount || { name: '---', email: '---', company: null, avatarUrl: this.defaultAvatar },
+                });
+              }
+            } catch (error) {
+              console.error('listenChatRooms - Lỗi khi lấy thông tin người dùng:', error);
+              roomsData.push({
+                ...room,
+                user: { name: '---', email: '---', company: null, avatarUrl: this.defaultAvatar },
+              });
+            }
+          }
+
+          this.rooms = roomsData;
+          this.lastDoc = lastDoc;
+          this.count = count;
+          this.hasMore = chatRooms.length >= this.pageSize;
+          this.page = 1;
+          this.loading = false;
+        }
+      );
+    } catch (error) {
+      console.error('listenChatRooms - Lỗi khi nghe danh sách trò chuyện:', error);
+      this.toastr.error('Không thể tải danh sách trò chuyện!');
+      this.loading = false;
+    }
   }
 
-  loadMore() {
-    if (!this.hasMore || !this.currentUser) return;
+  async loadMore() {
+    const userId = this.currentUser?.id?.toString();
+    if (!this.hasMore || !userId || this.loading) return;
 
     if (Math.ceil(this.count / this.pageSize) <= this.page) {
       this.hasMore = false;
       return;
     }
 
-    this.firebaseService.getMoreChatRooms(
-      this.currentUser.userId,
-      this.lastDoc,
-      this.pageSize,
-      this.searchText
-    ).then((result: any) => {
-      this.rooms = [...this.rooms, ...result.chatRooms];
+    this.loading = true;
+    try {
+      const result = await this.firebaseService.getMoreChatRooms(
+        userId,
+        this.lastDoc,
+        this.pageSize,
+        this.searchText
+      );
+      const newRooms: any[] = [];
+      for (const room of result.chatRooms) {
+        try {
+          const partnerId =
+            room.members[0] === userId ? room.members[1] : room.members[0];
+          const userAccount = await this.firebaseService.getUserAccount('accounts', partnerId);
+
+          const matchesSearch = this.searchText
+            ? this.isEmployer
+              ? userAccount?.name?.toLowerCase().includes(this.searchText.toLowerCase())
+              : userAccount?.company?.companyName?.toLowerCase().includes(this.searchText.toLowerCase())
+            : true;
+
+          if (matchesSearch) {
+            newRooms.push({
+              ...room,
+              user: userAccount || { name: '---', email: '---', company: null, avatarUrl: this.defaultAvatar },
+            });
+          }
+        } catch (error) {
+          console.error('loadMore - Lỗi khi lấy thông tin người dùng:', error);
+          newRooms.push({
+            ...room,
+            user: { name: '---', email: '---', company: null, avatarUrl: this.defaultAvatar },
+          });
+        }
+      }
+
+      this.rooms = [...this.rooms, ...newRooms];
       this.lastDoc = result.lastDoc;
+      this.hasMore = newRooms.length >= this.pageSize;
       this.page += 1;
-    });
+    } catch (error) {
+      console.error('loadMore - Lỗi khi tải thêm trò chuyện:', error);
+      this.toastr.error('Không thể tải thêm trò chuyện!');
+    } finally {
+      this.loading = false;
+    }
   }
 
-  handleSearch(event: any) {
-    this.searchSubject.next(event.target.value);
-  }
-
-  navigateToRoom(roomId: string) {
-    this.router.navigate(['/chat', roomId]);
+  navigateToRoom(room: any) {
+    this.chatStateService.setSelectedRoomId(room.id);
   }
 }

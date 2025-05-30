@@ -1,42 +1,40 @@
-<div *ngIf="open" class="fixed inset-0 flex items-center justify-center bg-black/50 z-[9999]">
-  <div class="bg-white rounded-2xl w-80 shadow-lg p-4 relative">
+<div *ngIf="open" class="fixed inset-0 flex items-center justify-center bg-black/60 z-[9999] backdrop-blur-sm">
+  <div class="bg-white rounded-2xl w-full max-w-sm shadow-xl p-6 relative transform transition-all duration-300">
 
     <!-- Close Button -->
-    <button (click)="closePopup()" class="absolute top-3 right-3 text-gray-500 hover:text-red-500">
-      ✖️
+    <button (click)="closePopup()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition">
+      <i class="fas fa-times text-lg"></i>
     </button>
 
     <!-- Title -->
-    <h2 class="text-center font-bold text-lg mb-4">Chia sẻ qua</h2>
+    <h2 class="text-center font-bold text-xl text-orange-600 mb-6">Chia sẻ qua</h2>
 
     <!-- Share Buttons -->
-    <div class="flex justify-center gap-4">
-
+    <div class="flex justify-center gap-6 flex-wrap">
       <!-- Facebook -->
-      <a [href]="facebookShareUrl" target="_blank" class="hover:scale-110 transition">
-        <img src="/assets/icons/facebook.svg" alt="Facebook" class="w-10 h-10" />
+      <a [href]="facebookShareUrl" target="_blank" class="text-orange-500 hover:text-orange-700 hover:scale-110 transition">
+        <i class="fab fa-facebook-f text-3xl"></i>
       </a>
 
       <!-- Messenger -->
-      <a *ngIf="facebookMessengerUrl" [href]="facebookMessengerUrl" target="_blank" class="hover:scale-110 transition">
-        <img src="/assets/icons/messenger.svg" alt="Messenger" class="w-10 h-10" />
+      <a *ngIf="facebookMessengerUrl" [href]="facebookMessengerUrl" target="_blank" class="text-orange-500 hover:text-orange-700 hover:scale-110 transition">
+        <i class="fab fa-facebook-messenger text-3xl"></i>
       </a>
 
-      <!-- Linkedin -->
-      <a *ngIf="linkedinShareUrl" [href]="linkedinShareUrl" target="_blank" class="hover:scale-110 transition">
-        <img src="/assets/icons/linkedin.svg" alt="LinkedIn" class="w-10 h-10" />
+      <!-- LinkedIn -->
+      <a *ngIf="linkedinShareUrl" [href]="linkedinShareUrl" target="_blank" class="text-orange-500 hover:text-orange-700 hover:scale-110 transition">
+        <i class="fab fa-linkedin-in text-3xl"></i>
       </a>
 
       <!-- Twitter -->
-      <a *ngIf="twitterShareUrl" [href]="twitterShareUrl" target="_blank" class="hover:scale-110 transition">
-        <img src="/assets/icons/twitter.svg" alt="Twitter" class="w-10 h-10" />
+      <a *ngIf="twitterShareUrl" [href]="twitterShareUrl" target="_blank" class="text-orange-500 hover:text-orange-700 hover:scale-110 transition">
+        <i class="fab fa-twitter text-3xl"></i>
       </a>
 
       <!-- Email -->
-      <a *ngIf="emailShareUrl" [href]="emailShareUrl" target="_blank" class="hover:scale-110 transition">
-        <img src="/assets/icons/email.svg" alt="Email" class="w-10 h-10" />
+      <a *ngIf="emailShareUrl" [href]="emailShareUrl" class="text-orange-500 hover:text-orange-700 hover:scale-110 transition">
+        <i class="fas fa-envelope text-3xl"></i>
       </a>
-
     </div>
   </div>
 </div>

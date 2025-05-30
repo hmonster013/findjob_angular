@@ -11,7 +11,11 @@ import { ROLES_NAME } from '../../../_configs/constants';
 @Component({
   selector: 'app-employer-login-page',
   standalone: true,
-  imports: [CommonModule, EmployerLoginFormComponent, RouterModule],
+  imports: [
+    CommonModule,
+    EmployerLoginFormComponent,
+    RouterModule
+  ],
   templateUrl: './employer-login-page.component.html',
   styleUrls: ['./employer-login-page.component.css'],
 })

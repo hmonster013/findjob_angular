@@ -16,15 +16,16 @@ import { SidebarComponent } from '../_components/employers/slidebar/sidebar.comp
   ],
   templateUrl: './employer-layout.component.html',
   styleUrls: ['./employer-layout.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployerLayoutComponent implements OnInit, OnDestroy {
-  drawerWidth = 240; // Đồng bộ với SidebarComponent
+  drawerWidth = 240;
   mobileOpen = false;
-  isDesktop = window.innerWidth >= 1024; // Đổi từ 1280 (xl) sang 1024 (lg)
+  isDesktop = window.innerWidth >= 1024;
   private destroy$ = new Subject<void>();
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     fromEvent(window, 'resize')

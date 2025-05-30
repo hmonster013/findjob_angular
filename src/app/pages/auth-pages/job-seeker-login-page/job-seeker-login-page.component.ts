@@ -6,22 +6,22 @@ import { JobSeekerLoginFormComponent } from '../../_components/auths/job-seeker-
 import { AuthenticationService } from '../../../_services/authentication.service';
 import { TokenService } from '../../../_services/token.service';
 import { AuthStateService } from '../../../_services/auth-state.service';
-import { AUTH_CONFIG, ROLES_NAME } from '../../../_configs/constants';
+import { AUTH_CONFIG, ROLES_NAME, ROUTES } from '../../../_configs/constants';
 
 @Component({
   selector: 'app-job-seeker-login-page',
   standalone: true,
-  imports: [
-    CommonModule,
-    JobSeekerLoginFormComponent
-  ],
+  imports: [CommonModule, JobSeekerLoginFormComponent],
   templateUrl: './job-seeker-login-page.component.html',
-  styleUrls: ['./job-seeker-login-page.component.css']
 })
 export class JobSeekerLoginPageComponent implements OnInit {
-  isLoading = false;
+  isLoadingEmail = false;
+  isLoadingFacebook = false;
+  isLoadingGoogle = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
+
+  ROUTES = ROUTES;
 
   constructor(
     private authService: AuthenticationService,
@@ -33,31 +33,35 @@ export class JobSeekerLoginPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const queryParams = this.route.snapshot.queryParams;
-    this.successMessage = queryParams['success'] || null;
-    this.errorMessage = queryParams['error'] || null;
+    this.route.queryParams.subscribe((params) => {
+      this.successMessage = params['success'] || null;
+      this.errorMessage = params['error'] || null;
+    });
   }
 
   onLogin(formData: { email: string; password: string }) {
-    this.isLoading = true;
+    this.isLoadingEmail = true;
+    this.errorMessage = null; // Xóa lỗi trước khi gửi yêu cầu
 
     this.authService.checkCreds(formData.email, ROLES_NAME.JOB_SEEKER).subscribe({
       next: (res) => {
-        if (res.data.exists && res.data.email_verified === false) {
+        if (res.data.exists && !res.data.email_verified) {
           this.authStateService.setCurrentUser({ email: formData.email });
-          this.router.navigate(['/email-verification']);
-          this.isLoading = false;
-        } else if (res.data.exists && res.data.email_verified === true) {
+          this.router.navigate([`/${ROUTES.AUTH.EMAIL_VERIFICATION}`]);
+          this.isLoadingEmail = false;
+        } else if (res.data.exists && res.data.email_verified) {
           this.getAccessToken(formData);
         } else {
-          this.toastr.warning('Tài khoản không tồn tại hoặc sai thông tin.');
-          this.isLoading = false;
+          this.errorMessage = 'Tài khoản không tồn tại hoặc sai thông tin';
+          this.toastr.warning(this.errorMessage);
+          this.isLoadingEmail = false;
         }
       },
       error: () => {
-        this.toastr.error('Đã xảy ra lỗi, vui lòng đăng nhập lại!');
-        this.isLoading = false;
-      }
+        this.errorMessage = 'Đã xảy ra lỗi, vui lòng thử lại';
+        this.toastr.error(this.errorMessage);
+        this.isLoadingEmail = false;
+      },
     });
   }
 
@@ -75,70 +79,91 @@ export class JobSeekerLoginPageComponent implements OnInit {
               this.authStateService.setCurrentUser(userInfoRes.data);
               this.router.navigate(['/']);
               this.toastr.success('Đăng nhập thành công!');
-              this.isLoading = false;
+              this.isLoadingEmail = false;
             },
             error: () => {
-              this.toastr.error('Không thể lấy thông tin người dùng.');
-              this.isLoading = false;
-            }
+              this.errorMessage = 'Không thể lấy thông tin người dùng';
+              this.toastr.error(this.errorMessage);
+              this.isLoadingEmail = false;
+            },
           });
         } else {
-          this.errorMessage = res.errorMessage || 'Đăng nhập thất bại.';
-          this.isLoading = false;
+          this.errorMessage = res.errorMessage || 'Đăng nhập thất bại';
+          this.toastr.error(this.errorMessage || "");
+          this.isLoadingEmail = false;
         }
       },
       error: (err) => {
-        this.errorMessage = err.error?.errorMessage || 'Đăng nhập thất bại.';
-        this.isLoading = false;
-      }
+        this.errorMessage = err.error?.errorMessage || 'Đăng nhập thất bại';
+        this.toastr.error(this.errorMessage || "");
+        this.isLoadingEmail = false;
+      },
     });
   }
 
   onFacebookLogin(accessToken: string) {
+    this.isLoadingFacebook = true;
+    this.errorMessage = null;
     this.socialLogin('facebook', accessToken);
   }
 
   onGoogleLogin(accessToken: string) {
+    this.isLoadingGoogle = true;
+    this.errorMessage = null;
     this.socialLogin('google-oauth2', accessToken);
   }
 
   private socialLogin(provider: string, token: string) {
-    this.isLoading = true;
+    this.authService
+      .convertToken(AUTH_CONFIG.CLIENT_ID, AUTH_CONFIG.CLIENT_SECRET, provider, token)
+      .subscribe({
+        next: (res) => {
+          if (res.data.access_token) {
+            this.tokenService.saveAccessTokenAndRefreshTokenToCookie(
+              res.data.access_token,
+              res.data.refresh_token,
+              provider
+            );
+            this.authService.getUserInfo().subscribe({
+              next: (userInfoRes) => {
+                this.authStateService.setCurrentUser(userInfoRes.data);
+                this.router.navigate(['/']);
+                this.toastr.success('Đăng nhập thành công!');
+                this.isLoadingFacebook = false;
+                this.isLoadingGoogle = false;
+              },
+              error: () => {
+                this.errorMessage = 'Không thể lấy thông tin người dùng';
+                this.toastr.error(this.errorMessage);
+                this.isLoadingFacebook = false;
+                this.isLoadingGoogle = false;
+              },
+            });
+          } else {
+            this.errorMessage = 'Đăng nhập bằng mạng xã hội thất bại';
+            this.toastr.error(this.errorMessage);
+            this.isLoadingFacebook = false;
+            this.isLoadingGoogle = false;
+          }
+        },
+        error: () => {
+          this.errorMessage = 'Đăng nhập bằng mạng xã hội thất bại';
+          this.toastr.error(this.errorMessage);
+          this.isLoadingFacebook = false;
+          this.isLoadingGoogle = false;
+        },
+      });
+  }
 
-    this.authService.convertToken(
-      AUTH_CONFIG.CLIENT_ID,   // ✅ Chuẩn lấy từ constants
-      AUTH_CONFIG.CLIENT_SECRET, // ✅ Chuẩn lấy từ constants
-      provider,
-      token
-    ).subscribe({
-      next: (res) => {
-        if (res.data.access_token) {
-          this.tokenService.saveAccessTokenAndRefreshTokenToCookie(
-            res.data.access_token,
-            res.data.refresh_token,
-            provider
-          );
-          this.authService.getUserInfo().subscribe({
-            next: (userInfoRes) => {
-              this.authStateService.setCurrentUser(userInfoRes.data);
-              this.router.navigate(['/']);
-              this.toastr.success('Đăng nhập thành công!');
-              this.isLoading = false;
-            },
-            error: () => {
-              this.toastr.error('Không thể lấy thông tin người dùng.');
-              this.isLoading = false;
-            }
-          });
-        } else {
-          this.toastr.error('Đăng nhập bằng mạng xã hội thất bại.');
-          this.isLoading = false;
-        }
-      },
-      error: () => {
-        this.toastr.error('Đăng nhập bằng mạng xã hội thất bại.');
-        this.isLoading = false;
-      }
-    });
+  get isLoading(): boolean {
+    return this.isLoadingEmail || this.isLoadingFacebook || this.isLoadingGoogle;
+  }
+
+  navigateToForgotPassword() {
+    this.router.navigate([`/${ROUTES.AUTH.FORGOT_PASSWORD}`]);
+  }
+
+  navigateToRegister() {
+    this.router.navigate([`/${ROUTES.AUTH.REGISTER}`]);
   }
 }

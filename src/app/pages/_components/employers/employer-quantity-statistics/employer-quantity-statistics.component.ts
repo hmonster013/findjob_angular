@@ -14,7 +14,9 @@ export class EmployerQuantityStatisticsComponent implements OnInit {
   data: any = {};
   animateCards: boolean = false;
 
-  constructor(private statisticService: StatisticService) {}
+  constructor(
+    private statisticService: StatisticService
+  ) {}
 
   ngOnInit(): void {
     this.fetchStatistics();
@@ -24,11 +26,8 @@ export class EmployerQuantityStatisticsComponent implements OnInit {
     this.isLoading = true;
     this.statisticService.employerGeneralStatistics().subscribe({
       next: (res) => {
-        this.data = res.data || {};
+        this.data = res.data;
         this.isLoading = false;
-        setTimeout(() => {
-          this.animateCards = true;
-        }, 100);
       },
       error: (err) => {
         console.error('Error fetching statistics:', err);

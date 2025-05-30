@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ROUTES } from '../../../_configs/constants';
 
 @Component({
   selector: 'app-sidebar-header',
@@ -25,9 +26,9 @@ export class SidebarHeaderComponent {
 
   handleRedirect() {
     if (this.isEmployer) {
-      this.router.navigate(['/employer/dashboard']);
+      this.router.navigate([ROUTES.EMPLOYER.DASHBOARD]);
     } else {
-      this.router.navigate(['/home']);
+      this.router.navigate([ROUTES.JOB_SEEKER.HOME]);
     }
   }
 }

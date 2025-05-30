@@ -12,7 +12,6 @@ import { RouterOutlet } from '@angular/router';
 })
 export class ChatLayoutComponent {
   constructor() {
-    // Nếu cần ChatService thì inject
-    // Example: constructor(private chatService: ChatService) {}
+
   }
 }

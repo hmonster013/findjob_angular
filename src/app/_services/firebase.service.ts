@@ -1,6 +1,22 @@
 import { Injectable } from '@angular/core';
-import { serverTimestamp } from 'firebase/database';
-import { collection, getFirestore, setDoc, doc, getDoc, addDoc, query, where, getDocs, updateDoc, increment, orderBy, limit, startAfter, onSnapshot } from 'firebase/firestore';import { db } from '../_configs/firebase-config';
+import { serverTimestamp } from 'firebase/firestore';
+import {
+  collection,
+  getFirestore,
+  setDoc, doc,
+  getDoc,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  increment,
+  orderBy,
+  limit,
+  startAfter,
+  onSnapshot
+} from 'firebase/firestore';
+import { db } from '../_configs/firebase-config';
 
 @Injectable({
   providedIn: 'root'

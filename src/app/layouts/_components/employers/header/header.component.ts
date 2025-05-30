@@ -27,20 +27,13 @@ import { RouterLink } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  /** Width of the sidebar drawer */
-  @Input() drawerWidth: number = 240; // Đồng bộ với Sidebar và Layout
-  /** Function to toggle the sidebar drawer */
+  @Input() drawerWidth: number = 240;
   @Input() handleDrawerToggle?: () => void;
 
-  /** Current authenticated user */
   currentUser: any = null;
-  /** Authentication status */
   isAuthenticated: boolean = false;
-  /** Visibility state of the user menu */
   showUserMenu: boolean = false;
-  /** Mobile state */
   isMobile: boolean = window.innerWidth < 768;
-  /** Subject to manage subscription cleanup */
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -77,17 +70,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  /**
-   * Toggles the visibility of the user menu.
-   */
   toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
     this.cdr.markForCheck();
   }
 
-  /**
-   * Closes all menus (user menu).
-   */
   closeMenus() {
     this.showUserMenu = false;
     this.cdr.markForCheck();

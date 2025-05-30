@@ -6,22 +6,20 @@ import { JobSeekerSignUpFormComponent } from '../../_components/auths/job-seeker
 import { AuthenticationService } from '../../../_services/authentication.service';
 import { TokenService } from '../../../_services/token.service';
 import { AuthStateService } from '../../../_services/auth-state.service';
-import { AUTH_CONFIG } from '../../../_configs/constants';
+import { AUTH_CONFIG, ROUTES } from '../../../_configs/constants';
 
 @Component({
   selector: 'app-job-seeker-sign-up-page',
   standalone: true,
-  imports: [
-    CommonModule,
-    JobSeekerSignUpFormComponent
-  ],
+  imports: [CommonModule, JobSeekerSignUpFormComponent],
   templateUrl: './job-seeker-sign-up-page.component.html',
-  styleUrls: ['./job-seeker-sign-up-page.component.css']
 })
 export class JobSeekerSignUpPageComponent {
   isLoading = false;
   errorMessage: string | null = null;
   serverErrors: any = null;
+
+  ROUTES = ROUTES;
 
   constructor(
     private authService: AuthenticationService,
@@ -50,7 +48,7 @@ export class JobSeekerSignUpPageComponent {
         this.errorMessage = 'Đăng ký thất bại';
         this.serverErrors = err.error?.errors || null;
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -65,40 +63,42 @@ export class JobSeekerSignUpPageComponent {
   private handleSocialRegister(provider: string, token: string) {
     this.isLoading = true;
 
-    this.authService.convertToken(
-      AUTH_CONFIG.CLIENT_ID,
-      AUTH_CONFIG.CLIENT_SECRET,
-      provider,
-      token
-    ).subscribe({
-      next: (res) => {
-        if (res.access_token) {
-          this.tokenService.saveAccessTokenAndRefreshTokenToCookie(
-            res.access_token,
-            res.refresh_token,
-            provider
-          );
-          this.authService.getUserInfo().subscribe({
-            next: (userInfoRes) => {
-              this.authStateService.setCurrentUser(userInfoRes.data);
-              this.router.navigate(['/']);
-              this.toastr.success('Đăng ký thành công!');
-              this.isLoading = false;
-            },
-            error: () => {
-              this.toastr.error('Không thể lấy thông tin người dùng.');
-              this.isLoading = false;
-            }
-          });
-        } else {
+    this.authService
+      .convertToken(AUTH_CONFIG.CLIENT_ID, AUTH_CONFIG.CLIENT_SECRET, provider, token)
+      .subscribe({
+        next: (res) => {
+          if (res.access_token) {
+            this.tokenService.saveAccessTokenAndRefreshTokenToCookie(
+              res.access_token,
+              res.refresh_token,
+              provider
+            );
+            this.authService.getUserInfo().subscribe({
+              next: (userInfoRes) => {
+                this.authStateService.setCurrentUser(userInfoRes.data);
+                this.router.navigate(['/']);
+                this.toastr.success('Đăng ký thành công!');
+                this.isLoading = false;
+              },
+              error: () => {
+                this.toastr.error('Không thể lấy thông tin người dùng.');
+                this.isLoading = false;
+              },
+            });
+          } else {
+            this.errorMessage = 'Đăng ký mạng xã hội thất bại';
+            this.isLoading = false;
+          }
+        },
+        error: () => {
           this.errorMessage = 'Đăng ký mạng xã hội thất bại';
           this.isLoading = false;
-        }
-      },
-      error: () => {
-        this.errorMessage = 'Đăng ký mạng xã hội thất bại';
-        this.isLoading = false;
-      }
-    });
+        },
+      });
+  }
+
+  // Phương thức điều hướng đến trang đăng nhập
+  navigateToLogin() {
+    this.router.navigate([`/${ROUTES.AUTH.LOGIN}`]);
   }
 }

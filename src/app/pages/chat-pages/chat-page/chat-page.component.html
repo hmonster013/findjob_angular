@@ -10,11 +10,15 @@
   <!-- MAIN CHAT WINDOW -->
   <div class="col-span-12 sm:col-span-9 md:col-span-6 bg-white h-full flex flex-col">
     <!-- Mobile Top Header -->
-    <div *ngIf="isMobile || isMedium" class="flex items-center p-2 gap-2 border-b shadow-sm">
-      <button class="bg-gray-100 p-2 rounded" (click)="openLeftDrawer = !openLeftDrawer">👥</button>
-      <button class="bg-gray-100 p-2 rounded" (click)="openRightDrawer = !openRightDrawer">📋</button>
-      <h1 class="text-center flex-1 font-semibold text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">
-        New way to follow your chance. <span>More engage, more success</span>
+    <div *ngIf="isMobile || isMedium" class="flex items-center p-2 gap-2 border-b shadow-sm bg-orange-600">
+      <button class="bg-orange-500 p-2 rounded hover:bg-orange-700 text-white transition-all duration-300" (click)="toggleLeftDrawer()">
+        <i class="fas fa-users"></i>
+      </button>
+      <button class="bg-orange-500 p-2 rounded hover:bg-orange-700 text-white transition-all duration-300" (click)="toggleRightDrawer()">
+        <i class="fas fa-list-ul"></i>
+      </button>
+      <h1 class="text-center flex-1 font-semibold text-white">
+        New way to follow your chance. <span class="block text-sm">More engage, more success</span>
       </h1>
     </div>
 

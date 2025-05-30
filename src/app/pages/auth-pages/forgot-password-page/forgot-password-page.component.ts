@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { ForgotPasswordFormComponent } from '../../_components/auths/forgot-password-form/forgot-password-form.component';
 import { AuthenticationService } from '../../../_services/authentication.service';
-import { PLATFORM } from '../../../_configs/constants';
+import { PLATFORM, ROUTES } from '../../../_configs/constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password-page',
@@ -19,9 +20,12 @@ export class ForgotPasswordPageComponent {
   messageSuccess: string | null = null;
   isLoading = false;
 
+  ROUTES = ROUTES;
+
   constructor(
     private authService: AuthenticationService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   onSubmit(data: { email: string }) {
@@ -39,5 +43,10 @@ export class ForgotPasswordPageComponent {
         this.isLoading = false;
       }
     });
+  }
+
+  // Phương thức điều hướng đến trang đăng nhập
+  navigateToLogin() {
+    this.router.navigate([`/${ROUTES.AUTH.LOGIN}`]);
   }
 }

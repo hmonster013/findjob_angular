@@ -4,9 +4,8 @@ import { AuthStateService } from '../../../../_services/auth-state.service';
 
 @Component({
   selector: 'app-message',
-  imports: [
-    CommonModule
-  ],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './message.component.html',
   styleUrl: './message.component.css'
 })
@@ -23,13 +22,31 @@ export class MessageComponent {
   }
 
   isOwnMessage(): boolean {
-    return `${this.currentUser?.userId}` === `${this.userId}`;
+    return this.currentUser?.id?.toString() === this.userId?.toString();
   }
 
   formatCreatedAt(): string {
-    if (this.createdAt?.seconds) {
+    // Trường hợp createdAt không tồn tại hoặc không hợp lệ
+    if (!this.createdAt) {
+      return 'Đang gửi ...';
+    }
+
+    // Trường hợp createdAt là timestamp Firestore
+    if (this.createdAt && typeof this.createdAt.seconds === 'number') {
       return this.formatMessageDate(this.createdAt.seconds * 1000);
     }
+
+    // Trường hợp createdAt là đối tượng Date (cho tin nhắn tạm thời)
+    try {
+      const date = new Date(this.createdAt);
+      if (!isNaN(date.getTime())) {
+        return this.formatMessageDate(date.getTime());
+      }
+    } catch (e) {
+      // Lỗi đã được xử lý im lặng
+    }
+
+    // Trường hợp không xác định được định dạng
     return 'Đang gửi ...';
   }
 
@@ -37,14 +54,11 @@ export class MessageComponent {
     const now = new Date();
     const date = new Date(timestamp);
 
-    const isToday =
-      now.toDateString() === date.toDateString();
+    const isToday = now.toDateString() === date.toDateString();
 
     const yesterday = new Date();
     yesterday.setDate(now.getDate() - 1);
-
-    const isYesterday =
-      yesterday.toDateString() === date.toDateString();
+    const isYesterday = yesterday.toDateString() === date.toDateString();
 
     const options: Intl.DateTimeFormatOptions = {
       hour: '2-digit',

@@ -36,18 +36,15 @@ export class ApplicationChartComponent implements OnInit, OnDestroy, AfterViewIn
   ) {}
 
   ngOnInit(): void {
-    console.log('ngOnInit: Fetching statistics');
     this.fetchStatistics();
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit: Canvas ready, chartCanvas:', !!this.chartCanvas);
     this.isCanvasReady = true;
     if (this.dataReady && this.data !== null && this.data.labels && this.data.labels.length > 0) {
-      console.log('ngAfterViewInit: Rendering chart with data:', this.data);
       this.renderChart();
     } else {
-      console.log('ngAfterViewInit: No valid data to render chart, data:', this.data);
+
     }
     this.cdr.detectChanges();
   }
@@ -68,7 +65,6 @@ export class ApplicationChartComponent implements OnInit, OnDestroy, AfterViewIn
     const endDate = this.selectedDateRange[1].format('YYYY-MM-DD');
 
     if (this.selectedDateRange[0].isAfter(this.selectedDateRange[1])) {
-      console.warn('fetchStatistics: Invalid date range');
       this.errorMessage = 'Ngày bắt đầu không thể lớn hơn ngày kết thúc';
       this.isLoading = false;
       this.dataReady = false;
@@ -76,26 +72,22 @@ export class ApplicationChartComponent implements OnInit, OnDestroy, AfterViewIn
       return;
     }
 
-    console.log('fetchStatistics: Calling API with startDate:', startDate, 'endDate:', endDate);
     this.statisticService
       .employerApplicationStatistics({ startDate, endDate })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('fetchStatistics: API response:', response);
           this.data = response.data || null;
           this.isLoading = false;
           this.dataReady = true;
           if (this.isCanvasReady && this.data !== null && this.data.labels && this.data.labels.length > 0) {
-            console.log('fetchStatistics: Rendering chart with data:', this.data);
             this.renderChart();
           } else {
-            console.log('fetchStatistics: Canvas not ready or no valid data, data:', this.data);
+
           }
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('fetchStatistics: Error fetching data:', error);
           this.errorMessage = error.message || 'Không thể tải dữ liệu thống kê. Vui lòng thử lại.';
           this.isLoading = false;
           this.dataReady = false;
@@ -106,28 +98,23 @@ export class ApplicationChartComponent implements OnInit, OnDestroy, AfterViewIn
 
   renderChart() {
     if (!this.chartCanvas || !this.isCanvasReady || !this.chartCanvas.nativeElement) {
-      console.error('renderChart: Canvas not ready, chartCanvas:', !!this.chartCanvas, 'isCanvasReady:', this.isCanvasReady);
       return;
     }
     const ctx = this.chartCanvas.nativeElement.getContext('2d');
     if (!ctx) {
-      console.error('renderChart: Context not available');
       return;
     }
 
     if (this.chartInstance) {
-      console.log('renderChart: Destroying existing chart');
       this.chartInstance.destroy();
     }
 
     if (!this.data || !Array.isArray(this.data.labels) || this.data.labels.length === 0 ||
         !Array.isArray(this.data.data1) || !Array.isArray(this.data.data2) ||
         this.data.labels.length !== this.data.data1.length || this.data.labels.length !== this.data.data2.length) {
-      console.error('renderChart: Invalid chart data:', this.data);
       return;
     }
 
-    console.log('renderChart: Preparing chart data, labels:', this.data.labels);
     const datasets = [
       {
         type: 'line' as const,
@@ -231,12 +218,10 @@ export class ApplicationChartComponent implements OnInit, OnDestroy, AfterViewIn
         },
       },
     });
-    console.log('renderChart: Chart created successfully');
   }
 
   onSubmitDateChange() {
     if (this.allowSubmit) {
-      console.log('onSubmitDateChange: Fetching new statistics');
       this.fetchStatistics();
       this.allowSubmit = false;
     }
@@ -244,7 +229,6 @@ export class ApplicationChartComponent implements OnInit, OnDestroy, AfterViewIn
 
   onDateChange(event: any, type: 'start' | 'end') {
     const newDate = dayjs(event.target.value);
-    console.log('onDateChange: New date:', newDate.format('YYYY-MM-DD'), 'type:', type);
     if (type === 'start') {
       this.selectedDateRange[0] = newDate;
     } else {

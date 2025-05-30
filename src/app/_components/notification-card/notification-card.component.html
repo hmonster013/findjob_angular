@@ -3,7 +3,7 @@
   <button (click)="toggleMenu()" class="relative p-2 hover:opacity-80 cursor-pointer">
     <i class="fas fa-bell text-white text-lg" [ngClass]="unreadCount > 0 ? 'animate-bounce' : ''"></i>
     <span *ngIf="unreadCount > 0"
-      class="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+          class="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-orange-600 rounded-full">
       {{ unreadCount }}
     </span>
   </button>
@@ -11,39 +11,54 @@
   <!-- Dropdown Menu -->
   <div
     *ngIf="open"
-    class="absolute right-0 mt-2 w-64 max-w-[90vw] bg-white border rounded-lg shadow-lg z-45 overflow-hidden"
+    class="absolute right-0 mt-2 w-80 max-w-[90vw] bg-white border border-orange-200 rounded-lg shadow-lg z-50 overflow-hidden"
   >
-    <div class="flex justify-between items-center px-4 py-2 border-b">
-      <h5 class="font-semibold text-gray-700">Thông báo</h5>
-      <button (click)="clearAll()" class="text-sm text-blue-600 hover:underline flex items-center gap-1">
-        <i class="fas fa-trash text-blue-600"></i>
+    <div class="flex justify-between items-center px-4 py-3 bg-orange-50">
+      <h5 class="font-semibold text-gray-800">Thông báo</h5>
+      <button *ngIf="notifications.length > 0" (click)="clearAll()" class="text-sm text-orange-600 hover:text-orange-700 flex items-center gap-1">
+        <i class="fas fa-trash text-orange-600"></i>
         Xóa tất cả
       </button>
     </div>
 
     <div class="max-h-96 overflow-y-auto flex flex-col">
       <ng-container *ngIf="notifications.length > 0; else noNoti">
-        <div *ngFor="let noti of notifications" class="border-b hover:bg-gray-50 p-4 cursor-pointer"
+        <div *ngFor="let noti of notifications"
+             class="border-b bg-white hover:bg-orange-50 p-4 cursor-pointer transition-all duration-300"
+             [ngClass]="{'border-l-4 border-orange-200': !noti.is_read}"
              (click)="markAsRead(noti)">
-          <div class="font-medium text-gray-800">{{ noti.title }}</div>
-          <div class="text-sm text-gray-500">{{ noti.body }}</div>
-          <div class="text-xs text-gray-400 mt-1">{{ noti.createdAt | date:'short' }}</div>
+          <div class="flex items-start gap-3">
+            <img
+              [src]="noti.image || 'https://via.placeholder.com/48'"
+              class="w-10 h-10 rounded border border-gray-200 object-cover"
+              alt="Notification"
+            />
+            <div class="flex-1">
+              <div class="font-medium text-gray-800" [ngClass]="{'font-bold': !noti.is_read}">{{ noti.title }}</div>
+              <div class="text-sm text-gray-600">{{ noti.content }}</div>
+              <div class="text-xs text-gray-500 mt-1 flex items-center">
+                <i class="fas fa-clock mr-1"></i>
+                {{ noti.time | date:'dd/MM/yyyy HH:mm' }}
+              </div>
+            </div>
+          </div>
         </div>
 
         <button
           *ngIf="canLoadMore"
           (click)="loadMore()"
-          class="py-2 text-sm text-center text-blue-600 hover:underline flex items-center justify-center gap-1"
+          class="py-2 text-sm text-center text-orange-600 hover:text-orange-700 hover:bg-orange-100 flex items-center justify-center gap-1 transition-all duration-300"
         >
-          <i class="fas fa-chevron-down text-blue-600"></i>
+          <i class="fas fa-chevron-down text-orange-600"></i>
           Xem thêm
         </button>
       </ng-container>
 
       <ng-template #noNoti>
-        <div class="text-center text-gray-400 py-8 flex flex-col items-center gap-2">
-          <i class="fas fa-bell-slash text-gray-400 text-2xl"></i>
-          <p>Không có thông báo nào</p>
+        <div class="text-center text-gray-500 py-8 flex flex-col items-center gap-2 bg-white">
+          <i class="fas fa-bell-slash text-orange-400 text-3xl"></i>
+          <p class="font-medium">Không có thông báo nào</p>
+          <p class="text-sm">Bạn sẽ nhận thông báo khi có cập nhật mới!</p>
         </div>
       </ng-template>
     </div>

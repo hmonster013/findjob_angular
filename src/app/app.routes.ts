@@ -118,7 +118,6 @@ export function generateRoutes(): Routes {
       { path: 'system-error', component: SystemErrorPageComponent },
     ];
   } else {
-    // Mặc định fallback – có thể redirect hoặc dùng 1 route error
     return [
       { path: '**', redirectTo: 'forbidden' }
     ];

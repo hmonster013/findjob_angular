@@ -3,9 +3,8 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-chat-info',
-  imports: [
-    CommonModule
-  ],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './chat-info.component.html',
   styleUrl: './chat-info.component.css'
 })
@@ -14,5 +13,5 @@ export class ChatInfoComponent {
   @Input() title: string = '';
   @Input() subTitle: string = '';
   @Input() description: string = '';
-  @Input() mode: 'center' | 'row' = 'center'; // mặc định center
+  @Input() mode: 'center' | 'row' = 'center';
 }

@@ -6,33 +6,33 @@
 
 <ng-template #loaded>
   <ng-container *ngIf="companyDetail; else noData">
-    <div class="container mx-auto px-4 py-8 space-y-8">
+    <div class="container mx-auto px-4 py-6 space-y-6 md:space-y-8">
       <!-- Company Header (Cover + Info) -->
       <div class="bg-white rounded-xl shadow-md overflow-hidden">
         <!-- Cover Image -->
         <div class="relative">
           <img
             [src]="companyDetail.companyCoverImageUrl || IMAGES.coverImageDefault"
-            class="w-full h-[200px] md:h-[250px] object-cover"
+            class="w-full h-[180px] md:h-[240px] object-cover"
             alt="Company Cover"
             loading="lazy"
           />
           <!-- Logo -->
           <img
             [src]="companyDetail.companyImageUrl || IMAGES.coverImageDefault"
-            class="absolute bottom-0 left-6 w-28 h-28 rounded-lg border-4 border-amber-500 shadow-lg bg-white object-cover translate-y-1/2"
+            class="absolute bottom-0 left-4 w-24 h-24 rounded-lg border-4 border-amber-500 shadow-lg bg-white object-cover translate-y-1/2 max-w-full"
             alt="Company Logo"
           />
         </div>
 
         <!-- Company Info -->
-        <div class="pt-16 pb-6 px-6 md:flex md:items-start md:gap-6">
+        <div class="pt-14 pb-6 px-4 md:px-6 md:flex md:items-start md:gap-6">
           <div class="flex-1 text-center md:text-left">
-            <h1 class="text-3xl font-bold text-gray-800">{{ companyDetail.companyName }}</h1>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">{{ companyDetail.companyName }}</h1>
             <div class="text-gray-600 mt-3 space-y-2">
               <div><i class="fas fa-briefcase mr-2 text-amber-600"></i> {{ companyDetail.fieldOperation || 'Chưa cập nhật' }}</div>
-              <div><i class="fas fa-users mr-2 text-amber-600"></i> {{ companyDetail.employeeSize || 'Chưa cập nhật' }} nhân viên</div>
-              <div><i class="fas fa-calendar-alt mr-2 text-amber-600"></i> {{ companyDetail.since | date:'dd/MM/yyyy' }}</div>
+              <div><i class="fas fa-users mr-2 text-amber-600"></i> {{ employeeSizeDisplay }}</div>
+              <div><i class="fas fa-calendar-alt mr-2 text-amber-600"></i> {{ sinceDisplay }}</div>
             </div>
           </div>
 
@@ -44,8 +44,9 @@
               [disabled]="isLoadingFollow"
               aria-label="Theo dõi công ty"
             >
-              <i class="fas fa-star mr-2"></i>
-              {{ companyDetail.isFollowed ? 'Đang theo dõi' : 'Theo dõi' }} ({{ companyDetail.followNumber || 0 }})
+              <i *ngIf="isLoadingFollow" class="fas fa-spinner fa-spin mr-2"></i>
+              <i *ngIf="!isLoadingFollow" class="fas fa-star mr-2"></i>
+              {{ companyDetail.isFollowed ? 'Đang theo dõi' : 'Theo dõi' }}
             </button>
 
             <button
@@ -65,7 +66,7 @@
         <div class="lg:col-span-2 space-y-6">
           <!-- About Company -->
           <div class="bg-white p-6 rounded-xl shadow-md">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Về công ty</h2>
+            <h2 class="text-xl md:text-2xl font-semibold text-gray-800 mb-4">Về công ty</h2>
             <div
               class="text-gray-700 leading-relaxed prose"
               [innerHTML]="companyDetail.description || '<i>Chưa cập nhật</i>'"
@@ -74,7 +75,7 @@
 
           <!-- Job Listings -->
           <div class="bg-white p-6 rounded-xl shadow-md">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Việc làm đang tuyển</h2>
+            <h2 class="text-xl md:text-2xl font-semibold text-gray-800 mb-4">Việc làm đang tuyển</h2>
             <app-filter-job-post-card [params]="{ companyId: companyDetail.id }" />
           </div>
         </div>
@@ -162,12 +163,9 @@
       <!-- Share Popup -->
       <app-social-network-sharing-popup
         [open]="openSharePopup"
+        [shareUrl]="currentUrl"
+        [shareTitle]="companyDetail?.companyName || 'Chia sẻ công ty'"
         (setOpenPopup)="openSharePopup = $event"
-        [facebookShareUrl]="currentUrl"
-        [facebookMessengerUrl]="currentUrl"
-        [linkedinShareUrl]="currentUrl"
-        [twitterShareUrl]="currentUrl"
-        [emailShareUrl]="currentUrl"
       />
     </div>
   </ng-container>
