@@ -1,3 +1,4 @@
+<!-- employer-sign-up-form.component.html -->
 <form [formGroup]="signUpForm" (ngSubmit)="handleNextStep()" class="space-y-5 employer-sign-up-form">
   <!-- Step Indicator -->
   <div class="flex justify-center mb-6">
@@ -404,7 +405,7 @@
           class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
         >
           <option value="" disabled>Chọn quận/huyện</option>
-          <option *ngFor="let district of getFilteredDistricts()" [value]="district.id">{{ district.name }}</option>
+          <option *ngFor="let district of districts" [value]="district.id">{{ district.name }}</option>
         </select>
         <i class="fas fa-map-marker-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
       </div>

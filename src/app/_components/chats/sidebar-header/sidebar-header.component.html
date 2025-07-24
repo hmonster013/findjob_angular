@@ -1,28 +1,29 @@
-<!-- sidebar-header.component.html -->
-<div class="px-4 pt-4 pb-2">
+<div class="px-6 py-5 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
   <div class="flex items-center justify-between">
-    <!-- Logo -->
-    <img src="assets/images/logo-text-dark.png" alt="Logo" class="h-10" />
-
+    <!-- Logo và tiêu đề -->
+    <div class="flex items-center space-x-3 cursor-pointer group" (click)="handleRedirect()">
+      <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center group-hover:bg-white/30 transition-all duration-300">
+        <img [src]="IMAGES.logoWhite" alt="FindJob Logo" class="h-6 w-auto" />
+      </div>
+      <div>
+        <h2 class="text-xl font-bold tracking-tight">FindJob</h2>
+        <p class="text-xs opacity-90 font-medium">Professional Network</p>
+      </div>
+    </div>
     <!-- Button -->
     <button
       (click)="handleRedirect()"
-      class="flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition"
+      class="flex items-center justify-center w-11 h-11 bg-white/15 text-white rounded-xl hover:bg-white/25 transition-all duration-300 transform hover:scale-105 group"
+      [title]="isEmployer ? 'Về trang quản trị' : 'Về trang chủ'"
     >
       <ng-container *ngIf="isEmployer; else goHome">
-        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h18M3 6h18M3 18h18"></path>
-        </svg>
-        Về trang quản trị
+        <i class="fas fa-tachometer-alt text-lg group-hover:scale-110 transition-transform duration-300"></i>
       </ng-container>
       <ng-template #goHome>
-        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
-        </svg>
-        Về trang chủ
+        <i class="fas fa-home text-lg group-hover:scale-110 transition-transform duration-300"></i>
       </ng-template>
     </button>
   </div>
 
-  <hr class="mt-4 border-gray-300" />
+  <div class="mt-4 h-px bg-white/20"></div>
 </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { ResumeService } from '../../../../_services/resume.service';
+import { CommonService } from '../../../../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProfileSearchComponent } from '../profile-search/profile-search.component';
@@ -30,16 +31,19 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   resumes: any[] = [];
   resumeFilter: any = {};
+  allConfigs: any;
   private destroy$ = new Subject<void>();
 
   constructor(
     private resumeService: ResumeService,
+    private commonService: CommonService,
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.getConfigs();
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.resumeFilter = {
         kw: params['kw'] || '',
@@ -62,6 +66,17 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  getConfigs() {
+    this.commonService.getConfigs().subscribe({
+      next: (res) => {
+        this.allConfigs = res.data;
+      },
+      error: (err) => {
+        console.error('Lỗi khi lấy configs:', err);
+      }
+    });
   }
 
   fetchResumes() {
@@ -96,7 +111,11 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
     this.resumeService.getResumes(params).subscribe({
       next: (res) => {
         this.count = res.data?.count || 0;
-        this.resumes = res.data?.results || [];
+        this.resumes = (res.data?.results || []).map((resume: any) => ({
+          ...resume,
+          experienceName: this.getExperienceName(resume.experience),
+          cityName: this.getCityName(resume.city),
+        }));
         this.isLoading = false;
       },
       error: () => {
@@ -113,6 +132,20 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
         });
       },
     });
+  }
+
+  getExperienceName(experienceId: number | null | undefined): string {
+    if (!experienceId || !this.allConfigs?.experienceDict) {
+      return 'Chưa cập nhật';
+    }
+    return this.allConfigs.experienceDict[experienceId] || 'Chưa cập nhật';
+  }
+
+  getCityName(cityId: number | null | undefined): string {
+    if (!cityId || !this.allConfigs?.cityDict) {
+      return 'Chưa cập nhật';
+    }
+    return this.allConfigs.cityDict[cityId] || 'Chưa cập nhật';
   }
 
   confirmSave(resume: any) {
@@ -174,7 +207,6 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
       }
     });
     this.router.navigate([], { queryParams, relativeTo: this.route });
-    this.fetchResumes();
   }
 
   onReset() {
@@ -182,7 +214,6 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
     this.page = 1;
     this.pageSize = 10;
     this.router.navigate([], { queryParams: {}, relativeTo: this.route });
-    this.fetchResumes();
   }
 
   onChangePage(newPage: number) {
@@ -199,7 +230,6 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
         }
       });
       this.router.navigate([], { queryParams, relativeTo: this.route });
-      this.fetchResumes();
     }
   }
 
@@ -219,7 +249,6 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
       }
     });
     this.router.navigate([], { queryParams, relativeTo: this.route });
-    this.fetchResumes();
   }
 
   get totalPages(): number {

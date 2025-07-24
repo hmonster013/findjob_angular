@@ -1,3 +1,4 @@
+import { IMAGES } from './../../../_configs/constants';
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
@@ -14,4 +15,6 @@ export class ChatInfoComponent {
   @Input() subTitle: string = '';
   @Input() description: string = '';
   @Input() mode: 'center' | 'row' = 'center';
+
+  IMAGES = IMAGES;
 }

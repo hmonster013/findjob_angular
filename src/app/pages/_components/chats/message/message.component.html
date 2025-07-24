@@ -2,7 +2,7 @@
   <div class="flex items-end gap-2" [ngClass]="isOwnMessage() ? 'flex-row-reverse' : 'flex-row'">
     <!-- Avatar -->
     <img
-      [src]="avatarUrl || 'assets/images/default-avatar.png'"
+      [src]="avatarUrl || IMAGES.imageDefault"
       alt="Avatar"
       class="w-8 h-8 rounded-full border border-gray-300 object-cover"
     />

@@ -21,6 +21,7 @@
     "@angular/router": "^19.0.0",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@tailwindcss/postcss": "^4.1.4",
+    "angular-oauth2-oidc": "^17.0.0",
     "chart.js": "^4.4.9",
     "dayjs": "^1.11.13",
     "firebase": "^11.6.1",

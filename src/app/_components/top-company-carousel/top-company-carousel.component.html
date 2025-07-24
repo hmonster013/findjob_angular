@@ -40,7 +40,7 @@
           (click)="navigateToCompany(company.slug)"
         >
           <img
-            [src]="company.companyImageUrl ? company.companyImageUrl : 'assets/images/companies/company-logo.jpg'"
+            [src]="company.companyImageUrl ? company.companyImageUrl : IMAGES.imageDefault"
             alt="{{ company.companyName }}"
             class="w-20 h-20 object-contain bg-gray-50 rounded-md mb-2"
           />

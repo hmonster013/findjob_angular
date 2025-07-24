@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import dayjs from 'dayjs';
-import { ROUTES } from '../../_configs/constants';
+import { IMAGES, ROUTES } from '../../_configs/constants';
 
 @Component({
   selector: 'app-job-post',
@@ -27,6 +27,7 @@ export class JobPostComponent {
   @Input() isLoading: boolean = false;
 
   ROUTES = ROUTES;
+  IMAGES = IMAGES;
 
   constructor(private router: Router) {}
 

@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class MyjobService {
+export class FindjobService {
 
   private baseUrl = `${environment.apiUrl}/api/findjob/web`;
 

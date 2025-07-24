@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MyjobService } from '../../_services/myjob.service';
+import { FindjobService } from '../../_services/myjob.service';
 import { BANNER_TYPES } from '../../_configs/constants';
 import { CommonModule } from '@angular/common';
 
@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 export class MainJobRightBannerComponent {
   rightBanners: any[] = [];
 
-  constructor(private myjobService: MyjobService) {}
+  constructor(private myjobService: FindjobService) {}
 
   ngOnInit() {
     this.fetchBanners();

@@ -22,6 +22,7 @@ export class SendMailCardComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder) {
     this.mailForm = this.fb.group({
+      id : '',
       fullName: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(100)]],
       email: [{ value: '', disabled: true }, [Validators.required, Validators.email, Validators.maxLength(100)]],
       title: ['', [Validators.required, Validators.maxLength(200)]],
@@ -40,6 +41,7 @@ export class SendMailCardComponent implements OnInit, OnDestroy {
     }
     if (this.sendMailData) {
       this.mailForm.patchValue({
+        id: this.sendMailData.id || '',
         fullName: this.sendMailData.fullName || '',
         email: this.sendMailData.email || '',
         title: this.sendMailData.title || '',

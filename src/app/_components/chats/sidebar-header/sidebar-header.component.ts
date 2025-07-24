@@ -1,3 +1,4 @@
+import { IMAGES } from './../../../_configs/constants';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
@@ -14,6 +15,8 @@ import { ROUTES } from '../../../_configs/constants';
 export class SidebarHeaderComponent {
   currentUser: any;
   isEmployer: boolean = false;
+
+  IMAGES = IMAGES;
 
   constructor(private router: Router) {
     this.getCurrentUser();

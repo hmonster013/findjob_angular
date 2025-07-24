@@ -1,9 +1,11 @@
+import { CommonService } from './../../../../_services/common.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { JobService } from '../../../../_services/job.service';
+import { IMAGES } from '../../../../_configs/constants';
 
 @Component({
   selector: 'app-saved-job-card',
@@ -18,23 +20,37 @@ export class SavedJobCardComponent implements OnInit {
   page = 1;
   pageSize = 5;
   count = 0;
+  cityOptions: any[] = [];
 
-  // Ánh xạ city ID sang tên thành phố (giả định)
-  private cityMap: { [key: number]: string } = {
-    1: 'Hà Nội',
-    2: 'TP. Hồ Chí Minh',
-    3: 'Đà Nẵng',
-    // Thêm các thành phố khác nếu cần
-  };
+  IMAGES = IMAGES;
 
   constructor(
     private jobService: JobService,
     private toastr: ToastrService,
+    private commonService: CommonService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.getCities();
     this.loadSavedJobs();
+  }
+
+  getCities() {
+    this.commonService.getCities().subscribe({
+      next: (res) => {
+        this.cityOptions = res.data;
+      },
+      error: (err) => {
+        console.error('Error loading cities:', err);
+      }
+    });
+  }
+
+  // Hàm mới để lấy tên thành phố từ id
+  getCityNameById(cityId: number): string {
+    const city = this.cityOptions.find((c) => c.id === cityId);
+    return city ? city.name : 'Không xác định';
   }
 
   loadSavedJobs() {
@@ -58,11 +74,6 @@ export class SavedJobCardComponent implements OnInit {
     });
   }
 
-  // Hàm ánh xạ city ID sang tên thành phố
-  getCityName(cityId?: number): string {
-    return cityId && this.cityMap[cityId] ? this.cityMap[cityId] : 'Không xác định';
-  }
-
   handleUnsave(slug: string) {
     Swal.fire({
       title: 'Xác nhận',
@@ -73,7 +84,6 @@ export class SavedJobCardComponent implements OnInit {
       cancelButtonText: 'Giữ lại'
     }).then((result) => {
       if (result.isConfirmed) {
-        // TODO: Kiểm tra xem API có endpoint riêng cho unsave không, hiện dùng saveJobPost có thể sai
         this.jobService.saveJobPost(slug).subscribe({
           next: () => {
             this.toastr.success('Đã hủy lưu công việc thành công!');

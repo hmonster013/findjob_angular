@@ -1,3 +1,4 @@
+import { IMAGES } from './../../../../_configs/constants';
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthStateService } from '../../../../_services/auth-state.service';
@@ -17,6 +18,7 @@ export class MessageComponent {
 
   currentUser: any;
 
+  IMAGES = IMAGES;
   constructor(private authStateService: AuthStateService) {
     this.currentUser = this.authStateService.getCurrentUser();
   }

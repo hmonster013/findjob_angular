@@ -122,7 +122,7 @@
   <!-- Submit -->
   <button
     type="submit"
-    class="w-full bg-orange-600 text-white py-2 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition flex items-center justify-center disabled:bg-orange-400 disabled:cursor-not-allowed"
+    class="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
     [disabled]="form.invalid || isLoadingEmail"
   >
     <i *ngIf="isLoadingEmail" class="fas fa-spinner fa-spin mr-2"></i>
@@ -139,7 +139,7 @@
   <button
     type="button"
     (click)="handleFacebookLogin()"
-    class="w-full bg-[#1877f2] text-white py-2 rounded-md hover:bg-[#1566d8] focus:outline-none focus:ring-2 focus:ring-[#1877f2] focus:ring-offset-2 transition flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed"
+    class="w-full bg-[#1877f2] text-white py-2 rounded-md hover:bg-[#1566d8] focus:outline-none focus:ring-2 focus:ring-[#1877f2] focus:ring-offset-2 transition flex items-center justify-center gap-2 disabled:bg-blue-400 disabled:cursor-not-allowed"
     [disabled]="isLoadingFacebook"
   >
     <i *ngIf="isLoadingFacebook" class="fas fa-spinner fa-spin mr-2"></i>
@@ -148,9 +148,10 @@
   </button>
 
   <button
+    id="googleSignUpButton"
     type="button"
     (click)="handleGoogleLogin()"
-    class="w-full bg-white border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition flex items-center justify-center disabled:bg-gray-200 disabled:cursor-not-allowed mt-3"
+    class="w-full bg-white border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition flex items-center justify-center gap-2 disabled:bg-gray-200 disabled:cursor-not-allowed mt-3"
     [disabled]="isLoadingGoogle"
   >
     <i *ngIf="isLoadingGoogle" class="fas fa-spinner fa-spin mr-2"></i>

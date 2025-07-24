@@ -34,6 +34,7 @@ export class ResetPasswordPageComponent implements OnInit {
   }
 
   onResetPassword(data: any) {
+    console.log("reset")
     this.isLoading = true;
     this.errorMessage = null;
     this.serverErrors = null;

@@ -1,3 +1,4 @@
+import { APP_NAME, IMAGES } from './../../../../_configs/constants';
 import { Component, HostListener } from '@angular/core';
 import { HOST_NAME, ROUTES } from '../../../../_configs/constants';
 import { AuthStateService } from '../../../../_services/auth-state.service';
@@ -44,6 +45,9 @@ export class HeaderComponent {
   isAuthenticated = false;
   currentUser: any = null;
   showUserMenu = false;
+
+  IMAGES = IMAGES;
+  APP_NAME = APP_NAME;
 
   constructor(
     private router: Router,

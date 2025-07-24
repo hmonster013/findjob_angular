@@ -18,7 +18,7 @@
           *ngFor="let job of jobPosts"
           [id]="job.id"
           [slug]="job.slug"
-          [companyImageUrl]="job?.companyDict?.companyImageUrl || 'https://via.placeholder.com/150'"
+          [companyImageUrl]="job?.companyDict?.companyImageUrl"
           [companyName]="job?.companyDict?.companyName || 'Chưa cập nhật'"
           [jobName]="job?.jobName || 'Chưa cập nhật'"
           [cityName]="getCityName(job?.locationDict?.city)"

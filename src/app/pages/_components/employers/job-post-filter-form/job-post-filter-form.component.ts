@@ -45,7 +45,7 @@ export class JobPostFilterFormComponent implements OnInit, OnDestroy {
         isUrgent: params['isUrgent'] || '',
         statusId: params['statusId'] || ''
       });
-      this.onSubmit(); // Áp dụng bộ lọc ngay khi có queryParams
+      this.onSubmit();
     });
   }
 

@@ -25,14 +25,14 @@ export class AttachedProfilePageComponent implements AfterViewInit {
   @ViewChildren('sectionRef') sectionRefs!: QueryList<ElementRef>;
 
   sections = [
-    { id: 0, label: 'Thông tin cá nhân', icon: '🙍' },
-    { id: 1, label: 'Thông tin chung', icon: '🧾' },
-    { id: 2, label: 'Tải CV đính kèm', icon: '📎' },
+    { label: 'Thông tin cá nhân', icon: 'fas fa-user' },
+    { label: 'Thông tin chung', icon: 'fas fa-info-circle' },
+    { label: 'Tải CV đính kèm', icon: 'fas fa-file-upload' },
   ];
 
-  scrollToSection(index: number) {
+  scrollTo(index: number) {
     const section = this.sectionRefs.toArray()[index];
-    section.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    section?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   ngAfterViewInit(): void {}

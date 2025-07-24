@@ -4,6 +4,7 @@ import { AuthenticationService } from '../../_services/authentication.service';
 import { CompanyService } from '../../_services/company.service';
 import { AuthStateService } from '../../_services/auth-state.service';
 import { RouterLink } from '@angular/router';
+import { IMAGES } from '../../_configs/constants';
 
 @Component({
   selector: 'app-company',
@@ -29,7 +30,8 @@ export class CompanyComponent {
 
   followed: boolean = false;
   loadingFollow: boolean = false;
-  defaultCoverImage = 'assets/images/companies/company-cover.avif';
+
+  IMAGES = IMAGES;
 
   constructor(
     private companyService: CompanyService,

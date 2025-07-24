@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ToastrService } from 'ngx-toastr';
 import { JobSeekerProfileService } from '../../_services/job-seeker-profile.service';
 import { AuthStateService } from '../../_services/auth-state.service';
+import { ROUTES } from '../../_configs/constants';
 
 @Component({
   selector: 'app-apply-form',
@@ -92,9 +93,9 @@ export class ApplyFormComponent {
 
   getResumeLink(resume: any): string {
     if (resume.type === 'WEBSITE') {
-      return `/dashboard/step-profile/${resume.slug}`;
+      return `${ROUTES.JOB_SEEKER.DASHBOARD}/${ROUTES.JOB_SEEKER.STEP_PROFILE}/${resume.slug}`;
     } else {
-      return `/dashboard/attached-profile/${resume.slug}`;
+      return `${ROUTES.JOB_SEEKER.DASHBOARD}/${ROUTES.JOB_SEEKER.ATTACHED_PROFILE}/${resume.slug}`;
     }
   }
 }

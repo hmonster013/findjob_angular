@@ -1,3 +1,4 @@
+import { IMAGES } from './../../../../_configs/constants';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -6,7 +7,6 @@ import { ResumeService } from '../../../../_services/resume.service';
 import { CommonService } from '../../../../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { errorModal } from '../../../../_utils/sweetalert2-modal';
-import { BackdropLoadingComponent } from '../../../../_components/backdrop-loading/backdrop-loading.component';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { SendMailCardComponent } from '../send-mail-card/send-mail-card.component';
 import { formatDate } from '../../../../_utils/dateHelper';
@@ -14,7 +14,10 @@ import { formatDate } from '../../../../_utils/dateHelper';
 @Component({
   selector: 'app-profile-detail-card',
   standalone: true,
-  imports: [CommonModule, BackdropLoadingComponent, SendMailCardComponent],
+  imports: [
+    CommonModule,
+    SendMailCardComponent
+  ],
   templateUrl: './profile-detail-card.component.html',
   styleUrls: ['./profile-detail-card.component.css'],
 })
@@ -22,12 +25,13 @@ export class ProfileDetailCardComponent implements OnInit, OnDestroy {
   resumeSlug: string = '';
   profileDetail: any = null;
   isLoading: boolean = false;
-  isFullScreenLoading: boolean = false;
   openSendMailPopup: boolean = false;
   sendMailData: any = null;
   pdfUrl: string = '';
   configs: any = {};
   private destroy$ = new Subject<void>();
+
+  IMAGES = IMAGES;
 
   constructor(
     private route: ActivatedRoute,
@@ -67,6 +71,7 @@ export class ProfileDetailCardComponent implements OnInit, OnDestroy {
     this.resumeService.getResumeDetail(this.resumeSlug).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.profileDetail = res.data;
+        console.log('Profile Detail:', this.profileDetail); // Debug giá trị profileDetail
         if (this.profileDetail?.type === 'uploadFile') {
           this.pdfUrl = this.profileDetail?.cvFile?.url || '';
           if (!this.pdfUrl) {
@@ -96,11 +101,13 @@ export class ProfileDetailCardComponent implements OnInit, OnDestroy {
   handleSave() {
     this.resumeService.saveResume(this.resumeSlug).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
-        const isSaved = res.data?.isSaved;
+        console.log('Save Resume Response:', res); // Debug response từ API
+        const isSaved = res.data?.isSaved ?? !this.profileDetail.isSaved; // Fallback nếu API không trả isSaved
         this.profileDetail.isSaved = isSaved;
         this.toastr.success(isSaved ? 'Lưu hồ sơ thành công!' : 'Hủy lưu hồ sơ thành công!');
       },
-      error: () => {
+      error: (err) => {
+        console.error('Lỗi khi lưu hồ sơ:', err); // Debug lỗi
         errorModal('Lỗi', 'Lưu hồ sơ thất bại');
       },
     });
@@ -124,16 +131,13 @@ export class ProfileDetailCardComponent implements OnInit, OnDestroy {
   }
 
   handleSendEmail(formData: any) {
-    this.isFullScreenLoading = true;
     this.resumeService.sendEmail(formData.id, formData).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.toastr.success('Gửi email thành công!');
         this.openSendMailPopup = false;
         this.profileDetail.isSentEmail = true;
-        this.isFullScreenLoading = false;
       },
       error: () => {
-        this.isFullScreenLoading = false;
         errorModal('Lỗi', 'Gửi email thất bại');
       },
     });

@@ -3,7 +3,7 @@
     <!-- Logo -->
     <div class="flex justify-center mb-6">
       <img
-        src="/assets/images/logo.png"
+        [src]="IMAGES.logoWhite"
         alt="Logo Ứng Viên"
         class="h-12 sm:h-14 transform transition-transform duration-300 hover:scale-105"
         loading="lazy"
@@ -32,6 +32,7 @@
 
     <!-- Form -->
     <app-job-seeker-login-form
+      #loginForm
       (submitForm)="onLogin($event)"
       (facebookLogin)="onFacebookLogin($event)"
       (googleLogin)="onGoogleLogin($event)"

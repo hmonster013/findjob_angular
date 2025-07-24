@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from '../../../../_services/company.service';
-import { BackdropLoadingComponent } from '../../../../_components/backdrop-loading/backdrop-loading.component';
 import { CompanyFormComponent } from '../company-form/company-form.component';
 import Swal from 'sweetalert2';
 
@@ -11,7 +10,6 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [
     CommonModule,
-    BackdropLoadingComponent,
     CompanyFormComponent
   ],
   templateUrl: './company-card.component.html',
@@ -20,7 +18,6 @@ import Swal from 'sweetalert2';
 })
 export class CompanyCardComponent implements OnInit {
   isLoadingCompany = true;
-  isFullScreenLoading = false;
   editData: any = null;
   companyImageUrl: string | null = null;
   companyCoverImageUrl: string | null = null;
@@ -45,7 +42,7 @@ export class CompanyCardComponent implements OnInit {
           id: data.id,
           companyName: data.companyName || '',
           taxCode: data.taxCode || '',
-          employeeSize: data.employeeSize || '',
+          employeeSize: data.employeeSize ? data.employeeSize.toString() : '',
           fieldOperation: data.fieldOperation || '',
           since: data.since || '',
           websiteUrl: data.websiteUrl || '',
@@ -55,16 +52,13 @@ export class CompanyCardComponent implements OnInit {
           companyEmail: data.companyEmail || '',
           companyPhone: data.companyPhone || '',
           location: {
-            city: data.location?.city || '',
-            district: data.location?.district || '',
+            city: data.location?.city ? data.location.city.toString() : '',
+            district: data.location?.district ? data.location.district.toString() : '',
             address: data.location?.address || '',
-            latitude: data.location?.lat || '',
-            longitude: data.location?.lng || ''
+            lat: data.location?.lat ? data.location.lat.toString() : '',
+            lng: data.location?.lng ? data.location.lng.toString() : ''
           },
-          description: data.description || '',
-          locationDict: data.locationDict || { city: '' },
-          mobileUserDict: data.mobileUserDict || { id: '', fullName: '', email: '' },
-          companyImages: data.companyImages || []
+          description: data.description || ''
         };
         this.companyImageUrl = data.companyImageUrl || null;
         this.companyCoverImageUrl = data.companyCoverImageUrl || null;
@@ -87,32 +81,30 @@ export class CompanyCardComponent implements OnInit {
   }
 
   handleUpdate(data: any): void {
-    this.isFullScreenLoading = true;
     const updateData = {
       id: data.id,
       companyName: data.companyName,
-      taxCode: data.taxCode,
-      employeeSize: data.employeeSize,
+      taxCode: data.taxCode || null,
+      employeeSize: Number(data.employeeSize),
       fieldOperation: data.fieldOperation,
-      since: data.since,
-      websiteUrl: data.websiteUrl,
-      facebookUrl: data.facebookUrl,
-      youtubeUrl: data.youtubeUrl,
-      linkedinUrl: data.linkedinUrl,
+      since: data.since || null,
+      websiteUrl: data.websiteUrl || null,
+      facebookUrl: data.facebookUrl || null,
+      youtubeUrl: data.youtubeUrl || null,
+      linkedinUrl: data.linkedinUrl || null,
       companyEmail: data.companyEmail,
       companyPhone: data.companyPhone,
       location: {
-        city: data.location.city,
-        district: data.location.district,
+        city: Number(data.location.city),
+        district: data.location.district ? Number(data.location.district) : null,
         address: data.location.address,
-        lat: data.location.latitude,
-        lng: data.location.longitude
+        lat: data.location.lat ? Number(data.location.lat) : null,
+        lng: data.location.lng ? Number(data.location.lng) : null
       },
-      description: data.description,
-      locationDict: data.locationDict,
-      mobileUserDict: data.mobileUserDict,
-      companyImages: data.companyImages
+      description: data.description
     };
+
+    console.log('Update data:', updateData);
 
     this.companyService.updateCompany(data.id, updateData).subscribe({
       next: () => {
@@ -128,10 +120,10 @@ export class CompanyCardComponent implements OnInit {
         });
         this.loadCompany();
         this.serverErrors = null;
-        this.isFullScreenLoading = false;
       },
       error: (err) => {
-        this.serverErrors = err.error || null;
+        console.error('Update error:', err);
+        this.serverErrors = err.error?.errors || err.error || null;
         Swal.fire({
           title: 'Lỗi',
           text: 'Không thể cập nhật thông tin công ty',
@@ -142,7 +134,6 @@ export class CompanyCardComponent implements OnInit {
             confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
           }
         });
-        this.isFullScreenLoading = false;
       }
     });
   }
@@ -183,7 +174,6 @@ export class CompanyCardComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', file);
 
-    this.isFullScreenLoading = true;
     this.companyService.updateCompanyImageUrl(formData).subscribe({
       next: (res) => {
         this.companyImageUrl = res.data?.companyImageUrl || null;
@@ -197,8 +187,7 @@ export class CompanyCardComponent implements OnInit {
             confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
           }
         });
-        this.isFullScreenLoading = false;
-        input.value = ''; // Reset input
+        input.value = '';
       },
       error: () => {
         Swal.fire({
@@ -211,7 +200,6 @@ export class CompanyCardComponent implements OnInit {
             confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
           }
         });
-        this.isFullScreenLoading = false;
       }
     });
   }
@@ -252,7 +240,6 @@ export class CompanyCardComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', file);
 
-    this.isFullScreenLoading = true;
     this.companyService.updateCompanyCoverImageUrl(formData).subscribe({
       next: (res) => {
         this.companyCoverImageUrl = res.data?.companyCoverImageUrl || null;
@@ -266,8 +253,7 @@ export class CompanyCardComponent implements OnInit {
             confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
           }
         });
-        this.isFullScreenLoading = false;
-        input.value = ''; // Reset input
+        input.value = '';
       },
       error: () => {
         Swal.fire({
@@ -280,7 +266,6 @@ export class CompanyCardComponent implements OnInit {
             confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
           }
         });
-        this.isFullScreenLoading = false;
       }
     });
   }

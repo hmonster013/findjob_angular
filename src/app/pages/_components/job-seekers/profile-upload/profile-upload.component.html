@@ -1,12 +1,12 @@
 <div class="p-6 bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300">
   <!-- Header -->
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-xl font-semibold text-amber-600 flex items-center">
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-3">
+    <h2 class="text-xl font-semibold text-amber-600 flex items-center justify-center sm:justify-start">
       <i class="fas fa-file-pdf mr-2"></i> CV đã tải lên
     </h2>
     <button
       (click)="handleShowUpload()"
-      class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm flex items-center gap-2 transition-colors duration-200"
+      class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm flex items-center gap-2 transition-colors duration-200 w-full sm:w-auto justify-center"
     >
       <i class="fas fa-plus"></i> Thêm CV
     </button>
@@ -17,15 +17,21 @@
 
   <!-- Loading skeleton -->
   <div *ngIf="isLoadingResumes" class="space-y-4 animate-pulse">
-    <div *ngFor="let _ of [1, 2]" class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+    <div *ngFor="let _ of [1, 2]" class="p-6 bg-gray-50 rounded-lg grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div class="flex flex-col space-y-3">
         <div class="h-4 bg-gray-200 rounded w-3/4"></div>
         <div class="h-3 bg-gray-200 rounded w-1/2"></div>
         <div class="h-3 bg-gray-200 rounded w-1/4"></div>
       </div>
-      <div class="flex space-x-2">
-        <div class="h-8 w-20 bg-gray-200 rounded-md"></div>
-        <div class="h-8 w-20 bg-gray-200 rounded-md"></div>
+      <div class="flex flex-col justify-end space-y-2">
+        <div class="flex flex-wrap justify-end gap-2">
+          <div class="h-8 w-20 bg-gray-200 rounded-md"></div>
+          <div class="h-8 w-20 bg-gray-200 rounded-md"></div>
+        </div>
+        <div class="flex flex-wrap justify-end gap-2">
+          <div class="h-10 w-24 bg-gray-200 rounded-md"></div>
+          <div class="h-10 w-24 bg-gray-200 rounded-md"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -42,9 +48,10 @@
   <div *ngIf="!isLoadingResumes && resumes.length > 0" class="grid gap-4">
     <div
       *ngFor="let resume of resumes"
-      class="flex justify-between items-center p-4 bg-white border border-gray-100 rounded-lg hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+      class="p-6 bg-white border border-gray-100 rounded-lg hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer grid grid-cols-1 sm:grid-cols-2 gap-4"
     >
-      <div class="flex items-center space-x-4">
+      <!-- Left Column: CV Content -->
+      <div class="flex items-center space-x-4 justify-center sm:justify-start">
         <i class="fas fa-file-pdf text-amber-600 text-2xl"></i>
         <div class="flex flex-col">
           <h3 class="text-base font-semibold text-gray-800">{{ resume.title }}</h3>
@@ -62,21 +69,52 @@
           </span>
         </div>
       </div>
-      <div class="flex space-x-3">
-        <button
-          (click)="handleActiveResume(resume.slug)"
-          class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm transition-colors duration-200"
-          [disabled]="resume.isActive"
-          [ngClass]="{ 'opacity-50 cursor-not-allowed': resume.isActive }"
-        >
-          Kích hoạt
-        </button>
-        <button
-          (click)="handleDeleteResume(resume.slug)"
-          class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm transition-colors duration-200"
-        >
-          Xóa
-        </button>
+
+      <!-- Right Column: Buttons -->
+      <div class="flex flex-col justify-end gap-2">
+        <!-- Top Row: Active & Download -->
+        <div class="flex flex-wrap justify-center sm:justify-end gap-2">
+          <button
+            (click)="handleActiveResume(resume.slug)"
+            class="px-3 py-1 text-sm rounded-md flex items-center"
+            [ngClass]="{
+              'bg-amber-100 text-amber-700': resume.isActive,
+              'border border-amber-300 text-amber-600 hover:bg-amber-50': !resume.isActive
+            }"
+          >
+            <i
+              class="fas mr-1"
+              [ngClass]="resume.isActive ? 'fa-star text-yellow-500' : 'fa-star-o text-yellow-500'"
+            ></i>
+            Cho phép tìm kiếm
+          </button>
+          <button
+            (click)="handleDownloadResume(resume.fileUrl)"
+            class="px-3 py-1 text-sm rounded-md flex items-center bg-amber-100 text-yellow-700 hover:bg-amber-200 transition-colors duration-200"
+            [disabled]="!resume.fileUrl"
+            [ngClass]="{ 'opacity-50 cursor-not-allowed': !resume.fileUrl }"
+          >
+            <i class="fas fa-download mr-1 text-yellow-700"></i>
+            Tải xuống
+          </button>
+        </div>
+        <!-- Bottom Row: Edit & Delete -->
+        <div class="flex flex-wrap justify-center sm:justify-end gap-2">
+          <button
+            (click)="handleEditResume(resume.slug)"
+            class="px-4 py-2 text-base rounded-md flex items-center bg-amber-600 text-white hover:bg-amber-700 transition-colors duration-200"
+          >
+            <i class="fas fa-edit mr-1"></i>
+            Chỉnh sửa
+          </button>
+          <button
+            (click)="handleDeleteResume(resume.slug)"
+            class="px-4 py-2 text-base rounded-md flex items-center bg-amber-600 text-white hover:bg-amber-700 transition-colors duration-200"
+          >
+            <i class="fas fa-trash mr-1"></i>
+            Xóa
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -86,7 +124,7 @@
     *ngIf="openPopup"
     class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-[1000] transition-opacity duration-300"
   >
-    <div class="bg-white rounded-xl p-8 max-w-lg w-full relative transform transition-transform duration-300 scale-100">
+    <div class="bg-white rounded-lg p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-xl border border-gray-200 relative">
       <!-- Close button -->
       <button
         (click)="openPopup = false"
@@ -107,7 +145,7 @@
   <!-- Fullscreen loading -->
   <div
     *ngIf="isFullScreenLoading"
-    class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[1000]"
+    class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-[1000]"
   >
     <i class="fas fa-spinner fa-spin text-amber-600 text-5xl"></i>
   </div>

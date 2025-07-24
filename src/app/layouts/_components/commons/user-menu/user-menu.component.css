@@ -1,0 +1,18 @@
+/* user-menu.component.css */
+
+@media (max-width: 640px) {
+  .user-menu-popup {
+    right: 8px !important;
+    left: auto !important;
+    width: auto !important;
+    min-width: 200px !important;
+    max-width: calc(100vw - 16px) !important;
+  }
+
+  .user-menu-popup .block,
+  .user-menu-popup button {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+}

@@ -1,12 +1,12 @@
-<div class="bg-white rounded-lg shadow flex flex-col flex-1 h-full w-full">
+<div class="bg-white rounded-lg md:shadow md:border flex flex-col flex-1 h-full w-full border-none shadow-none mobile-container">
   <!-- Header -->
-  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 sm:p-6 bg-white border-b border-gray-100">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 sm:p-6 bg-white md:border-b md:border-gray-100 border-none mobile-header">
     <h1 class="text-2xl font-semibold text-orange-600">Hồ sơ đã ứng tuyển</h1>
     <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
       <button
         type="button"
         (click)="handleExport()"
-        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mobile-button"
         [disabled]="resumes.length === 0"
       >
         <i class="fas fa-download text-lg"></i>
@@ -16,27 +16,14 @@
   </div>
 
   <!-- Filter Form -->
-  <div class="p-4 sm:p-6 bg-white">
-    <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="bg-white p-6 rounded-xl border-2 border-gray-300 shadow-lg">
-      <div class="flex flex-wrap gap-4 items-center">
-        <!-- Keyword Search -->
-        <div class="flex-1 min-w-[200px]">
-          <div class="relative">
-            <input
-              type="text"
-              formControlName="kw"
-              placeholder="Nhập tên ứng viên"
-              class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-md"
-            />
-            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-600 text-lg"></i>
-          </div>
-        </div>
-
+  <div class="md:p-4 md:sm:p-6 bg-white p-0">
+    <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="bg-white p-6 rounded-xl md:border md:border-gray-200 md:shadow-md border-none shadow-none mobile-filter-form">
+      <div class="flex flex-col sm:flex-row gap-y-4 sm:gap-x-4 items-stretch sm:items-center mobile-button-group">
         <!-- Job Post -->
-        <div class="w-44">
+        <div class="w-full sm:flex-1 min-w-0 mobile-form-group">
           <select
             formControlName="jobPostId"
-            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-select"
           >
             <option [ngValue]="null">Tất cả tin tuyển</option>
             <option *ngFor="let job of jobs" [ngValue]="job.id">{{ job.jobName }}</option>
@@ -44,10 +31,10 @@
         </div>
 
         <!-- Application Status -->
-        <div class="w-44">
+        <div class="w-full sm:flex-1 min-w-0 mobile-form-group">
           <select
             formControlName="status"
-            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-select"
           >
             <option [ngValue]="null">Tất cả trạng thái</option>
             <option *ngFor="let option of applicationStatusOptions" [value]="option.id">
@@ -57,17 +44,17 @@
         </div>
 
         <!-- Buttons -->
-        <div class="flex gap-3 items-center">
+        <div class="flex flex-col sm:flex-row gap-y-2 sm:gap-x-3 w-full sm:w-auto items-stretch sm:items-center mobile-button-group">
           <button
             type="submit"
-            class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg"
+            class="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg flex-shrink-0 mobile-search-button"
           >
             Tìm kiếm
           </button>
           <button
             type="button"
             (click)="toggleAdvanceFilter()"
-            class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg"
+            class="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg flex-shrink-0 mobile-filter-button"
           >
             {{ showAdvanceFilter ? 'Ẩn lọc nâng cao' : 'Lọc nâng cao' }}
           </button>
@@ -75,7 +62,7 @@
             *ngIf="isFormNotEmpty()"
             type="button"
             (click)="onReset()"
-            class="text-orange-600 hover:text-orange-700 p-2 transition-all"
+            class="text-orange-600 hover:text-orange-700 p-2 transition-all flex-shrink-0 mobile-reset-icon"
           >
             <i class="fas fa-times text-xl"></i>
           </button>
@@ -83,15 +70,15 @@
       </div>
 
       <!-- Advanced Filter -->
-      <div *ngIf="showAdvanceFilter" class="w-full mt-6 border-t-2 border-gray-300 pt-6">
+      <div *ngIf="showAdvanceFilter" class="w-full md:mt-6 mt-0 md:border-t-2 md:border-gray-300 md:pt-6 pt-0 border-none mobile-advanced-filter">
         <h3 class="text-lg font-semibold text-orange-600 mb-4">Lọc nâng cao</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mobile-filter-grid">
           <!-- City -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Tỉnh/Thành Phố</label>
+          <div class="mobile-form-group">
+            <label class="block text-sm text-gray-600 mb-1 mobile-label">Tỉnh/Thành Phố</label>
             <select
               formControlName="cityId"
-              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-select"
             >
               <option [ngValue]="null">Tất cả tỉnh thành</option>
               <option *ngFor="let item of cityOptions" [value]="item.id">{{ item.name }}</option>
@@ -99,11 +86,11 @@
           </div>
 
           <!-- Career -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Ngành Nghề</label>
+          <div class="mobile-form-group">
+            <label class="block text-sm text-gray-600 mb-1 mobile-label">Ngành Nghề</label>
             <select
               formControlName="careerId"
-              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-select"
             >
               <option [ngValue]="null">Tất cả ngành nghề</option>
               <option *ngFor="let item of careerOptions" [value]="item.id">{{ item.name }}</option>
@@ -111,11 +98,11 @@
           </div>
 
           <!-- Experience -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Kinh Nghiệm</label>
+          <div class="mobile-form-group">
+            <label class="block text-sm text-gray-600 mb-1 mobile-label">Kinh Nghiệm</label>
             <select
               formControlName="experienceId"
-              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-select"
             >
               <option [ngValue]="null">Tất cả kinh nghiệm</option>
               <option *ngFor="let item of experienceOptions" [value]="item.id">{{ item.name }}</option>
@@ -123,11 +110,11 @@
           </div>
 
           <!-- Position -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Cấp Bậc</label>
+          <div class="mobile-form-group">
+            <label class="block text-sm text-gray-600 mb-1 mobile-label">Cấp Bậc</label>
             <select
               formControlName="positionId"
-              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-select"
             >
               <option [ngValue]="null">Tất cả cấp bậc</option>
               <option *ngFor="let item of positionOptions" [value]="item.id">{{ item.name }}</option>
@@ -135,11 +122,11 @@
           </div>
 
           <!-- Academic Level -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Học Vấn</label>
+          <div class="mobile-form-group">
+            <label class="block text-sm text-gray-600 mb-1 mobile-label">Học Vấn</label>
             <select
               formControlName="academicLevelId"
-              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-select"
             >
               <option [ngValue]="null">Tất cả học vấn</option>
               <option *ngFor="let item of academicLevelOptions" [value]="item.id">{{ item.name }}</option>
@@ -147,11 +134,11 @@
           </div>
 
           <!-- Type of Workplace -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Nơi Làm Việc</label>
+          <div class="mobile-form-group">
+            <label class="block text-sm text-gray-600 mb-1 mobile-label">Nơi Làm Việc</label>
             <select
               formControlName="typeOfWorkplaceId"
-              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-select"
             >
               <option [ngValue]="null">Tất cả nơi làm việc</option>
               <option *ngFor="let item of typeOfWorkplaceOptions" [value]="item.id">{{ item.name }}</option>
@@ -159,11 +146,11 @@
           </div>
 
           <!-- Job Type -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Hình Thức Làm Việc</label>
+          <div class="mobile-form-group">
+            <label class="block text-sm text-gray-600 mb-1 mobile-label">Hình Thức Làm Việc</label>
             <select
               formControlName="jobTypeId"
-              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-select"
             >
               <option [ngValue]="null">Tất cả hình thức</option>
               <option *ngFor="let item of jobTypeOptions" [value]="item.id">{{ item.name }}</option>
@@ -171,11 +158,11 @@
           </div>
 
           <!-- Gender -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Giới Tính</label>
+          <div class="mobile-form-group">
+            <label class="block text-sm text-gray-600 mb-1 mobile-label">Giới Tính</label>
             <select
               formControlName="genderId"
-              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-select"
             >
               <option [ngValue]="null">Tất cả giới tính</option>
               <option *ngFor="let item of genderOptions" [value]="item.id">{{ item.name }}</option>
@@ -183,11 +170,11 @@
           </div>
 
           <!-- Marital Status -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-1">Tình Trạng Hôn Nhân</label>
+          <div class="mobile-form-group">
+            <label class="block text-sm text-gray-600 mb-1 mobile-label">Tình Trạng Hôn Nhân</label>
             <select
               formControlName="maritalStatusId"
-              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-select"
             >
               <option [ngValue]="null">Tất cả trạng thái</option>
               <option *ngFor="let item of maritalStatusOptions" [value]="item.id">{{ item.name }}</option>
@@ -200,7 +187,7 @@
           <button
             type="button"
             (click)="onReset()"
-            class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2"
+            class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2 mobile-button"
           >
             <i class="fas fa-trash text-lg"></i>
             Xóa bộ lọc
@@ -211,8 +198,8 @@
   </div>
 
   <!-- Skeleton Loading -->
-  <div *ngIf="isLoading && !isFullScreenLoading" class="grid gap-4 mx-4 sm:mx-6">
-    <div *ngFor="let _ of [].constructor(pageSize)" class="p-4 bg-white border border-gray-200 rounded-lg animate-pulse">
+  <div *ngIf="isLoading && !isFullScreenLoading" class="grid md:gap-4 gap-2 md:mx-4 md:sm:mx-6 mx-0">
+    <div *ngFor="let _ of [].constructor(pageSize)" class="p-4 bg-white md:border md:border-gray-200 border-none rounded-lg animate-pulse mobile-skeleton">
       <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
       <div class="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
       <div class="h-4 bg-gray-200 rounded w-1/3"></div>
@@ -220,7 +207,7 @@
   </div>
 
   <!-- Applied Resume Table -->
-  <div class="flex-1 mx-4 sm:mx-6 mb-4 sm:mb-6" *ngIf="!isLoading || isFullScreenLoading">
+  <div class="flex-1 md:mx-4 md:sm:mx-6 md:mb-4 md:sm:mb-6 mx-0 mb-0" *ngIf="!isLoading || isFullScreenLoading">
     <app-applied-resume-table
       [dataSource]="resumes"
       [isLoading]="isLoading"

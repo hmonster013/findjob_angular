@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+// employer-sign-up-form.component.ts
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { CommonService } from '../../../../_services/common.service';
 
 @Component({
   selector: 'app-employer-sign-up-form',
@@ -8,7 +10,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, ValidationErro
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './employer-sign-up-form.component.html',
 })
-export class EmployerSignUpFormComponent {
+export class EmployerSignUpFormComponent implements OnInit {
   @Output() submitForm = new EventEmitter<any>();
   @Output() checkCreds = new EventEmitter<string>();
   @Input() serverErrors: any = {};
@@ -20,25 +22,15 @@ export class EmployerSignUpFormComponent {
   showConfirmPassword = false;
   lastCheckedEmail = '';
 
-  // Danh sách tùy chọn giả định (lấy từ backend hoặc config)
-  cities = [
-    { id: 1, name: 'Hà Nội' },
-    { id: 2, name: 'TP.HCM' },
-    // Thêm các tỉnh/thành khác
-  ];
-  districts = [
-    { id: 1, name: 'Quận 1', cityId: 2 },
-    { id: 2, name: 'Quận 3', cityId: 2 },
-    // Thêm các quận/huyện khác
-  ];
-  employeeSizes = [
-    { id: 1, name: 'Dưới 10 nhân viên' },
-    { id: 2, name: '10 - 150 nhân viên' },
-    { id: 3, name: '150 - 300 nhân viên' },
-    { id: 4, name: 'Trên 300 nhân viên' },
-  ];
+  // Configuration data
+  cities: any[] = [];
+  districts: any[] = [];
+  employeeSizes: any[] = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private commonService: CommonService
+  ) {
     this.signUpForm = this.fb.group(
       {
         fullName: ['', [Validators.required, Validators.maxLength(100)]],
@@ -53,7 +45,7 @@ export class EmployerSignUpFormComponent {
           ],
         ],
         confirmPassword: ['', Validators.required],
-        platform: ['web', Validators.required], // Giả định platform là 'web'
+        platform: ['web', Validators.required],
         companyName: ['', [Validators.required, Validators.maxLength(255)]],
         companyEmail: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
         companyPhone: ['', [Validators.maxLength(15)]],
@@ -68,10 +60,56 @@ export class EmployerSignUpFormComponent {
       },
       { validators: this.passwordMatchValidator }
     );
+
+    // Watch for city changes to fetch districts
+    this.signUpForm.get('city')?.valueChanges.subscribe(cityId => {
+      if (cityId) {
+        this.fetchDistricts(cityId);
+      } else {
+        this.districts = [];
+        this.signUpForm.get('district')?.setValue('');
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.getConfigs();
   }
 
   get emailControl() {
     return this.signUpForm.get('email');
+  }
+
+  getConfigs() {
+    this.commonService.getConfigs().subscribe({
+      next: (res) => {
+        if (res.data) {
+          this.cities = res.data.cityOptions || [];
+          this.employeeSizes = res.data.employeeSizeOptions || [];
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching configs:', err);
+      }
+    });
+  }
+
+  fetchDistricts(cityId: number) {
+    this.commonService.getDistrictsByCityId(cityId).subscribe({
+      next: (res) => {
+        this.districts = res.data || [];
+        // Reset district if current value is not valid
+        const currentDistrict = this.signUpForm.get('district')?.value;
+        if (currentDistrict && !this.districts.find(d => d.id === currentDistrict)) {
+          this.signUpForm.get('district')?.setValue('');
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching districts:', err);
+        this.districts = [];
+        this.signUpForm.get('district')?.setValue('');
+      }
+    });
   }
 
   passwordMatchValidator(form: FormGroup): ValidationErrors | null {
@@ -117,9 +155,7 @@ export class EmployerSignUpFormComponent {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
 
-  // Lọc quận/huyện theo tỉnh/thành
   getFilteredDistricts() {
-    const cityId = this.signUpForm.get('city')?.value;
-    return this.districts.filter(district => district.cityId === cityId);
+    return this.districts;
   }
 }

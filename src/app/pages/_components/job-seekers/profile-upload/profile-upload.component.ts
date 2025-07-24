@@ -3,15 +3,17 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { ProfileUploadFormComponent } from '../profile-upload-form/profile-upload-form.component';
-import { CV_TYPES } from '../../../../_configs/constants';
+import { CV_TYPES, ROUTES } from '../../../../_configs/constants';
 import { ResumeService } from '../../../../_services/resume.service';
 import { JobSeekerProfileService } from '../../../../_services/job-seeker-profile.service';
+import { Router } from '@angular/router';
 
 interface Resume {
   slug: string;
   title: string;
   updatedAt: string;
   isActive: boolean;
+  fileUrl?: string;
 }
 
 @Component({
@@ -23,7 +25,7 @@ interface Resume {
 })
 export class ProfileUploadComponent implements OnInit {
   @Input() allConfig: any = {};
-  @Input() jobSeekerProfileId!: number; // Đổi từ any thành number
+  @Input() jobSeekerProfileId!: number;
 
   resumes: Resume[] = [];
   isLoadingResumes = true;
@@ -34,7 +36,8 @@ export class ProfileUploadComponent implements OnInit {
   constructor(
     private jobSeekerProfileService: JobSeekerProfileService,
     private resumeService: ResumeService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -131,16 +134,31 @@ export class ProfileUploadComponent implements OnInit {
     this.isFullScreenLoading = true;
     this.resumeService.activeResume(slug).subscribe({
       next: () => {
-        this.toastr.success('Đã kích hoạt CV!');
+        this.toastr.success('Đã cập nhật trạng thái tìm kiếm!');
         this.loadResumes();
       },
       error: (err) => {
-        console.error('Error activating resume:', err);
-        this.toastr.error('Có lỗi khi kích hoạt CV!');
+        console.error('Error toggling resume activation:', err);
+        this.toastr.error('Có lỗi khi cập nhật trạng thái!');
       },
       complete: () => {
         this.isFullScreenLoading = false;
       },
     });
+  }
+
+  handleEditResume(slug: string): void {
+    this.router.navigate([`${ROUTES.JOB_SEEKER.DASHBOARD}/${ROUTES.JOB_SEEKER.ATTACHED_PROFILE}/${slug}`]);
+  }
+
+  handleDownloadResume(fileUrl?: string): void {
+    if (!fileUrl) {
+      this.toastr.error('Không tìm thấy file để tải!');
+      return;
+    }
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = '';
+    link.click();
   }
 }

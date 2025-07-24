@@ -1,7 +1,7 @@
 <form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()" class="space-y-6">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <!-- Title -->
-    <div class="col-span-2">
+    <div class="md:col-span-2">
       <label class="block text-sm font-medium text-gray-800 mb-1">Vị trí mong muốn <span class="text-red-600">*</span></label>
       <input
         formControlName="title"
@@ -192,7 +192,7 @@
     </div>
 
     <!-- Description -->
-    <div class="col-span-2">
+    <div class="md:col-span-2">
       <label class="block text-sm font-medium text-gray-800 mb-1">Mục tiêu nghề nghiệp <span class="text-red-600">*</span></label>
       <textarea
         formControlName="description"

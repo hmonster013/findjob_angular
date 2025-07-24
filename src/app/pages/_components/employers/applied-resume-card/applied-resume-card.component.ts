@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, forkJoin } from 'rxjs';
 import { JobPostActivityService } from '../../../../_services/job-post-activity.service';
 import { JobService } from '../../../../_services/job.service';
 import { CommonService } from '../../../../_services/common.service';
@@ -55,7 +55,6 @@ export class AppliedResumeCardComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {
     this.filterForm = this.fb.group({
-      kw: [''],
       jobPostId: [null],
       status: [null],
       cityId: [null],
@@ -71,28 +70,67 @@ export class AppliedResumeCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fetchConfigs();
-    this.fetchJobs();
-    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
-      this.filterForm.patchValue({
-        kw: params['kw'] || '',
-        jobPostId: params['jobPostId'] || null,
-        status: params['status'] || null,
-        cityId: params['cityId'] || null,
-        careerId: params['careerId'] || null,
-        experienceId: params['experienceId'] || null,
-        positionId: params['positionId'] || null,
-        academicLevelId: params['academicLevelId'] || null,
-        typeOfWorkplaceId: params['typeOfWorkplaceId'] || null,
-        jobTypeId: params['jobTypeId'] || null,
-        genderId: params['genderId'] || null,
-        maritalStatusId: params['maritalStatusId'] || null,
+    forkJoin({
+      configs: this.commonService.getConfigs(),
+      jobs: this.jobService.getEmployerJobPost({}),
+    })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: ({ configs, jobs }) => {
+          // Xử lý configs
+          this.applicationStatusOptions = configs.data?.applicationStatusOptions || [];
+          this.cityOptions = configs.data?.cityOptions || [];
+          this.careerOptions = configs.data?.careerOptions || [];
+          this.experienceOptions = configs.data?.experienceOptions || [];
+          this.positionOptions = configs.data?.positionOptions || [];
+          this.academicLevelOptions = configs.data?.academicLevelOptions || [];
+          this.typeOfWorkplaceOptions = configs.data?.typeOfWorkplaceOptions || [];
+          this.jobTypeOptions = configs.data?.jobTypeOptions || [];
+          this.genderOptions = configs.data?.genderOptions || [];
+          this.maritalStatusOptions = configs.data?.maritalStatusOptions || [];
+
+          // Xử lý jobs
+          this.jobs = Array.isArray(jobs.data?.results) ? jobs.data.results : [];
+
+          // Xử lý query params
+          let lastParams: { [key: string]: any } = {};
+          this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+            // So sánh params mới với params cũ
+            const paramsChanged = Object.keys(params).some(
+              key => params[key] !== lastParams[key]
+            );
+            if (!paramsChanged && Object.keys(lastParams).length > 0) {
+              return; // Không cập nhật nếu params không thay đổi
+            }
+            lastParams = { ...params };
+
+            const jobPostId = params['jobPostId'] ? +params['jobPostId'] : null;
+            const validJobPostId = jobPostId && this.jobs.some(job => job.id === jobPostId) ? jobPostId : null;
+
+            this.filterForm.patchValue({
+              jobPostId: validJobPostId,
+              status: params['status'] || null,
+              cityId: params['cityId'] || null,
+              careerId: params['careerId'] || null,
+              experienceId: params['experienceId'] || null,
+              positionId: params['positionId'] || null,
+              academicLevelId: params['academicLevelId'] || null,
+              typeOfWorkplaceId: params['typeOfWorkplaceId'] || null,
+              jobTypeId: params['jobTypeId'] || null,
+              genderId: params['genderId'] || null,
+              maritalStatusId: params['maritalStatusId'] || null,
+            });
+
+            if (Object.values(params).some(val => val)) {
+              this.showAdvanceFilter = true;
+            }
+            this.fetchResumes();
+          });
+        },
+        error: () => {
+          this.toastr.error('Không thể tải dữ liệu ban đầu!');
+        },
       });
-      if (Object.values(params).some(val => val)) {
-        this.showAdvanceFilter = true;
-      }
-      this.fetchResumes();
-    });
   }
 
   ngOnDestroy(): void {
@@ -100,30 +138,9 @@ export class AppliedResumeCardComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  fetchConfigs() {
-    this.commonService.getConfigs().pipe(takeUntil(this.destroy$)).subscribe({
-      next: (res) => {
-        this.applicationStatusOptions = res.data?.applicationStatusOptions || [];
-        this.cityOptions = res.data?.cityOptions || [];
-        this.careerOptions = res.data?.careerOptions || [];
-        this.experienceOptions = res.data?.experienceOptions || [];
-        this.positionOptions = res.data?.positionOptions || [];
-        this.academicLevelOptions = res.data?.academicLevelOptions || [];
-        this.typeOfWorkplaceOptions = res.data?.typeOfWorkplaceOptions || [];
-        this.jobTypeOptions = res.data?.jobTypeOptions || [];
-        this.genderOptions = res.data?.genderOptions || [];
-        this.maritalStatusOptions = res.data?.maritalStatusOptions || [];
-      },
-      error: () => {
-        this.toastr.error('Không thể tải cấu hình!');
-      },
-    });
-  }
-
   fetchResumes() {
     this.isLoading = true;
     const params: { [key: string]: any } = {
-      kw: this.filterForm.value.kw,
       jobPostId: this.filterForm.value.jobPostId,
       status: this.filterForm.value.status,
       cityId: this.filterForm.value.cityId,
@@ -139,7 +156,6 @@ export class AppliedResumeCardComponent implements OnInit, OnDestroy {
       pageSize: this.pageSize,
     };
 
-    // Loại bỏ các trường null hoặc rỗng
     Object.keys(params).forEach(key => {
       if (params[key] === null || params[key] === '') {
         delete params[key];
@@ -155,17 +171,6 @@ export class AppliedResumeCardComponent implements OnInit, OnDestroy {
       error: () => {
         this.isLoading = false;
         errorModal('Lỗi', 'Không thể tải danh sách ứng viên');
-      },
-    });
-  }
-
-  fetchJobs() {
-    this.jobService.getEmployerJobPost({}).subscribe({
-      next: (res) => {
-        this.jobs = Array.isArray(res.data?.results) ? res.data.results : [];
-      },
-      error: () => {
-        errorModal('Lỗi', 'Không thể tải danh sách tin tuyển dụng');
       },
     });
   }
@@ -189,7 +194,7 @@ export class AppliedResumeCardComponent implements OnInit, OnDestroy {
     );
   }
 
-  handleChangeStatus(id: number, status: string) {
+  handleChangeStatus(id: number, status: number) {
     this.jobPostActivityService.changeApplicationStatus(id, { status }).subscribe({
       next: () => {
         this.toastr.success('Cập nhật trạng thái ứng tuyển thành công');
@@ -223,7 +228,6 @@ export class AppliedResumeCardComponent implements OnInit, OnDestroy {
     }
     this.isFullScreenLoading = true;
     const params: { [key: string]: any } = {
-      kw: this.filterForm.value.kw,
       jobPostId: this.filterForm.value.jobPostId,
       status: this.filterForm.value.status,
       cityId: this.filterForm.value.cityId,
@@ -253,39 +257,24 @@ export class AppliedResumeCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  handleSaveKeywordLocalStorage(kw: string) {
-    try {
-      if (kw) {
-        const keywordListStr = localStorage.getItem('resume_search_history');
-        let keywordList = keywordListStr ? JSON.parse(keywordListStr) : [];
-        if (!keywordList.includes(kw)) {
-          if (keywordList.length >= 5) {
-            keywordList = [kw, ...keywordList.slice(0, 4)];
-          } else {
-            keywordList = [kw, ...keywordList];
-          }
-          localStorage.setItem('resume_search_history', JSON.stringify(keywordList));
-        }
-      }
-    } catch (error) {
-      console.error('Lỗi khi lưu từ khóa:', error);
-    }
-  }
-
   onSubmit() {
     this.page = 0;
     const data = this.filterForm.value;
-    this.handleSaveKeywordLocalStorage(data.kw);
+
+    // Kiểm tra jobPostId
+    if (data.jobPostId && !this.jobs.some(job => job.id === data.jobPostId)) {
+      data.jobPostId = null;
+      this.filterForm.patchValue({ jobPostId: null });
+    }
+
     const queryParams = Object.fromEntries(
       Object.entries(data).filter(([_, v]) => v !== null && v !== '')
     );
     this.router.navigate([], { queryParams, relativeTo: this.route });
-    this.fetchResumes();
   }
 
   onReset() {
     this.filterForm.reset({
-      kw: '',
       jobPostId: null,
       status: null,
       cityId: null,

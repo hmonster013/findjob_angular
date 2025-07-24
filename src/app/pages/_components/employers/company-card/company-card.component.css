@@ -1,59 +1,17 @@
 .card-container {
-  transition: box-shadow 0.3s ease;
+  max-width: 100%;
 }
 
 .card-section {
-  padding: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.skeleton-pulse {
-  background: linear-gradient(90deg, #FEEBC8 25%, #FFF7ED 50%, #FEEBC8 75%); /* orange-100 shades */
-  background-size: 200% 100%;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-.upload-button {
-  cursor: pointer;
-}
-
-.tooltip {
-  position: relative;
-  display: inline-block;
-}
-
-.tooltiptext {
-  visibility: hidden;
-  width: 200px;
-  background-color: #7C2D12; /* orange-800 */
-  color: #FFFFFF; /* white */
-  text-align: center;
-  border-radius: 4px;
-  padding: 8px;
-  position: absolute;
+.tooltip .tooltiptext {
   z-index: 10;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -100px;
-  opacity: 0;
-  transition: opacity 0.2s, transform 0.2s ease;
-  transform: translateY(-10px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #F97316; /* orange-600 */
-  font-size: 0.75rem;
-  font-weight: 500;
 }
 
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(0);
+@media (min-width: 640px) {
+  .card-section {
+    margin-bottom: 2rem;
+  }
 }

@@ -4,7 +4,7 @@ import { environment } from "../../environments/environment";
 // Biến môi trường & App info
 export const ENV = environment.production ? 'production' : 'development';
 export const PLATFORM = 'WEB';
-export const APP_NAME = 'MyJob';
+export const APP_NAME = 'UTTJob';
 
 export const HOST_NAME = {
   MYJOB: environment.FINDJOB_HOST_NAME || '127.0.0.1',
@@ -33,17 +33,6 @@ export const AUTH_CONFIG = {
 
   GOONGAPI_KEY: environment.GOONGAPI_KEY,
   GOONGAPI_ACCESS_TOKEN: environment.GOONGAPI_ACCESS_TOKEN,
-
-  // JOB_SEEKER_BOT: {
-  //   AGENT_ID: environment.JOB_SEEKER_BOT_AGENT_ID || '3658b10a-faaf-4e27-beea-99adaa33664e',
-  //   CHAT_TITLE: 'MyJob AI',
-  //   CHAT_ICON: 'assets/icons/job_seeker_chatbot_icon.gif',
-  // },
-  // EMPLOYER_BOT: {
-  //   AGENT_ID: environment.EMPLOYER_BOT_AGENT_ID || 'a49623dc-cfa1-49b1-8b2f-0f7eabdf7f6d',
-  //   CHAT_TITLE: 'MyJob AI',
-  //   CHAT_ICON: 'assets/icons/employer_chatbot_icon.gif',
-  // },
 };
 
 export const ROLES_NAME = {
@@ -77,19 +66,12 @@ export const DATE_OPTIONS = {
 };
 
 export const IMAGES = {
-  getLogo: (size: string, mode: string) => `assets/logo/${mode}-logo-${size}.png`,
+  logoWhite: 'assets/logo/school-logo.webp',
+  logoBlack: 'assets/logo/school-logo.webp',
   getTextLogo: (mode: string) => `assets/logo/${mode}-text-logo.png`,
-  coverImageDefault: 'assets/images/companies/company-cover.avif',
-  chPlayDownload: 'assets/images/app-android-download.png',
-  appStoreDownload: 'assets/images/app-ios-download.png',
+  coverImageDefault: 'assets/images/company-cover.avif',
+  imageDefault: 'assets/images/image-default.jpg',
   notificationImageDefault: 'assets/images/noti-img-default.png',
-};
-
-export const ABOUT_IMAGES = {
-  AROUND_JOB_POST: 'assets/images/about-images/around-job-post.png',
-  JOB_POST_NOTIFICATION: 'assets/images/about-images/job-notification-img.png',
-  JOB_POST: 'assets/images/about-images/job-post-img.png',
-  PROFILE: 'assets/images/about-images/profile-img.png',
 };
 
 export const ICONS = {
@@ -108,24 +90,16 @@ export const LINKS = {
   CHPLAY_LINK: 'https://play.google.com/store/',
   APPSTORE_LINK: 'https://www.apple.com/app-store/',
   CERTIFICATE_LINK: 'http://online.gov.vn/',
-  INSTAGRAM_LINK: 'https://www.instagram.com/huybk2/',
-  FACEBOOK_LINK: 'https://www.facebook.com/bkhuy/',
-  FACEBOOK_MESSENGER_LINK: 'https://www.facebook.com/bkhuy/',
-  LINKEDIN_LINK: 'https://www.linkedin.com/in/huy-khanh-10041b20b/',
-  TWITTER_LINK: 'https://twitter.com/HuyBuiKhanh',
-  YOUTUBE_LINK: 'https://www.youtube.com/channel/UCn49BvcP1w1mamaOSGTKVZw',
+  INSTAGRAM_LINK: 'https://www.instagram.com/',
+  FACEBOOK_LINK: 'https://www.facebook.com/',
+  FACEBOOK_MESSENGER_LINK: 'https://www.facebook.com/',
+  LINKEDIN_LINK: 'https://www.linkedin.com/',
+  TWITTER_LINK: 'https://twitter.com/',
+  YOUTUBE_LINK: 'https://www.youtube.com/',
 };
 
 export const LOADING_IMAGES = {
   LOADING_SPINNER: 'assets/images/loading/loading-spinner.gif',
-};
-
-export const FEEDBACK_IMAGES = {
-  '1star': 'assets/images/feedbacks/1star.gif',
-  '2star': 'assets/images/feedbacks/2star.gif',
-  '3star': 'assets/images/feedbacks/3star.gif',
-  '4star': 'assets/images/feedbacks/4star.gif',
-  '5star': 'assets/images/feedbacks/5star.gif',
 };
 
 export const LOGO_IMAGES = {
@@ -145,7 +119,7 @@ export const JOB_POST_STATUS_BG_COLOR = {
 
 export const ROUTES = {
   AUTH: {
-    EMAIL_VERIFICATION: 'email-verification-required',
+    EMAIL_VERIFICATION: 'email-verification',
     LOGIN: 'dang-nhap',
     REGISTER: 'dang-ky',
     FORGOT_PASSWORD: 'quen-mat-khau',
@@ -168,7 +142,7 @@ export const ROUTES = {
     DASHBOARD: 'bang-dieu-khien',
     PROFILE: 'ho-so',
     STEP_PROFILE: 'ho-so-tung-buoc',
-    ATTACHED_PROFILE: 'ho-so-dinh-kem/:slug',
+    ATTACHED_PROFILE: 'ho-so-dinh-kem',
     MY_JOB: 'viec-lam-cua-toi',
     MY_COMPANY: 'cong-ty-cua-toi',
     NOTIFICATION: 'thong-bao',

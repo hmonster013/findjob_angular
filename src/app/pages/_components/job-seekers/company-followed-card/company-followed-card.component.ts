@@ -1,3 +1,4 @@
+import { IMAGES } from './../../../../_configs/constants';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -18,6 +19,8 @@ export class CompanyFollowedCardComponent implements OnInit {
   page = 1;
   pageSize = 10;
   count = 0;
+
+  IMAGES = IMAGES;
 
   constructor(
     private companyFollowedService: CompanyFollowedService,

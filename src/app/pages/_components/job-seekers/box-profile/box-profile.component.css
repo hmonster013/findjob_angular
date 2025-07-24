@@ -20,3 +20,15 @@ div[ngIf="resume"] .flex.items-center {
   display: flex;
   align-items: center;
 }
+
+/* Responsive bổ sung cho avatar và info */
+@media (max-width: 767px) {
+  .box-profile-avatar {
+    margin-bottom: 0.5rem;
+    justify-content: center;
+  }
+  .box-profile-info {
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+}

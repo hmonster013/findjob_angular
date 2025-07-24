@@ -7,7 +7,7 @@
     >
       <ng-container *ngIf="currentUser?.avatarUrl; else placeholder">
         <img
-          [src]="currentUser.avatarUrl"
+          [src]="currentUser.avatarUrl || IMAGES.imageDefault"
           alt="Avatar"
           class="rounded-full w-full h-full object-cover border-2 border-amber-100"
         />

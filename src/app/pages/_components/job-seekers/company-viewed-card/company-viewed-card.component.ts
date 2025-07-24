@@ -1,3 +1,4 @@
+import { IMAGES } from './../../../../_configs/constants';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -17,6 +18,8 @@ export class CompanyViewedCardComponent implements OnInit {
   page = 1;
   pageSize = 10;
   count = 0;
+
+  IMAGES = IMAGES;
 
   constructor(
     private resumeViewedService: ResumeViewedService,

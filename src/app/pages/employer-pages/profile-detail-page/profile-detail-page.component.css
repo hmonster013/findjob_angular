@@ -1,0 +1,39 @@
+/* Default desktop styles */
+.mobile-page-container {
+  /* Default page layout - desktop already has sm:p-6 from Tailwind */
+}
+
+/* Mobile Responsive Styles for Profile Detail Page */
+@media (max-width: 768px) {
+  .mobile-page-container {
+    /* p-0 from Tailwind handles padding on mobile */
+    margin: 0 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    background: white !important;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .mobile-page-container {
+    margin: 0 !important;
+    border-radius: 6px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+  }
+}
+
+/* Remove unnecessary margins on mobile and let layout handle spacing */
+@media (max-width: 768px) {
+  :host {
+    display: block;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Ensure the page container takes full available space */
+  .mobile-page-container {
+    min-height: auto;
+    width: 100%;
+  }
+}

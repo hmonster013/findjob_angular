@@ -6,7 +6,7 @@ import { JobSeekerSignUpFormComponent } from '../../_components/auths/job-seeker
 import { AuthenticationService } from '../../../_services/authentication.service';
 import { TokenService } from '../../../_services/token.service';
 import { AuthStateService } from '../../../_services/auth-state.service';
-import { AUTH_CONFIG, ROUTES } from '../../../_configs/constants';
+import { AUTH_CONFIG, IMAGES, ROUTES } from '../../../_configs/constants';
 
 @Component({
   selector: 'app-job-seeker-sign-up-page',
@@ -20,6 +20,7 @@ export class JobSeekerSignUpPageComponent {
   serverErrors: any = null;
 
   ROUTES = ROUTES;
+  IMAGES = IMAGES;
 
   constructor(
     private authService: AuthenticationService,
@@ -36,8 +37,10 @@ export class JobSeekerSignUpPageComponent {
 
     this.authService.jobSeekerRegister(data).subscribe({
       next: (res) => {
-        if (res.status) {
+        // Kiểm tra nếu errors là object rỗng và data là null
+        if (res.errors && Object.keys(res.errors).length === 0 && res.data === null) {
           this.router.navigate(['/email-verification']);
+          this.toastr.success('Đăng ký thành công!');
         } else {
           this.errorMessage = res.message || 'Đăng ký thất bại';
           this.serverErrors = res.errors || null;
@@ -64,7 +67,7 @@ export class JobSeekerSignUpPageComponent {
     this.isLoading = true;
 
     this.authService
-      .convertToken(AUTH_CONFIG.CLIENT_ID, AUTH_CONFIG.CLIENT_SECRET, provider, token)
+      .convertToken(provider, token)
       .subscribe({
         next: (res) => {
           if (res.access_token) {

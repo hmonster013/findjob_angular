@@ -1,7 +1,7 @@
 <form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()" class="space-y-6">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <!-- Degree Name -->
-    <div class="col-span-2">
+    <div class="md:col-span-2">
       <label class="block text-sm font-medium text-gray-800 mb-1">Tên bằng cấp/Chứng chỉ <span class="text-red-600">*</span></label>
       <input
         formControlName="degreeName"
@@ -20,7 +20,7 @@
     </div>
 
     <!-- Major -->
-    <div class="col-span-2">
+    <div class="md:col-span-2">
       <label class="block text-sm font-medium text-gray-800 mb-1">Chuyên ngành đào tạo <span class="text-red-600">*</span></label>
       <input
         formControlName="major"
@@ -39,7 +39,7 @@
     </div>
 
     <!-- Training Place Name -->
-    <div class="col-span-2">
+    <div class="md:col-span-2">
       <label class="block text-sm font-medium text-gray-800 mb-1">Trường/Trung tâm đào tạo <span class="text-red-600">*</span></label>
       <input
         formControlName="trainingPlaceName"
@@ -96,7 +96,7 @@
     </div>
 
     <!-- Is Current -->
-    <div class="col-span-2">
+    <div class="md:col-span-2">
       <label class="flex items-center gap-2 text-sm font-medium text-gray-800">
         <input
           type="checkbox"
@@ -109,7 +109,7 @@
     </div>
 
     <!-- Description -->
-    <div class="col-span-2">
+    <div class="md:col-span-2">
       <label class="block text-sm font-medium text-gray-800 mb-1">Mô tả thêm</label>
       <textarea
         formControlName="description"

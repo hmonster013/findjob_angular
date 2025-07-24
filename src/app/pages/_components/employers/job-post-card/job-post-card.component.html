@@ -1,11 +1,12 @@
-<div class="bg-white rounded-lg shadow flex flex-col flex-1 h-full w-full">
+<div class="bg-white rounded-lg border border-gray-200 shadow-md flex flex-col flex-1 h-full w-full">
   <!-- Header -->
   <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 sm:p-6 bg-white border-b border-gray-100">
     <h1 class="text-2xl font-semibold text-orange-600">Quản lý tin tuyển dụng</h1>
     <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
       <button
-        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300"
+        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         (click)="onExport()"
+        [disabled]="list.length === 0"
       >
         <i class="fas fa-download text-lg"></i>
         Tải danh sách
@@ -49,12 +50,17 @@
     ></app-job-posts-table>
   </div>
 
+  <!-- Full Screen Loading -->
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-gray-500/50 flex justify-center items-center z-[2000]">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-orange-600"></div>
+  </div>
+
   <!-- Popup Modal -->
-  <div *ngIf="openPopup" class="fixed inset-0 bg-orange-500/50 flex justify-center items-center z-[1000] p-4 animate-fadeInUp">
+  <div *ngIf="openPopup" class="fixed inset-0 bg-gray-500/50 flex justify-center items-center z-[1000] p-4 animate-fadeInUp">
     <div class="bg-white w-full max-w-4xl rounded-lg relative max-h-[90vh] flex flex-col overflow-hidden">
       <button
-        (click)="openPopup = false"
-        class="absolute top-4 right-4 text-gray-500 hover:text-orange-800 z-10"
+        (click)="onCloseForm()"
+        class="absolute top-4 right-4 text-gray-500 hover:text-orange-600 z-10"
       >
         <i class="fas fa-times text-xl"></i>
       </button>
@@ -68,6 +74,7 @@
           [editData]="editData"
           [serverErrors]="serverErrors"
           (handleAddOrUpdate)="onSave($event)"
+          (cancel)="onCloseForm()"
         ></app-job-post-form>
       </div>
     </div>

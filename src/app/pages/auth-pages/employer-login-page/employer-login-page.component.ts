@@ -6,7 +6,7 @@ import { EmployerLoginFormComponent } from '../../_components/auths/employer-log
 import { AuthenticationService } from '../../../_services/authentication.service';
 import { TokenService } from '../../../_services/token.service';
 import { AuthStateService } from '../../../_services/auth-state.service';
-import { ROLES_NAME } from '../../../_configs/constants';
+import { IMAGES, ROLES_NAME } from '../../../_configs/constants';
 
 @Component({
   selector: 'app-employer-login-page',
@@ -23,6 +23,8 @@ export class EmployerLoginPageComponent {
   isLoading = false;
 
   @ViewChild(EmployerLoginFormComponent) employerLoginForm?: EmployerLoginFormComponent;
+
+  IMAGES = IMAGES;
 
   constructor(
     private authService: AuthenticationService,

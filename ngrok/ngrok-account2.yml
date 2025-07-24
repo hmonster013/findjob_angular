@@ -1,0 +1,6 @@
+version: "2"
+authtoken: 2xpCuFTxLexI3PmvXeXv2IMpp5W_6V6o35qYpwN1eZdmqEzXB
+tunnels:
+  employer:
+    proto: http
+    addr: localhost:4200

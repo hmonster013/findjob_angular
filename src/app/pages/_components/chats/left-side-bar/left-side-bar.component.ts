@@ -1,3 +1,4 @@
+import { IMAGES } from './../../../../_configs/constants';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +8,7 @@ import { AuthStateService } from '../../../../_services/auth-state.service';
 import { FirebaseService } from '../../../../_services/firebase.service';
 import { ChatStateService } from '../../../../_services/chat-state.service';
 import { ROUTES } from '../../../../_configs/constants';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-left-side-bar',
@@ -27,9 +29,13 @@ export class LeftSideBarComponent implements OnInit, OnDestroy {
   private readonly pageSize = 20;
   private readonly defaultAvatar = 'https://via.placeholder.com/54';
   private unsubscribeSnapshot: any;
+  private chatStateSubscription: Subscription;
 
   currentUser: any;
   searchText: string = '';
+  selectedRoomId: string | null = null;
+
+  IMAGES = IMAGES;
 
   constructor(
     private firebaseService: FirebaseService,
@@ -37,7 +43,11 @@ export class LeftSideBarComponent implements OnInit, OnDestroy {
     private chatStateService: ChatStateService,
     private toastr: ToastrService,
     private router: Router
-  ) {}
+  ) {
+    this.chatStateSubscription = this.chatStateService.selectedRoomId$.subscribe(roomId => {
+      this.selectedRoomId = roomId;
+    });
+  }
 
   ngOnInit() {
     this.currentUser = this.authStateService.getCurrentUser();
@@ -53,6 +63,7 @@ export class LeftSideBarComponent implements OnInit, OnDestroy {
     if (this.unsubscribeSnapshot) {
       this.unsubscribeSnapshot();
     }
+    this.chatStateSubscription.unsubscribe();
   }
 
   onSearch() {

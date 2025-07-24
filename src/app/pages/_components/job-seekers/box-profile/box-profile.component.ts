@@ -1,3 +1,4 @@
+import { IMAGES } from './../../../../_configs/constants';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -25,9 +26,11 @@ export class BoxProfileComponent implements OnInit, OnDestroy {
   isFullScreenLoading = false;
   isGeneratingPDF = false;
   resume: any = null;
-  selectedColor = '#f59e0b'; // Màu amber-500 để đồng bộ với giao diện
+  selectedColor = '#f59e0b';
   openColorPicker = false;
   private destroy$ = new Subject<void>();
+
+  IMAGES = IMAGES;
 
   constructor(
     private jobSeekerProfileService: JobSeekerProfileService,
@@ -220,7 +223,6 @@ export class BoxProfileComponent implements OnInit, OnDestroy {
       });
     }
 
-    // Tải PDF
     setTimeout(() => {
       doc.save(`${this.currentUser?.fullName || 'cv'}-${this.resume?.title || 'resume'}.pdf`);
       this.toastr.success('Tải PDF thành công!');
@@ -241,8 +243,8 @@ export class BoxProfileComponent implements OnInit, OnDestroy {
 
   formatSalary(min: number, max: number): string {
     if (!min && !max) return 'Thỏa thuận';
-    const minInMillions = min ? (min / 1000000).toFixed(3) : '';
-    const maxInMillions = max ? (max / 1000000).toFixed(3) : '';
+    const minInMillions = min ? (min / 1000000) : '';
+    const maxInMillions = max ? (max / 1000000) : '';
     return `${minInMillions ? minInMillions + ' triệu' : ''} - ${maxInMillions ? maxInMillions + ' triệu' : ''}`;
   }
 

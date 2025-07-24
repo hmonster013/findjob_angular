@@ -29,7 +29,6 @@ export class JobPostActivityService {
     });
   }
 
-  // ✅ Employer APIs
   sendEmail(id: number, data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/employer-job-posts-activity/${id}/send-email/`, data);
   }

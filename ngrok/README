@@ -1,0 +1,2 @@
+ngrok start --config <file> <tunnel>
+ngrok start --all --config <file>

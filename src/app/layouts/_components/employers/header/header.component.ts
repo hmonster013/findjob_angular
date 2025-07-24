@@ -1,3 +1,4 @@
+import { IMAGES } from './../../../../_configs/constants';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthStateService } from '../../../../_services/auth-state.service';
@@ -5,13 +6,8 @@ import { NotificationCardComponent } from '../../../../_components/notification-
 import { ChatCardComponent } from '../../../../_components/chat-card/chat-card.component';
 import { UserMenuComponent } from '../../commons/user-menu/user-menu.component';
 import { Subject, fromEvent, takeUntil, debounceTime } from 'rxjs';
-import { AccountCardComponent } from "../../../../pages/_components/auths/account-card/account-card.component";
 import { AccountSwitchMenuComponent } from "../../commons/account-switch-menu/account-switch-menu.component";
-import { RouterLink } from '@angular/router';
 
-/**
- * Header component for the application, displaying navigation and user-related actions.
- */
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -35,6 +31,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showUserMenu: boolean = false;
   isMobile: boolean = window.innerWidth < 768;
   private destroy$ = new Subject<void>();
+
+  IMAGES = IMAGES;
 
   constructor(
     private authStateService: AuthStateService,

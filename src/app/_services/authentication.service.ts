@@ -28,15 +28,15 @@ export class AuthenticationService {
     return this.http.post(url, data);
   }
 
-  convertToken(clientId: string, clientSecret: string, provider: string, token: string): Observable<any> {
+  convertToken(provider: string, code: string): Observable<any> {
     const url = `${this.baseUrl}/convert-token/`;
 
     const data = {
       grant_type: AUTH_CONFIG.CONVERT_TOKEN_KEY,
-      client_id: clientId,
-      client_secret: clientSecret,
+      client_id: AUTH_CONFIG.CLIENT_ID,
+      client_secret: AUTH_CONFIG.CLIENT_SECRET,
       backend: provider,
-      token: token,
+      token: code,
     };
 
     return this.http.post(url, data);

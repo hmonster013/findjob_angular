@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import dayjs from 'dayjs';
+import { IMAGES, ROUTES } from '../../_configs/constants';
 
 @Component({
   selector: 'app-job-post-large',
@@ -25,11 +26,16 @@ export class JobPostLargeComponent {
   @Input() isUrgent: boolean = false;
   @Input() isLoading: boolean = false;
 
-  constructor(private router: Router) {}
+  IMAGES = IMAGES;
+  ROUTES = ROUTES;
+
+  constructor(
+    private router: Router
+  ) {}
 
   navigateToDetail() {
     if (this.slug) {
-      this.router.navigate(['/viec-lam', this.slug]);
+      this.router.navigate(['/' + ROUTES.JOB_SEEKER.JOBS, this.slug]);
     }
   }
 

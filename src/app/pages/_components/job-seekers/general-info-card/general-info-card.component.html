@@ -21,48 +21,49 @@
   <!-- Resume Info -->
   <div *ngIf="!isLoadingResumeDetail && resumeDetail" class="space-y-4">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-      <div>
-        <span class="font-semibold text-gray-800">Vị trí mong muốn:</span> {{ resumeDetail.title || 'Chưa cập nhật' }}
+      <div class="flex flex-col">
+        <span class="font-semibold text-gray-800 mb-1">Vị trí mong muốn:</span>
+        <span class="text-gray-600 break-words">{{ resumeDetail.title || 'Chưa cập nhật' }}</span>
       </div>
-      <div>
-        <span class="font-semibold text-gray-800">Cấp bậc:</span>
-        {{ allConfig?.positionDict[resumeDetail.position] || 'Chưa cập nhật' }}
+      <div class="flex flex-col">
+        <span class="font-semibold text-gray-800 mb-1">Cấp bậc:</span>
+        <span class="text-gray-600 break-words">{{ allConfig?.positionDict[resumeDetail.position] || 'Chưa cập nhật' }}</span>
       </div>
-      <div>
-        <span class="font-semibold text-gray-800">Trình độ học vấn:</span>
-        {{ allConfig?.academicLevelDict[resumeDetail.academicLevel] || 'Chưa cập nhật' }}
+      <div class="flex flex-col">
+        <span class="font-semibold text-gray-800 mb-1">Trình độ học vấn:</span>
+        <span class="text-gray-600 break-words">{{ allConfig?.academicLevelDict[resumeDetail.academicLevel] || 'Chưa cập nhật' }}</span>
       </div>
-      <div>
-        <span class="font-semibold text-gray-800">Kinh nghiệm:</span>
-        {{ allConfig?.experienceDict[resumeDetail.experience] || 'Chưa cập nhật' }}
+      <div class="flex flex-col">
+        <span class="font-semibold text-gray-800 mb-1">Kinh nghiệm:</span>
+        <span class="text-gray-600 break-words">{{ allConfig?.experienceDict[resumeDetail.experience] || 'Chưa cập nhật' }}</span>
       </div>
-      <div>
-        <span class="font-semibold text-gray-800">Nghề nghiệp:</span>
-        {{ allConfig?.careerDict[resumeDetail.career] || 'Chưa cập nhật' }}
+      <div class="flex flex-col">
+        <span class="font-semibold text-gray-800 mb-1">Nghề nghiệp:</span>
+        <span class="text-gray-600 break-words">{{ allConfig?.careerDict[resumeDetail.career] || 'Chưa cập nhật' }}</span>
       </div>
-      <div>
-        <span class="font-semibold text-gray-800">Tỉnh/Thành phố:</span>
-        {{ allConfig?.cityDict[resumeDetail.city] || 'Chưa cập nhật' }}
+      <div class="flex flex-col">
+        <span class="font-semibold text-gray-800 mb-1">Tỉnh/Thành phố:</span>
+        <span class="text-gray-600 break-words">{{ allConfig?.cityDict[resumeDetail.city] || 'Chưa cập nhật' }}</span>
       </div>
-      <div>
-        <span class="font-semibold text-gray-800">Mức lương tối thiểu:</span>
-        {{ resumeDetail.salaryMin ? (resumeDetail.salaryMin | number) + ' VND' : 'Chưa cập nhật' }}
+      <div class="flex flex-col">
+        <span class="font-semibold text-gray-800 mb-1">Mức lương tối thiểu:</span>
+        <span class="text-gray-600 break-words">{{ resumeDetail.salaryMin ? (resumeDetail.salaryMin | number) + ' VND' : 'Chưa cập nhật' }}</span>
       </div>
-      <div>
-        <span class="font-semibold text-gray-800">Mức lương tối đa:</span>
-        {{ resumeDetail.salaryMax ? (resumeDetail.salaryMax | number) + ' VND' : 'Chưa cập nhật' }}
+      <div class="flex flex-col">
+        <span class="font-semibold text-gray-800 mb-1">Mức lương tối đa:</span>
+        <span class="text-gray-600 break-words">{{ resumeDetail.salaryMax ? (resumeDetail.salaryMax | number) + ' VND' : 'Chưa cập nhật' }}</span>
       </div>
-      <div>
-        <span class="font-semibold text-gray-800">Nơi làm việc:</span>
-        {{ allConfig?.typeOfWorkplaceDict[resumeDetail.typeOfWorkplace] || 'Chưa cập nhật' }}
+      <div class="flex flex-col">
+        <span class="font-semibold text-gray-800 mb-1">Nơi làm việc:</span>
+        <span class="text-gray-600 break-words">{{ allConfig?.typeOfWorkplaceDict[resumeDetail.typeOfWorkplace] || 'Chưa cập nhật' }}</span>
       </div>
-      <div>
-        <span class="font-semibold text-gray-800">Hình thức làm việc:</span>
-        {{ allConfig?.jobTypeDict[resumeDetail.jobType] || 'Chưa cập nhật' }}
+      <div class="flex flex-col">
+        <span class="font-semibold text-gray-800 mb-1">Hình thức làm việc:</span>
+        <span class="text-gray-600 break-words">{{ allConfig?.jobTypeDict[resumeDetail.jobType] || 'Chưa cập nhật' }}</span>
       </div>
-      <div class="col-span-2">
-        <span class="font-semibold text-gray-800">Mục tiêu nghề nghiệp:</span>
-        {{ resumeDetail.description || 'Chưa cập nhật' }}
+      <div class="flex flex-col md:col-span-2">
+        <span class="font-semibold text-gray-800 mb-1">Mục tiêu nghề nghiệp:</span>
+        <span class="text-gray-600 break-words">{{ resumeDetail.description || 'Chưa cập nhật' }}</span>
       </div>
     </div>
 

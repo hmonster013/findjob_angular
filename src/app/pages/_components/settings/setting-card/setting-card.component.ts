@@ -7,7 +7,10 @@ import { SettingFormComponent } from '../setting-form/setting-form.component';
 
 @Component({
   selector: 'app-setting-card',
-  imports: [CommonModule, SettingFormComponent],
+  imports: [
+    CommonModule,
+    SettingFormComponent
+  ],
   templateUrl: './setting-card.component.html',
   styleUrls: ['./setting-card.component.css'],
   standalone: true

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
-import { MyjobService } from '../../_services/myjob.service';
+import { FindjobService } from '../../_services/myjob.service';
 import { FeedbackCardComponent } from '../feedback-card/feedback-card.component';
 import { NoDataCardComponent } from '../no-data-card/no-data-card.component';
 
@@ -21,7 +21,7 @@ export class FeedbackCarouselComponent {
   col: number = 4;
   skeletonArray = Array(10);
 
-  constructor(private myjobService: MyjobService) {}
+  constructor(private myjobService: FindjobService) {}
 
   ngOnInit() {
     this.handleResize();

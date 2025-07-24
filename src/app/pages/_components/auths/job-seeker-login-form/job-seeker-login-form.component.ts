@@ -1,6 +1,11 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { AUTH_CONFIG } from '../../../../_configs/constants';
+
+declare const google: any;
+declare const FB: any;
 
 @Component({
   selector: 'app-job-seeker-login-form',
@@ -8,18 +13,23 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './job-seeker-login-form.component.html',
 })
-export class JobSeekerLoginFormComponent implements OnInit {
+export class JobSeekerLoginFormComponent implements OnInit, OnDestroy, AfterViewInit {
   form: FormGroup;
   isLoadingEmail = false;
   isLoadingFacebook = false;
   isLoadingGoogle = false;
-  showPassword = false; // Thêm trạng thái showPassword
+  showPassword = false;
 
   @Output() submitForm = new EventEmitter<{ email: string; password: string }>();
   @Output() facebookLogin = new EventEmitter<string>();
   @Output() googleLogin = new EventEmitter<string>();
 
-  constructor(private fb: FormBuilder) {
+  AUTH_CONFIG = AUTH_CONFIG;
+
+  constructor(
+    private fb: FormBuilder,
+    private toastr: ToastrService
+  ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
@@ -27,7 +37,37 @@ export class JobSeekerLoginFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    window.addEventListener('message', this.handleSocialLoginMessage.bind(this));
+    // Không cần loadDiscoveryDocumentAndTryLogin nữa
+  }
+
+  ngAfterViewInit(): void {
+    if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+      const client = google.accounts.oauth2.initCodeClient({
+        client_id: AUTH_CONFIG.GOOGLE_CLIENT_ID,
+        scope: 'profile email', // Kiểm tra scope với backend
+        ux_mode: 'popup',
+        callback: (response: any) => {
+          console.log('Google response:', response);
+          if (response.code) {
+            this.isLoadingGoogle = true;
+            this.googleLogin.emit(response.code);
+          } else {
+            this.toastr.error('Đăng nhập Google thất bại.');
+            this.isLoadingGoogle = false;
+          }
+        },
+      });
+      document.getElementById('googleSignInButton')?.addEventListener('click', () => {
+        client.requestCode();
+      });
+    } else {
+      console.error('Google Identity Services script not loaded.');
+      this.toastr.error('Không thể tải Google Sign-In. Vui lòng thử lại sau.');
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Không cần unsubscribe nữa
   }
 
   handleSubmit() {
@@ -42,30 +82,25 @@ export class JobSeekerLoginFormComponent implements OnInit {
   handleFacebookLogin() {
     if (this.isLoadingFacebook) return;
     this.isLoadingFacebook = true;
-    window.open('/auth/facebook', '_blank', 'width=500,height=600');
-  }
 
-  handleGoogleLogin() {
-    if (this.isLoadingGoogle) return;
-    this.isLoadingGoogle = true;
-    window.open('/auth/google', '_blank', 'width=500,height=600');
-  }
-
-  private handleSocialLoginMessage(event: MessageEvent) {
-    if (event.data.type === 'social_login') {
-      const { provider, token } = event.data;
-      if (provider === 'facebook') {
-        this.facebookLogin.emit(token);
-        this.isLoadingFacebook = false;
-      } else if (provider === 'google') {
-        this.googleLogin.emit(token);
-        this.isLoadingGoogle = false;
-      }
-    }
+    // Gọi Facebook Login
+    FB.login(
+      (response: any) => {
+        if (response.status === 'connected' && response.authResponse) {
+          const accessToken = response.authResponse.accessToken;
+          console.log('Facebook access token:', accessToken);
+          this.facebookLogin.emit(accessToken);
+        } else {
+          this.toastr.error('Đăng nhập bằng Facebook thất bại.');
+          this.isLoadingFacebook = false;
+        }
+      },
+      { scope: 'public_profile,email' } // Yêu cầu các quyền cần thiết
+    );
   }
 
   togglePassword() {
-    this.showPassword = !this.showPassword; // Thêm phương thức toggle
+    this.showPassword = !this.showPassword;
   }
 
   resetLoadingEmail() {

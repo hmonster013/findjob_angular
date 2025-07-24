@@ -1,23 +1,23 @@
-<div class="bg-white p-6 rounded-xl border-2 border-gray-300 shadow-lg">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-wrap gap-4 items-center">
+<div class="bg-white p-4 sm:p-6 rounded-xl border-2 border-gray-300 shadow-lg">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3 sm:flex-row sm:gap-4 sm:items-center">
     <!-- Keyword Search -->
-    <div class="flex-1 min-w-[300px]">
+    <div class="w-full sm:flex-1 min-w-0">
       <div class="relative">
         <input
           type="text"
           formControlName="kw"
           placeholder="Nhập tên công ty hoặc lĩnh vực cần tìm kiếm"
-          class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-md"
+          class="w-full pl-10 pr-4 py-2 sm:py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-md"
         />
         <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-600 text-lg"></i>
       </div>
     </div>
 
     <!-- City -->
-    <div class="w-44">
+    <div class="w-full sm:w-44">
       <select
         formControlName="cityId"
-        class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+        class="w-full px-3 py-2 sm:py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
       >
         <option value="">Tất cả tỉnh thành</option>
         <option *ngFor="let city of cityOptions" [value]="city.id">{{ city.name }}</option>
@@ -25,21 +25,14 @@
     </div>
 
     <!-- Buttons -->
-    <div class="flex gap-3 items-center">
+    <div class="flex w-full sm:w-auto gap-3 items-center">
       <button
         type="submit"
         [disabled]="isLoading"
-        class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg"
+        class="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-2 sm:py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg"
       >
         <i *ngIf="isLoading" class="fas fa-spinner fa-spin mr-2"></i>
         Tìm kiếm
-      </button>
-      <!-- <button
-        type="button"
-        (click)="toggleAdvanceFilter()"
-        class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg"
-      >
-        {{ showAdvanceFilter ? 'Ẩn lọc nâng cao' : 'Lọc nâng cao' }}
       </button>
       <button
         *ngIf="isFormNotEmpty()"
@@ -48,25 +41,7 @@
         class="text-orange-600 hover:text-orange-700 p-2 transition-all"
       >
         <i class="fas fa-times text-xl"></i>
-      </button> -->
-    </div>
-
-    <!-- Advanced Filter -->
-    <div *ngIf="showAdvanceFilter" class="w-full mt-6 border-t-2 border-gray-300 pt-6">
-      <h3 class="text-lg font-semibold text-orange-600 mb-4">Lọc nâng cao</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Field of Operation -->
-        <div>
-          <label class="block text-sm text-gray-600 mb-1">Lĩnh vực hoạt động</label>
-          <select
-            formControlName="fieldId"
-            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
-          >
-            <option value="">Tất cả lĩnh vực</option>
-            <option *ngFor="let field of fieldOptions" [value]="field.id">{{ field.name }}</option>
-          </select>
-        </div>
-      </div>
+      </button>
     </div>
   </form>
 </div>

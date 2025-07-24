@@ -1,3 +1,4 @@
+import { IMAGES } from './../../../../_configs/constants';
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
@@ -24,6 +25,8 @@ export class NotificationCardComponent {
   lastKey: any = null;
   PAGE_SIZE = 10;
 
+  IMAGES = IMAGES;
+
   constructor(
     private router: Router,
     private toastr: ToastrService,
@@ -46,6 +49,28 @@ export class NotificationCardComponent {
 
   get pageCount(): number {
     return Math.ceil(this.count / this.PAGE_SIZE);
+  }
+
+  // Hàm kiểm tra và trả về URL hình ảnh hợp lệ
+  getValidImageUrl(imageUrl: string | undefined | null): string {
+    // Nếu không có URL hoặc URL rỗng, trả về hình mặc định
+    if (!imageUrl) {
+      return this.IMAGES.imageDefault;
+    }
+
+    // Kiểm tra nếu URL bắt đầu bằng Google redirect
+    if (imageUrl.startsWith('https://www.google.com/url')) {
+      return this.IMAGES.imageDefault;
+    }
+
+    // Kiểm tra định dạng hình ảnh (jpg, jpeg, png, gif, webp)
+    const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+    if (!imageExtensions.test(imageUrl)) {
+      return this.IMAGES.imageDefault;
+    }
+
+    // Nếu URL hợp lệ, trả về chính nó
+    return imageUrl;
   }
 
   listenCount() {
@@ -72,13 +97,13 @@ export class NotificationCardComponent {
       const notiList: any[] = [];
       snapshot.forEach((doc) => {
         const data = doc.data();
-        // Chuyển đổi Timestamp thành Date
         if (data['time'] && data['time'].toDate) {
           data['time'] = data['time'].toDate();
         }
         notiList.push({ ...data, key: doc.id });
       });
       this.notifications = notiList;
+      console.log(this.notifications);
       this.lastKey = snapshot.docs[snapshot.docs.length - 1];
       this.isLoading = false;
     }, (error) => {
@@ -100,7 +125,6 @@ export class NotificationCardComponent {
       const nextList: any[] = [];
       snapshot.forEach((doc) => {
         const data = doc.data();
-        // Chuyển đổi Timestamp thành Date
         if (data['time'] && data['time'].toDate) {
           data['time'] = data['time'].toDate();
         }

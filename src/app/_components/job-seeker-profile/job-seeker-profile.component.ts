@@ -19,11 +19,9 @@ export class JobSeekerProfileComponent {
   @Input() title!: string;
   @Input() salaryMin?: number;
   @Input() salaryMax?: number;
-  @Input() experience!: string;
   @Input() updateAt!: string;
   @Input() isSaved: boolean = false;
   @Input() viewEmployerNumber!: number;
-  @Input() city!: string;
   @Input() user?: { fullName?: string };
   @Input() jobSeekerProfile?: { old?: number };
   @Input() type!: string;

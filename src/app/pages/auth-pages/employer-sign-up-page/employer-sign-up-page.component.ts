@@ -5,19 +5,25 @@ import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { EmployerSignUpFormComponent } from '../../_components/auths/employer-sign-up-form/employer-sign-up-form.component';
 import { AuthStateService } from '../../../_services/auth-state.service';
-import { ROLES_NAME } from '../../../_configs/constants';
+import { IMAGES, ROLES_NAME, ROUTES } from '../../../_configs/constants';
 import { AuthenticationService } from '../../../_services/authentication.service';
 
 @Component({
   selector: 'app-employer-sign-up-page',
   standalone: true,
-  imports: [CommonModule, EmployerSignUpFormComponent],
+  imports: [
+    CommonModule,
+    EmployerSignUpFormComponent
+  ],
   templateUrl: './employer-sign-up-page.component.html',
   styleUrls: ['./employer-sign-up-page.component.css'],
 })
 export class EmployerSignUpPageComponent implements OnInit {
   isLoading = false;
   serverErrors: any = {};
+
+  IMAGES = IMAGES;
+  ROUTES = ROUTES;
 
   constructor(
     private authService: AuthenticationService,
@@ -33,7 +39,6 @@ export class EmployerSignUpPageComponent implements OnInit {
 
   onSubmit(formData: any) {
     this.isLoading = true;
-    // Chuẩn hóa dữ liệu theo serializer
     const payload = {
       fullName: formData.fullName,
       email: formData.email,
@@ -59,10 +64,9 @@ export class EmployerSignUpPageComponent implements OnInit {
 
     this.authService.employerRegister(payload).subscribe({
       next: (res) => {
-        if (res.status) {
-          this.authStateService.setCurrentUser({ email: formData.email });
+        if (res.errors && Object.keys(res.errors).length == 0) {
           this.toastr.success('Đăng ký thành công. Vui lòng xác thực email.');
-          this.router.navigate(['/email-verification-required']);
+          this.router.navigate(['/' + ROUTES.AUTH.EMAIL_VERIFICATION]);
         } else {
           this.serverErrors = res.errors || { general: res.message || 'Đăng ký thất bại' };
           this.toastr.error(res.message || 'Đăng ký thất bại');

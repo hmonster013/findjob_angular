@@ -12,6 +12,6 @@ export class SystemErrorPageComponent {
   constructor(private router: Router) {}
 
   goHome() {
-    this.router.navigate(['']);
+    this.router.navigate(['/']);
   }
 }

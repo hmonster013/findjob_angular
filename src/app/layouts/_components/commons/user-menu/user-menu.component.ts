@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ElementRef, HostListener } from '@angular/core';
 import { AuthStateService } from '../../../../_services/auth-state.service';
 import { Router, RouterLink } from '@angular/router';
 import { ROLES_NAME, ROUTES } from '../../../../_configs/constants';
@@ -34,6 +34,7 @@ export class UserMenuComponent {
     private authService: AuthStateService,
     private router: Router,
     private tokenService: TokenService,
+    private elementRef: ElementRef
   ) {}
 
   ngOnInit(): void {
@@ -66,5 +67,12 @@ export class UserMenuComponent {
         this.router.navigate([`/${ROUTES.AUTH.LOGIN}`]);
       }
     });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.closeMenu();
+    }
   }
 }

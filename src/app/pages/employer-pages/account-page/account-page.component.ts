@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { BackdropLoadingComponent } from '../../../_components/backdrop-loading/backdrop-loading.component';
 import { AccountCardComponent } from '../../_components/auths/account-card/account-card.component';
 import { AuthenticationService } from '../../../_services/authentication.service';
 import { AuthStateService } from '../../../_services/auth-state.service';
@@ -24,7 +23,6 @@ interface UserProfile {
   imports: [
     CommonModule,
     AccountCardComponent,
-    BackdropLoadingComponent
   ]
 })
 export class AccountPageComponent implements OnInit {

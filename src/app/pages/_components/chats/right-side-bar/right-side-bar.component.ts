@@ -1,15 +1,16 @@
+import { IMAGES } from './../../../../_configs/constants';
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthStateService } from '../../../../_services/auth-state.service';
 import { FirebaseService } from '../../../../_services/firebase.service';
 import { JobPostActivityService } from '../../../../_services/job-post-activity.service';
-import { ChatStateService } from '../../../../_services/chat-state.service'; // Import ChatStateService
+import { ChatStateService } from '../../../../_services/chat-state.service';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr'; // Import ToastrService
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-right-side-bar',
-  standalone: true, // Thêm standalone: true
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './right-side-bar.component.html',
   styleUrl: './right-side-bar.component.css'
@@ -24,13 +25,15 @@ export class RightSideBarComponent implements OnInit {
   readonly pageSize = 12;
   currentUser: any;
 
+  IMAGES = IMAGES;
+
   constructor(
     private authStateService: AuthStateService,
     private firebaseService: FirebaseService,
     private jobPostActivityService: JobPostActivityService,
-    private chatStateService: ChatStateService, // Thêm ChatStateService
+    private chatStateService: ChatStateService,
     private router: Router,
-    private toastr: ToastrService // Thêm ToastrService
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -75,14 +78,13 @@ export class RightSideBarComponent implements OnInit {
     const isExists = await this.firebaseService.checkExists('accounts', partnerId);
 
     if (!isExists) {
-      // Chuẩn bị dữ liệu người dùng
       const preparedUserData = {
         userId: partnerId,
         name: userData.fullName,
         email: userData.userEmail,
         avatarUrl: userData.avatarUrl || userData.companyImageUrl,
         company: this.isEmployer
-          ? null // Nhà tuyển dụng không cần thông tin công ty
+          ? null
           : {
               companyId: userData.companyId,
               slug: userData.companySlug,

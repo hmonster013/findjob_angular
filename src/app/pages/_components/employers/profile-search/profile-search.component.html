@@ -1,9 +1,9 @@
-<div class="bg-white p-6 rounded-xl border-2 border-gray-300 shadow-lg">
-  <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+<div class="bg-white p-6 rounded-xl border border-gray-200 shadow-md mobile-search-container">
+  <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" class="mobile-search-form">
     <!-- Basic Search -->
-    <div class="flex flex-wrap gap-4 items-center">
+    <div class="flex flex-wrap gap-4 items-center mobile-basic-search">
       <!-- Keyword Search -->
-      <div class="flex-1 min-w-[200px]">
+      <div class="flex-1 min-w-[200px] mobile-search-input">
         <div class="relative">
           <input
             type="text"
@@ -16,7 +16,7 @@
       </div>
 
       <!-- City -->
-      <div class="w-44">
+      <div class="w-44 mobile-city-select">
         <select
           formControlName="cityId"
           class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
@@ -29,11 +29,11 @@
       </div>
 
       <!-- Buttons -->
-      <div class="flex gap-3 items-center">
+      <div class="flex gap-3 items-center mobile-button-group">
         <button
           type="submit"
           [disabled]="isLoading"
-          class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed mobile-search-button"
         >
           <i *ngIf="isLoading" class="fas fa-spinner fa-spin mr-2"></i>
           Tìm kiếm
@@ -41,7 +41,7 @@
         <button
           type="button"
           (click)="toggleAdvanced()"
-          class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg"
+          class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg mobile-advanced-button"
         >
           {{ showAdvanced ? 'Ẩn lọc nâng cao' : 'Lọc nâng cao' }}
         </button>
@@ -49,7 +49,7 @@
           *ngIf="isFormNotEmpty()"
           type="button"
           (click)="onReset()"
-          class="text-orange-600 hover:text-orange-700 p-2 transition-all"
+          class="text-orange-600 hover:text-orange-700 p-2 transition-all mobile-reset-button"
         >
           <i class="fas fa-times text-xl"></i>
         </button>
@@ -57,15 +57,15 @@
     </div>
 
     <!-- Advanced Filters -->
-    <div *ngIf="showAdvanced" class="mt-6 border-t-2 border-gray-300 pt-6">
+    <div *ngIf="showAdvanced" class="mt-6 border-t-2 border-gray-300 pt-6 mobile-advanced-section">
       <h3 class="text-lg font-semibold text-orange-600 mb-4">Bộ lọc nâng cao</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mobile-advanced-grid">
         <!-- Career -->
-        <div>
-          <label class="block text-sm text-gray-600 mb-1">Ngành Nghề</label>
+        <div class="mobile-advanced-form-group">
+          <label class="block text-sm text-gray-600 mb-1 mobile-advanced-label">Ngành Nghề</label>
           <select
             formControlName="careerId"
-            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-advanced-select"
           >
             <option [ngValue]="null">Tất cả ngành nghề</option>
             <option *ngFor="let career of configs?.careerOptions" [ngValue]="career.id">
@@ -75,11 +75,11 @@
         </div>
 
         <!-- Experience -->
-        <div>
-          <label class="block text-sm text-gray-600 mb-1">Kinh Nghiệm</label>
+        <div class="mobile-advanced-form-group">
+          <label class="block text-sm text-gray-600 mb-1 mobile-advanced-label">Kinh Nghiệm</label>
           <select
             formControlName="experienceId"
-            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-advanced-select"
           >
             <option [ngValue]="null">Tất cả kinh nghiệm</option>
             <option *ngFor="let exp of configs?.experienceOptions" [ngValue]="exp.id">
@@ -89,11 +89,11 @@
         </div>
 
         <!-- Position -->
-        <div>
-          <label class="block text-sm text-gray-600 mb-1">Vị trí</label>
+        <div class="mobile-advanced-form-group">
+          <label class="block text-sm text-gray-600 mb-1 mobile-advanced-label">Vị trí</label>
           <select
             formControlName="positionId"
-            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-advanced-select"
           >
             <option [ngValue]="null">Tất cả vị trí</option>
             <option *ngFor="let pos of configs?.positionOptions" [ngValue]="pos.id">
@@ -103,11 +103,11 @@
         </div>
 
         <!-- Academic Level -->
-        <div>
-          <label class="block text-sm text-gray-600 mb-1">Trình độ học vấn</label>
+        <div class="mobile-advanced-form-group">
+          <label class="block text-sm text-gray-600 mb-1 mobile-advanced-label">Trình độ học vấn</label>
           <select
             formControlName="academicLevelId"
-            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-advanced-select"
           >
             <option [ngValue]="null">Tất cả trình độ</option>
             <option *ngFor="let level of configs?.academicLevelOptions" [ngValue]="level.id">
@@ -117,11 +117,11 @@
         </div>
 
         <!-- Workplace -->
-        <div>
-          <label class="block text-sm text-gray-600 mb-1">Hình thức làm việc</label>
+        <div class="mobile-advanced-form-group">
+          <label class="block text-sm text-gray-600 mb-1 mobile-advanced-label">Hình thức làm việc</label>
           <select
             formControlName="typeOfWorkplaceId"
-            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-advanced-select"
           >
             <option [ngValue]="null">Tất cả hình thức</option>
             <option *ngFor="let wp of configs?.typeOfWorkplaceOptions" [ngValue]="wp.id">
@@ -131,11 +131,11 @@
         </div>
 
         <!-- Job Type -->
-        <div>
-          <label class="block text-sm text-gray-600 mb-1">Loại công việc</label>
+        <div class="mobile-advanced-form-group">
+          <label class="block text-sm text-gray-600 mb-1 mobile-advanced-label">Loại công việc</label>
           <select
             formControlName="jobTypeId"
-            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-advanced-select"
           >
             <option [ngValue]="null">Tất cả loại công việc</option>
             <option *ngFor="let jt of configs?.jobTypeOptions" [ngValue]="jt.id">
@@ -145,11 +145,11 @@
         </div>
 
         <!-- Gender -->
-        <div>
-          <label class="block text-sm text-gray-600 mb-1">Giới tính</label>
+        <div class="mobile-advanced-form-group">
+          <label class="block text-sm text-gray-600 mb-1 mobile-advanced-label">Giới tính</label>
           <select
             formControlName="genderId"
-            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-advanced-select"
           >
             <option [ngValue]="null">Tất cả giới tính</option>
             <option *ngFor="let gender of configs?.genderOptions" [ngValue]="gender.id">
@@ -159,11 +159,11 @@
         </div>
 
         <!-- Marital Status -->
-        <div>
-          <label class="block text-sm text-gray-600 mb-1">Tình trạng hôn nhân</label>
+        <div class="mobile-advanced-form-group">
+          <label class="block text-sm text-gray-600 mb-1 mobile-advanced-label">Tình trạng hôn nhân</label>
           <select
             formControlName="maritalStatusId"
-            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm mobile-advanced-select"
           >
             <option [ngValue]="null">Tất cả tình trạng</option>
             <option *ngFor="let status of configs?.maritalStatusOptions" [ngValue]="status.id">

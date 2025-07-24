@@ -19,12 +19,12 @@
         class="flex flex-row items-center gap-3"
       >
         <img
-          src="/assets/logo/logo-white.png"
+          [src]="IMAGES.logoBlack"
           alt="FindJob Logo"
           class="h-12 sm:h-14 rounded-md shadow-md transform transition-transform duration-300 hover:scale-105"
           loading="lazy"
         />
-        <span class="text-orange-600 font-bold text-xl">FindJob</span>
+        <span class="text-orange-600 font-bold text-xl">{{APP_NAME}}</span>
       </a>
     </div>
 
@@ -130,7 +130,7 @@
             aria-label="Thông báo"
           >
             <i class="fas fa-bell text-xl text-orange-600"></i>
-            <span class="font-medium">{{ APP_NAME }} thông báo</span>
+            <span class="font-medium">Thông báo</span>
           </a>
         </li>
 

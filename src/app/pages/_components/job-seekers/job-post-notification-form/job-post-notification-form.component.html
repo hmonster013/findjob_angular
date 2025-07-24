@@ -1,6 +1,6 @@
 <form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()" class="space-y-4">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="flex flex-col md:col-span-2">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="flex flex-col sm:col-span-2">
       <label class="mb-3 font-semibold text-gray-700">Từ khóa <span class="text-red-500 text-base">*</span></label>
       <input
         formControlName="jobName"
@@ -80,11 +80,11 @@
       </span>
     </div>
 
-    <div class="flex flex-col md:col-span-2">
+    <div class="flex flex-col sm:col-span-2">
       <label class="mb-3 font-semibold text-gray-700">Tần suất thông báo <span class="text-red-500 text-base">*</span></label>
       <div class="flex flex-wrap gap-4">
         <ng-container *ngFor="let option of allConfig?.frequencyNotificationOptions">
-          <label class="inline-flex items-center space-x-2 cursor-pointer">
+          <label class="inline-flex items-center space-x-2 cursor-pointer w-full sm:w-auto">
             <input
               type="radio"
               [value]="option.id"
@@ -102,17 +102,17 @@
   </div>
 
   <!-- Submit / Cancel Buttons -->
-  <div class="flex justify-end space-x-3 mt-6">
+  <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 mt-6 w-full">
     <button
       type="submit"
-      class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-md transition-colors duration-200"
+      class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-md transition-colors duration-200 w-full sm:w-auto"
     >
       {{ editData ? 'Cập nhật' : 'Lưu' }}
     </button>
     <button
       type="button"
       (click)="cancel()"
-      class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-md transition-colors duration-200"
+      class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-md transition-colors duration-200 w-full sm:w-auto"
     >
       Hủy
     </button>

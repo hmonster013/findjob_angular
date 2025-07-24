@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { CommonService } from '../../../../_services/common.service';
-import { confirmModal, errorModal } from '../../../../_utils/sweetalert2-modal';
 import { SendMailCardComponent } from '../send-mail-card/send-mail-card.component';
 import { NoDataCardComponent } from '../../../../_components/no-data-card/no-data-card.component';
 import { DatePipe } from '@angular/common';
@@ -30,9 +29,9 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
   @Input() isLoading: boolean = false;
   @Input() total: number = 0;
   @Input() page: number = 0;
-  @Input() rowsPerPage: number = 5; // Đồng bộ với pageSize=5
+  @Input() rowsPerPage: number = 5;
   @Output() delete = new EventEmitter<number>();
-  @Output() changeStatus = new EventEmitter<{ id: number; status: string }>();
+  @Output() changeStatus = new EventEmitter<{ id: number; status: number }>();
   @Output() sendEmail = new EventEmitter<any>();
   @Output() pageChange = new EventEmitter<number>();
   @Output() rowsPerPageChange = new EventEmitter<number>();
@@ -99,11 +98,23 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
     });
   }
 
-  handleChangeApplicationStatus(event: any, row: any) {
-    const newStatus = event.target.value;
-    const currentStatus = row.status.toString();
+  handleChangeApplicationStatus(newStatus: number, row: any) {
+    const currentStatus = parseInt(row.status); // Lưu trạng thái hiện tại
+    if (isNaN(currentStatus) || isNaN(newStatus)) {
+      Swal.fire({
+        title: 'Lỗi',
+        text: 'Trạng thái không hợp lệ!',
+        icon: 'error',
+        confirmButtonText: 'Đóng',
+        buttonsStyling: false,
+        customClass: {
+          confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
+        }
+      });
+      return;
+    }
 
-    const statusOrder = ['1', '2', '3', '4', '5', '6'];
+    const statusOrder = [1, 2, 3, 4, 5, 6];
     if (statusOrder.indexOf(newStatus) < statusOrder.indexOf(currentStatus)) {
       Swal.fire({
         title: 'Không hợp lệ',
@@ -115,13 +126,12 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
           confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
         }
       });
-      event.target.value = currentStatus;
       return;
     }
 
     Swal.fire({
       title: 'Thay đổi trạng thái?',
-      text: `Trạng thái sẽ được cập nhật thành "${this.applicationStatusDict[newStatus]}".`,
+      text: `Trạng thái sẽ được cập nhật thành "${this.applicationStatusDict[newStatus]}"`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Cập nhật',
@@ -134,8 +144,6 @@ export class AppliedResumeTableComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.isConfirmed) {
         this.changeStatus.emit({ id: row.id, status: newStatus });
-      } else {
-        event.target.value = currentStatus;
       }
     });
   }

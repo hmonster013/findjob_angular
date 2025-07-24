@@ -17,9 +17,7 @@ import { ROUTES } from '../../../../_configs/constants';
 })
 export class CompanySearchComponent implements OnInit {
   form: FormGroup;
-  showAdvanceFilter = false;
   cityOptions: any[] = [];
-  fieldOptions: any[] = []; // Thêm bộ lọc lĩnh vực hoạt động
   isLoading = false;
 
   constructor(
@@ -30,8 +28,7 @@ export class CompanySearchComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       kw: [''],
-      cityId: [''],
-      fieldId: [''] // Thêm trường lọc nâng cao
+      cityId: ['']
     });
   }
 
@@ -40,12 +37,8 @@ export class CompanySearchComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.form.patchValue({
         kw: params['kw'] || '',
-        cityId: params['cityId'] || '',
-        fieldId: params['fieldId'] || ''
+        cityId: params['cityId'] || ''
       });
-      if (Object.values(params).some(val => val)) {
-        this.showAdvanceFilter = true;
-      }
     });
   }
 
@@ -53,7 +46,6 @@ export class CompanySearchComponent implements OnInit {
     this.commonService.getConfigs().subscribe({
       next: (res) => {
         this.cityOptions = res.data.cityOptions || [];
-        this.fieldOptions = res.data.fieldOptions || []; // Giả sử API trả về fieldOptions
       },
       error: (err) => {
         console.error('Lỗi tải cấu hình:', err);
@@ -95,12 +87,7 @@ export class CompanySearchComponent implements OnInit {
 
   onReset() {
     this.form.reset();
-    this.showAdvanceFilter = false;
     this.router.navigate([ROUTES.JOB_SEEKER.COMPANY], { queryParams: {} });
-  }
-
-  toggleAdvanceFilter() {
-    this.showAdvanceFilter = !this.showAdvanceFilter;
   }
 
   isFormNotEmpty(): boolean {

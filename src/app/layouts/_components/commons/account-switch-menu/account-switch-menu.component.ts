@@ -25,7 +25,6 @@ export class AccountSwitchMenuComponent {
       this.hostname === HOST_NAME.MYJOB
         ? HOST_NAME.EMPLOYER_MYJOB
         : HOST_NAME.MYJOB;
-    // Thay vì window.open, sử dụng redirect tương đối nếu cùng domain
     window.location.href = `http://${target}:4200/`;
   }
 

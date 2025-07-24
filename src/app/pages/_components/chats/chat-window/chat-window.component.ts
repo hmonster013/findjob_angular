@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy, Input } from '@angular/core';
 import { collection, doc, limit, onSnapshot, orderBy, query, startAfter, updateDoc, where, getDocs } from 'firebase/firestore';
 import { MessageComponent } from '../message/message.component';
 import { ChatStateService } from '../../../../_services/chat-state.service';
@@ -30,6 +30,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   @ViewChild('inputRef') inputRef!: ElementRef;
   @ViewChild('messageListRef') messageListRef!: ElementRef;
 
+  @Input() showMobileHeader: boolean = false;
+  @Input() onToggleLeftDrawer?: () => void;
+  @Input() onToggleRightDrawer?: () => void;
+
   LIMIT = 20;
   currentUser: any;
   selectedRoom: any = {};
@@ -50,6 +54,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   private unsubscribeMessages: (() => void) | null = null;
   private unsubscribeSelectedRoom: (() => void) | null = null;
   private subscription: Subscription = new Subscription();
+  private shouldAutoScroll = true;
+  private lastMessageCount = 0;
 
   constructor(
     private chatStateService: ChatStateService,
@@ -144,8 +150,28 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewChecked() {
-    if (this.messageListRef) {
-      this.messageListRef.nativeElement.scrollTop = this.messageListRef.nativeElement.scrollHeight + 50;
+    // Only auto scroll if we should and there are new messages
+    if (this.shouldAutoScroll && this.messages.length > this.lastMessageCount) {
+      this.scrollToBottom();
+      this.lastMessageCount = this.messages.length;
+    }
+  }
+
+  private scrollToBottom() {
+    if (this.messageListRef && this.messageListRef.nativeElement) {
+      const element = this.messageListRef.nativeElement;
+      setTimeout(() => {
+        element.scrollTop = element.scrollHeight;
+      }, 50);
+    }
+  }
+
+  checkScrollPosition() {
+    if (this.messageListRef && this.messageListRef.nativeElement) {
+      const element = this.messageListRef.nativeElement;
+      const threshold = 100; // pixels from bottom
+      const isNearBottom = element.scrollHeight - element.scrollTop - element.clientHeight < threshold;
+      this.shouldAutoScroll = isNearBottom;
     }
   }
 
@@ -296,10 +322,17 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
       if (querySnapshot.docs.length > 0) {
         this.lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
       }
-      this.messages = messagesData;
+            this.messages = messagesData;
       this.page = 1;
       this.hasMore = messagesData.length >= this.LIMIT;
       this.isLoading = false;
+      this.lastMessageCount = this.messages.length;
+
+      // Scroll to bottom when messages are loaded for the first time
+      this.shouldAutoScroll = true;
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 100);
     }, (error) => {
       this.toastr.error('Không thể tải danh sách tin nhắn!');
       this.isLoading = false;
@@ -365,8 +398,11 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         await this.firebaseService.updateChatRoomByPartnerId(this.partnerId, this.selectedRoomId);
 
         this.inputValue = '';
+        // Always scroll to bottom when sending a message
+        this.shouldAutoScroll = true;
         setTimeout(() => {
           this.inputRef.nativeElement.focus();
+          this.scrollToBottom();
         });
       } catch (error) {
         this.toastr.error('Không thể gửi tin nhắn, vui lòng thử lại!');
@@ -383,5 +419,11 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
 
   trackByMessageId(index: number, message: any): string {
     return message.id;
+  }
+
+  autoResize(event: any) {
+    const textarea = event.target;
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 128) + 'px';
   }
 }

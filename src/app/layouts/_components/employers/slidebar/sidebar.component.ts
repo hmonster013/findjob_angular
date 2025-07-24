@@ -1,3 +1,4 @@
+import { IMAGES } from './../../../../_configs/constants';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { APP_NAME, ROUTES } from '../../../../_configs/constants';
 import { CommonModule } from '@angular/common';
@@ -28,6 +29,7 @@ export class SidebarComponent {
 
   ROUTES = ROUTES;
   APP_NAME = APP_NAME;
+  IMAGES = IMAGES;
 
   toggleExpand(section: 'candidates' | 'account') {
     this.expandedItems[section] = !this.expandedItems[section];

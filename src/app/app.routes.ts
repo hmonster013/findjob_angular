@@ -12,7 +12,7 @@ import { SystemErrorPageComponent } from './pages/errors-pages/system-error-page
 export function generateRoutes(): Routes {
   const hostname = window.location.hostname;
 
-  if (hostname === '127.0.0.1') {
+  if (hostname === '127.0.0.1' || hostname === '1a2533d14838.ngrok-free.app') {
     // Job Seeker Routes
     return [
       {
@@ -44,7 +44,7 @@ export function generateRoutes(): Routes {
           { path: 'dang-ky', loadComponent: () => import('./pages/auth-pages/job-seeker-sign-up-page/job-seeker-sign-up-page.component').then(m => m.JobSeekerSignUpPageComponent) },
           { path: 'quen-mat-khau', loadComponent: () => import('./pages/auth-pages/forgot-password-page/forgot-password-page.component').then(m => m.ForgotPasswordPageComponent) },
           { path: 'cap-nhat-mat-khau/:token', loadComponent: () => import('./pages/auth-pages/reset-password-page/reset-password-page.component').then(m => m.ResetPasswordPageComponent) },
-          { path: 'email-verification-required', loadComponent: () => import('./pages/auth-pages/email-verification-required-page/email-verification-required-page.component').then(m => m.EmailVerificationRequiredPageComponent) },
+          { path: 'email-verification', loadComponent: () => import('./pages/auth-pages/email-verification-required-page/email-verification-required-page.component').then(m => m.EmailVerificationRequiredPageComponent) },
         ]
       },
       {
@@ -74,7 +74,7 @@ export function generateRoutes(): Routes {
       { path: '**', component: NotFoundPageComponent },
       { path: 'system-error', component: SystemErrorPageComponent },
   ];
-  } else if (hostname === 'localhost') {
+  } else if (hostname === 'localhost' || hostname === 'ba26-2a09-bac5-d45b-16d2-00-246-ef.ngrok-free.app') {
     // Employer Routes (localhost)
     return [
       {
@@ -102,7 +102,7 @@ export function generateRoutes(): Routes {
           { path: 'dang-ky', loadComponent: () => import('./pages/auth-pages/employer-sign-up-page/employer-sign-up-page.component').then(m => m.EmployerSignUpPageComponent) },
           { path: 'quen-mat-khau', loadComponent: () => import('./pages/auth-pages/forgot-password-page/forgot-password-page.component').then(m => m.ForgotPasswordPageComponent) },
           { path: 'cap-nhat-mat-khau/:token', loadComponent: () => import('./pages/auth-pages/reset-password-page/reset-password-page.component').then(m => m.ResetPasswordPageComponent) },
-          { path: 'email-verification-required', loadComponent: () => import('./pages/auth-pages/email-verification-required-page/email-verification-required-page.component').then(m => m.EmailVerificationRequiredPageComponent) },
+          { path: 'email-verification', loadComponent: () => import('./pages/auth-pages/email-verification-required-page/email-verification-required-page.component').then(m => m.EmailVerificationRequiredPageComponent) },
         ]
       },
       {

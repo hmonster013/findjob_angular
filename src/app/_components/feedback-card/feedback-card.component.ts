@@ -1,3 +1,4 @@
+import { IMAGES } from './../../_configs/constants';
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
@@ -14,4 +15,6 @@ export class FeedbackCardComponent {
   @Input() fullName: string = '';
   @Input() content: string = '';
   @Input() isLoading: boolean = false;
+
+  IMAGES = IMAGES;
 }

@@ -32,7 +32,7 @@
       class="flex-shrink-0 hidden md:block"
     ></app-chat-card>
 
-    <!-- Avatar + UserMenu -->
+    <!-- UserMenu -->
     <div *ngIf="isAuthenticated" class="relative">
       <div
         class="flex items-center gap-2 border-2 border-white rounded-3xl p-1 cursor-pointer hover:bg-gradient-to-r hover:from-orange-500 hover:to-orange-600 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
@@ -42,7 +42,7 @@
         role="button"
       >
         <img
-          [src]="currentUser?.avatarUrl || '/assets/images/avatar-default.png'"
+          [src]="currentUser?.avatarUrl || IMAGES.imageDefault"
           alt="Avatar của {{ currentUser?.fullName || 'người dùng' }}"
           class="w-10 h-10 rounded-full object-cover"
           loading="lazy"

@@ -1,23 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { NoDataCardComponent } from '../../../../_components/no-data-card/no-data-card.component';
 import Swal from 'sweetalert2';
-
-interface Resume {
-  slug?: string;
-  title?: string;
-  userDict?: { fullName: string };
-  salaryMin?: number;
-  salaryMax?: number;
-  experience?: string;
-  city?: string;
-}
-
-interface ResumeRow {
-  resume?: Resume;
-  createAt?: string;
-}
+import { CommonService } from '../../../../_services/common.service';
 
 @Component({
   selector: 'app-saved-resume-table',
@@ -27,8 +13,8 @@ interface ResumeRow {
   styleUrls: ['./saved-resume-table.component.css'],
   providers: [DatePipe],
 })
-export class SavedResumeTableComponent {
-  @Input() dataSource: ResumeRow[] = [];
+export class SavedResumeTableComponent implements OnInit {
+  @Input() dataSource: any[] = [];
   @Input() isLoading: boolean = false;
   @Input() total: number = 0;
   @Input() page: number = 1;
@@ -38,7 +24,43 @@ export class SavedResumeTableComponent {
   @Output() pageChange = new EventEmitter<number>();
   @Output() rowsPerPageChange = new EventEmitter<number>();
 
-  constructor(private router: Router) {}
+  allConfigs: any;
+
+  constructor(
+    private router: Router,
+    private commonService: CommonService
+  ) {}
+
+  ngOnInit(): void {
+    this.getConfigs();
+  }
+
+  getConfigs() {
+    this.commonService.getConfigs().subscribe({
+      next: (res) => {
+        this.allConfigs = res.data;
+      },
+      error: (err) => {
+        console.error('Lỗi khi lấy configs:', err);
+      }
+    });
+  }
+
+  // Lấy tên kinh nghiệm từ id
+  getExperienceName(experienceId: number | null | undefined): string {
+    if (!experienceId || !this.allConfigs?.experienceDict) {
+      return '---';
+    }
+    return this.allConfigs.experienceDict[experienceId] || '---';
+  }
+
+  // Lấy tên thành phố từ id
+  getCityName(cityId: number | null | undefined): string {
+    if (!cityId || !this.allConfigs?.cityDict) {
+      return '---';
+    }
+    return this.allConfigs.cityDict[cityId] || '---';
+  }
 
   viewProfile(slug: string | undefined) {
     if (slug) {

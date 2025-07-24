@@ -1,3 +1,4 @@
+import { IMAGES } from './../../../../_configs/constants';
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService } from '../../../../_services/authentication.service';
@@ -18,6 +19,7 @@ export class AvatarCardComponent {
   isFullScreenLoading = false;
   currentUser: any;
 
+  IMAGES = IMAGES;
   constructor(
     private authenticationService: AuthenticationService,
     private authStateService: AuthStateService,

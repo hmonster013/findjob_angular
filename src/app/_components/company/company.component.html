@@ -24,7 +24,7 @@
     <!-- Cover + Logo -->
     <div class="relative">
       <img
-        [src]="companyCoverImageUrl || defaultCoverImage"
+        [src]="companyCoverImageUrl || IMAGES.coverImageDefault"
         alt="Cover"
         class="w-full h-36 object-cover rounded-lg brightness-90"
       />
@@ -34,7 +34,7 @@
         class="absolute -bottom-8 left-4 w-20 h-20 rounded-lg bg-white p-1 border border-gray-100 hover:scale-105 transition transform"
       >
         <img
-          [src]="companyImageUrl || 'assets/images/companies/company-logo.jpg'"
+          [src]="companyImageUrl || IMAGES.imageDefault"
           alt="Company Logo"
           class="w-full h-full object-cover rounded-md"
         />

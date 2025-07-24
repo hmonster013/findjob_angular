@@ -13,9 +13,9 @@
         class="flex-1 min-w-[128px] flex flex-col items-center cursor-pointer p-3 rounded-lg transition-all"
         [attr.aria-label]="'Filter by ' + career.name"
       >
-        <div class="bg-white p-4 rounded-xl hover:border hover:border-orange-600 transition flex flex-col items-center h-[128px] w-full ">
+        <div class="bg-white p-4 rounded-xl hover:border hover:border-orange-600 transition flex flex-col items-center h-[128px] w-full">
           <img
-            [src]="career.iconUrl"
+            [src]="career.iconUrl || IMAGES.imageDefault"
             alt="{{ career.name }}"
             class="w-16 h-16 rounded-md object-cover mb-2"
           />
@@ -28,7 +28,7 @@
 
       <!-- "View All" Item -->
       <div
-        (click)="toggleDialog(true)"
+        (click)="handleGetAllCareets()"
         class="flex-1 min-w-[128px] flex flex-col items-center cursor-pointer p-3 rounded-lg transition-all"
         aria-label="View all careers"
       >
@@ -45,12 +45,4 @@
       </div>
     </div>
   </div>
-
-  <!-- SubHeader Dialog -->
-  <app-search-dialog
-    [open]="open"
-    [topCareers]="topCareers"
-    (close)="toggleDialog(false)"
-    (selectCareer)="handleFilter($event)"
-  ></app-search-dialog>
 </div>

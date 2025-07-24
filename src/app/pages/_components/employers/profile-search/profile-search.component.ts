@@ -23,6 +23,17 @@ export class ProfileSearchComponent implements OnInit, OnDestroy {
   showAdvanced: boolean = false;
   private destroy$ = new Subject<void>();
 
+  private advancedFilterFields = [
+    'careerId',
+    'experienceId',
+    'positionId',
+    'academicLevelId',
+    'typeOfWorkplaceId',
+    'jobTypeId',
+    'genderId',
+    'maritalStatusId'
+  ];
+
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
@@ -58,8 +69,16 @@ export class ProfileSearchComponent implements OnInit, OnDestroy {
         genderId: params['genderId'] || null,
         maritalStatusId: params['maritalStatusId'] || null,
       });
-      this.showAdvanced = Object.values(params).some(val => val && !['kw', 'cityId', 'page', 'pageSize'].includes(val));
-      this.onSubmit();
+
+      this.showAdvanced = Object.keys(params).some(key => this.advancedFilterFields.includes(key) && params[key] !== '' && params[key] !== null);
+
+      // Chỉ gọi onSubmit nếu có tham số lọc
+      const hasFilterParams = Object.keys(params).some(key =>
+        !['page', 'pageSize'].includes(key) && params[key] !== '' && params[key] !== null
+      );
+      if (hasFilterParams) {
+        this.onSubmit();
+      }
     });
   }
 
@@ -125,7 +144,6 @@ export class ProfileSearchComponent implements OnInit, OnDestroy {
 
       const formValue: FilterParams = { ...this.searchForm.value };
       this.handleSaveKeywordLocalStorage(formValue.kw || '');
-      // Remove empty or null values
       Object.keys(formValue).forEach(key => {
         if (formValue[key as keyof FilterParams] === '' || formValue[key as keyof FilterParams] === null) {
           delete formValue[key as keyof FilterParams];

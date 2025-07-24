@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener, OnInit } from '@angular/core';
 import { CompanyService } from '../../_services/company.service';
 import { Router, RouterLink } from '@angular/router';
-import { ROUTES } from '../../_configs/constants';
+import { IMAGES, ROUTES } from '../../_configs/constants';
 
 @Component({
   selector: 'app-top-company-carousel',
@@ -18,6 +18,8 @@ export class TopCompanyCarouselComponent implements OnInit {
   isLoading: boolean = true;
   skeletonArray = Array(10);
   col: number = 5;
+
+  IMAGES = IMAGES;
 
   constructor(
     private router: Router,

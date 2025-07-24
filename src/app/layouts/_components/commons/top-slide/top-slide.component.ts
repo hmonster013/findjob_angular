@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { MyjobService } from '../../../../_services/myjob.service';
+import { FindjobService } from '../../../../_services/myjob.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -15,7 +15,7 @@ import { RouterLink } from '@angular/router';
 export class TopSlideComponent {
   banners: any[] = [];
 
-  constructor(private myjobService: MyjobService) {}
+  constructor(private myjobService: FindjobService) {}
 
   ngOnInit() {
     this.getBanners();

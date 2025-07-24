@@ -5,7 +5,6 @@ import { ResumeSavedService } from '../../../../_services/resume-saved.service';
 import { ResumeService } from '../../../../_services/resume.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
-import { BackdropLoadingComponent } from '../../../../_components/backdrop-loading/backdrop-loading.component';
 import { exportToXLSX } from '../../../../_utils/xlsx-utils';
 import { SavedResumeFilterFormComponent } from '../saved-resume-filter-form/saved-resume-filter-form.component';
 import { SavedResumeTableComponent } from '../saved-resume-table/saved-resume-table.component';
@@ -16,7 +15,6 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [
     CommonModule,
-    BackdropLoadingComponent,
     SavedResumeFilterFormComponent,
     SavedResumeTableComponent,
   ],
@@ -26,7 +24,6 @@ import Swal from 'sweetalert2';
 export class SavedResumeCardComponent implements OnInit, OnDestroy {
   resumes: any[] = [];
   isLoading: boolean = false;
-  isFullScreenLoading: boolean = false;
   page: number = 1;
   rowsPerPage: number = 10;
   count: number = 0;
@@ -171,7 +168,6 @@ export class SavedResumeCardComponent implements OnInit, OnDestroy {
       this.toastr.warning('Không có dữ liệu để xuất!');
       return;
     }
-    this.isFullScreenLoading = true;
     type FilterParams = {
       kw?: string;
       salaryMax?: number | null;
@@ -189,10 +185,8 @@ export class SavedResumeCardComponent implements OnInit, OnDestroy {
     this.resumeSavedService.exportResumesSaved(params).subscribe({
       next: (res) => {
         exportToXLSX(res.data, 'ho-so-da-luu');
-        this.isFullScreenLoading = false;
       },
       error: () => {
-        this.isFullScreenLoading = false;
         Swal.fire({
           title: 'Lỗi',
           text: 'Không thể xuất Excel',

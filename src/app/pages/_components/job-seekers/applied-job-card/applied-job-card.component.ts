@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { JobPostActivityService } from '../../../../_services/job-post-activity.service';
+import { CommonService } from '../../../../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
+import { IMAGES } from '../../../../_configs/constants';
 
 @Component({
   selector: 'app-applied-job-card',
@@ -18,22 +20,38 @@ export class AppliedJobCardComponent implements OnInit {
   page = 1;
   pageSize = 10;
   count = 0;
+  cityOptions: any[] = []; // Thêm biến để lưu danh sách thành phố
 
-  // Ánh xạ city ID sang tên thành phố (giả định, đồng bộ với SavedJobCard)
-  private cityMap: { [key: number]: string } = {
-    1: 'Hà Nội',
-    2: 'TP. Hồ Chí Minh',
-    3: 'Đà Nẵng',
-    // Thêm các thành phố khác nếu cần
-  };
+  IMAGES = IMAGES;
 
   constructor(
     private jobPostActivityService: JobPostActivityService,
+    private commonService: CommonService, // Thêm CommonService
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
+    this.getCities(); // Gọi lấy danh sách thành phố
     this.loadJobPostActivities();
+  }
+
+  // Hàm lấy danh sách thành phố
+  getCities() {
+    this.commonService.getCities().subscribe({
+      next: (res) => {
+        this.cityOptions = res.data;
+      },
+      error: (err) => {
+        console.error('Error loading cities:', err);
+        this.toastr.error('Không thể tải danh sách thành phố!');
+      }
+    });
+  }
+
+  // Hàm ánh xạ id thành phố thành tên
+  getCityNameById(cityId: number): string {
+    const city = this.cityOptions.find((c) => c.id === cityId);
+    return city ? city.name : 'Không xác định';
   }
 
   loadJobPostActivities() {
@@ -56,11 +74,6 @@ export class AppliedJobCardComponent implements OnInit {
 
   formatDateDisplay(dateStr: string): string {
     return formatDate(dateStr, 'dd/MM/yyyy', 'en-US');
-  }
-
-  // Hàm ánh xạ city ID sang tên thành phố
-  getCityName(cityId?: number): string {
-    return cityId && this.cityMap[cityId] ? this.cityMap[cityId] : 'Không xác định';
   }
 
   handleChangePage(newPage: number) {

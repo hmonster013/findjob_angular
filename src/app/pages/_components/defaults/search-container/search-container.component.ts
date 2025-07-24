@@ -1,24 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CommonService } from '../../../../_services/common.service';
-import { Router, RouterLink } from '@angular/router';
-import { SearchDialogComponent } from "../search-dialog/search-dialog.component";
-import { ROUTES } from '../../../../_configs/constants';
-import { HomeSearchComponent } from "../home-search/home-search.component";
+import { Router } from '@angular/router';
+import { HomeSearchComponent } from '../home-search/home-search.component';
+import { IMAGES, ROUTES } from '../../../../_configs/constants';
 
 @Component({
   selector: 'app-search-container',
+  standalone: true,
   imports: [
     CommonModule,
-    SearchDialogComponent,
     HomeSearchComponent
-],
+  ],
   templateUrl: './search-container.component.html',
-  styleUrl: './search-container.component.css'
+  styleUrls: ['./search-container.component.css']
 })
 export class SearchContainerComponent {
   topCareers: any[] = [];
-  open: boolean = false;
+  IMAGES = IMAGES;
 
   constructor(
     private commonService: CommonService,
@@ -40,17 +39,12 @@ export class SearchContainerComponent {
     });
   }
 
-  handleFilter(careerId: number) {
-    this.router.navigate([`/${ROUTES.JOB_SEEKER.JOBS}`], { queryParams: { careerId } });
+  handleFilter(careerId?: number) {
+    const queryParams = careerId ? { careerId } : {};
+    this.router.navigate([`/${ROUTES.JOB_SEEKER.JOBS}`], { queryParams });
   }
 
-  toggleDialog(openStatus: boolean) {
-    this.open = openStatus;
-
-    if (openStatus) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+  handleGetAllCareets() {
+    this.router.navigate([`/${ROUTES.JOB_SEEKER.JOBS_BY_CAREER}`]);
   }
 }

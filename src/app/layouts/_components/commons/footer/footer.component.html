@@ -4,20 +4,16 @@
 
     <!-- Cột 1 -->
     <div>
-      <div class="flex flex-row items-center mb-4">
+      <div class="flex flex-row items-center mb-4 space-x-1">
         <img
-            src="assets/logo/logo-white.png"
+            [src]="IMAGES.logoWhite"
             alt="Logo"
             class="w-12"
           />
-          <p class="font-bold">FindJob</p>
+        <p class="font-bold">{{APP_NAME}}</p>
       </div>
       <ul class="space-y-2">
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/gioi-thieu')">Về {{ APP_NAME }}</li>
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/lien-he')">Liên Hệ</li>
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/hoi-dap')">Hỏi Đáp</li>
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/thoa-thuan-su-dung')">Thỏa thuận sử dụng</li>
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/quy-dinh-bao-mat')">Quy định bảo mật</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/ve-chung-toi')">Về {{ APP_NAME }}</li>
       </ul>
     </div>
 
@@ -25,11 +21,11 @@
     <div>
       <h3 class="font-semibold text-lg mb-3">Dành cho nhà tuyển dụng</h3>
       <ul class="space-y-2">
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/employer/job-post')">Đăng Tin Tuyển Dụng</li>
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/employer/profile')">Tìm Kiếm Hồ Sơ</li>
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/employer/dashboard')">Quản Lý Nhà Tuyển Dụng</li>
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/employer/chat')">Tin Nhắn</li>
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/employer/notification')">Thông Báo</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/tin-tuyen-dung')">Đăng Tin Tuyển Dụng</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/danh-sach-ung-vien')">Tìm Kiếm Hồ Sơ</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('')">Quản Lý Nhà Tuyển Dụng</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/ket-noi-voi-ung-vien')">Tin Nhắn</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/thong-bao')">Thông Báo</li>
       </ul>
     </div>
 
@@ -37,27 +33,17 @@
     <div>
       <h3 class="font-semibold text-lg mb-3">Dành cho ứng viên</h3>
       <ul class="space-y-2">
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/viec-lam')">Việc Làm</li>
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/cong-ty')">Công ty</li>
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/job-seeker/dashboard')">Quản Lý Ứng Viên</li>
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/job-seeker/dashboard/chat')">Tin Nhắn</li>
-        <li class="cursor-pointer hover:text-primary-600" (click)="navigate('/job-seeker/dashboard/notification')">Thông Báo</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/viec-lam')">Việc Làm</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/cong-ty')">Công ty</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/bang-dieu-khien')">Quản Lý Ứng Viên</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/ket-noi-voi-nha-tuyen-dung')">Tin Nhắn</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/thong-bao')">Thông Báo</li>
       </ul>
     </div>
 
     <!-- Cột 4 -->
     <div>
-      <h3 class="font-semibold text-lg mb-3">Ứng dụng di động</h3>
-      <div class="flex flex-col sm:flex-row gap-2">
-        <a [href]="LINKS.CHPLAY_LINK" target="_blank">
-          <img [src]="IMAGES.chPlayDownload" alt="CHPlay" class="w-36 hover:scale-105 transition-transform" />
-        </a>
-        <a [href]="LINKS.APPSTORE_LINK" target="_blank">
-          <img [src]="IMAGES.appStoreDownload" alt="AppStore" class="w-36 hover:scale-105 transition-transform" />
-        </a>
-      </div>
-
-      <h3 class="font-semibold text-lg mt-6 mb-3">Kết nối với MyJob</h3>
+      <h3 class="font-semibold text-lg mt-6 mb-3">Kết nối với {{APP_NAME}}</h3>
       <div class="flex flex-wrap gap-2">
         <a *ngFor="let social of socialLinks" [href]="social.link" target="_blank">
           <img [src]="social.icon" alt="" class="w-9 h-9 hover:scale-110 transition-transform" />
@@ -70,6 +56,6 @@
   <hr class="my-6 border-gray-300" />
 
   <p class="text-center text-sm mt-4">
-    © {{ currentYear }} FindJob. Tất cả quyền được bảo lưu.
+    © {{ currentYear }} {{APP_NAME}}. Tất cả quyền được bảo lưu.
   </p>
 </footer>

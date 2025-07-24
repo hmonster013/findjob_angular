@@ -1,0 +1,6 @@
+version: "2"
+authtoken: 2soRyQTPvfKTt8KV0oq4ZQvLKcv_5rKkFMeYMWV1WoHetCq1g
+tunnels:
+  job-seeker:
+    proto: http
+    addr: 127.0.0.1:4200

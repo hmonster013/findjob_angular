@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IMAGES } from '../../../../_configs/constants';
 
 @Component({
   selector: 'app-sidebar-profile',
@@ -10,4 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class SidebarProfileComponent {
   @Input() currentUser: any;
+
+  IMAGES = IMAGES;
+
 }

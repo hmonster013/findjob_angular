@@ -29,7 +29,7 @@ export class FilterJobPostCardComponent implements OnInit {
   col: number = 3;
   readonly pageSize = 12;
 
-  cityDict: { [key: string]: string } | null = null; // Biến lưu cityDict
+  cityDict: { [key: string]: string } | null = null;
 
   constructor(
     private jobService: JobService,

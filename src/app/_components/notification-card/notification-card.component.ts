@@ -5,7 +5,7 @@ import { db } from '../../_configs/firebase-config';
 import { AuthStateService } from '../../_services/auth-state.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ROUTES } from '../../_configs/constants';
+import { ROUTES, IMAGES } from '../../_configs/constants'; // Thêm IMAGES
 import { formatRoute } from '../../_utils/func-utils';
 
 interface Notification {
@@ -13,11 +13,11 @@ interface Notification {
   title: string;
   content: string;
   image?: string;
-  time: any; // Firestore Timestamp hoặc Date
+  time: any;
   is_read: boolean;
   is_deleted: boolean;
   type: string;
-  [key: string]: any; // Để hỗ trợ các trường động như APPLY_JOB
+  [key: string]: any;
 }
 
 @Component({
@@ -25,7 +25,7 @@ interface Notification {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './notification-card.component.html',
-  styleUrls: ['./notification-card.component.css'],
+  styleUrls: ['./notification-card.component.css']
 })
 export class NotificationCardComponent {
   open = false;
@@ -34,7 +34,10 @@ export class NotificationCardComponent {
   pageSize = 5;
   lastKey: any = null;
   canLoadMore = false;
+  isLoading = true; // Thêm trạng thái loading
   @Output() closed = new EventEmitter<void>();
+
+  IMAGES = IMAGES; // Hằng số hình ảnh mặc định
 
   private unsubscribe: (() => void) | null = null;
 
@@ -45,6 +48,11 @@ export class NotificationCardComponent {
   ) {}
 
   ngOnInit() {
+    if (!this.authStateService.isAuthenticated()) {
+      this.toastr.error('Vui lòng đăng nhập để xem thông báo!');
+      this.isLoading = false;
+      return;
+    }
     this.fetchNotifications();
   }
 
@@ -55,6 +63,15 @@ export class NotificationCardComponent {
   }
 
   toggleMenu() {
+    // Nếu là mobile, chuyển trang thay vì mở dropdown
+    if (window && window.innerWidth <= 640) {
+      const currentUrl = this.router.url;
+      if (currentUrl.includes('/bang-dieu-khien/thong-bao')) {
+        return;
+      }
+      this.router.navigate(['/bang-dieu-khien/thong-bao']);
+      return;
+    }
     this.open = !this.open;
     if (!this.open) {
       this.closed.emit();
@@ -66,6 +83,21 @@ export class NotificationCardComponent {
     return user?.id ? String(user.id) : null;
   }
 
+  // Hàm kiểm tra và trả về URL hình ảnh hợp lệ
+  getValidImageUrl(imageUrl: string | undefined | null): string {
+    if (!imageUrl) {
+      return this.IMAGES.imageDefault;
+    }
+    if (imageUrl.startsWith('https://www.google.com/url')) {
+      return this.IMAGES.imageDefault;
+    }
+    const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+    if (!imageExtensions.test(imageUrl)) {
+      return this.IMAGES.imageDefault;
+    }
+    return imageUrl;
+  }
+
   fetchNotifications() {
     const userId = this.getUserId();
     if (!userId) {
@@ -73,6 +105,7 @@ export class NotificationCardComponent {
       this.notifications = [];
       this.unreadCount = 0;
       this.canLoadMore = false;
+      this.isLoading = false;
       return;
     }
 
@@ -88,7 +121,6 @@ export class NotificationCardComponent {
       const notiList: Notification[] = [];
       snapshot.forEach((doc) => {
         const data = doc.data();
-        // Chuyển Timestamp thành Date
         if (data['time'] && data['time'].toDate) {
           data['time'] = data['time'].toDate();
         }
@@ -98,12 +130,14 @@ export class NotificationCardComponent {
       this.unreadCount = notiList.filter(item => !item.is_read).length;
       this.lastKey = snapshot.docs[snapshot.docs.length - 1];
       this.canLoadMore = notiList.length >= this.pageSize;
+      this.isLoading = false;
     }, (error) => {
       console.error('Lỗi khi tải thông báo:', error);
       this.toastr.error('Không thể tải danh sách thông báo!');
       this.notifications = [];
       this.unreadCount = 0;
       this.canLoadMore = false;
+      this.isLoading = false;
     });
   }
 
@@ -111,6 +145,7 @@ export class NotificationCardComponent {
     const userId = this.getUserId();
     if (!userId || !this.lastKey) return;
 
+    this.isLoading = true;
     const notiRef = collection(db, 'users', userId, 'notifications');
     const nextQuery = query(
       notiRef,
@@ -137,6 +172,8 @@ export class NotificationCardComponent {
     } catch (error) {
       console.error('Lỗi khi tải thêm thông báo:', error);
       this.toastr.error('Không thể tải thêm thông báo!');
+    } finally {
+      this.isLoading = false;
     }
   }
 

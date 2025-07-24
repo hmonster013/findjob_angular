@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { JobService } from '../../../../_services/job.service';
+import { CommonService } from '../../../../_services/common.service'; // Thêm CommonService
 import { Subject, takeUntil } from 'rxjs';
 import { JobPostLargeComponent } from '../../../../_components/job-post-large/job-post-large.component';
 import { NoDataCardComponent } from '../../../../_components/no-data-card/no-data-card.component';
@@ -26,13 +27,25 @@ export class MainJobPostCardComponent implements OnInit, OnDestroy {
   pageSize = 10;
   destroy$ = new Subject<void>();
   jobPostFilter: any = {};
+  cityDict: { [key: string]: string } | null = null; // Thêm cityDict
 
   constructor(
     private jobService: JobService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private commonService: CommonService // Inject CommonService
   ) {}
 
   ngOnInit() {
+    // Lấy cityDict khi khởi tạo
+    this.commonService.getConfigs().pipe(takeUntil(this.destroy$)).subscribe({
+      next: (res) => {
+        this.cityDict = res.data.cityDict;
+      },
+      error: (err) => {
+        console.error('Error loading city configs:', err);
+      }
+    });
+
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.jobPostFilter = {
         kw: params['kw'] || '',
@@ -94,5 +107,9 @@ export class MainJobPostCardComponent implements OnInit, OnDestroy {
 
   get pageCount(): number {
     return Math.ceil(this.count / this.pageSize);
+  }
+
+  getCityName(cityId: number): string {
+    return this.cityDict?.[Number(cityId)] || 'Chưa cập nhật';
   }
 }

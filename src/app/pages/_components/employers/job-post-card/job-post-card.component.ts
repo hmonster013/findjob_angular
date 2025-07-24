@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { JobService } from '../../../../_services/job.service';
-import { JobPostsTableComponent } from "../job-posts-table/job-posts-table.component";
-import { JobPostFormComponent } from "../job-post-form/job-post-form.component";
-import { JobPostFilterFormComponent } from "../job-post-filter-form/job-post-filter-form.component";
+import { JobPostsTableComponent } from '../job-posts-table/job-posts-table.component';
+import { JobPostFormComponent } from '../job-post-form/job-post-form.component';
 import { confirmModal, errorModal } from '../../../../_utils/sweetalert2-modal';
 import { exportToXLSX } from '../../../../_utils/xlsx-utils';
+import { JobPostFilterFormComponent } from '../job-post-filter-form/job-post-filter-form.component';
 
 @Component({
   selector: 'app-job-post-card',
@@ -118,6 +118,10 @@ export class JobPostCardComponent implements OnInit, OnDestroy {
   }
 
   onSave(formData: any) {
+    if (!formData) {
+      this.openPopup = false;
+      return;
+    }
     const formSubmit = { ...formData };
     this.isFullScreenLoading = true;
 
@@ -152,6 +156,12 @@ export class JobPostCardComponent implements OnInit, OnDestroy {
     }
   }
 
+  onCloseForm() {
+    this.openPopup = false;
+    this.editData = null;
+    this.serverErrors = {};
+  }
+
   onFilter(filter: any) {
     this.filterData = filter;
     this.page = 0;
@@ -181,18 +191,23 @@ export class JobPostCardComponent implements OnInit, OnDestroy {
   }
 
   onExport() {
-    const params = { ...this.filterData };
-    this.isFullScreenLoading = true;
-    this.jobService.exportEmployerJobPosts(params).pipe(takeUntil(this.destroy$)).subscribe({
-      next: (res) => {
-        exportToXLSX(res.data, 'danh-sach-tin-tuyen-dung');
-        this.isFullScreenLoading = false;
-      },
-      error: () => {
-        this.isFullScreenLoading = false;
-        errorModal('Lỗi', 'Xuất file thất bại');
-      }
-    });
+    if (this.list.length === 0) {
+      errorModal('Lỗi', 'Không có dữ liệu để xuất');
+      return;
+    }
+
+    // Chuẩn bị dữ liệu cho Excel từ this.list
+    const exportData = this.list.map(item => ({
+      'Tên tin đăng': item.jobName || '',
+      'Ngày đăng': item.createAt ? new Date(item.createAt).toLocaleDateString('vi-VN') : '',
+      'Thời hạn nộp': item.deadline ? new Date(item.deadline).toLocaleDateString('vi-VN') : '',
+      'Lượt nộp': item.appliedTotal || 0,
+      'Lượt xem': item.viewedTotal || 0,
+      'Trạng thái': item.isVerify ? 'Đã xác minh' : 'Chưa xác minh'
+    }));
+
+    // Xuất file Excel
+    exportToXLSX(exportData, 'danh-sach-tin-tuyen-dung');
   }
 
   ngOnDestroy(): void {

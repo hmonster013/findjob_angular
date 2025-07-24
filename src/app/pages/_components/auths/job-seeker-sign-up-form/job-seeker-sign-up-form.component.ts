@@ -1,7 +1,11 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { PLATFORM } from '../../../../_configs/constants';
+import { ToastrService } from 'ngx-toastr';
+import { PLATFORM, AUTH_CONFIG } from '../../../../_configs/constants';
+
+declare const google: any;
+declare const FB: any;
 
 @Component({
   selector: 'app-job-seeker-sign-up-form',
@@ -9,7 +13,7 @@ import { PLATFORM } from '../../../../_configs/constants';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './job-seeker-sign-up-form.component.html',
 })
-export class JobSeekerSignUpFormComponent implements OnInit {
+export class JobSeekerSignUpFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() serverErrors: any = null;
   @Output() submitForm = new EventEmitter<any>();
   @Output() facebookRegister = new EventEmitter<string>();
@@ -19,10 +23,15 @@ export class JobSeekerSignUpFormComponent implements OnInit {
   isLoadingEmail = false;
   isLoadingFacebook = false;
   isLoadingGoogle = false;
-  showPassword = false; // Biến để kiểm soát trạng thái xem/ẩn mật khẩu
-  showConfirmPassword = false; // Biến để kiểm soát trạng thái xem/ẩn xác nhận mật khẩu
+  showPassword = false;
+  showConfirmPassword = false;
 
-  constructor(private fb: FormBuilder) {
+  AUTH_CONFIG = AUTH_CONFIG;
+
+  constructor(
+    private fb: FormBuilder,
+    private toastr: ToastrService
+  ) {
     this.form = this.fb.group(
       {
         fullName: ['', [Validators.required, Validators.minLength(2)]],
@@ -36,13 +45,42 @@ export class JobSeekerSignUpFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Lắng nghe postMessage từ popup
-    window.addEventListener('message', this.handleSocialRegisterMessage.bind(this));
+    // No initialization needed for social login here
+  }
+
+  ngAfterViewInit(): void {
+    // Initialize Google Sign-In
+    if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+      const client = google.accounts.oauth2.initCodeClient({
+        client_id: AUTH_CONFIG.GOOGLE_CLIENT_ID,
+        scope: 'profile email',
+        ux_mode: 'popup',
+        callback: (response: any) => {
+          console.log('Google response:', response);
+          if (response.code) {
+            this.isLoadingGoogle = true;
+            this.googleRegister.emit(response.code);
+          } else {
+            this.toastr.error('Đăng ký bằng Google thất bại.');
+            this.isLoadingGoogle = false;
+          }
+        },
+      });
+      document.getElementById('googleSignUpButton')?.addEventListener('click', () => {
+        client.requestCode();
+      });
+    } else {
+      console.error('Google Identity Services script not loaded.');
+      this.toastr.error('Không thể tải Google Sign-In. Vui lòng thử lại sau.');
+    }
   }
 
   ngOnDestroy(): void {
-    // Xóa listener khi component bị hủy
-    window.removeEventListener('message', this.handleSocialRegisterMessage.bind(this));
+    // Cleanup if needed (e.g., remove event listeners)
+    const googleButton = document.getElementById('googleSignUpButton');
+    if (googleButton) {
+      googleButton.removeEventListener('click', () => {});
+    }
   }
 
   passwordMatchValidator(group: FormGroup) {
@@ -61,39 +99,36 @@ export class JobSeekerSignUpFormComponent implements OnInit {
   handleFacebookLogin() {
     if (this.isLoadingFacebook) return;
     this.isLoadingFacebook = true;
-    window.open('/auth/facebook', '_blank', 'width=500,height=600');
+
+    // Gọi Facebook Login
+    FB.login(
+      (response: any) => {
+        if (response.status === 'connected' && response.authResponse) {
+          const accessToken = response.authResponse.accessToken;
+          console.log('Facebook access token:', accessToken);
+          this.facebookRegister.emit(accessToken);
+        } else {
+          this.toastr.error('Đăng ký bằng Facebook thất bại.');
+          this.isLoadingFacebook = false;
+        }
+      },
+      { scope: 'public_profile,email' }
+    );
   }
 
   handleGoogleLogin() {
-    if (this.isLoadingGoogle) return;
-    this.isLoadingGoogle = true;
-    window.open('/auth/google', '_blank', 'width=500,height=600');
+    // The actual Google login is handled by the button click event in ngAfterViewInit
+    // This method is just a placeholder to keep the button's (click) binding
   }
 
-  private handleSocialRegisterMessage(event: MessageEvent) {
-    if (event.data.type === 'social_register') {
-      const { provider, token } = event.data;
-      if (provider === 'facebook') {
-        this.facebookRegister.emit(token);
-        this.isLoadingFacebook = false;
-      } else if (provider === 'google') {
-        this.googleRegister.emit(token);
-        this.isLoadingGoogle = false;
-      }
-    }
-  }
-
-  // Chức năng xem/ẩn mật khẩu
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
 
-  // Chức năng xem/ẩn xác nhận mật khẩu
   toggleConfirmPasswordVisibility() {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
 
-  // Reset loading state
   resetLoadingEmail() {
     this.isLoadingEmail = false;
   }

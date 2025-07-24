@@ -5,10 +5,10 @@
       <div class="lg:col-span-8 space-y-4">
         <div class="bg-white rounded-xl shadow-xl border border-gray-300 p-6">
           <!-- Tabs header -->
-          <div class="flex flex-wrap gap-3 border-b-2 border-gray-300 mb-6">
+          <div class="flex flex-wrap gap-2 gap-y-2 border-b-2 border-gray-300 mb-6 w-full">
             <button
               (click)="selectTab('saved')"
-              class="flex items-center whitespace-nowrap px-4 py-2 rounded-md text-sm font-medium text-gray-800 transition-all duration-300 ease-in-out"
+              class="flex items-center whitespace-nowrap px-2 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium text-gray-800 transition-all duration-300 ease-in-out w-full sm:w-auto"
               [ngClass]="{
                 'bg-amber-100 text-amber-600 font-bold border-b-[4px] border-amber-600 shadow-md': selectedTab === 'saved',
                 'hover:bg-amber-50 hover:text-amber-600': selectedTab !== 'saved'
@@ -18,7 +18,7 @@
             </button>
             <button
               (click)="selectTab('applied')"
-              class="flex items-center whitespace-nowrap px-4 py-2 rounded-md text-sm font-medium text-gray-800 transition-all duration-300 ease-in-out"
+              class="flex items-center whitespace-nowrap px-2 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium text-gray-800 transition-all duration-300 ease-in-out w-full sm:w-auto"
               [ngClass]="{
                 'bg-amber-100 text-amber-600 font-bold border-b-[4px] border-amber-600 shadow-md': selectedTab === 'applied',
                 'hover:bg-amber-50 hover:text-amber-600': selectedTab !== 'applied'
@@ -28,7 +28,7 @@
             </button>
             <button
               (click)="selectTab('notified')"
-              class="flex items-center whitespace-nowrap px-4 py-2 rounded-md text-sm font-medium text-gray-800 transition-all duration-300 ease-in-out"
+              class="flex items-center whitespace-nowrap px-2 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium text-gray-800 transition-all duration-300 ease-in-out w-full sm:w-auto"
               [ngClass]="{
                 'bg-amber-100 text-amber-600 font-bold border-b-[4px] border-amber-600 shadow-md': selectedTab === 'notified',
                 'hover:bg-amber-50 hover:text-amber-600': selectedTab !== 'notified'

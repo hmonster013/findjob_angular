@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { ForgotPasswordFormComponent } from '../../_components/auths/forgot-password-form/forgot-password-form.component';
 import { AuthenticationService } from '../../../_services/authentication.service';
-import { PLATFORM, ROUTES } from '../../../_configs/constants';
+import { IMAGES, PLATFORM, ROUTES } from '../../../_configs/constants';
 import { Router } from '@angular/router';
 
 @Component({
@@ -21,6 +21,7 @@ export class ForgotPasswordPageComponent {
   isLoading = false;
 
   ROUTES = ROUTES;
+  IMAGES = IMAGES;
 
   constructor(
     private authService: AuthenticationService,

@@ -1,4 +1,4 @@
-<div class="p-4 sm:p-5 rounded-lg border border-gray-200 shadow-md bg-gray-50 overflow-x-auto hover:shadow-md transition-shadow duration-300">
+<div class="p-4 sm:p-5 rounded-lg border border-gray-200 shadow-md bg-white overflow-x-auto hover:shadow-md transition-shadow duration-300">
   <table class="min-w-full table-auto">
     <thead>
       <tr class="bg-gray-50 text-gray-800 text-sm">
@@ -40,9 +40,9 @@
         <td class="px-3 sm:px-4 py-2 sm:py-3">
           <span
             class="inline-block px-2 py-0.5 text-xs font-medium rounded-full"
-            [ngClass]="JOB_POST_STATUS_BG_COLOR[row.status] || 'bg-orange-100 text-orange-800'"
+            [ngClass]="JOB_POST_STATUS_BG_COLOR[row.isUrgent] || 'bg-orange-100 text-orange-800'"
           >
-            {{ allConfig?.jobPostStatusDict?.[row.status] || '---' }}
+            {{ row.isUrgent ? 'Tuyển gấp' : 'Không tuyển gấp' }}
           </span>
         </td>
         <td class="px-3 sm:px-4 py-2 sm:py-3 flex justify-end gap-2">

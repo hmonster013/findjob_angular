@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CompanyImageService } from '../../../../_services/company-image.service';
-import { BackdropLoadingComponent } from '../../../../_components/backdrop-loading/backdrop-loading.component';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -15,11 +14,10 @@ import Swal from 'sweetalert2';
 })
 export class CompanyImageCardComponent implements OnInit {
   isLoadingCompany: boolean = true;
-  isFullScreenLoading: boolean = false;
   fileList: any[] = [];
   previewImage: string = '';
   previewVisible: boolean = false;
-  Math = Math; // Expose Math object to template
+  Math = Math;
 
   constructor(private companyImageService: CompanyImageService) {}
 
@@ -100,7 +98,6 @@ export class CompanyImageCardComponent implements OnInit {
   }
 
   uploadFiles(formData: FormData, input: HTMLInputElement): void {
-    this.isFullScreenLoading = true;
     this.companyImageService.addCompanyImage(formData).subscribe({
       next: (res) => {
         const results = res.data || [];
@@ -119,7 +116,6 @@ export class CompanyImageCardComponent implements OnInit {
             confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
           }
         });
-        this.isFullScreenLoading = false;
         input.value = ''; // Reset input
       },
       error: () => {
@@ -133,7 +129,6 @@ export class CompanyImageCardComponent implements OnInit {
             confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
           }
         });
-        this.isFullScreenLoading = false;
       }
     });
   }
@@ -153,7 +148,6 @@ export class CompanyImageCardComponent implements OnInit {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        this.isFullScreenLoading = true;
         this.companyImageService.deleteCompanyImage(image.uid).subscribe({
           next: () => {
             this.fileList = this.fileList.filter(item => item.uid !== image.uid);
@@ -167,7 +161,6 @@ export class CompanyImageCardComponent implements OnInit {
                 confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
               }
             });
-            this.isFullScreenLoading = false;
           },
           error: () => {
             Swal.fire({
@@ -180,7 +173,6 @@ export class CompanyImageCardComponent implements OnInit {
                 confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700'
               }
             });
-            this.isFullScreenLoading = false;
           }
         });
       }
