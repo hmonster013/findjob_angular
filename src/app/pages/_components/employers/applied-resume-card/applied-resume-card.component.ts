@@ -227,34 +227,28 @@ export class AppliedResumeCardComponent implements OnInit, OnDestroy {
       return;
     }
     this.isFullScreenLoading = true;
-    const params: { [key: string]: any } = {
-      jobPostId: this.filterForm.value.jobPostId,
-      status: this.filterForm.value.status,
-      cityId: this.filterForm.value.cityId,
-      careerId: this.filterForm.value.careerId,
-      experienceId: this.filterForm.value.experienceId,
-      positionId: this.filterForm.value.positionId,
-      academicLevelId: this.filterForm.value.academicLevelId,
-      typeOfWorkplaceId: this.filterForm.value.typeOfWorkplaceId,
-      jobTypeId: this.filterForm.value.jobTypeId,
-      genderId: this.filterForm.value.genderId,
-      maritalStatusId: this.filterForm.value.maritalStatusId,
+    // Định nghĩa map trạng thái ứng tuyển
+    const statusMap: Record<number, string> = {
+      1: 'Chờ duyệt',
+      2: 'Đã duyệt',
+      3: 'Đã từ chối',
+      4: 'Đã rút',
+      5: 'Đã phỏng vấn',
+      6: 'Đã nhận việc',
+      7: 'Đã từ chối nhận việc',
     };
-    Object.keys(params).forEach(key => {
-      if (params[key] === null || params[key] === '') {
-        delete params[key];
-      }
-    });
-    this.jobPostActivityService.exportAppliedResume(params).subscribe({
-      next: (res) => {
-        exportToXLSX(res.data, 'danh-sach-ung-tuyen');
-        this.isFullScreenLoading = false;
-      },
-      error: () => {
-        this.isFullScreenLoading = false;
-        errorModal('Lỗi', 'Xuất file thất bại');
-      },
-    });
+    // Chuẩn bị dữ liệu xuất Excel từ this.resumes
+    const exportData = (this.resumes || []).map((item: any) => ({
+      'Tên ứng viên': item.fullName || '',
+      'Email': item.email || '',
+      'Vị trí ứng tuyển': item.title || '',
+      'Tin tuyển dụng': item.jobName || '',
+      'Ngày ứng tuyển': item.createAt ? new Date(item.createAt).toLocaleDateString('vi-VN') : '',
+      'Trạng thái': statusMap[item.status] || 'Không xác định',
+      'Đã gửi email': item.isSentEmail ? 'Có' : 'Không',
+    }));
+    exportToXLSX(exportData, 'danh-sach-ung-tuyen');
+    this.isFullScreenLoading = false;
   }
 
   onSubmit() {

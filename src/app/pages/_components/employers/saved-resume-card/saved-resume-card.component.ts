@@ -168,36 +168,15 @@ export class SavedResumeCardComponent implements OnInit, OnDestroy {
       this.toastr.warning('Không có dữ liệu để xuất!');
       return;
     }
-    type FilterParams = {
-      kw?: string;
-      salaryMax?: number | null;
-      experienceId?: number | null;
-      cityId?: number | null;
-    };
-
-    const params: FilterParams = { ...this.filterData };
-    Object.keys(params).forEach(key => {
-      if (params[key as keyof FilterParams] === null || params[key as keyof FilterParams] === '') {
-        delete params[key as keyof FilterParams];
-      }
-    });
-
-    this.resumeSavedService.exportResumesSaved(params).subscribe({
-      next: (res) => {
-        exportToXLSX(res.data, 'ho-so-da-luu');
-      },
-      error: () => {
-        Swal.fire({
-          title: 'Lỗi',
-          text: 'Không thể xuất Excel',
-          icon: 'error',
-          confirmButtonText: 'Đóng',
-          buttonsStyling: false,
-          customClass: {
-            confirmButton: 'bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700',
-          },
-        });
-      },
-    });
+    // Chuẩn bị dữ liệu xuất Excel từ this.resumes
+    const exportData = (this.resumes || []).map((row: any) => ({
+      'Tên CV': row.resume?.title || 'Chưa cập nhật',
+      'Ứng viên': row.resume?.userDict?.fullName || '---',
+      'Mức lương': (row.resume?.salaryMin && row.resume?.salaryMax) ? `${row.resume.salaryMin.toLocaleString('vi-VN')} - ${row.resume.salaryMax.toLocaleString('vi-VN')}` : '---',
+      'Kinh nghiệm': row.resume?.experienceName || '---',
+      'Thành phố': row.resume?.cityName || '---',
+      'Ngày lưu': row.createAt ? new Date(row.createAt).toLocaleDateString('vi-VN') : '',
+    }));
+    exportToXLSX(exportData, 'ho-so-da-luu');
   }
 }

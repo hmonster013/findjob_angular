@@ -198,11 +198,13 @@ export class JobPostCardComponent implements OnInit, OnDestroy {
 
     // Chuẩn bị dữ liệu cho Excel từ this.list
     const exportData = this.list.map(item => ({
-      'Tên tin đăng': item.jobName || '',
+      'Tên tin': item.jobName || '',
       'Ngày đăng': item.createAt ? new Date(item.createAt).toLocaleDateString('vi-VN') : '',
-      'Thời hạn nộp': item.deadline ? new Date(item.deadline).toLocaleDateString('vi-VN') : '',
-      'Lượt nộp': item.appliedTotal || 0,
-      'Lượt xem': item.viewedTotal || 0,
+      'Hạn nộp': item.deadline ? new Date(item.deadline).toLocaleDateString('vi-VN') : '',
+      'Gấp': item.isUrgent ? 'Có' : 'Không',
+      'Hết hạn': item.isExpired ? 'Có' : 'Không',
+      'Lượt nộp': item.appliedNumber ?? item.appliedTotal ?? 0,
+      'Lượt xem': item.views ?? item.viewedTotal ?? 0,
       'Trạng thái': item.isVerify ? 'Đã xác minh' : 'Chưa xác minh'
     }));
 

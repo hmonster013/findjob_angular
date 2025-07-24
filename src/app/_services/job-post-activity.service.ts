@@ -45,12 +45,6 @@ export class JobPostActivityService {
     });
   }
 
-  exportAppliedResume(params: any = {}): Observable<any> {
-    return this.http.get(`${this.baseUrl}/employer-job-posts-activity/export/`, {
-      params: this.convertToHttpParams(params),
-    });
-  }
-
   changeApplicationStatus(id: number, data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/employer-job-posts-activity/${id}/application-status/`, data);
   }

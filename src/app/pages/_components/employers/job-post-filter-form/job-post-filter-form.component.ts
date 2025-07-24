@@ -16,6 +16,7 @@ export class JobPostFilterFormComponent implements OnInit, OnDestroy {
   @Output() filter = new EventEmitter<any>();
 
   form: FormGroup;
+  isLoading: boolean = false;
   urgentOptions = [
     { id: 1, name: 'Tuyển gấp' },
     { id: 2, name: 'Không tuyển gấp' }
@@ -80,6 +81,7 @@ export class JobPostFilterFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    this.isLoading = true;
     const data = this.form.value;
     this.handleSaveKeywordLocalStorage(data.kw);
     const filterData = {
@@ -91,6 +93,11 @@ export class JobPostFilterFormComponent implements OnInit, OnDestroy {
       Object.entries(data).filter(([_, v]) => v !== '' && v !== null)
     );
     this.router.navigate([], { queryParams, relativeTo: this.route });
+
+    // Reset loading state after a short delay
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 500);
   }
 
   onReset() {
