@@ -1,0 +1,16 @@
+/* job-application-card.component.css */
+:host {
+  display: block;
+}
+
+.rounded-full {
+  border-radius: 50%;
+}
+
+.transition-all {
+  transition: all 0.2s ease-in-out;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

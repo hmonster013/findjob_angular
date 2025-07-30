@@ -1,0 +1,57 @@
+<div class="min-h-screen flex items-center justify-center bg-white px-4 py-12 sm:px-6 lg:px-8">
+  <div class="w-full max-w-md bg-white p-6 sm:p-8 rounded-xl border border-gray-200 shadow-lg relative transform transition-all duration-300">
+    <!-- Logo -->
+    <div class="flex justify-center mb-6">
+      <img
+        [src]="IMAGES.logoWhite"
+        alt="Logo Người Tìm Việc"
+        class="h-12 sm:h-14 transform transition-transform duration-300 hover:scale-105"
+        loading="lazy"
+      />
+    </div>
+
+    <!-- Title -->
+    <h2 class="text-2xl sm:text-3xl font-bold text-center text-gray-800 tracking-tight mb-6">
+      Đăng ký Người tìm việc
+    </h2>
+
+    <!-- Error Message -->
+    <div
+      *ngIf="errorMessage"
+      class="bg-red-100 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm"
+    >
+      {{ errorMessage }}
+    </div>
+
+    <!-- Form -->
+    <app-job-seeker-sign-up-form
+      [serverErrors]="serverErrors"
+      (submitForm)="onRegister($event)"
+      (facebookRegister)="onFacebookRegister($event)"
+      (googleRegister)="onGoogleRegister($event)"
+    ></app-job-seeker-sign-up-form>
+
+    <!-- Link login -->
+    <div class="flex justify-center mt-8 text-sm">
+      <a
+        (click)="navigateToLogin()"
+        class="cursor-pointer text-orange-600 hover:text-orange-700 transition-colors duration-300 flex items-center focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 rounded"
+        aria-label="Đăng nhập"
+      >
+        <i class="fas fa-sign-in-alt mr-2"></i>
+        Đã có tài khoản? Đăng nhập
+      </a>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div
+    *ngIf="isLoading"
+    class="fixed inset-0 bg-orange-600 bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-300"
+  >
+    <div class="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-3 animate-pulse">
+      <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-orange-600"></div>
+      <span class="text-gray-700 font-medium">Đang đăng ký...</span>
+    </div>
+  </div>
+</div>

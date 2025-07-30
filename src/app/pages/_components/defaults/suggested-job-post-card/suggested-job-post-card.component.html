@@ -1,0 +1,90 @@
+<div id="suggested-job-post-card" class="space-y-6">
+  <!-- Jobs Grid -->
+  <div [ngClass]="{
+    'grid grid-cols-1 gap-4': mode === 'fixed' || col === 1,
+    'grid grid-cols-2 gap-4': mode === 'responsive' && col === 2,
+    'grid grid-cols-3 gap-3': mode === 'responsive' && col === 3
+  }">
+    <ng-container *ngIf="isLoading; else jobPostList">
+      <app-job-post
+        *ngFor="let i of [].constructor(pageSize)"
+        [isLoading]="true"
+      ></app-job-post>
+    </ng-container>
+
+    <ng-template #jobPostList>
+      <ng-container *ngIf="jobPosts.length > 0; else noData">
+        <app-job-post
+          *ngFor="let job of jobPosts"
+          [id]="job.id"
+          [slug]="job.slug"
+          [companyImageUrl]="job?.companyDict?.companyImageUrl"
+          [companyName]="job?.companyDict?.companyName || 'Chưa cập nhật'"
+          [jobName]="job?.jobName || 'Chưa cập nhật'"
+          [cityName]="getCityName(job?.locationDict?.city)"
+          [deadline]="job?.deadline"
+          [isUrgent]="job?.isUrgent"
+          [isHot]="job?.isHot"
+          [salaryMin]="job.salaryMin"
+          [salaryMax]="job.salaryMax"
+          [isLoading]="false"
+        ></app-job-post>
+      </ng-container>
+    </ng-template>
+
+    <ng-template #noData>
+      <app-no-data-card>
+        <div class="text-center">
+          <i class="fas fa-exclamation-circle text-4xl text-orange-600 mb-4"></i>
+          <p class="text-gray-600 text-sm">Không có công việc phù hợp</p>
+        </div>
+      </app-no-data-card>
+    </ng-template>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="totalPages > 1" class="flex justify-center mt-8">
+    <div class="flex gap-2 items-center">
+      <!-- Previous Button -->
+      <button
+        (click)="changePage(page - 1)"
+        [disabled]="page === 1"
+        [ngClass]="{
+          'px-4 py-2 text-base': mode === 'responsive',
+          'px-3 py-1 text-sm': mode === 'fixed'
+        }"
+        class="bg-gray-100 text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+      >
+        <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <!-- Page Numbers -->
+      <button
+        *ngFor="let p of getVisiblePages()"
+        (click)="changePage(p)"
+        [ngClass]="{
+          'bg-orange-600 text-white border-orange-600 shadow-md scale-105': p === page,
+          'bg-white text-gray-700 border-gray-200': p !== page,
+          'px-4 py-2 text-base': mode === 'responsive',
+          'px-3 py-1 text-sm': mode === 'fixed'
+        }"
+        class="border rounded-lg hover:bg-gray-100 hover:border-gray-300 transition-all"
+      >
+        {{ p }}
+      </button>
+
+      <!-- Next Button -->
+      <button
+        (click)="changePage(page + 1)"
+        [disabled]="page === totalPages"
+        [ngClass]="{
+          'px-4 py-2 text-base': mode === 'responsive',
+          'px-3 py-1 text-sm': mode === 'fixed'
+        }"
+        class="bg-gray-100 text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+      >
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>

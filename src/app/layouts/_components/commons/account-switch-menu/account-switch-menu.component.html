@@ -1,0 +1,35 @@
+<div>
+  <!-- Nếu hiển thị nút -->
+  <div *ngIf="isShowButton; else titleOnly" class="flex flex-col gap-2 w-36 max-w-[90vw]">
+    <button
+      class="border border-gray-300 text-gray-700 py-2 rounded hover:bg-gray-100 text-sm font-medium"
+      (click)="handleClickAuth(true)"
+    >
+      {{ hostname === HOST_NAME.EMPLOYER_MYJOB ? 'Đăng nhập ứng viên' : 'Đăng nhập NTD' }}
+    </button>
+    <button
+      class="border border-gray-300 text-gray-700 py-2 rounded hover:bg-gray-100 text-sm font-medium"
+      (click)="handleClickAuth(false)"
+    >
+      {{ hostname === HOST_NAME.EMPLOYER_MYJOB ? 'Đăng ký ứng viên' : 'Đăng ký NTD' }}
+    </button>
+  </div>
+
+  <!-- Nếu chỉ hiển thị title -->
+  <ng-template #titleOnly>
+    <div class="flex items-center cursor-pointer" (click)="handleClick()">
+      <div class="text-white text-2xl mr-2">
+        <i *ngIf="hostname === HOST_NAME.MYJOB" class="fas fa-briefcase"></i>
+        <i *ngIf="hostname === HOST_NAME.EMPLOYER_MYJOB" class="fas fa-users"></i>
+      </div>
+      <div class="flex flex-col text-white leading-tight">
+        <span class="font-semibold text-sm">
+          {{ hostname === HOST_NAME.MYJOB ? 'Nhà tuyển dụng' : 'Người tìm việc' }}
+        </span>
+        <span class="text-xs">
+          {{ hostname === HOST_NAME.MYJOB ? 'Đăng tin miễn phí' : 'Chuyển trang' }}
+        </span>
+      </div>
+    </div>
+  </ng-template>
+</div>

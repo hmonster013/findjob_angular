@@ -1,0 +1,37 @@
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 px-6 py-8 max-w-7xl mx-auto">
+  <!-- Left content -->
+  <div class="md:col-span-9 space-y-8">
+    <div #sectionRef>
+      <app-personal-info-card [title]="'Thông tin cá nhân'" />
+    </div>
+
+    <div #sectionRef>
+      <app-general-info-card [title]="'Thông tin chung'" />
+    </div>
+
+    <div #sectionRef>
+      <app-cv-card [title]="'Tải CV đính kèm'" />
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="hidden md:block md:col-span-3">
+    <div class="sticky top-24">
+      <div class="bg-gradient-to-r from-orange-600 to-orange-400 text-white rounded-xl p-6 shadow-lg">
+        <h2 class="text-lg font-semibold mb-6 flex items-center gap-2">
+          <i class="fas fa-user-circle"></i> Hồ sơ đính kèm của bạn
+        </h2>
+        <ul class="space-y-3">
+          <li *ngFor="let section of sections; let i = index">
+            <button
+              class="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-orange-700/50 transition text-sm font-medium"
+              (click)="scrollTo(i)"
+            >
+              <i class="{{ section.icon }} text-orange-200"></i> {{ section.label }}
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<nav class="w-full bg-white shadow-md">
+  <!-- Desktop: Normal flex layout -->
+  <div class="hidden lg:block">
+    <div class="container mx-auto px-4 py-3 flex gap-3 items-center justify-start">
+      <a
+        *ngFor="let tab of tabItems"
+        [routerLink]="tab.path"
+        routerLinkActive="bg-amber-100 text-amber-600 font-bold border-b-4 border-amber-600 shadow-sm"
+        [routerLinkActiveOptions]="{ exact: tab.id === 1 }"
+        class="flex items-center whitespace-nowrap px-4 py-2 rounded-md text-gray-800 text-sm font-medium hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 ease-in-out"
+      >
+        <i class="fas fa-{{tab.icon}} mr-2 text-base"></i>
+        {{ tab.label }}
+      </a>
+    </div>
+  </div>
+
+  <!-- Mobile: Horizontal scroll tối giản -->
+  <div class="lg:hidden">
+    <div class="mobile-tab-scroll">
+      <div class="mobile-tab-list">
+        <a
+          *ngFor="let tab of tabItems"
+          [routerLink]="tab.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: tab.id === 1 }"
+          class="mobile-tab-item"
+        >
+          <i class="fas fa-{{tab.icon}} mobile-tab-icon"></i>
+          <span class="mobile-tab-text">{{ tab.label }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>

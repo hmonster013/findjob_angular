@@ -1,0 +1,62 @@
+<div class="container mx-auto px-4 py-6">
+  <!-- Search Input -->
+  <div class="flex justify-center mb-6">
+    <form class="flex items-center border border-orange-600 rounded-full bg-white w-full max-w-md shadow-md transition-all duration-300 hover:shadow-lg">
+      <span class="pl-4 text-orange-600">
+        <i class="fas fa-search"></i>
+      </span>
+      <input
+        type="text"
+        [(ngModel)]="searchValue"
+        name="search"
+        (input)="handleFilterChange(searchValue)"
+        placeholder="Tìm kiếm {{ type === 'CAREER' ? 'ngành nghề' : type === 'CITY' ? 'thành phố' : 'loại công việc' }}..."
+        class="flex-grow p-3 outline-none rounded-full text-gray-700 placeholder-gray-400"
+      />
+    </form>
+  </div>
+
+  <!-- Items List -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div
+      *ngFor="let item of items"
+      (click)="handleFilter(item.id)"
+      class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-gray-100"
+    >
+      <div class="flex flex-col items-center text-center">
+        <!-- Icon (Conditional) -->
+        <i
+          *ngIf="type === 'CAREER' && item.appIconName; else defaultIcon"
+          class="fas fa-{{ item.appIconName }} text-orange-600 text-3xl mb-3"
+        ></i>
+        <ng-template #defaultIcon>
+          <i
+            class="fas fa-{{ type === 'CITY' ? 'city' : 'briefcase' }} text-orange-600 text-3xl mb-3"
+          ></i>
+        </ng-template>
+
+        <!-- Item Name -->
+        <h3 class="text-lg font-semibold text-gray-800 hover:text-orange-600 transition-colors">
+          {{ item.name }}
+        </h3>
+
+        <!-- Job Post Total (Only for CAREER) -->
+        <p *ngIf="type === 'CAREER' && item.jobPostTotal" class="text-sm text-gray-500 mt-2">
+          {{ item.jobPostTotal }} việc làm
+        </p>
+
+        <!-- Badge for Type -->
+        <span
+          class="mt-2 inline-block px-2 py-1 text-xs font-medium rounded-full"
+          [ngClass]="{
+            'bg-orange-100 text-orange-600': type === 'CAREER',
+            'bg-blue-100 text-blue-600': type === 'CITY',
+            'bg-green-100 text-green-600': type === 'JOB_TYPE'
+          }"
+        >
+          {{ type === 'CAREER' ? 'Ngành nghề' : type === 'CITY' ? 'Thành phố' : 'Loại công việc' }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,95 @@
+/* tab-bar.component.css */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom border bottom for mobile active state */
+.border-b-3 {
+  border-bottom-width: 3px;
+}
+
+/* Smooth scroll behavior */
+.overflow-x-auto {
+  scroll-behavior: smooth;
+}
+
+/* Force horizontal scroll for mobile tab container - tối giản */
+.mobile-tab-scroll {
+  width: 100vw !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background: #fff;
+}
+
+.mobile-tab-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-tab-list {
+  display: flex !important;
+  width: max-content !important;
+  min-width: 100vw !important;
+  gap: 8px;
+}
+
+.mobile-tab-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #374151 !important;
+  transition: all 0.2s ease-in-out !important;
+  flex-shrink: 0 !important;
+  min-width: 80px !important;
+  min-height: 60px !important;
+  text-decoration: none !important;
+  background: #fff;
+}
+
+.mobile-tab-item:hover {
+  background-color: #fef3c7 !important;
+  color: #d97706 !important;
+}
+
+.mobile-tab-item.active {
+  background-color: #fef3c7 !important;
+  color: #d97706 !important;
+  font-weight: 600 !important;
+  border-bottom: 3px solid #d97706 !important;
+}
+
+.mobile-tab-icon {
+  font-size: 18px !important;
+  margin-bottom: 4px !important;
+}
+
+.mobile-tab-text {
+  line-height: 1.2 !important;
+  text-align: center !important;
+}
+
+/* Mobile tab styling improvements */
+@media (max-width: 1023px) {
+  .min-w-max {
+    min-width: max-content;
+  }
+
+  /* Ensure tabs are touchable on mobile */
+  a {
+    min-height: 60px;
+    touch-action: manipulation;
+  }
+}

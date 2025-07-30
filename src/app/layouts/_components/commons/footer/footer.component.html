@@ -1,0 +1,61 @@
+<!-- footer.component.html -->
+<footer class="bg-orange-800 mt-10 pt-10 pb-4 text-gray-300">
+  <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+
+    <!-- Cột 1 -->
+    <div>
+      <div class="flex flex-row items-center mb-4 space-x-1">
+        <img
+            [src]="IMAGES.logoWhite"
+            alt="Logo"
+            class="w-12"
+          />
+        <p class="font-bold">{{APP_NAME}}</p>
+      </div>
+      <ul class="space-y-2">
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/ve-chung-toi')">Về {{ APP_NAME }}</li>
+      </ul>
+    </div>
+
+    <!-- Cột 2 -->
+    <div>
+      <h3 class="font-semibold text-lg mb-3">Dành cho nhà tuyển dụng</h3>
+      <ul class="space-y-2">
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/tin-tuyen-dung')">Đăng Tin Tuyển Dụng</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/danh-sach-ung-vien')">Tìm Kiếm Hồ Sơ</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('')">Quản Lý Nhà Tuyển Dụng</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/ket-noi-voi-ung-vien')">Tin Nhắn</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/thong-bao')">Thông Báo</li>
+      </ul>
+    </div>
+
+    <!-- Cột 3 -->
+    <div>
+      <h3 class="font-semibold text-lg mb-3">Dành cho ứng viên</h3>
+      <ul class="space-y-2">
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/viec-lam')">Việc Làm</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/cong-ty')">Công ty</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/bang-dieu-khien')">Quản Lý Ứng Viên</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/ket-noi-voi-nha-tuyen-dung')">Tin Nhắn</li>
+        <li class="cursor-pointer hover:text-orange-600" (click)="navigate('/thong-bao')">Thông Báo</li>
+      </ul>
+    </div>
+
+    <!-- Cột 4 -->
+    <div>
+      <h3 class="font-semibold text-lg mt-6 mb-3">Kết nối với {{APP_NAME}}</h3>
+      <div class="flex flex-wrap gap-2">
+        <a *ngFor="let social of socialLinks" [href]="social.link" target="_blank">
+          <img [src]="social.icon" alt="" class="w-9 h-9 hover:scale-110 transition-transform" />
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="my-6 border-gray-300" />
+
+  <p class="text-center text-sm mt-4">
+    © {{ currentYear }} {{APP_NAME}}. Tất cả quyền được bảo lưu.
+  </p>
+</footer>

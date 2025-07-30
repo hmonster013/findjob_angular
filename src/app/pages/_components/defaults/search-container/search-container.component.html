@@ -1,0 +1,48 @@
+<div class="w-full border border-gray-200 bg-white/50 backdrop-blur-sm shadow-lg rounded-xl relative -top-[55px] z-10">
+  <div class="m-4">
+    <app-home-search></app-home-search>
+  </div>
+
+  <div class="container mx-auto py-4">
+    <!-- List Top Careers (Limited to 10 + 1 "View All") -->
+    <div class="flex flex-wrap gap-4 px-4">
+      <!-- Show only the first 10 careers -->
+      <div
+        *ngFor="let career of topCareers | slice:0:10; let i = index"
+        (click)="handleFilter(career.id)"
+        class="flex-1 min-w-[128px] flex flex-col items-center cursor-pointer p-3 rounded-lg transition-all"
+        [attr.aria-label]="'Filter by ' + career.name"
+      >
+        <div class="bg-white p-4 rounded-xl hover:border hover:border-orange-600 transition flex flex-col items-center h-[128px] w-full">
+          <img
+            [src]="career.iconUrl || IMAGES.imageDefault"
+            alt="{{ career.name }}"
+            class="w-16 h-16 rounded-md object-cover mb-2"
+          />
+          <div class="text-center">
+            <div class="text-orange-700 font-medium text-sm truncate max-w-[8rem]">{{ career.name }}</div>
+            <div class="text-gray-600 text-xs mt-1">{{ career.jobPostTotal | number }} bài đăng</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- "View All" Item -->
+      <div
+        (click)="handleGetAllCareets()"
+        class="flex-1 min-w-[128px] flex flex-col items-center cursor-pointer p-3 rounded-lg transition-all"
+        aria-label="View all careers"
+      >
+        <div class="bg-white p-4 rounded-xl hover:border hover:border-orange-600 transition flex flex-col items-center h-[128px] w-full">
+          <img
+            src="assets/icons/all.webp"
+            alt=""
+            class="w-16 h-16 rounded-md object-cover mb-2"
+          />
+          <div class="text-center">
+            <div class="text-orange-700 font-medium text-sm truncate max-w-[8rem]">Tất cả ngành nghề</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

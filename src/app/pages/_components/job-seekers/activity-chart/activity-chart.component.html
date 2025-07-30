@@ -1,0 +1,21 @@
+<div class="p-4 bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300">
+  <h2 class="text-lg font-semibold text-amber-600 mb-4 flex items-center">
+    <i class="fas fa-chart-line mr-2"></i> Biểu đồ hoạt động
+  </h2>
+
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoading" class="space-y-4">
+    <div class="h-4 bg-gray-200 rounded animate-pulse"></div>
+    <div class="h-64 bg-gray-200 rounded animate-pulse"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && !dataChart?.labels?.length" class="text-center text-gray-600 text-sm">
+    <i class="fas fa-exclamation-circle mr-1"></i> Không có dữ liệu hoạt động.
+  </div>
+
+  <!-- Chart -->
+  <div *ngIf="!isLoading && dataChart?.labels?.length">
+    <canvas #activityCanvas height="300"></canvas>
+  </div>
+</div>

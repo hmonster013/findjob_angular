@@ -1,0 +1,85 @@
+<div class="space-y-6 w-full px-2 sm:px-0">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 w-full">
+    <h2 class="text-2xl font-bold text-gray-800">{{ title }}</h2>
+    <div *ngIf="notifications.length > 0" class="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+      <button
+        (click)="markAllRead()"
+        class="px-4 py-2 rounded-md border border-amber-600 text-amber-600 hover:bg-amber-100 hover:shadow-md hover:-translate-y-0.5 text-sm font-medium transition-all duration-300 ease-in-out flex items-center w-full sm:w-auto justify-center"
+      >
+        <i class="fas fa-check-circle mr-1 text-xs"></i> Đánh dấu đã đọc
+      </button>
+      <button
+        (click)="removeAllNotifications()"
+        class="px-4 py-2 rounded-md border border-red-500 text-red-500 hover:bg-red-100 hover:shadow-md hover:-translate-y-0.5 text-sm font-medium transition-all duration-300 ease-in-out flex items-center w-full sm:w-auto justify-center"
+      >
+        <i class="fas fa-trash mr-1 text-xs"></i> Xóa tất cả
+      </button>
+    </div>
+  </div>
+
+  <!-- Skeleton loading -->
+  <div *ngIf="isLoading" class="space-y-4 w-full">
+    <div *ngFor="let _ of [1,2,3,4,5]" class="flex items-center p-4 bg-gray-50 rounded-lg animate-pulse w-full">
+      <div class="w-12 h-12 bg-gray-200 rounded border border-gray-200 mr-0 sm:mr-4 flex-shrink-0"></div>
+      <div class="flex-1 min-w-0">
+        <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+      </div>
+      <div class="w-6 h-6 bg-gray-200 rounded-full flex-shrink-0"></div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div
+    *ngIf="!isLoading && notifications.length === 0"
+    class="text-center text-gray-600 py-12 bg-gray-50 rounded-lg border border-gray-200 shadow-md w-full"
+  >
+    <i class="fas fa-bell mx-auto text-6xl text-gray-400 mb-4"></i>
+    <p class="text-lg font-medium text-gray-700">Chưa có thông báo nào.</p>
+    <p class="text-sm text-gray-500 mt-2">Bạn sẽ nhận thông báo khi có cập nhật mới!</p>
+  </div>
+
+  <!-- List notifications -->
+  <div *ngIf="!isLoading && notifications.length > 0" class="space-y-4 w-full">
+    <div
+      *ngFor="let item of notifications"
+      (click)="handleClick(item)"
+      class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:bg-gray-50 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ease-in-out w-full"
+      [ngClass]="{'bg-amber-50': !item.is_read}"
+    >
+      <img
+        [src]="getValidImageUrl(item.image)"
+        class="w-12 h-12 rounded border border-gray-200 object-cover mb-2 sm:mb-0 mr-0 sm:mr-4 flex-shrink-0"
+        alt="Notification"
+      />
+      <div class="flex-1 min-w-0 w-full">
+        <div class="font-semibold text-gray-800" [ngClass]="{'font-bold': !item.is_read}">
+          {{ item.title }}
+        </div>
+        <div class="text-gray-600 text-sm mt-1 break-words">{{ item.content }}</div>
+        <div class="text-gray-500 text-xs mt-1 flex items-center">
+          <i class="fas fa-clock mr-1 text-xs text-gray-500"></i>
+          {{ item.time | date: 'dd/MM/yyyy HH:mm' }}
+        </div>
+      </div>
+      <button
+        (click)="removeNotification(item.key); $event.stopPropagation()"
+        class="text-red-500 hover:text-red-700 w-full sm:w-auto justify-center mt-2 sm:mt-0"
+        title="Xóa thông báo"
+      >
+        <i class="fas fa-times text-xs"></i>
+      </button>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="pageCount > 1" class="flex flex-wrap justify-center items-center space-x-2 mt-8 w-full overflow-x-auto">
+      <button
+        (click)="loadMore()"
+        [disabled]="notifications.length >= count"
+        class="w-10 h-10 flex items-center justify-center rounded-full bg-amber-600 text-white hover:bg-amber-700 hover:shadow-md hover:-translate-y-0.5 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 ease-in-out"
+      >
+        <i class="fas fa-chevron-down text-xs"></i>
+      </button>
+    </div>
+  </div>
+</div>

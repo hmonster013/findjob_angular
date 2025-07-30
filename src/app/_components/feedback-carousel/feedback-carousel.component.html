@@ -1,0 +1,58 @@
+<div id="feed-back-carousel" class="max-w-[1452px] mx-auto py-5">
+  <ng-container *ngIf="isLoading; else feedbackContent">
+    <swiper-container
+      style="
+        --swiper-pagination-color: #f97316;
+        --swiper-pagination-bullet-size: 13px;
+      "
+      [attr.slides-per-view]="col"
+      space-between="20"
+      pagination="true"
+      direction="horizontal"
+      modules="[Autoplay, Pagination]"
+      class="w-full h-[460px]"
+    >
+      <swiper-slide *ngFor="let i of skeletonArray">
+        <app-feedback-card
+          [isLoading]="true"
+          class="w-full h-full pb-[45px]"
+        ></app-feedback-card>
+      </swiper-slide>
+    </swiper-container>
+  </ng-container>
+
+  <ng-template #feedbackContent>
+    <swiper-container
+      style="
+        --swiper-pagination-color: #f97316;
+        --swiper-pagination-bullet-size: 13px;
+      "
+      [attr.slides-per-view]="col"
+      space-between="20"
+      pagination="true"
+      navigation="false"
+      direction="horizontal"
+      class="w-full h-[460px]"
+    >
+      <ng-container *ngIf="feedbacks.length > 0; else noData">
+        <swiper-slide *ngFor="let feedback of feedbacks">
+          <app-feedback-card
+            [avatarUrl]="feedback?.userDict?.avatarUrl"
+            [fullName]="feedback?.userDict?.fullName"
+            [content]="feedback?.content"
+            class="w-full h-full pb-[45px]"
+          ></app-feedback-card>
+        </swiper-slide>
+      </ng-container>
+
+      <ng-template #noData>
+        <swiper-slide>
+          <app-no-data-card
+            title="Chưa có người dùng nào đánh giá"
+            class="w-full h-full"
+          ></app-no-data-card>
+        </swiper-slide>
+      </ng-template>
+    </swiper-container>
+  </ng-template>
+</div>

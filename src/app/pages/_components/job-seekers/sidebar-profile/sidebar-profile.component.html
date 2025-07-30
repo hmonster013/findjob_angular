@@ -1,0 +1,40 @@
+<div class="p-4 bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300">
+  <h2 class="text-lg font-semibold text-amber-600 mb-4">Hồ sơ của bạn</h2>
+  <div class="flex items-center space-x-3">
+    <!-- Avatar -->
+    <div
+      class="relative w-12 h-12 p-1 rounded-full bg-gradient-to-br from-amber-600 to-amber-400 shadow-sm hover:scale-105 transition-transform duration-300"
+    >
+      <ng-container *ngIf="currentUser?.avatarUrl; else placeholder">
+        <img
+          [src]="currentUser.avatarUrl || IMAGES.imageDefault"
+          alt="Avatar"
+          class="rounded-full w-full h-full object-cover border-2 border-amber-100"
+        />
+      </ng-container>
+      <ng-template #placeholder>
+        <div class="rounded-full w-full h-full bg-amber-200 flex items-center justify-center text-amber-600 text-base font-bold">
+          {{ currentUser?.fullName?.charAt(0) || 'U' }}
+        </div>
+      </ng-template>
+    </div>
+    <!-- Info -->
+    <div class="flex-1">
+      <p class="text-sm text-gray-600">Chào mừng trở lại,</p>
+      <h3 class="text-lg font-semibold text-gray-800 mb-1">{{ currentUser?.fullName || 'Người dùng' }}</h3>
+      <div
+        *ngIf="currentUser?.isVerifyEmail; else notVerified"
+        class="flex items-center text-green-600 text-sm"
+      >
+        <i class="fas fa-check-circle mr-1"></i>
+        <span>Tài khoản đã xác thực</span>
+      </div>
+      <ng-template #notVerified>
+        <div class="flex items-center text-red-600 text-sm">
+          <i class="fas fa-times-circle mr-1"></i>
+          <span>Tài khoản chưa xác thực</span>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

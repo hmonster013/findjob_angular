@@ -1,0 +1,65 @@
+<div class="p-4 bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-amber-600 flex items-center">
+      <i class="fas fa-folder-open mr-2"></i> Hồ sơ ứng tuyển
+    </h2>
+    <button
+      class="px-3 py-1 rounded-md text-amber-600 hover:bg-amber-50 hover:text-amber-700 transition-all flex items-center gap-1 text-sm font-medium"
+      (click)="navigateToProfile()"
+    >
+      <i class="fas fa-arrow-right"></i>
+    </button>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="space-y-2">
+    <div class="h-4 bg-gray-200 rounded animate-pulse"></div>
+    <div class="h-4 bg-gray-200 rounded animate-pulse"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && resumes.length === 0" class="text-center text-gray-600 text-sm">
+    <i class="fas fa-exclamation-circle mr-1"></i> Chưa có hồ sơ ứng tuyển nào.
+  </div>
+
+  <!-- Resume list -->
+  <div *ngIf="!isLoading && resumes.length > 0" class="space-y-2">
+    <div
+      *ngFor="let resume of resumes"
+      class="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer"
+      (click)="handleNavigate(resume.slug)"
+    >
+      <div class="flex items-center space-x-3">
+        <!-- Avatar -->
+        <div
+          class="p-2 rounded-full"
+          [ngClass]="{
+            'bg-amber-100': resume?.type === 'CV_WEBSITE',
+            'bg-red-100': resume?.type === 'CV_UPLOAD'
+          }"
+        >
+          <i *ngIf="resume?.type === 'CV_WEBSITE'" class="fas fa-file-alt text-amber-600 text-base"></i>
+          <i *ngIf="resume?.type === 'CV_UPLOAD'" class="fas fa-file-pdf text-red-600 text-base"></i>
+        </div>
+
+        <!-- Title and description -->
+        <div>
+          <h3 class="text-base font-semibold text-gray-800">{{ resume.title }}</h3>
+          <p class="text-sm text-gray-600">
+            Sửa lần cuối: {{ formatDateDisplay(resume.updateAt) }}
+          </p>
+          <span
+            class="text-sm font-medium"
+            [ngClass]="{
+              'text-green-600': resume.isActive,
+              'text-red-600': !resume.isActive
+            }"
+          >
+            {{ resume.isActive ? 'Đang cho phép tìm kiếm' : 'Không cho phép tìm kiếm' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

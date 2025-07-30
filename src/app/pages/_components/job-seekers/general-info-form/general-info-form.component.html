@@ -1,0 +1,230 @@
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()" class="space-y-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Title -->
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Vị trí mong muốn <span class="text-red-600">*</span></label>
+      <input
+        formControlName="title"
+        type="text"
+        placeholder="VD: Lập trình viên Backend"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('title')?.errors && form.get('title')?.touched}"
+      />
+      <div
+        *ngIf="form.get('title')?.errors && form.get('title')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('title')?.errors?.['required']">Vị trí là bắt buộc.</div>
+        <div *ngIf="form.get('title')?.errors?.['maxlength']">Vị trí không được vượt quá 200 ký tự.</div>
+      </div>
+    </div>
+
+    <!-- Position -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Cấp bậc mong muốn <span class="text-red-600">*</span></label>
+      <select
+        formControlName="position"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('position')?.errors && form.get('position')?.touched}"
+      >
+        <option value="">Chọn cấp bậc</option>
+        <option *ngFor="let option of allConfig?.positionOptions" [value]="option.id">{{ option.name }}</option>
+      </select>
+      <div
+        *ngIf="form.get('position')?.errors && form.get('position')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('position')?.errors?.['required']">Cấp bậc là bắt buộc.</div>
+      </div>
+    </div>
+
+    <!-- Academic Level -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Trình độ học vấn <span class="text-red-600">*</span></label>
+      <select
+        formControlName="academicLevel"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('academicLevel')?.errors && form.get('academicLevel')?.touched}"
+      >
+        <option value="">Chọn trình độ học vấn</option>
+        <option *ngFor="let option of allConfig?.academicLevelOptions" [value]="option.id">{{ option.name }}</option>
+      </select>
+      <div
+        *ngIf="form.get('academicLevel')?.errors && form.get('academicLevel')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('academicLevel')?.errors?.['required']">Trình độ học vấn là bắt buộc.</div>
+      </div>
+    </div>
+
+    <!-- Experience -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Kinh nghiệm làm việc <span class="text-red-600">*</span></label>
+      <select
+        formControlName="experience"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('experience')?.errors && form.get('experience')?.touched}"
+      >
+        <option value="">Chọn kinh nghiệm</option>
+        <option *ngFor="let option of allConfig?.experienceOptions" [value]="option.id">{{ option.name }}</option>
+      </select>
+      <div
+        *ngIf="form.get('experience')?.errors && form.get('experience')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('experience')?.errors?.['required']">Kinh nghiệm là bắt buộc.</div>
+      </div>
+    </div>
+
+    <!-- Career -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Nghề nghiệp <span class="text-red-600">*</span></label>
+      <select
+        formControlName="career"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('career')?.errors && form.get('career')?.touched}"
+      >
+        <option value="">Chọn nghề nghiệp</option>
+        <option *ngFor="let option of allConfig?.careerOptions" [value]="option.id">{{ option.name }}</option>
+      </select>
+      <div
+        *ngIf="form.get('career')?.errors && form.get('career')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('career')?.errors?.['required']">Nghề nghiệp là bắt buộc.</div>
+      </div>
+    </div>
+
+    <!-- City -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Tỉnh/Thành phố <span class="text-red-600">*</span></label>
+      <select
+        formControlName="city"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('city')?.errors && form.get('city')?.touched}"
+      >
+        <option value="">Chọn tỉnh/thành phố</option>
+        <option *ngFor="let option of allConfig?.cityOptions" [value]="option.id">{{ option.name }}</option>
+      </select>
+      <div
+        *ngIf="form.get('city')?.errors && form.get('city')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('city')?.errors?.['required']">Tỉnh/Thành phố là bắt buộc.</div>
+      </div>
+    </div>
+
+    <!-- Salary Min -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Mức lương tối thiểu (VND) <span class="text-red-600">*</span></label>
+      <input
+        formControlName="salaryMin"
+        type="number"
+        placeholder="Nhập mức lương tối thiểu"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('salaryMin')?.errors && form.get('salaryMin')?.touched}"
+      />
+      <div
+        *ngIf="form.get('salaryMin')?.errors && form.get('salaryMin')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('salaryMin')?.errors?.['required']">Mức lương tối thiểu là bắt buộc.</div>
+        <div *ngIf="form.get('salaryMin')?.errors?.['min']">Mức lương tối thiểu phải lớn hơn hoặc bằng 0.</div>
+      </div>
+    </div>
+
+    <!-- Salary Max -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Mức lương tối đa (VND) <span class="text-red-600">*</span></label>
+      <input
+        formControlName="salaryMax"
+        type="number"
+        placeholder="Nhập mức lương tối đa"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('salaryMax')?.errors && form.get('salaryMax')?.touched}"
+      />
+      <div
+        *ngIf="form.get('salaryMax')?.errors && form.get('salaryMax')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('salaryMax')?.errors?.['required']">Mức lương tối đa là bắt buộc.</div>
+        <div *ngIf="form.get('salaryMax')?.errors?.['min']">Mức lương tối đa phải lớn hơn hoặc bằng 0.</div>
+        <div *ngIf="form.get('salaryMax')?.errors?.['invalidRange']">Mức lương tối đa phải lớn hơn hoặc bằng mức tối thiểu.</div>
+      </div>
+    </div>
+
+    <!-- Type of Workplace -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Nơi làm việc <span class="text-red-600">*</span></label>
+      <select
+        formControlName="typeOfWorkplace"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('typeOfWorkplace')?.errors && form.get('typeOfWorkplace')?.touched}"
+      >
+        <option value="">Chọn nơi làm việc</option>
+        <option *ngFor="let option of allConfig?.typeOfWorkplaceOptions" [value]="option.id">{{ option.name }}</option>
+      </select>
+      <div
+        *ngIf="form.get('typeOfWorkplace')?.errors && form.get('typeOfWorkplace')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('typeOfWorkplace')?.errors?.['required']">Nơi làm việc là bắt buộc.</div>
+      </div>
+    </div>
+
+    <!-- Job Type -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Hình thức làm việc <span class="text-red-600">*</span></label>
+      <select
+        formControlName="jobType"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('jobType')?.errors && form.get('jobType')?.touched}"
+      >
+        <option value="">Chọn hình thức làm việc</option>
+        <option *ngFor="let option of allConfig?.jobTypeOptions" [value]="option.id">{{ option.name }}</option>
+      </select>
+      <div
+        *ngIf="form.get('jobType')?.errors && form.get('jobType')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('jobType')?.errors?.['required']">Hình thức làm việc là bắt buộc.</div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Mục tiêu nghề nghiệp <span class="text-red-600">*</span></label>
+      <textarea
+        formControlName="description"
+        placeholder="Nhập mục tiêu nghề nghiệp"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all h-32 resize-none"
+        [ngClass]="{'border-red-600': form.get('description')?.errors && form.get('description')?.touched}"
+      ></textarea>
+      <div
+        *ngIf="form.get('description')?.errors && form.get('description')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('description')?.errors?.['required']">Mục tiêu nghề nghiệp là bắt buộc.</div>
+        <div *ngIf="form.get('description')?.errors?.['maxlength']">Mục tiêu không được vượt quá 800 ký tự.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex justify-end gap-4 mt-6">
+    <button
+      type="button"
+      (click)="cancel()"
+      class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-all flex items-center gap-2"
+    >
+      <i class="fas fa-times"></i> Hủy
+    </button>
+    <button
+      type="submit"
+      class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-all flex items-center gap-2 disabled:bg-orange-400 disabled:cursor-not-allowed"
+      [disabled]="form.invalid"
+    >
+      <i class="fas fa-save"></i> Lưu
+    </button>
+  </div>
+</form>

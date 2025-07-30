@@ -1,0 +1,55 @@
+<div class="min-h-screen flex items-center justify-center bg-white px-4 py-12 sm:px-6 lg:px-8">
+  <!-- Card container -->
+  <div class="w-full max-w-md bg-white p-6 sm:p-8 rounded-xl border border-gray-200 shadow-lg relative transform transition-all duration-300">
+    <!-- Logo -->
+    <div class="flex justify-center mb-6">
+      <img
+        [src]="IMAGES.logoWhite"
+        alt="Logo Nhà Tuyển Dụng"
+        class="h-12 sm:h-14 transform transition-transform duration-300 hover:scale-105"
+        loading="lazy"
+      />
+    </div>
+
+    <!-- Title -->
+    <h2 class="text-2xl sm:text-3xl font-bold text-center text-gray-800 tracking-tight mb-6">
+      Đăng nhập Nhà Tuyển Dụng
+    </h2>
+
+    <!-- Form -->
+    <div class="space-y-6">
+      <app-employer-login-form (submitForm)="onLogin($event)"></app-employer-login-form>
+    </div>
+
+    <!-- Links -->
+    <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8 text-sm">
+      <a
+        routerLink="/quen-mat-khau"
+        class="text-orange-600 hover:text-orange-700 transition-colors duration-300 flex items-center focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 rounded"
+        aria-label="Quên mật khẩu"
+      >
+        <i class="fas fa-key mr-2"></i>
+        Quên mật khẩu?
+      </a>
+      <a
+        routerLink="/dang-ky"
+        class="text-orange-600 hover:text-orange-700 transition-colors duration-300 flex items-center focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 rounded"
+        aria-label="Đăng ký tài khoản"
+      >
+        <i class="fas fa-user-plus mr-2"></i>
+        Đăng ký tài khoản
+      </a>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div
+    *ngIf="isLoading"
+    class="fixed inset-0 bg-orange-600 bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-300"
+  >
+    <div class="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-3 animate-pulse">
+      <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-orange-600"></div>
+      <span class="text-gray-700 font-medium">Đang đăng nhập...</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()" class="space-y-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Job Name -->
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Chức danh/vị trí công việc <span class="text-red-600">*</span></label>
+      <input
+        formControlName="jobName"
+        type="text"
+        placeholder="VD: Kỹ sư phần mềm"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('jobName')?.errors && form.get('jobName')?.touched}"
+      />
+      <div
+        *ngIf="form.get('jobName')?.errors && form.get('jobName')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('jobName')?.errors?.['required']">Chức danh là bắt buộc.</div>
+        <div *ngIf="form.get('jobName')?.errors?.['maxlength']">Chức danh không được vượt quá 200 ký tự.</div>
+      </div>
+    </div>
+
+    <!-- Company Name -->
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Tên công ty <span class="text-red-600">*</span></label>
+      <input
+        formControlName="companyName"
+        type="text"
+        placeholder="Nhập tên công ty"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('companyName')?.errors && form.get('companyName')?.touched}"
+      />
+      <div
+        *ngIf="form.get('companyName')?.errors && form.get('companyName')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('companyName')?.errors?.['required']">Tên công ty là bắt buộc.</div>
+        <div *ngIf="form.get('companyName')?.errors?.['maxlength']">Tên công ty không được vượt quá 255 ký tự.</div>
+      </div>
+    </div>
+
+    <!-- Start Date -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Ngày bắt đầu <span class="text-red-600">*</span></label>
+      <input
+        formControlName="startDate"
+        type="date"
+        [max]="maxYesterday"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('startDate')?.errors && form.get('startDate')?.touched}"
+      />
+      <div
+        *ngIf="form.get('startDate')?.errors && form.get('startDate')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('startDate')?.errors?.['required']">Ngày bắt đầu là bắt buộc.</div>
+      </div>
+    </div>
+
+    <!-- End Date -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Ngày kết thúc <span class="text-red-600">*</span></label>
+      <input
+        formControlName="endDate"
+        type="date"
+        [max]="maxToday"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('endDate')?.errors && form.get('endDate')?.touched}"
+      />
+      <div
+        *ngIf="form.get('endDate')?.errors && form.get('endDate')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('endDate')?.errors?.['required']">Ngày kết thúc là bắt buộc.</div>
+        <div *ngIf="form.get('endDate')?.errors?.['invalidRange']">Ngày kết thúc phải sau ngày bắt đầu.</div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Mô tả thêm</label>
+      <textarea
+        formControlName="description"
+        placeholder="Nhập mô tả công việc"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all h-32 resize-none"
+        [ngClass]="{'border-red-600': form.get('description')?.errors && form.get('description')?.touched}"
+      ></textarea>
+      <div
+        *ngIf="form.get('description')?.errors && form.get('description')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('description')?.errors?.['maxlength']">Mô tả không được vượt quá 1000 ký tự.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex justify-end gap-4 mt-6">
+    <button
+      type="button"
+      (click)="cancel()"
+      class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-all flex items-center gap-2"
+    >
+      <i class="fas fa-times"></i> Hủy
+    </button>
+    <button
+      type="submit"
+      class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-all flex items-center gap-2 disabled:bg-orange-400 disabled:cursor-not-allowed"
+      [disabled]="form.invalid"
+    >
+      <i class="fas fa-save"></i> Lưu
+    </button>
+  </div>
+</form>

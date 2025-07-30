@@ -1,0 +1,29 @@
+<div class="p-4 rounded-lg shadow border border-blue-100 bg-white flex flex-col items-center h-full">
+  <!-- Nếu Loading -->
+  <ng-container *ngIf="isLoading; else showContent">
+    <div class="w-12 h-12 bg-gray-300 rounded-full mb-2 animate-pulse"></div>
+    <div class="w-24 h-4 bg-gray-300 mb-2 animate-pulse"></div>
+    <div class="w-2/3 h-20 bg-gray-300 animate-pulse"></div>
+  </ng-container>
+
+  <!-- Nếu đã load dữ liệu -->
+  <ng-template #showContent>
+    <img
+      [src]="avatarUrl ? avatarUrl : IMAGES.imageDefault"
+      alt="Avatar"
+      class="w-12 h-12 rounded-full object-cover mb-2"
+    />
+
+    <h6 class="text-base font-semibold text-gray-900 text-center mb-2">
+      {{ fullName || 'Anonymous' }}
+    </h6>
+
+    <div class="content-wrapper flex flex-col items-center flex-1">
+      <span class="quote-start text-2xl text-gray-400 mb-1">"</span>
+      <p class="content text-sm text-gray-600 text-center px-2 leading-relaxed">
+        {{ content || 'No feedback available' }}
+      </p>
+      <span class="quote-end text-2xl text-gray-400 mt-1">"</span>
+    </div>
+  </ng-template>
+</div>

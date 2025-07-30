@@ -1,0 +1,154 @@
+.chart-container {
+  transition: opacity 0.3s ease;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+input[type="date"] {
+  border-color: #e5e7eb;
+  transition: border-color 0.2s ease;
+}
+
+input[type="date"]:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.btn-primary:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 14px;
+  text-align: center;
+}
+
+.empty-state, .error-state {
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.empty-state h3, .error-state h3 {
+  color: #1f2937;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.empty-state img, .error-state img {
+  max-width: 120px;
+  margin-top: 16px;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-wrapper {
+  display: none;
+  padding: 10px; /* Thêm padding để đẹp hơn */
+  margin: 5px; /* Thêm margin để cân đối */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.chart-wrapper.visible {
+  display: block;
+}
+
+.chart-wrapper canvas {
+  width: 100% !important;
+  max-width: 100%;
+  height: 320px !important;
+  min-height: 200px;
+  display: block;
+  box-sizing: border-box;
+}
+
+.chart-date-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+  .chart-container {
+    padding: 8px !important;
+  }
+  .chart-wrapper {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .chart-wrapper canvas {
+    height: 220px !important;
+    min-height: 120px;
+  }
+  .chart-date-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  .chart-date-controls input,
+  .chart-date-controls button {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+}

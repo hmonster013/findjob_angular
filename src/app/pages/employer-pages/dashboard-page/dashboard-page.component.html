@@ -1,0 +1,14 @@
+<div class="grid grid-cols-1 gap-4">
+  <!-- Employer stats -->
+  <div>
+    <app-employer-quantity-statistics />
+  </div>
+
+  <!-- Recruitment Chart -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <app-recruitment-chart [title]="'BIỂU ĐỒ TUYỂN DỤNG'" />
+    <app-candidate-chart [title]="'BIỂU ĐỒ ỨNG VIÊN'" />
+    <app-application-chart [title]="'BIỂU ĐỒ TUYỂN DỤNG & ỨNG TUYỂN'" />
+    <app-hiring-academic-chart [title]="'BIỂU ĐỒ TUYỂN DỤNG THEO CẤP BẬC'" />
+  </div>
+</div>

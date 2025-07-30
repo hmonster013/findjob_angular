@@ -1,0 +1,70 @@
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()" class="space-y-6">
+  <div class="grid grid-cols-1 gap-4">
+    <!-- Language -->
+    <div class="flex flex-col">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Ngôn ngữ <span class="text-red-600">*</span></label>
+      <select
+        formControlName="language"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('language')?.errors && form.get('language')?.touched}"
+      >
+        <option value="">Chọn ngôn ngữ</option>
+        <option *ngFor="let option of allConfig?.languageOptions" [value]="option.id">{{ option.name }}</option>
+      </select>
+      <div
+        *ngIf="form.get('language')?.errors && form.get('language')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('language')?.errors?.['required']">Ngôn ngữ là bắt buộc.</div>
+        <div *ngIf="form.get('language')?.errors?.['duplicate']">Ngôn ngữ này đã được thêm.</div>
+      </div>
+    </div>
+
+    <!-- Level -->
+    <div class="flex flex-col">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Trình độ <span class="text-red-600">*</span></label>
+      <div class="flex space-x-2">
+        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+          <input
+            type="radio"
+            [value]="star"
+            formControlName="level"
+            class="hidden"
+            [id]="'level-star-' + star"
+          />
+          <label
+            [for]="'level-star-' + star"
+            class="text-2xl cursor-pointer select-none transition-colors duration-200"
+            [ngClass]="{'text-yellow-400': form.get('level')?.value >= star, 'text-gray-300': form.get('level')?.value < star}"
+            attr.aria-label="Cấp độ {{star}}"
+          >★</label>
+        </ng-container>
+      </div>
+      <div
+        *ngIf="form.get('level')?.errors && form.get('level')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('level')?.errors?.['required']">Trình độ là bắt buộc.</div>
+        <div *ngIf="form.get('level')?.errors?.['min'] || form.get('level')?.errors?.['max']">Trình độ phải từ 1 đến 5.</div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="flex justify-end gap-4 mt-6">
+      <button
+        type="button"
+        (click)="cancel()"
+        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-all flex items-center gap-2"
+      >
+        <i class="fas fa-times"></i> Hủy
+      </button>
+      <button
+        type="submit"
+        class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-all flex items-center gap-2 disabled:bg-orange-400 disabled:cursor-not-allowed"
+        [disabled]="form.invalid"
+      >
+        <i class="fas fa-save"></i> Lưu
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,34 @@
+<div [ngClass]="mode === 'center' ? 'flex flex-col items-center space-y-4 mt-6' : 'flex items-center space-x-3 p-2'">
+  <!-- Avatar -->
+  <img
+    [src]="avatarUrl || IMAGES.imageDefault"
+    alt="Avatar"
+    class="w-14 h-14 rounded-full border p-1 border-gray-300 object-cover"
+  />
+
+  <!-- Nếu mode center thì stack dọc -->
+  <div *ngIf="mode === 'center'; else rowMode" class="text-center space-y-1">
+    <div class="font-semibold text-sm text-gray-800">{{ title || '---' }}</div>
+    <div class="font-semibold text-sm text-gray-600">{{ subTitle || '---' }}</div>
+
+    <div class="text-xs text-orange-600 flex items-center justify-center gap-1">
+      <!-- SVG icon dấu check -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+      </svg>
+      {{ description || '' }}
+    </div>
+
+    <div class="text-xs text-gray-500">
+      Hãy bắt đầu cuộc trò chuyện bằng một lời chào 😍
+    </div>
+  </div>
+
+  <!-- Nếu mode row thì layout ngang -->
+  <ng-template #rowMode>
+    <div class="flex-1 space-y-0.5">
+      <div class="font-semibold text-sm text-white">{{ title || '---' }}</div>
+      <div class="text-sm text-gray-200">{{ subTitle || '---' }}</div>
+    </div>
+  </ng-template>
+</div>

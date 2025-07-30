@@ -1,0 +1,156 @@
+<div class="bg-white py-6 w-full">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 px-2 sm:px-4 max-w-4xl w-full mx-auto gap-2">
+    <div>
+      <h2 class="text-2xl font-bold text-gray-800">Thông báo việc làm</h2>
+      <p class="text-gray-400">Tối đa 3 thông báo việc làm được bật</p>
+    </div>
+    <button
+      (click)="handleShowAdd()"
+      class="bg-amber-600 hover:bg-amber-700 text-white p-2 rounded-full flex items-center justify-center w-full sm:w-auto"
+    >
+      <i class="fas fa-plus text-xs"></i>
+    </button>
+  </div>
+
+  <hr class="mb-6 border-gray-200 max-w-4xl w-full mx-auto">
+
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoadingJobPostNotifications" class="space-y-4 px-2 sm:px-4 max-w-4xl w-full mx-auto">
+    <div *ngFor="let _ of [1,2,3,4,5]" class="flex items-center p-4 bg-gray-50 rounded-lg animate-pulse shadow-sm w-full">
+      <div class="w-12 h-12 bg-gray-200 rounded-md mr-0 sm:mr-4 flex-shrink-0"></div>
+      <div class="flex-1 min-w-0">
+        <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+      </div>
+      <div class="w-20 h-8 bg-gray-200 rounded flex-shrink-0"></div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoadingJobPostNotifications && jobPostNotifications.length === 0" class="text-center py-12 bg-gray-50 rounded-lg border border-gray-200 shadow-sm max-w-4xl w-full mx-auto px-2 sm:px-4">
+    <i class="fas fa-bell text-6xl text-amber-600 mb-4"></i>
+    <p class="text-lg font-medium text-gray-700">Bạn chưa tạo thông báo việc làm nào.</p>
+    <p class="text-sm text-gray-500 mt-2">Tạo thông báo để nhận thông tin việc làm phù hợp!</p>
+    <button
+      (click)="handleShowAdd()"
+      class="mt-4 inline-flex items-center px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors text-sm w-full sm:w-auto justify-center"
+    >
+      <i class="fas fa-plus mr-1 text-xs"></i> Tạo thông báo
+    </button>
+  </div>
+
+  <!-- List notifications -->
+  <div *ngIf="!isLoadingJobPostNotifications && jobPostNotifications.length > 0" class="space-y-4 px-2 sm:px-4 max-w-4xl w-full mx-auto">
+    <div
+      *ngFor="let notification of jobPostNotifications"
+      class="flex flex-col sm:flex-row items-start sm:items-center p-4 border border-gray-200 rounded-lg bg-white hover:shadow-lg transition-shadow w-full overflow-x-auto gap-2"
+    >
+      <div class="h-12 w-12 rounded-md bg-amber-100 flex items-center justify-center mr-0 sm:mr-4 mb-2 sm:mb-0 flex-shrink-0">
+        <i class="fas fa-bell text-amber-600 text-xl"></i>
+      </div>
+      <div class="flex-1 min-w-0 w-full">
+        <h3 class="text-lg font-semibold text-gray-800 break-words">{{ notification.jobName }}</h3>
+        <div class="text-sm text-gray-500 mt-1 flex flex-wrap items-center gap-4">
+          <span class="flex items-center">
+            <i class="fas fa-briefcase text-xs mr-1"></i>
+            {{ getCareerName(notification.career) }}
+          </span>
+          <span class="flex items-center">
+            <i class="fas fa-map-marker-alt text-xs mr-1"></i>
+            {{ getCityName(notification.city) }}
+          </span>
+          <span class="flex items-center">
+            <i class="fas fa-money-bill-wave text-xs mr-1"></i>
+            {{ notification.salary ? (notification.salary / 1000000 | number: '1.0-2') + ' triệu' : 'Thỏa thuận' }}
+          </span>
+          <span class="flex items-center">
+            <i class="fas fa-clock text-xs mr-1"></i>
+            {{ getFrequencyName(notification.frequency) }}
+          </span>
+        </div>
+      </div>
+      <div class="flex flex-row sm:flex-col items-center sm:items-end space-x-2 sm:space-x-0 sm:space-y-2 w-full sm:w-auto mt-2 sm:mt-0 justify-end">
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            [(ngModel)]="notification.isActive"
+            (change)="handleToggleActive(notification.id, $event)"
+            class="sr-only toggle-switch"
+          />
+          <div class="w-11 h-6 bg-gray-300 rounded-full transition-colors duration-200 ease-in-out" [ngClass]="{'bg-amber-600': notification.isActive}"></div>
+          <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out" [ngClass]="{'translate-x-5': notification.isActive}"></div>
+        </label>
+        <button
+          (click)="handleShowUpdate(notification.id)"
+          class="text-amber-600 hover:text-amber-700 text-sm font-medium flex items-center w-full sm:w-auto justify-center"
+        >
+          <i class="fas fa-edit mr-1 text-xs"></i> Sửa
+        </button>
+        <button
+          (click)="handleDelete(notification.id)"
+          class="text-red-500 hover:text-red-600 text-sm font-medium flex items-center w-full sm:w-auto justify-center"
+        >
+          <i class="fas fa-trash mr-1 text-xs"></i> Xóa
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoadingJobPostNotifications && totalPages > 1" class="flex flex-wrap justify-center items-center space-x-2 mt-8 w-full overflow-x-auto px-2 sm:px-0 max-w-4xl mx-auto">
+    <button
+      (click)="handleChangePage(page - 1)"
+      [disabled]="page <= 1"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-amber-600 text-white hover:bg-amber-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+    >
+      <i class="fas fa-chevron-left text-xs"></i>
+    </button>
+    <div class="flex space-x-1">
+      <button
+        *ngFor="let p of pages"
+        (click)="handleChangePage(p)"
+        [ngClass]="{
+          'bg-amber-600 text-white': p === page,
+          'bg-gray-100 text-gray-700': p !== page
+        }"
+        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-amber-100 transition-colors text-sm"
+      >
+        {{ p }}
+      </button>
+    </div>
+    <button
+      (click)="handleChangePage(page + 1)"
+      [disabled]="page >= totalPages"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-amber-600 text-white hover:bg-amber-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+    >
+      <i class="fas fa-chevron-right text-xs"></i>
+    </button>
+  </div>
+
+  <!-- Modal Popup -->
+  <div *ngIf="openPopup" class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-[1000] px-2">
+    <div class="bg-white rounded-lg p-4 sm:p-6 max-w-full sm:max-w-lg w-full relative">
+      <button
+        (click)="openPopup = false"
+        class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+        aria-label="Đóng modal"
+      >
+        <i class="fas fa-times text-sm"></i>
+      </button>
+      <app-job-post-notification-form
+        [allConfig]="allConfig"
+        [editData]="editData"
+        [handleAddOrUpdate]="handleAddOrUpdate"
+        (cancelForm)="openPopup = false"
+      ></app-job-post-notification-form>
+    </div>
+  </div>
+
+  <!-- Fullscreen Loading -->
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-[1000]">
+    <svg class="animate-spin h-10 w-10 text-amber-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+    </svg>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+df-messenger {
+  z-index: 1000;
+  width: 360px;
+  height: 500px;
+  display: block !important;
+}
+
+button {
+  transition: all 0.3s ease;
+}

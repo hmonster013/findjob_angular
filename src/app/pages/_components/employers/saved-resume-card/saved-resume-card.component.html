@@ -1,0 +1,40 @@
+<div class="bg-white shadow-md rounded-lg flex flex-col flex-1 h-full w-full mobile-container">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 sm:p-6 bg-white border-b border-gray-100 mobile-header">
+    <h1 class="text-2xl font-semibold text-orange-600">Hồ sơ đã lưu</h1>
+    <div class="group relative w-full sm:w-auto">
+      <button
+        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mobile-export-button"
+        (click)="handleExport()"
+        [disabled]="count === 0"
+      >
+        <i class="fas fa-download text-sm"></i> Tải danh sách
+      </button>
+      <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+        Tải danh sách
+      </span>
+    </div>
+  </div>
+
+  <!-- Filter and Count -->
+  <div class="p-4 sm:p-6 bg-white mobile-filter-section">
+    <app-saved-resume-filter-form (handleFilter)="handleFilter($event)"></app-saved-resume-filter-form>
+    <div class="font-bold text-lg text-gray-800 mt-4 mobile-count">
+      Tổng cộng: <span class="text-orange-600">{{ count | number }} hồ sơ</span>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="mx-4 sm:mx-6 mb-4 sm:mb-6 mobile-table-section">
+    <app-saved-resume-table
+      [dataSource]="resumes"
+      [isLoading]="isLoading"
+      [total]="count"
+      [page]="page"
+      [rowsPerPage]="rowsPerPage"
+      (edit)="handleSave($event)"
+      (pageChange)="handleChangePage($event)"
+      (rowsPerPageChange)="handleChangeRowsPerPage($event)"
+    ></app-saved-resume-table>
+  </div>
+</div>

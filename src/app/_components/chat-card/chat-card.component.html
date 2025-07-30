@@ -1,0 +1,13 @@
+<button
+  (click)="handleRedirect()"
+  class="relative p-2 rounded-full hover:opacity-80 cursor-pointer"
+  aria-label="show new notifications"
+>
+  <i class="fa-solid fa-message text-white text-lg" [ngClass]="unreadCount > 0 ? 'animate-bounce' : ''"></i>
+  <span
+    *ngIf="unreadCount > 0"
+    class="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full"
+  >
+    {{ unreadCount }}
+  </span>
+</button>

@@ -1,0 +1,64 @@
+/* Đảm bảo tooltip không bị cắt */
+.group:hover .group-hover\:block {
+  display: block !important;
+}
+
+/* Căn chỉnh icon và text */
+.fa-briefcase,
+.fa-user-tie,
+.fa-dollar-sign,
+.fa-calendar-alt,
+.fa-exclamation-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.5; /* Đảm bảo icon căn giữa theo chiều dọc */
+}
+
+/* Đảm bảo flex container căn chỉnh đúng */
+div[ngIf="resume"] .flex.items-center {
+  display: flex;
+  align-items: center;
+}
+
+/* Responsive bổ sung cho avatar và info */
+@media (max-width: 767px) {
+  .box-profile-avatar {
+    margin-bottom: 0.5rem;
+    justify-content: center;
+  }
+  .box-profile-info {
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Color picker modal responsive */
+.color-picker-modal {
+  z-index: 9999 !important;
+  position: fixed !important;
+}
+
+/* Đảm bảo modal không bị che bởi header trên mobile */
+@media (max-width: 768px) {
+  .color-picker-modal {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    align-items: flex-start !important;
+    overflow-y: auto !important;
+  }
+
+  .color-picker-content {
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+    max-height: 80vh !important;
+  }
+}
+
+/* Responsive cho grid màu sắc */
+@media (max-width: 640px) {
+  .preset-colors-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
+  }
+}

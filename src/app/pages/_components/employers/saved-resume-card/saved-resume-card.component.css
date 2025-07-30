@@ -1,0 +1,120 @@
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #7C2D12; /* orange-800 */
+  color: #FFFFFF; /* white */
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  transform: translateY(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #F97316; /* orange-600 */
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mobile Responsive Styles for Saved Resume Card */
+@media (max-width: 768px) {
+  .mobile-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .mobile-header {
+    padding: 16px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .mobile-header h1 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .mobile-export-button {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+
+  .mobile-filter-section {
+    padding: 16px;
+    background: #f9fafb;
+  }
+
+  .mobile-count {
+    margin-top: 16px;
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .mobile-table-section {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .mobile-header {
+    padding: 12px;
+  }
+
+  .mobile-header h1 {
+    font-size: 18px;
+  }
+
+  .mobile-export-button {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .mobile-filter-section {
+    padding: 12px;
+  }
+
+  .mobile-count {
+    font-size: 14px;
+    margin-top: 12px;
+    padding: 10px;
+  }
+}
+
+/* Smooth transitions */
+.mobile-container,
+.mobile-export-button {
+  transition: all 0.3s ease;
+}
+
+/* Focus states for accessibility */
+@media (max-width: 768px) {
+  .mobile-export-button:focus {
+    outline: 2px solid #f97316;
+    outline-offset: 2px;
+  }
+}

@@ -1,0 +1,16 @@
+.max-h-96::-webkit-scrollbar {
+  width: 6px;
+}
+
+.max-h-96::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.max-h-96::-webkit-scrollbar-thumb {
+  background: #f97316; /* orange-600 */
+  border-radius: 3px;
+}
+
+.max-h-96::-webkit-scrollbar-thumb:hover {
+  background: #ea580c; /* orange-700 */
+}

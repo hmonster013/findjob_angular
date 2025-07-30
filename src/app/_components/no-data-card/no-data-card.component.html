@@ -1,0 +1,30 @@
+<!-- no-data-card.component.html -->
+
+<div class="flex flex-col items-center justify-center py-6 text-center gap-4">
+
+  <!-- Hình ảnh SVG -->
+  <ng-container *ngIf="imgComponentSvg; else defaultImg">
+    <ng-container *ngIf="isSvgUrl(imgComponentSvg); else inlineSvg">
+      <img [src]="imgComponentSvg" alt="No Data" class="w-40 h-40 object-contain" />
+    </ng-container>
+
+    <ng-template #inlineSvg>
+      <div [innerHTML]="imgComponentSvg"></div>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #defaultImg>
+    <img src="/assets/images/no-data.svg" alt="No Data" class="w-40 h-40 object-contain" />
+  </ng-template>
+
+  <!-- Tiêu đề -->
+  <div class="text-gray-400 text-sm font-medium">
+    {{ title }}
+  </div>
+
+  <!-- Nội dung thêm (children) -->
+  <div class="mt-4">
+    <ng-content></ng-content>
+  </div>
+
+</div>

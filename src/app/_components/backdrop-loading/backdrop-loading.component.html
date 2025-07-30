@@ -1,0 +1,14 @@
+<!-- backdrop-loading.component.html -->
+
+<ng-container *ngIf="open">
+  <div
+    class="fixed inset-0 flex items-center justify-center z-[9999]"
+    [ngStyle]="{ 'background-color': bgColor }"
+  >
+    <img
+      [src]="spinnerUrl"
+      alt="Loading ..."
+      class="w-24 animate-spin"
+    />
+  </div>
+</ng-container>

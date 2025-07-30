@@ -1,0 +1,21 @@
+<form [formGroup]="settingForm" (ngSubmit)="onSubmit()" id="setting-form" class="space-y-2">
+  <!-- Email Notification -->
+  <div class="flex items-center gap-2">
+    <input
+      type="checkbox"
+      formControlName="emailNotificationActive"
+      class="w-4 h-4 border-2 border-gray-300 rounded shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg text-amber-600 transition-all duration-300 ease-in-out"
+    />
+    <label class="text-sm font-medium text-gray-800">Cho phép gửi email</label>
+  </div>
+
+  <!-- SMS Notification -->
+  <!-- <div class="flex items-center gap-2">
+    <input
+      type="checkbox"
+      formControlName="smsNotificationActive"
+      class="w-4 h-4 border-2 border-gray-300 rounded shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg text-amber-600 transition-all duration-300 ease-in-out"
+    />
+    <label class="text-sm font-medium text-gray-800">Cho phép gửi tin nhắn SMS</label>
+  </div> -->
+</form>

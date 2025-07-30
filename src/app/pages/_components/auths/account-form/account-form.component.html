@@ -1,0 +1,49 @@
+<form [formGroup]="accountForm" (ngSubmit)="onSubmit()" id="account-form" class="space-y-6">
+  <!-- Full Name -->
+  <div class="space-y-1">
+    <label class="block text-sm font-medium text-gray-800">
+      Họ và tên <span class="text-red-600">*</span>
+    </label>
+    <input
+      type="text"
+      formControlName="fullName"
+      placeholder="Nhập họ và tên"
+      class="w-full px-4 py-2 border-2 border-gray-300 rounded-md shadow-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 hover:border-amber-600 hover:shadow-lg bg-white text-base transition-all duration-300 ease-in-out"
+      [ngClass]="{'border-red-600 focus:border-red-600 hover:border-red-600': accountForm.get('fullName')?.errors && accountForm.get('fullName')?.touched}"
+    />
+    <div
+      *ngIf="accountForm.get('fullName')?.errors && accountForm.get('fullName')?.touched"
+      class="text-red-600 text-xs mt-1"
+    >
+      <div *ngIf="accountForm.get('fullName')?.errors?.['required']">Họ và tên là bắt buộc.</div>
+      <div *ngIf="accountForm.get('fullName')?.errors?.['maxlength']">Họ và tên vượt quá độ dài cho phép.</div>
+      <div *ngIf="accountForm.get('fullName')?.errors?.['server']">{{ accountForm.get('fullName')?.errors?.['server'] }}</div>
+    </div>
+  </div>
+
+  <!-- Email -->
+  <div class="space-y-1">
+    <label class="block text-sm font-medium text-gray-800">
+      Email <span class="text-red-600">*</span>
+    </label>
+    <input
+      type="email"
+      formControlName="email"
+      placeholder="Nhập email"
+      class="w-full px-4 py-2 border-2 border-gray-400 rounded-md bg-gray-200 cursor-not-allowed text-base"
+    />
+  </div>
+
+  <!-- Password -->
+  <div class="space-y-1">
+    <label class="block text-sm font-medium text-gray-800">
+      Mật khẩu <span class="text-red-600">*</span>
+    </label>
+    <input
+      type="password"
+      formControlName="password"
+      placeholder="Nhập mật khẩu"
+      class="w-full px-4 py-2 border-2 border-gray-400 rounded-md bg-gray-200 cursor-not-allowed text-base"
+    />
+  </div>
+</form>

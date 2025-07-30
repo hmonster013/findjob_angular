@@ -1,0 +1,37 @@
+<div class="relative h-[320px] w-full">
+  <swiper-container
+    style="
+      --swiper-navigation-color: #f97316;
+      --swiper-navigation-size: 23px;
+       --swiper-navigation-sides-offset: 100px;
+    "
+    slides-per-view="1"
+    space-between="30"
+    navigation="true"
+    autoplay-delay="6000"
+    autoplay-disable-on-interaction="false"
+    modules="[Autoplay, Navigation]"
+    class="w-full h-full rounded-lg overflow-hidden"
+  >
+    <swiper-slide *ngFor="let banner of banners">
+      <a
+        [href]="banner.buttonLink"
+        target="_blank"
+        class="block h-full"
+      >
+        <img
+          [src]="banner.imageUrl"
+          alt="Banner"
+          class="w-full h-[320px] object-fill rounded-lg "
+        />
+      </a>
+    </swiper-slide>
+  </swiper-container>
+
+  <!-- HomeSearch -->
+  <div
+    class="absolute top-1/4 left-5 right-5 z-10"
+  >
+    <app-home-search></app-home-search>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<div class="bg-white p-6 rounded-xl border border-gray-200 shadow-md mobile-search-container">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mobile-search-form">
+    <!-- Basic Search -->
+    <div class="flex flex-wrap gap-4 items-center mobile-basic-search">
+      <!-- Keyword Search -->
+      <div class="flex-1 min-w-[200px] mobile-search-input">
+        <div class="relative">
+          <input
+            type="text"
+            formControlName="kw"
+            placeholder="Nhập tên tin đăng"
+            class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-md"
+          />
+          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-600 text-lg"></i>
+        </div>
+      </div>
+
+      <!-- Urgent Status -->
+      <div class="w-44 mobile-city-select">
+        <select
+          formControlName="isUrgent"
+          class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+        >
+          <option value="">Trạng thái tuyển dụng</option>
+          <option *ngFor="let option of urgentOptions" [value]="option.id">
+            {{ option.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Approval Status -->
+      <div class="w-44 mobile-city-select">
+        <select
+          formControlName="statusId"
+          class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+        >
+          <option value="">Trạng thái duyệt</option>
+          <option *ngFor="let option of statusOptions" [value]="option.id">
+            {{ option.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex gap-3 items-center mobile-button-group">
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed mobile-search-button"
+        >
+          <i *ngIf="isLoading" class="fas fa-spinner fa-spin mr-2"></i>
+          Tìm kiếm
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

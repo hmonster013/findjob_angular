@@ -1,0 +1,73 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- Theo Nghề Nghiệp -->
+  <div class="p-5 border border-gray-200 rounded-xl bg-white shadow-md hover:shadow-lg transition-all flex flex-col h-full">
+    <h3 class="text-orange-600 font-semibold text-lg border-b border-gray-200 pb-2 mb-4">
+      Việc làm theo nghề nghiệp
+    </h3>
+    <div class="flex flex-col flex-1 space-y-2">
+      <div
+        *ngFor="let career of careerOptions.slice(0, maxItem)"
+        (click)="handleFilter(career.id, 'CAREER')"
+        class="cursor-pointer px-3 py-1.5 rounded-lg text-gray-700 hover:bg-orange-100 hover:text-orange-600 hover:translate-x-2 transition-all"
+      >
+        {{ career.name }}
+      </div>
+      <a
+        *ngIf="careerOptions.length > maxItem"
+        [routerLink]="['/', ROUTES.JOB_SEEKER.JOBS_BY_CAREER]"
+        class="text-orange-600 font-semibold flex items-center gap-2 mt-auto hover:text-orange-800 hover:underline transition-all"
+      >
+        Xem tất cả nghề nghiệp
+        <span class="text-sm">➔</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Theo Khu Vực -->
+  <div class="p-5 border border-gray-200 rounded-xl bg-white shadow-md hover:shadow-lg transition-all flex flex-col h-full">
+    <h3 class="text-orange-600 font-semibold text-lg border-b border-gray-200 pb-2 mb-4">
+      Việc làm theo khu vực
+    </h3>
+    <div class="flex flex-col flex-1 space-y-2">
+      <div
+        *ngFor="let city of cityOptions.slice(0, maxItem)"
+        (click)="handleFilter(city.id, 'CITY')"
+        class="cursor-pointer px-3 py-1.5 rounded-lg text-gray-700 hover:bg-orange-100 hover:text-orange-600 hover:translate-x-2 transition-all"
+      >
+        {{ city.name }}
+      </div>
+      <a
+        *ngIf="cityOptions.length > maxItem"
+        [routerLink]="['/', ROUTES.JOB_SEEKER.JOBS_BY_CITY]"
+        class="text-orange-600 font-semibold flex items-center gap-2 mt-auto hover:text-orange-800 hover:underline transition-all"
+      >
+        Xem tất cả khu vực
+        <span class="text-sm">➔</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Theo Hình Thức Làm Việc -->
+  <div class="p-5 border border-gray-200 rounded-xl bg-white shadow-md hover:shadow-lg transition-all flex flex-col h-full">
+    <h3 class="text-orange-600 font-semibold text-lg border-b border-gray-200 pb-2 mb-4">
+      Việc làm theo hình thức
+    </h3>
+    <div class="flex flex-col flex-1 space-y-2">
+      <div
+        *ngFor="let jobType of jobTypeOptions.slice(0, maxItem)"
+        (click)="handleFilter(jobType.id, 'JOB_TYPE')"
+        class="cursor-pointer px-3 py-1.5 rounded-lg text-gray-700 hover:bg-orange-100 hover:text-orange-600 hover:translate-x-2 transition-all"
+      >
+        {{ jobType.name }}
+      </div>
+      <a
+        *ngIf="jobTypeOptions.length > maxItem"
+        [routerLink]="['/', ROUTES.JOB_SEEKER.JOBS_BY_TYPE]"
+        class="text-orange-600 font-semibold flex items-center gap-2 mt-auto hover:text-orange-800 hover:underline transition-all"
+      >
+        Xem tất cả hình thức
+        <span class="text-sm">➔</span>
+      </a>
+    </div>
+  </div>
+</div>

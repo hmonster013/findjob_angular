@@ -1,0 +1,16 @@
+input:invalid,
+select:invalid {
+  border-color: #ef4444;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #f59e0b !important;
+}

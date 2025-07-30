@@ -1,0 +1,117 @@
+/* candidate-chart.component.css */
+.chart-container {
+  transition: box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #ffffff;
+  color: #F97316; /* orange-600 */
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  transform: translateY(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(249, 115, 22, 0.2); /* orange-600 */
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chart-wrapper {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.chart-wrapper.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chart-wrapper canvas {
+  width: 100% !important;
+  max-width: 100%;
+  height: 320px !important;
+  min-height: 200px;
+  display: block;
+  box-sizing: border-box;
+}
+
+.chart-date-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.error-state,
+.empty-state {
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@media (max-width: 640px) {
+  .chart-container {
+    padding: 8px !important;
+  }
+  .chart-wrapper {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .chart-wrapper canvas {
+    height: 220px !important;
+    min-height: 120px;
+  }
+  .chart-date-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  .chart-date-controls input,
+  .chart-date-controls button {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+}

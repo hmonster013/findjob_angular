@@ -1,0 +1,257 @@
+<div class="p-4 mb-4 bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-2">
+    <h2 class="text-lg font-semibold text-amber-600 flex items-center">
+      <i class="fas fa-user-circle mr-2"></i> Hồ sơ xin việc
+    </h2>
+    <div class="flex flex-wrap items-center gap-2 mt-2 md:mt-0" *ngIf="resume">
+      <!-- Cho phép tìm kiếm -->
+      <button
+        (click)="handleActiveResume(resume.slug)"
+        class="px-3 py-1 text-sm rounded-md flex items-center"
+        [ngClass]="{
+          'bg-amber-100 text-amber-700': resume.isActive,
+          'border border-amber-300 text-amber-600 hover:bg-amber-50': !resume.isActive
+        }"
+      >
+        <i
+          class="fas mr-1"
+          [ngClass]="resume.isActive ? 'fa-star text-yellow-500' : 'fa-star-o text-yellow-500'"
+        ></i>
+        Cho phép tìm kiếm
+      </button>
+      <!-- Tooltip -->
+      <div class="relative group">
+        <i class="fas fa-info-circle text-gray-400 text-sm"></i>
+        <div
+          class="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 bottom-full mb-2 w-48 max-w-xs z-20 left-1/2 -translate-x-1/2"
+        >
+          Bật "Cho phép tìm kiếm" để nhà tuyển dụng tìm thấy hồ sơ của bạn và liên hệ về công việc mới.
+        </div>
+      </div>
+      <!-- Tải PDF -->
+      <button
+        *ngIf="!isGeneratingPDF"
+        (click)="handleDownloadPDF()"
+        class="px-3 py-1 text-sm rounded-md bg-amber-100 text-amber-700 hover:bg-amber-200 flex items-center"
+      >
+        <i class="fas fa-download mr-1"></i> Tải xuống
+      </button>
+      <button
+        *ngIf="isGeneratingPDF"
+        class="px-3 py-1 text-sm rounded-md bg-amber-100 text-amber-700 flex items-center"
+        disabled
+      >
+        <i class="fas fa-spinner fa-spin mr-1"></i> Đang tạo PDF...
+      </button>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <hr class="my-4 border-gray-200" />
+
+  <!-- Content -->
+  <div>
+    <!-- Loading -->
+    <div *ngIf="isLoadingResume" class="space-y-4">
+      <div class="flex items-center space-x-4">
+        <div class="w-24 h-24 bg-gray-200 rounded-full animate-pulse"></div>
+        <div class="space-y-2 flex-1">
+          <div class="h-5 bg-gray-200 rounded w-1/2"></div>
+          <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+        </div>
+      </div>
+      <div class="space-y-2">
+        <div class="h-4 bg-gray-200 rounded"></div>
+        <div class="h-4 bg-gray-200 rounded"></div>
+        <div class="h-4 bg-gray-200 rounded"></div>
+        <div class="h-4 bg-gray-200 rounded"></div>
+      </div>
+      <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+      <div class="flex justify-center">
+        <div class="h-10 bg-gray-200 rounded w-32"></div>
+      </div>
+    </div>
+
+    <!-- Empty -->
+    <div
+      *ngIf="!isLoadingResume && !resume"
+      class="text-center text-gray-600 p-4 bg-gray-50 rounded-lg text-sm"
+    >
+      <i class="fas fa-exclamation-circle mr-1"></i> Không có hồ sơ xin việc.
+    </div>
+
+    <!-- Resume -->
+    <div *ngIf="!isLoadingResume && resume" class="flex flex-col md:flex-row md:items-start gap-4">
+      <!-- Avatar + tên + tiêu đề (mobile dọc, desktop ngang) -->
+      <div class="flex flex-col items-center md:items-start md:flex-row md:space-x-4 w-full md:w-auto">
+        <div
+          class="relative w-24 h-24 p-1 rounded-full bg-gradient-to-br from-amber-600 to-amber-400 shadow-md hover:scale-105 transition-transform duration-300 mb-2 md:mb-0"
+        >
+          <img
+            [src]="currentUser?.avatarUrl || IMAGES.imageDefault"
+            class="w-full h-full rounded-full object-cover border-2 border-amber-100"
+            alt="Avatar"
+          />
+        </div>
+        <div class="text-center md:text-left mt-2 md:mt-0">
+          <h3 class="text-lg font-semibold text-gray-800">
+            {{ resume.user?.fullName || 'Chưa cập nhật' }}
+          </h3>
+          <p class="text-sm text-gray-600">
+            {{ resume.title || 'Chưa cập nhật' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="flex-1 space-y-2">
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center text-gray-600 text-sm">
+            <i class="fas fa-briefcase w-6 h-6 mr-2 text-amber-600 flex-shrink-0"></i>
+            <span>
+              Kinh nghiệm:
+              <span class="font-semibold text-gray-800">
+                {{ allConfig?.experienceDict?.[resume.experience] || 'Chưa cập nhật' }}
+              </span>
+            </span>
+          </div>
+          <div class="flex items-center text-gray-600 text-sm">
+            <i class="fas fa-user-tie w-6 h-6 mr-2 text-amber-600 flex-shrink-0"></i>
+            <span>
+              Cấp bậc:
+              <span class="font-semibold text-gray-800">
+                {{ allConfig?.positionDict?.[resume.position] || 'Chưa cập nhật' }}
+              </span>
+            </span>
+          </div>
+          <div class="flex items-center text-gray-600 text-sm">
+            <i class="fas fa-dollar-sign w-6 h-6 mr-2 text-amber-600 flex-shrink-0"></i>
+            <span>
+              Mức lương mong muốn:
+              <span class="font-semibold text-gray-800">
+                {{ formatSalary(resume.salaryMin, resume.salaryMax) }}
+              </span>
+            </span>
+          </div>
+          <div class="flex items-center text-gray-600 text-sm">
+            <i class="fas fa-calendar-alt w-6 h-6 mr-2 text-amber-600 flex-shrink-0"></i>
+            <span>
+              Ngày cập nhật:
+              <span class="font-semibold text-gray-800">
+                {{ resume.updateAt | date: 'dd/MM/yyyy HH:mm:ss' }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Warning -->
+    <div *ngIf="!isLoadingResume && resume" class="mt-4 p-3 bg-amber-50 rounded-lg flex items-center">
+      <i class="fas fa-exclamation-circle w-6 h-6 text-amber-500 mr-2 flex-shrink-0"></i>
+      <span class="text-gray-600 text-sm">
+        Vui lòng thêm tất cả các thông tin cần thiết để hoàn thành hồ sơ của bạn.
+      </span>
+    </div>
+
+    <!-- Edit Button -->
+    <div *ngIf="!isLoadingResume && resume" class="mt-4 flex justify-center">
+      <button
+        (click)="handleEditResume(resume.slug)"
+        class="px-6 py-2 text-white bg-amber-600 rounded-lg shadow-md hover:bg-amber-700 hover:-translate-y-0.5 transition-all flex items-center"
+      >
+        <i class="fas fa-edit mr-2"></i> Chỉnh sửa hồ sơ
+      </button>
+    </div>
+  </div>
+
+  <!-- Color Picker Dialog -->
+  <div
+    *ngIf="openColorPicker"
+    class="color-picker-modal fixed inset-0 bg-gray-500/50 flex items-center justify-center z-[9999] p-4 pt-8 pb-8"
+    style="z-index: 9999 !important;"
+  >
+    <div class="color-picker-content bg-white p-4 sm:p-6 rounded-lg shadow-xl max-w-md w-full max-h-[85vh] sm:max-h-[90vh] overflow-y-auto my-auto">
+      <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4 flex items-center">
+        <i class="fas fa-palette mr-2 text-amber-600"></i> Chọn màu cho CV
+      </h3>
+
+      <!-- Preset Colors -->
+      <div class="mb-4 sm:mb-6">
+        <h4 class="text-sm font-medium text-gray-600 mb-2 sm:mb-3">Màu sắc được đề xuất</h4>
+        <div class="preset-colors-grid grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+          <div
+            *ngFor="let color of presetColors"
+            (click)="selectedColor = color.value"
+            [class]="'p-3 rounded-lg border-2 cursor-pointer transition-all hover:shadow-md ' + (selectedColor === color.value ? 'border-amber-500 bg-amber-50' : 'border-gray-200 hover:border-gray-300')"
+          >
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-6 h-6 rounded-full border border-gray-300"
+                [style.background-color]="color.value"
+              ></div>
+              <div class="flex-1">
+                <div class="text-sm font-medium text-gray-800">{{ color.name }}</div>
+                <div class="text-xs text-gray-500">{{ color.description }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Color Picker -->
+      <div class="mb-4 sm:mb-6">
+        <h4 class="text-sm font-medium text-gray-600 mb-2 sm:mb-3">Tùy chỉnh màu sắc</h4>
+        <div class="flex items-center space-x-3">
+          <input
+            type="color"
+            [(ngModel)]="selectedColor"
+            class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg border border-gray-300 cursor-pointer"
+          />
+          <div class="flex-1">
+            <div class="text-sm text-gray-800">Màu đã chọn</div>
+            <div class="text-xs text-gray-500 font-mono">{{ selectedColor }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div class="mb-4 sm:mb-6">
+        <h4 class="text-sm font-medium text-gray-600 mb-2 sm:mb-3">Xem trước</h4>
+        <div class="p-2 sm:p-3 rounded-lg border border-gray-200">
+          <div
+            class="h-7 sm:h-8 rounded-md flex items-center justify-center text-white text-xs sm:text-sm font-medium"
+            [style.background-color]="selectedColor"
+          >
+            {{ resume?.title || 'Tiêu đề CV' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+        <button
+          (click)="handleColorSelect(selectedColor)"
+          class="w-full sm:flex-1 px-4 py-2.5 sm:py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-all flex items-center justify-center text-sm sm:text-base"
+        >
+          <i class="fas fa-download mr-2"></i> Tạo PDF
+        </button>
+        <button
+          (click)="openColorPicker = false"
+          class="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-all text-sm sm:text-base"
+        >
+          Hủy
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Loading -->
+  <div
+    *ngIf="isFullScreenLoading"
+    class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50"
+  >
+    <i class="fas fa-spinner fa-spin text-white text-4xl"></i>
+  </div>
+</div>

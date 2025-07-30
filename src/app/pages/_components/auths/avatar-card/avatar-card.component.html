@@ -1,0 +1,45 @@
+<div class="flex flex-col items-center relative group mb-4 shadow-xl rounded-lg border-2 border-gray-300 p-4">
+  <div class="relative w-32 h-32 p-2 rounded-full bg-gradient-to-r from-amber-600 to-amber-700 shadow-xl">
+    <img
+      [src]="currentUser?.avatarUrl || IMAGES.imageDefault"
+      class="w-full h-full rounded-full object-cover border-2 border-gray-200"
+      alt="Avatar"
+    />
+
+    <!-- Overlay buttons -->
+    <div
+      class="absolute inset-0 bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-300 ease-in-out"
+    >
+      <div class="flex space-x-2">
+        <!-- Upload button -->
+        <label class="cursor-pointer">
+          <input type="file" class="hidden" accept="image/png,image/jpeg" (change)="onSelectFile($event)" />
+          <div
+            class="bg-amber-100 p-2 rounded-full shadow-md hover:bg-amber-200 hover:shadow-lg text-amber-600 text-base transition-all duration-300 ease-in-out"
+          >
+            <i class="fas fa-upload"></i>
+          </div>
+        </label>
+
+        <!-- Delete button -->
+        <button
+          type="button"
+          (click)="onDelete()"
+          class="bg-amber-100 p-2 rounded-full shadow-md hover:bg-amber-200 hover:shadow-lg text-amber-600 text-base transition-all duration-300 ease-in-out"
+          [disabled]="!currentUser?.avatarUrl"
+        >
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-2 text-sm font-semibold text-gray-800">
+    Ảnh đại diện
+  </div>
+
+  <!-- Loading Full Screen -->
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 z-50 bg-gray-500/50 flex items-center justify-center">
+    <div class="animate-spin rounded-full h-10 w-10 border-4 border-amber-600 border-t-transparent shadow-lg"></div>
+  </div>
+</div>

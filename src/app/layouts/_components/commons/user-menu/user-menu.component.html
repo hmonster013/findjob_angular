@@ -1,0 +1,23 @@
+<div
+  class="absolute right-0 top-full mt-2 w-56 bg-white rounded-md shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none z-45 transition ease-out duration-100 transform opacity-100 scale-100 user-menu-popup"
+>
+  <div class="py-1 border rounded-md">
+    <ng-container *ngFor="let item of menuItems; let last = last">
+      <a
+        [routerLink]="['/', item.path]"
+        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-orange-500 cursor-pointer"
+        [ngClass]="{'border-b border-gray-200': !last}"
+        (click)="closeMenu()"
+      >
+        {{ item.label }}
+      </a>
+    </ng-container>
+
+    <button
+      class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100 border-t border-gray-200 cursor-pointer"
+      (click)="handleLogout()"
+    >
+      <i class="fas fa-sign-out-alt text-red-600 text-sm mr-2"></i>Đăng xuất
+    </button>
+  </div>
+</div>

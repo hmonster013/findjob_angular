@@ -1,0 +1,166 @@
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()" class="space-y-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Full Name -->
+    <div class="md:col-span-2" formGroupName="user">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Họ và tên <span class="text-red-600">*</span></label>
+      <input
+        formControlName="fullName"
+        type="text"
+        placeholder="Nhập họ và tên"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all text-sm"
+        [ngClass]="{'border-red-600': form.get('user.fullName')?.errors && form.get('user.fullName')?.touched}"
+      />
+      <div
+        *ngIf="form.get('user.fullName')?.errors && form.get('user.fullName')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('user.fullName')?.errors?.['required']">Họ và tên là bắt buộc.</div>
+        <div *ngIf="form.get('user.fullName')?.errors?.['maxlength']">Họ và tên không được vượt quá 100 ký tự.</div>
+      </div>
+    </div>
+    <!-- Phone -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Số điện thoại <span class="text-red-600">*</span></label>
+      <input
+        formControlName="phone"
+        type="text"
+        placeholder="Nhập số điện thoại"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all text-sm"
+        [ngClass]="{'border-red-600': form.get('phone')?.errors && form.get('phone')?.touched}"
+      />
+      <div
+        *ngIf="form.get('phone')?.errors && form.get('phone')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('phone')?.errors?.['required']">Số điện thoại là bắt buộc.</div>
+        <div *ngIf="form.get('phone')?.errors?.['pattern']">Số điện thoại không hợp lệ.</div>
+      </div>
+    </div>
+    <!-- Birthday -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Ngày sinh <span class="text-red-600">*</span></label>
+      <input
+        formControlName="birthday"
+        type="date"
+        [max]="maxYesterday"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all text-sm"
+        [ngClass]="{'border-red-600': form.get('birthday')?.errors && form.get('birthday')?.touched}"
+      />
+      <div
+        *ngIf="form.get('birthday')?.errors && form.get('birthday')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('birthday')?.errors?.['required']">Ngày sinh là bắt buộc.</div>
+      </div>
+    </div>
+    <!-- Gender -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Giới tính <span class="text-red-600">*</span></label>
+      <select
+        formControlName="gender"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all text-sm"
+        [ngClass]="{'border-red-600': form.get('gender')?.errors && form.get('gender')?.touched}"
+      >
+        <option value="">Chọn giới tính</option>
+        <option *ngFor="let option of allConfig?.genderOptions" [value]="option.id">{{ option.name }}</option>
+      </select>
+      <div
+        *ngIf="form.get('gender')?.errors && form.get('gender')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('gender')?.errors?.['required']">Giới tính là bắt buộc.</div>
+      </div>
+    </div>
+    <!-- Marital Status -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Tình trạng hôn nhân <span class="text-red-600">*</span></label>
+      <select
+        formControlName="maritalStatus"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all text-sm"
+        [ngClass]="{'border-red-600': form.get('maritalStatus')?.errors && form.get('maritalStatus')?.touched}"
+      >
+        <option value="">Chọn tình trạng hôn nhân</option>
+        <option *ngFor="let option of allConfig?.maritalStatusOptions" [value]="option.id">{{ option.name }}</option>
+      </select>
+      <div
+        *ngIf="form.get('maritalStatus')?.errors && form.get('maritalStatus')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('maritalStatus')?.errors?.['required']">Tình trạng hôn nhân là bắt buộc.</div>
+      </div>
+    </div>
+    <!-- City -->
+    <div formGroupName="location">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Tỉnh/Thành phố <span class="text-red-600">*</span></label>
+      <select
+        formControlName="city"
+        (change)="onCityChange($event)"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all text-sm"
+        [ngClass]="{'border-red-600': form.get('location.city')?.errors && form.get('location.city')?.touched}"
+      >
+        <option value="">Chọn tỉnh/thành phố</option>
+        <option *ngFor="let option of allConfig?.cityOptions" [value]="option.id">{{ option.name }}</option>
+      </select>
+      <div
+        *ngIf="form.get('location.city')?.errors && form.get('location.city')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('location.city')?.errors?.['required']">Tỉnh/Thành phố là bắt buộc.</div>
+      </div>
+    </div>
+    <!-- District -->
+    <div formGroupName="location">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Quận/Huyện <span class="text-red-600">*</span></label>
+      <select
+        formControlName="district"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all text-sm"
+        [ngClass]="{'border-red-600': form.get('location.district')?.errors && form.get('location.district')?.touched}"
+      >
+        <option value="">Chọn quận/huyện</option>
+        <option *ngFor="let option of districtOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+      <div
+        *ngIf="form.get('location.district')?.errors && form.get('location.district')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('location.district')?.errors?.['required']">Quận/Huyện là bắt buộc.</div>
+      </div>
+    </div>
+    <!-- Address -->
+    <div class="md:col-span-2" formGroupName="location">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Địa chỉ <span class="text-red-600">*</span></label>
+      <input
+        formControlName="address"
+        type="text"
+        placeholder="Nhập địa chỉ"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-600 focus:border-amber-600 transition-all text-sm"
+        [ngClass]="{'border-red-600': form.get('location.address')?.errors && form.get('location.address')?.touched}"
+      />
+      <div
+        *ngIf="form.get('location.address')?.errors && form.get('location.address')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('location.address')?.errors?.['required']">Địa chỉ là bắt buộc.</div>
+        <div *ngIf="form.get('location.address')?.errors?.['maxlength']">Địa chỉ không được vượt quá 255 ký tự.</div>
+      </div>
+    </div>
+  </div>
+  <!-- Form Actions -->
+  <div class="flex justify-end gap-4 mt-6">
+    <button
+      type="button"
+      (click)="close()"
+      class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-all flex items-center gap-2"
+      aria-label="Đóng form"
+    >
+      <i class="fas fa-times"></i> Hủy
+    </button>
+    <button
+      type="submit"
+      class="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-all flex items-center gap-2 disabled:bg-amber-400 disabled:cursor-not-allowed text-sm"
+      [disabled]="form.invalid"
+    >
+      <i class="fas fa-save"></i> Lưu
+    </button>
+  </div>
+</form>

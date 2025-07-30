@@ -1,0 +1,72 @@
+<div class="card-container relative rounded-lg shadow-sm p-4 sm:p-5 bg-white border border-gray-200">
+  <ng-container *ngIf="isLoadingCompany">
+    <div class="card-section space-y-6">
+      <div>
+        <h3 class="font-semibold text-lg mb-4 text-gray-800">Logo công ty</h3>
+        <div class="flex flex-col items-center">
+          <div class="w-16 h-16 bg-gray-200 rounded-lg animate-pulse"></div>
+          <div class="h-10 w-32 bg-gray-200 rounded-md animate-pulse mt-4"></div>
+        </div>
+      </div>
+      <div>
+        <h3 class="font-semibold text-lg mb-4 text-gray-800">Ảnh bìa công ty</h3>
+        <div class="flex flex-col items-center">
+          <div class="w-full max-w-3xl h-32 sm:h-40 bg-gray-200 rounded-lg animate-pulse"></div>
+          <div class="h-10 w-32 bg-gray-200 rounded-md animate-pulse mt-4"></div>
+        </div>
+      </div>
+      <div class="text-center text-gray-400">Đang tải thông tin công ty...</div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoadingCompany">
+    <div class="card-section space-y-4">
+      <h3 class="font-semibold text-lg text-gray-800">Logo công ty</h3>
+      <div class="flex flex-col items-center">
+        <img
+          [src]="companyImageUrl || '/assets/default-logo.png'"
+          alt="Company Logo"
+          class="w-16 h-16 object-cover rounded-lg border border-gray-200 shadow-sm mb-4"
+        />
+        <div class="group relative tooltip">
+          <label class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-200 cursor-pointer">
+            <i class="fas fa-upload text-sm"></i> Thay đổi logo
+            <input type="file" (change)="handleUploadLogo($event)" accept="image/jpeg,image/png" hidden aria-label="Upload logo công ty" />
+          </label>
+          <span class="tooltiptext absolute hidden group-hover:block -top-10 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+            Thay đổi logo
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-section space-y-4">
+      <h3 class="font-semibold text-lg text-gray-800">Ảnh bìa công ty</h3>
+      <div class="flex flex-col items-center">
+        <img
+          [src]="companyCoverImageUrl || '/assets/default-cover.png'"
+          alt="Company Cover"
+          class="w-full max-w-3xl h-32 sm:h-40 object-cover rounded-lg border border-gray-200 shadow-sm mb-4"
+        />
+        <div class="group relative tooltip">
+          <label class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-200 cursor-pointer">
+            <i class="fas fa-upload text-sm"></i> Thay đổi ảnh bìa
+            <input type="file" (change)="handleUploadCover($event)" accept="image/jpeg,image/png" hidden aria-label="Upload ảnh bìa công ty" />
+          </label>
+          <span class="tooltiptext absolute hidden group-hover:block -top-10 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+            Thay đổi ảnh bìa
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-section space-y-4">
+      <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Chỉnh sửa thông tin công ty</h2>
+      <app-company-form
+        [editData]="editData"
+        [serverErrors]="serverErrors"
+        (handleSave)="handleUpdate($event)"
+      ></app-company-form>
+    </div>
+  </ng-container>
+</div>

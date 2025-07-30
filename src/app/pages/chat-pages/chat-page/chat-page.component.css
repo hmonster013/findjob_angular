@@ -1,0 +1,134 @@
+/* Custom scrollbar styles */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thumb-orange-200::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thumb-orange-200::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thumb-orange-200::-webkit-scrollbar-thumb {
+  background: #fed7aa;
+  border-radius: 3px;
+}
+
+.scrollbar-thumb-orange-200::-webkit-scrollbar-thumb:hover {
+  background: #fdba74;
+}
+
+/* Fixed height containers */
+.chat-container {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.chat-sidebar {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.chat-main {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 120px);
+}
+
+/* Smooth animations */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Drawer slide animations */
+.drawer-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.drawer-slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Improved focus states */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.4);
+}
+
+/* Chat bubble improvements */
+.chat-bubble {
+  transition: all 0.2s ease-in-out;
+}
+
+.chat-bubble:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Border gradient effect */
+.border-gradient {
+  border: 2px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(45deg, #f97316, #ea580c) border-box;
+}
+
+/* Prevent text expansion */
+.text-container {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Mobile drawer height fix */
+@media (max-width: 768px) {
+  .mobile-drawer {
+    height: 100vh;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+}

@@ -1,0 +1,42 @@
+<div class="p-4 bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300">
+  <div>
+    <h2 class="text-lg font-semibold text-amber-600 mb-1 flex items-center">
+      <i class="fas fa-eye mr-2"></i> CV của bạn đã đủ tốt?
+    </h2>
+    <p class="text-base text-gray-600">
+      Bao nhiêu nhà tuyển dụng đang quan tâm tới hồ sơ của bạn?
+    </p>
+  </div>
+
+  <div class="pt-4">
+    <div class="flex items-center space-x-3">
+      <div class="relative flex items-center justify-center">
+        <div class="absolute w-20 h-20 rounded-full bg-amber-100 animate-pulse"></div>
+        <div
+          class="w-16 h-16 rounded-full bg-gradient-to-br from-amber-600 to-amber-400 flex items-center justify-center text-white text-xl font-bold"
+        >
+          <ng-container *ngIf="!isLoading; else loading">
+            {{ data?.totalView ?? '---' }}
+          </ng-container>
+          <ng-template #loading>
+            <i class="fas fa-spinner fa-spin text-2xl"></i>
+          </ng-template>
+        </div>
+      </div>
+      <div>
+        <p class="text-base text-gray-800">
+          Mỗi lượt nhà tuyển dụng xem CV là cơ hội để bạn đến gần hơn với công việc phù hợp.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pt-6 flex justify-end">
+    <button
+      (click)="navigateToJobs()"
+      class="bg-amber-600 text-white py-2 px-6 rounded-md hover:bg-amber-700 hover:-translate-y-0.5 transform transition-all flex items-center gap-2"
+    >
+      <i class="fas fa-search"></i> Khám phá ngay
+    </button>
+  </div>
+</div>

@@ -1,0 +1,296 @@
+.chart-container {
+  transition: box-shadow 0.3s ease;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #7C2D12; /* orange-800 */
+  color: #FFFFFF; /* white */
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  transform: translateY(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #F97316; /* orange-600 */
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Responsive Styles for Table */
+@media (max-width: 768px) {
+  .mobile-table-container {
+    padding: 12px !important;
+    margin: 0 16px;
+    border-radius: 12px;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .mobile-card-list {
+    gap: 12px;
+  }
+
+  .mobile-candidate-card {
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .mobile-candidate-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .mobile-candidate-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f97316;
+    margin-bottom: 4px;
+  }
+
+  .mobile-candidate-title {
+    font-size: 13px;
+    color: #f97316;
+    margin-bottom: 8px;
+  }
+
+  .mobile-info-row {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+
+  .mobile-info-label {
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .mobile-status-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #f97316;
+    border-radius: 8px;
+    background: white;
+    color: #7c2d12;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-status-select:focus {
+    outline: none;
+    border-color: #ea580c;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+  }
+
+  .mobile-action-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .mobile-action-button {
+    flex: 1;
+    padding: 12px;
+    background: #fef3f2;
+    color: #f97316;
+    border: 1px solid #fed7d1;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  .mobile-action-button:hover {
+    background: #f97316;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(249, 115, 22, 0.3);
+  }
+
+  .mobile-action-button:active {
+    transform: translateY(0);
+  }
+
+  .mobile-cv-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #7c2d12;
+    background: #fed7d1;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-weight: 500;
+  }
+
+  .mobile-pagination {
+    padding: 16px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    margin: 0 -12px -12px -12px;
+    border-radius: 0 0 12px 12px;
+  }
+
+  .mobile-pagination-info {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .mobile-pagination-select {
+    border: 1px solid #f97316;
+    border-radius: 6px;
+    padding: 4px 8px;
+    margin: 0 4px;
+    background: white;
+    color: #f97316;
+    font-size: 12px;
+  }
+
+  .mobile-pagination-nav {
+    display: flex;
+    justify-content: center;
+  }
+
+  .mobile-pagination-button {
+    padding: 8px 12px;
+    border: 1px solid #fed7d1;
+    background: white;
+    color: #f97316;
+    font-size: 12px;
+    transition: all 0.3s ease;
+    min-width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-pagination-button:first-child {
+    border-radius: 6px 0 0 6px;
+  }
+
+  .mobile-pagination-button:last-child {
+    border-radius: 0 6px 6px 0;
+  }
+
+  .mobile-pagination-button:not(:last-child) {
+    border-right: none;
+  }
+
+  .mobile-pagination-button:hover:not(:disabled) {
+    background: #f97316;
+    color: white;
+  }
+
+  .mobile-pagination-button:disabled {
+    color: #9ca3af;
+    background: #f3f4f6;
+    cursor: not-allowed;
+  }
+
+  .mobile-pagination-button.active {
+    background: #f97316;
+    color: white;
+  }
+}
+
+/* Extra small screens (iPhone SE, etc.) */
+@media (max-width: 480px) {
+  .mobile-table-container {
+    margin: 0 8px;
+    padding: 8px !important;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .mobile-candidate-card {
+    padding: 12px;
+  }
+
+  .mobile-candidate-name {
+    font-size: 15px;
+  }
+
+  .mobile-candidate-title {
+    font-size: 12px;
+  }
+
+  .mobile-info-row {
+    font-size: 11px;
+  }
+
+  .mobile-action-buttons {
+    gap: 6px;
+  }
+
+  .mobile-action-button {
+    padding: 10px;
+    font-size: 14px;
+    min-height: 40px;
+  }
+}
+
+/* Focus and accessibility improvements */
+@media (max-width: 768px) {
+  .mobile-status-select:focus,
+  .mobile-action-button:focus,
+  .mobile-pagination-button:focus {
+    outline: 2px solid #f97316;
+    outline-offset: 2px;
+  }
+}
+
+/* No data state mobile */
+@media (max-width: 768px) {
+  .mobile-no-data {
+    padding: 40px 20px;
+    text-align: center;
+  }
+}

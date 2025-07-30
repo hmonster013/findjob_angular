@@ -1,0 +1,108 @@
+<form [formGroup]="form" (ngSubmit)="handleSubmit()" class="space-y-5">
+  <!-- Email -->
+  <div>
+    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+      Email <span class="text-red-500">*</span>
+    </label>
+    <div class="relative">
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="Nhập email của bạn"
+        autocomplete="email"
+        class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+        aria-describedby="email-error"
+        [attr.aria-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
+      />
+      <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+    </div>
+    <div
+      *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+      id="email-error"
+      class="text-red-500 text-xs mt-1"
+    >
+      <span *ngIf="form.get('email')?.errors?.['required']">Email là bắt buộc</span>
+      <span *ngIf="form.get('email')?.errors?.['email']">Email không đúng định dạng</span>
+    </div>
+  </div>
+
+  <!-- Password -->
+  <div>
+    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+      Mật khẩu <span class="text-red-500">*</span>
+    </label>
+    <div class="relative">
+      <input
+        id="password"
+        [type]="showPassword ? 'text' : 'password'"
+        formControlName="password"
+        placeholder="Nhập mật khẩu của bạn"
+        autocomplete="current-password"
+        class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+        aria-describedby="password-error"
+        [attr.aria-invalid]="form.get('password')?.invalid && form.get('password')?.touched"
+      />
+      <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      <button
+        type="button"
+        (click)="togglePassword()"
+        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-orange-600 transition-colors"
+        aria-label="Toggle password visibility"
+      >
+        <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+      </button>
+    </div>
+    <div
+      *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
+      id="password-error"
+      class="text-red-500 text-xs mt-1"
+    >
+      <span *ngIf="form.get('password')?.errors?.['required']">Mật khẩu là bắt buộc</span>
+    </div>
+  </div>
+
+  <!-- Submit button -->
+  <button
+    type="submit"
+    [disabled]="form.invalid || isLoadingEmail"
+    class="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    <i *ngIf="isLoadingEmail" class="fas fa-spinner fa-spin mr-2"></i>
+    <i *ngIf="!isLoadingEmail" class="fas fa-sign-in-alt mr-2"></i>
+    Đăng nhập
+  </button>
+
+  <!-- Divider -->
+  <div class="flex items-center my-6">
+    <hr class="flex-grow border-gray-300" />
+    <span class="mx-3 text-gray-500 text-sm">Hoặc</span>
+    <hr class="flex-grow border-gray-300" />
+  </div>
+
+  <!-- Social Login -->
+  <button
+    type="button"
+    (click)="handleFacebookLogin()"
+    class="w-full bg-[#1877f2] text-white py-2 rounded-md hover:bg-[#1566d8] focus:outline-none focus:ring-2 focus:ring-[#1877f2] focus:ring-offset-2 transition flex items-center justify-center gap-2"
+    [disabled]="isLoadingFacebook"
+  >
+    <i *ngIf="isLoadingFacebook" class="fas fa-spinner fa-spin mr-2"></i>
+    <i *ngIf="!isLoadingFacebook" class="fab fa-facebook-f mr-2"></i>
+    Đăng nhập bằng Facebook
+  </button>
+
+  <!-- Google Sign-In Button -->
+  <div class="mt-3">
+    <button
+      id="googleSignInButton"
+      type="button"
+      class="w-full bg-white text-gray-700 py-2 rounded-md border border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition flex items-center justify-center gap-2"
+      [disabled]="isLoadingGoogle"
+    >
+      <i *ngIf="isLoadingGoogle" class="fas fa-spinner fa-spin mr-2"></i>
+      <i *ngIf="!isLoadingGoogle" class="fab fa-google mr-2"></i>
+      Đăng nhập bằng Google
+    </button>
+  </div>
+</form>

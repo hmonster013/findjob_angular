@@ -1,0 +1,102 @@
+<form [formGroup]="applyForm" (ngSubmit)="onSubmit()" class="space-y-6">
+  <!-- Loading resumes -->
+  <div *ngIf="isLoadingResumes" class="flex justify-center">
+    <i class="fas fa-spinner fa-spin text-amber-600 text-2xl"></i>
+  </div>
+
+  <!-- Resume selection -->
+  <div *ngIf="!isLoadingResumes" class="space-y-3">
+    <label class="block text-sm font-medium text-gray-700">Chọn hồ sơ <span class="text-red-500">*</span></label>
+    <div *ngIf="resumes.length === 0" class="text-gray-500 text-sm italic">
+      <i class="fas fa-exclamation-circle mr-1"></i> Bạn chưa có hồ sơ nào
+    </div>
+    <div *ngFor="let resume of resumes" class="space-y-2">
+      <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-amber-50 transition">
+        <input
+          type="radio"
+          formControlName="resume"
+          [value]="resume.id"
+          class="mr-3 text-amber-600 focus:ring-amber-600"
+        />
+        <div class="flex-1">
+          <div class="font-semibold text-gray-800">
+            {{ resume.title || 'Hồ sơ không có tiêu đề' }}
+          </div>
+          <div class="text-xs text-gray-500 italic">
+            <ng-container [ngSwitch]="resume.type">
+              <ng-container *ngSwitchCase="'WEBSITE'">📄 Hồ sơ trực tuyến</ng-container>
+              <ng-container *ngSwitchCase="'UPLOAD'">📄 Hồ sơ đính kèm</ng-container>
+              <ng-container *ngSwitchDefault>📄 Hồ sơ không xác định</ng-container>
+            </ng-container>
+          </div>
+        </div>
+        <a
+          [href]="getResumeLink(resume)"
+          target="_blank"
+          class="text-amber-600 font-semibold text-sm hover:text-amber-700"
+        >
+          <i class="fas fa-eye mr-1"></i> Xem hồ sơ
+        </a>
+      </label>
+    </div>
+    <div *ngIf="applyForm.get('resume')?.invalid && (applyForm.get('resume')?.touched || applyFormSubmitted)" class="text-red-500 text-xs flex items-center">
+      <i class="fas fa-exclamation-circle mr-1"></i> Vui lòng chọn một hồ sơ
+    </div>
+  </div>
+
+  <!-- Họ và tên -->
+  <div>
+    <label class="block mb-1 text-sm font-medium text-gray-700">Họ và tên <span class="text-red-500">*</span></label>
+    <input
+      type="text"
+      formControlName="fullName"
+      placeholder="Nhập họ và tên"
+      class="w-full border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-600"
+    />
+    <div *ngIf="applyForm.get('fullName')?.invalid && (applyForm.get('fullName')?.touched || applyFormSubmitted)" class="text-red-500 text-xs flex items-center mt-1">
+      <i class="fas fa-exclamation-circle mr-1"></i> Họ và tên là bắt buộc
+    </div>
+  </div>
+
+  <!-- Email -->
+  <div>
+    <label class="block mb-1 text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+    <input
+      type="email"
+      formControlName="email"
+      placeholder="Nhập email"
+      class="w-full border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-600"
+    />
+    <div *ngIf="applyForm.get('email')?.invalid && (applyForm.get('email')?.touched || applyFormSubmitted)" class="text-red-500 text-xs flex items-center mt-1">
+      <i class="fas fa-exclamation-circle mr-1"></i> Email không hợp lệ
+    </div>
+  </div>
+
+  <!-- Số điện thoại -->
+  <div>
+    <label class="block mb-1 text-sm font-medium text-gray-700">Số điện thoại <span class="text-red-500">*</span></label>
+    <input
+      type="text"
+      formControlName="phone"
+      placeholder="Nhập số điện thoại"
+      class="w-full border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-600"
+    />
+    <div *ngIf="applyForm.get('phone')?.invalid && (applyForm.get('phone')?.touched || applyFormSubmitted)" class="text-red-500 text-xs flex items-center mt-1">
+      <i class="fas fa-exclamation-circle mr-1"></i> Số điện thoại không hợp lệ
+    </div>
+  </div>
+
+  <!-- Lưu ý -->
+  <div class="text-gray-500 text-xs italic">
+    <i class="fas fa-info-circle mr-1"></i> Lưu ý: Họ tên, email, số điện thoại cần chính xác để nhà tuyển dụng liên hệ với bạn.
+  </div>
+
+  <!-- Nút Ứng tuyển -->
+  <button
+    type="submit"
+    class="w-full bg-amber-600 text-white py-2 rounded-md font-medium hover:bg-amber-700 transition flex items-center justify-center gap-2"
+    [disabled]="applyForm.invalid"
+  >
+    <i class="fas fa-paper-plane"></i> Ứng tuyển
+  </button>
+</form>

@@ -1,0 +1,327 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="form" class="space-y-6">
+  <!-- Upload file -->
+  <div class="md:col-span-2">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      Chọn tệp CV của bạn <span class="text-red-500">*</span>
+    </label>
+    <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-amber-600 transition-colors duration-200">
+      <input
+        type="file"
+        accept="application/pdf"
+        (change)="onFileChange($event)"
+        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+      />
+      <!-- Hiển thị khi chưa chọn file -->
+      <div *ngIf="!selectedFileName" class="flex flex-col items-center">
+        <i class="fas fa-cloud-upload-alt text-amber-600 text-2xl mb-2"></i>
+        <p class="text-sm text-gray-600">Kéo thả file vào đây hoặc nhấn để chọn</p>
+        <p class="text-xs text-gray-500 mt-1">Chỉ chấp nhận file PDF (tối đa 5MB)</p>
+      </div>
+      <!-- Hiển thị khi đã chọn file -->
+      <div *ngIf="selectedFileName" class="flex items-center justify-center space-x-2">
+        <i class="fas fa-check-circle text-green-500 text-2xl"></i>
+        <p class="text-sm text-gray-800">Đã chọn: {{ selectedFileName }}</p>
+        <button
+          type="button"
+          (click)="clearFile()"
+          class="text-red-500 hover:text-red-700 text-sm"
+        >
+          <i class="fas fa-times"></i> Xóa
+        </button>
+      </div>
+    </div>
+    <div *ngIf="fileError" class="text-red-500 text-xs mt-2">{{ fileError }}</div>
+  </div>
+
+  <!-- Title -->
+  <div class="md:col-span-2">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      Vị trí mong muốn <span class="text-red-500">*</span>
+    </label>
+    <input
+      type="text"
+      formControlName="title"
+      placeholder="VD: Lập trình viên Backend"
+      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
+    />
+    <div
+      *ngIf="form.get('title')?.errors?.['required'] && form.get('title')?.touched"
+      class="text-red-500 text-xs mt-2"
+    >
+      Vui lòng nhập vị trí mong muốn
+    </div>
+    <div
+      *ngIf="form.get('title')?.errors?.['maxlength']"
+      class="text-red-500 text-xs mt-2"
+    >
+      Vị trí không được vượt quá 200 ký tự
+    </div>
+  </div>
+
+  <!-- Grid for select fields -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Position -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Cấp bậc mong muốn <span class="text-red-500">*</span>
+      </label>
+      <select
+        formControlName="position"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
+      >
+        <option value="">Chọn cấp bậc</option>
+        <option
+          *ngFor="let option of allConfig?.positionOptions"
+          [value]="option.id"
+        >
+          {{ option.name }}
+        </option>
+      </select>
+      <div
+        *ngIf="form.get('position')?.errors?.['required'] && form.get('position')?.touched"
+        class="text-red-500 text-xs mt-2"
+      >
+        Vui lòng chọn cấp bậc
+      </div>
+    </div>
+
+    <!-- Academic Level -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Trình độ học vấn <span class="text-red-500">*</span>
+      </label>
+      <select
+        formControlName="academicLevel"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
+      >
+        <option value="">Chọn trình độ học vấn</option>
+        <option
+          *ngFor="let option of allConfig?.academicLevelOptions"
+          [value]="option.id"
+        >
+          {{ option.name }}
+        </option>
+      </select>
+      <div
+        *ngIf="form.get('academicLevel')?.errors?.['required'] && form.get('academicLevel')?.touched"
+        class="text-red-500 text-xs mt-2"
+      >
+        Vui lòng chọn trình độ học vấn
+      </div>
+    </div>
+
+    <!-- Experience -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Kinh nghiệm làm việc <span class="text-red-500">*</span>
+      </label>
+      <select
+        formControlName="experience"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
+      >
+        <option value="">Chọn kinh nghiệm làm việc</option>
+        <option
+          *ngFor="let option of allConfig?.experienceOptions"
+          [value]="option.id"
+        >
+          {{ option.name }}
+        </option>
+      </select>
+      <div
+        *ngIf="form.get('experience')?.errors?.['required'] && form.get('experience')?.touched"
+        class="text-red-500 text-xs mt-2"
+      >
+        Vui lòng chọn kinh nghiệm làm việc
+      </div>
+    </div>
+
+    <!-- Career -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Nghề nghiệp <span class="text-red-500">*</span>
+      </label>
+      <select
+        formControlName="career"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
+      >
+        <option value="">Chọn nghề nghiệp</option>
+        <option
+          *ngFor="let option of allConfig?.careerOptions"
+          [value]="option.id"
+        >
+          {{ option.name }}
+        </option>
+      </select>
+      <div
+        *ngIf="form.get('career')?.errors?.['required'] && form.get('career')?.touched"
+        class="text-red-500 text-xs mt-2"
+      >
+        Vui lòng chọn nghề nghiệp
+      </div>
+    </div>
+
+    <!-- City -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Tỉnh/Thành phố <span class="text-red-500">*</span>
+      </label>
+      <select
+        formControlName="city"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
+      >
+        <option value="">Chọn tỉnh/thành phố</option>
+        <option *ngFor="let option of allConfig?.cityOptions" [value]="option.id">
+          {{ option.name }}
+        </option>
+      </select>
+      <div
+        *ngIf="form.get('city')?.errors?.['required'] && form.get('city')?.touched"
+        class="text-red-500 text-xs mt-2"
+      >
+        Vui lòng chọn tỉnh/thành phố
+      </div>
+    </div>
+
+    <!-- Workplace type -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Nơi làm việc <span class="text-red-500">*</span>
+      </label>
+      <select
+        formControlName="typeOfWorkplace"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
+      >
+        <option value="">Chọn nơi làm việc</option>
+        <option
+          *ngFor="let option of allConfig?.typeOfWorkplaceOptions"
+          [value]="option.id"
+        >
+          {{ option.name }}
+        </option>
+      </select>
+      <div
+        *ngIf="form.get('typeOfWorkplace')?.errors?.['required'] && form.get('typeOfWorkplace')?.touched"
+        class="text-red-500 text-xs mt-2"
+      >
+        Vui lòng chọn nơi làm việc
+      </div>
+    </div>
+
+    <!-- Job type -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Hình thức làm việc <span class="text-red-500">*</span>
+      </label>
+      <select
+        formControlName="jobType"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
+      >
+        <option value="">Chọn hình thức làm việc</option>
+        <option
+          *ngFor="let option of allConfig?.jobTypeOptions"
+          [value]="option.id"
+        >
+          {{ option.name }}
+        </option>
+      </select>
+      <div
+        *ngIf="form.get('jobType')?.errors?.['required'] && form.get('jobType')?.touched"
+        class="text-red-500 text-xs mt-2"
+      >
+        Vui lòng chọn hình thức làm việc
+      </div>
+    </div>
+  </div>
+
+  <!-- Salary Min / Max -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Lương tối thiểu <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="number"
+        formControlName="salaryMin"
+        placeholder="Nhập lương tối thiểu"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
+      />
+      <div
+        *ngIf="form.get('salaryMin')?.errors?.['required'] && form.get('salaryMin')?.touched"
+        class="text-red-500 text-xs mt-2"
+      >
+        Vui lòng nhập lương tối thiểu
+      </div>
+      <div
+        *ngIf="form.get('salaryMin')?.errors?.['invalid']"
+        class="text-red-500 text-xs mt-2"
+      >
+        Lương tối thiểu phải nhỏ hơn lương tối đa
+      </div>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Lương tối đa <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="number"
+        formControlName="salaryMax"
+        placeholder="Nhập lương tối đa"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600"
+      />
+      <div
+        *ngIf="form.get('salaryMax')?.errors?.['required'] && form.get('salaryMax')?.touched"
+        class="text-red-500 text-xs mt-2"
+      >
+        Vui lòng nhập lương tối đa
+      </div>
+      <div
+        *ngIf="form.get('salaryMax')?.errors?.['invalid']"
+        class="text-red-500 text-xs mt-2"
+      >
+        Lương tối đa phải lớn hơn lương tối thiểu
+      </div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="md:col-span-2">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      Mục tiêu nghề nghiệp <span class="text-red-500">*</span>
+    </label>
+    <textarea
+      formControlName="description"
+      rows="4"
+      placeholder="Nhập mục tiêu nghề nghiệp của bạn"
+      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600 resize-none"
+    ></textarea>
+    <div
+      *ngIf="form.get('description')?.errors?.['required'] && form.get('description')?.touched"
+      class="text-red-500 text-xs mt-2"
+    >
+      Vui lòng nhập mục tiêu nghề nghiệp
+    </div>
+    <div
+      *ngIf="form.get('description')?.errors?.['maxlength']"
+      class="text-red-500 text-xs mt-2"
+    >
+      Mục tiêu nghề nghiệp không được vượt quá 800 ký tự
+    </div>
+  </div>
+
+  <!-- Submit / Cancel -->
+  <div class="flex justify-end space-x-3 md:col-span-2">
+    <button
+      type="submit"
+      class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-md transition-colors duration-200"
+    >
+      Lưu
+    </button>
+    <button
+      type="button"
+      (click)="cancel()"
+      class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-md transition-colors duration-200"
+    >
+      Hủy
+    </button>
+  </div>
+</form>

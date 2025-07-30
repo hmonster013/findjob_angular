@@ -1,0 +1,24 @@
+<div class="max-w-screen-lg mx-auto py-8 px-6 bg-white rounded-xl shadow-sm">
+  <!-- Header -->
+  <h1 class="text-3xl font-bold text-orange-600 mb-3 tracking-tight">
+    Việc làm theo Ngành nghề
+  </h1>
+  <!-- Divider -->
+  <div class="h-1 bg-gradient-to-r from-orange-600/20 via-orange-600 to-orange-600/20 my-4 rounded-full"></div>
+
+  <!-- Content -->
+  <ng-container *ngIf="!isLoading; else loading">
+    <app-category-card [options]="allCareerOptions" type="CAREER" />
+  </ng-container>
+
+  <!-- Loading State -->
+  <ng-template #loading>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 py-10">
+      <div *ngFor="let _ of [1, 2, 3, 4]" class="bg-gray-100 p-6 rounded-xl animate-pulse">
+        <div class="h-8 w-8 mx-auto bg-gray-300 rounded-full mb-3"></div>
+        <div class="h-4 bg-gray-300 rounded w-3/4 mx-auto mb-2"></div>
+        <div class="h-3 bg-gray-300 rounded w-1/2 mx-auto"></div>
+      </div>
+    </div>
+  </ng-template>
+</div>

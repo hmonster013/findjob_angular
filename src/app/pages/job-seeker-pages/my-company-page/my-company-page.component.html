@@ -1,0 +1,50 @@
+<div class="">
+  <div class="container max-w-7xl mx-auto space-y-4">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- LEFT content -->
+      <div class="lg:col-span-8 space-y-4">
+        <div class="bg-white rounded-xl shadow-xl border border-gray-300 p-6">
+          <!-- Tabs header -->
+          <div class="flex flex-wrap gap-3 border-b-2 border-gray-300 mb-6">
+            <button
+              (click)="selectTab('viewed')"
+              class="flex items-center whitespace-nowrap px-4 py-2 rounded-md text-sm font-medium text-gray-800 transition-all duration-300 ease-in-out"
+              [ngClass]="{
+                'bg-amber-100 text-amber-600 font-bold border-b-[4px] border-amber-600 shadow-md': selectedTab === 'viewed',
+                'hover:bg-amber-50 hover:text-amber-600': selectedTab !== 'viewed'
+              }"
+            >
+              <i class="fas fa-eye mr-2 text-xs"></i> Nhà tuyển dụng xem hồ sơ
+            </button>
+            <button
+              (click)="selectTab('followed')"
+              class="flex items-center whitespace-nowrap px-4 py-2 rounded-md text-sm font-medium text-gray-800 transition-all duration-300 ease-in-out"
+              [ngClass]="{
+                'bg-amber-100 text-amber-600 font-bold border-b-[4px] border-amber-600 shadow-md': selectedTab === 'followed',
+                'hover:bg-amber-50 hover:text-amber-600': selectedTab !== 'followed'
+              }"
+            >
+              <i class="fas fa-heart mr-2 text-xs"></i> Theo dõi công ty
+            </button>
+          </div>
+
+          <!-- Tabs content -->
+          <div *ngIf="selectedTab === 'viewed'">
+            <app-company-viewed-card />
+          </div>
+          <div *ngIf="selectedTab === 'followed'">
+            <app-company-followed-card />
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT sidebar -->
+      <div class="lg:col-span-4 space-y-4">
+        <div class="bg-white rounded-xl shadow-xl border border-gray-300 p-6">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">Việc làm phù hợp</h2>
+          <app-suggested-job-post-card mode="fixed" [pageSize]="4" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

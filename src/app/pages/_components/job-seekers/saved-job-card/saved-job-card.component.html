@@ -1,0 +1,108 @@
+<div class="bg-white py-6 w-full">
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoading" class="space-y-4 px-2 sm:px-4 max-w-4xl w-full mx-auto">
+    <div *ngFor="let _ of [1,2,3,4,5]" class="flex items-center p-4 bg-gray-50 rounded-lg animate-pulse shadow-sm w-full">
+      <div class="w-12 h-12 bg-gray-200 rounded-md mr-4 flex-shrink-0"></div>
+      <div class="flex-1 min-w-0">
+        <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+      </div>
+      <div class="w-20 h-8 bg-gray-200 rounded flex-shrink-0"></div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && savedJobs.length === 0" class="text-center py-12 bg-gray-50 rounded-lg border border-gray-200 shadow-sm max-w-4xl w-full mx-auto px-2 sm:px-4">
+    <i class="fas fa-briefcase text-6xl text-orange-400 mb-4"></i>
+    <p class="text-lg font-medium text-gray-700">Bạn chưa lưu công việc nào.</p>
+    <p class="text-sm text-gray-500 mt-2">Khám phá ngay các cơ hội việc làm phù hợp với bạn!</p>
+    <a
+      href="/viec-lam"
+      class="mt-4 inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+    >
+      <i class="fas fa-search mr-2 text-sm"></i> Tìm việc ngay
+    </a>
+  </div>
+
+  <!-- List saved jobs -->
+  <div *ngIf="!isLoading && savedJobs.length > 0" class="space-y-4 px-2 sm:px-4 max-w-4xl w-full mx-auto">
+    <div
+      *ngFor="let job of savedJobs"
+      class="flex flex-col sm:flex-row items-start sm:items-center p-4 border border-gray-200 rounded-lg bg-white hover:shadow-lg transition-shadow w-full overflow-x-auto"
+    >
+      <img
+        [src]="job.companyDict?.companyImageUrl || IMAGES.imageDefault"
+        alt="Company Logo"
+        class="h-12 w-12 rounded-md object-cover mr-0 sm:mr-4 mb-2 sm:mb-0 flex-shrink-0"
+      />
+      <div class="flex-1 min-w-0 w-full">
+        <div class="flex flex-wrap items-center space-x-2">
+          <a
+            [routerLink]="['/viec-lam', job.slug]"
+            class="text-lg font-semibold text-orange-600 hover:underline break-words"
+          >
+            {{ job.jobName }}
+          </a>
+          <span *ngIf="job.isUrgent" class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-red-500 rounded-full">
+            <i class="fas fa-exclamation-circle mr-1 text-xs"></i> Khẩn cấp
+          </span>
+          <span *ngIf="job.isApplied" class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-green-500 rounded-full">
+            <i class="fas fa-check-circle mr-1 text-xs"></i> Đã ứng tuyển
+          </span>
+        </div>
+        <p class="text-sm text-gray-600 mt-1 break-words">{{ job.companyDict?.companyName || 'Không xác định' }}</p>
+        <div class="text-sm text-gray-500 mt-1 flex flex-wrap items-center gap-4">
+          <span class="flex items-center">
+            <i class="fas fa-money-bill-wave text-xs mr-1"></i>
+            {{ job.salaryMin / 1000000 }} - {{ job.salaryMax / 1000000 }} triệu
+          </span>
+          <span class="flex items-center">
+            <i class="fas fa-map-marker-alt text-xs mr-1"></i>
+            {{ getCityNameById(job.locationDict?.city) }}
+          </span>
+          <span class="flex items-center">
+            <i class="fas fa-clock text-xs mr-1"></i>
+            {{ job.deadline | date: 'dd/MM/yyyy' }}
+          </span>
+        </div>
+      </div>
+      <button
+        (click)="handleUnsave(job.slug)"
+        class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors text-sm mt-2 sm:mt-0 sm:ml-4 w-full sm:w-auto justify-center"
+      >
+        <i class="fas fa-trash-alt mr-1 text-xs"></i> Hủy lưu
+      </button>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && totalPages > 1" class="flex flex-wrap justify-center items-center space-x-2 mt-8 w-full overflow-x-auto px-2 sm:px-0">
+    <button
+      (click)="handleChangePage(page - 1)"
+      [disabled]="page <= 1"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-orange-600 text-white hover:bg-orange-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+    >
+      <i class="fas fa-chevron-left text-sm"></i>
+    </button>
+    <div class="flex space-x-1">
+      <button
+        *ngFor="let p of pages"
+        (click)="handleChangePage(p)"
+        [ngClass]="{
+          'bg-orange-600 text-white': p === page,
+          'bg-gray-100 text-gray-700': p !== page
+        }"
+        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-orange-100 transition-colors"
+      >
+        {{ p }}
+      </button>
+    </div>
+    <button
+      (click)="handleChangePage(page + 1)"
+      [disabled]="page >= totalPages"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-orange-600 text-white hover:bg-orange-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+    >
+      <i class="fas fa-chevron-right text-sm"></i>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<header
+  class="w-full sticky top-0 z-[999] bg-orange-600 text-white shadow h-16 flex items-center justify-between"
+>
+  <!-- Left side: Menu toggle + Account Switch -->
+  <div class="flex items-center h-full px-4 sm:px-6 gap-3">
+    <!-- Mobile Menu Button -->
+    <button
+      class="lg:hidden p-2 rounded-lg bg-orange-700 hover:bg-orange-800 hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+      (click)="handleDrawerToggle?.()"
+      aria-label="Mở sidebar"
+    >
+      <i class="fas fa-bars text-white text-xl"></i>
+    </button>
+    <!-- Account Switch Menu -->
+    <div class="hidden md:block">
+      <app-account-switch-menu></app-account-switch-menu>
+    </div>
+  </div>
+
+  <!-- Right side: Notifications + Chat + Avatar -->
+  <div class="flex items-center h-full px-4 sm:px-6 gap-3">
+    <!-- NotificationCard -->
+    <app-notification-card
+      *ngIf="isAuthenticated"
+      class="flex-shrink-0"
+      (closed)="closeMenus()"
+    ></app-notification-card>
+
+    <!-- ChatCard -->
+    <app-chat-card
+      *ngIf="isAuthenticated"
+      class="flex-shrink-0 hidden md:block"
+    ></app-chat-card>
+
+    <!-- UserMenu -->
+    <div *ngIf="isAuthenticated" class="relative">
+      <div
+        class="flex items-center gap-2 border-2 border-white rounded-3xl p-1 cursor-pointer hover:bg-gradient-to-r hover:from-orange-500 hover:to-orange-600 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+        (click)="toggleUserMenu()"
+        [attr.aria-expanded]="showUserMenu"
+        aria-controls="user-menu"
+        role="button"
+      >
+        <img
+          [src]="currentUser?.avatarUrl || IMAGES.imageDefault"
+          alt="Avatar của {{ currentUser?.fullName || 'người dùng' }}"
+          class="w-10 h-10 rounded-full object-cover"
+          loading="lazy"
+        />
+        <span class="hidden md:block text-white font-semibold text-sm truncate max-w-[120px]">
+          {{ currentUser?.fullName || 'Người dùng' }}
+        </span>
+      </div>
+
+      <div
+        *ngIf="showUserMenu"
+        id="user-menu"
+        class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-50 max-w-[calc(100vw-16px)]"
+      >
+        <app-user-menu (closed)="closeMenus()"></app-user-menu>
+      </div>
+    </div>
+  </div>
+</header>

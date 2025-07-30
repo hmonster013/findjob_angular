@@ -1,0 +1,38 @@
+<div class="max-w-7xl mx-auto space-x-4">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+    <!-- LEFT content -->
+    <div class="md:col-span-7 lg:col-span-8 space-y-6">
+      <!-- BoxProfile -->
+      <app-box-profile
+        [currentUser]="currentUser"
+        [allConfig]="allConfigs"
+        [title]="'MyJob Profile'"
+      />
+
+      <!-- ProfileUpload -->
+      <app-profile-upload
+        [allConfig]="allConfigs"
+        [jobSeekerProfileId]="currentUser?.jobSeekerProfile?.id"
+        [title]="'Hồ sơ đính kèm'"
+      />
+    </div>
+
+    <!-- RIGHT sidebar -->
+    <div class="md:col-span-5 lg:col-span-4 space-y-6">
+      <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300 space-y-4">
+        <h2 class="text-lg font-semibold text-amber-600 flex items-center">
+          <i class="fas fa-eye mr-2"></i> Ai đã xem hồ sơ của bạn
+        </h2>
+        <app-company-viewed-card />
+        <div class="text-center">
+          <a
+            routerLink="/job-seeker/dashboard/my-company"
+            class="text-amber-600 hover:underline text-sm font-medium"
+          >
+            Xem chi tiết
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

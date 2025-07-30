@@ -1,0 +1,197 @@
+<div class="job-posts-table-container p-3 lg:p-5 rounded-lg border border-gray-200 shadow-md bg-white hover:shadow-md transition-shadow duration-300">
+
+  <!-- Desktop Table View -->
+  <div class="hidden md:block overflow-x-auto">
+    <table class="min-w-full table-auto">
+      <thead>
+        <tr class="bg-gray-50 text-gray-800 text-sm">
+          <th
+            *ngFor="let head of headCells"
+            class="px-3 lg:px-4 py-2 lg:py-3 font-medium"
+            [ngClass]="{
+              'text-left': !head.numeric,
+              'text-right': head.numeric,
+              'cursor-pointer': head.showOrder,
+              'pl-2': head.disablePadding
+            }"
+            (click)="head.showOrder && onSort(head.id)"
+          >
+            {{ head.label }}
+            <span *ngIf="orderBy === head.id && head.showOrder" class="ml-1">
+              {{ order === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody *ngIf="!isLoading && dataSource.length > 0; else noData">
+        <tr *ngFor="let row of dataSource" class="border-b border-gray-200 hover:bg-gray-100 text-sm transition-colors">
+          <td class="px-3 lg:px-4 py-2 lg:py-3" [ngClass]="{'pl-2': headCells[0].disablePadding}">
+            {{ row.jobName }}
+            <span *ngIf="row.isUrgent" class="inline-block ml-2 px-2 py-0.5 text-xs font-medium text-orange-800 bg-orange-100 rounded-full">
+              Tuyển gấp
+            </span>
+          </td>
+          <td class="px-3 lg:px-4 py-2 lg:py-3">{{ formatDate(row.createAt) }}</td>
+          <td class="px-3 lg:px-4 py-2 lg:py-3">
+            <span [ngClass]="row.isExpired ? 'text-orange-600' : 'text-orange-600'">
+              {{ formatDate(row.deadline) }}
+            </span>
+          </td>
+          <td class="px-3 lg:px-4 py-2 lg:py-3">{{ row.appliedNumber }}</td>
+          <td class="px-3 lg:px-4 py-2 lg:py-3">{{ row.views }}</td>
+          <td class="px-3 lg:px-4 py-2 lg:py-3">
+            <span
+              class="inline-block px-2 py-0.5 text-xs font-medium rounded-full"
+              [ngClass]="JOB_POST_STATUS_BG_COLOR[row.isUrgent] || 'bg-orange-100 text-orange-800'"
+            >
+              {{ row.isUrgent ? 'Tuyển gấp' : 'Không tuyển gấp' }}
+            </span>
+          </td>
+          <td class="px-3 lg:px-4 py-2 lg:py-3 flex justify-end gap-2">
+            <div class="group relative">
+              <button (click)="edit.emit(row)" class="text-orange-600 hover:text-orange-700 hover:shadow-md transition-all duration-300">
+                <i class="fas fa-edit text-lg"></i>
+              </button>
+              <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+                Cập nhật
+              </span>
+            </div>
+            <div class="group relative">
+              <button (click)="confirmDelete(row)" class="text-orange-600 hover:text-orange-700 hover:shadow-md transition-all duration-300">
+                <i class="fas fa-trash text-lg"></i>
+              </button>
+              <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+                Xóa
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mobile Card View -->
+  <div class="block md:hidden">
+    <div *ngIf="!isLoading && dataSource.length > 0; else noData" class="space-y-3">
+      <div *ngFor="let row of dataSource" class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+        <!-- Job Title -->
+        <div class="flex justify-between items-start mb-3">
+          <h3 class="font-medium text-gray-900 flex-1 pr-2">{{ row.jobName }}</h3>
+          <div class="flex gap-2 ml-2">
+            <button
+              (click)="edit.emit(row)"
+              class="text-orange-600 hover:text-orange-700 p-2 rounded-full hover:bg-orange-50 transition-colors"
+              aria-label="Cập nhật"
+            >
+              <i class="fas fa-edit text-base"></i>
+            </button>
+            <button
+              (click)="confirmDelete(row)"
+              class="text-orange-600 hover:text-orange-700 p-2 rounded-full hover:bg-orange-50 transition-colors"
+              aria-label="Xóa"
+            >
+              <i class="fas fa-trash text-base"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Job Details -->
+        <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+          <div>
+            <span class="font-medium">Ngày đăng:</span>
+            <div class="text-gray-900">{{ formatDate(row.createAt) }}</div>
+          </div>
+          <div>
+            <span class="font-medium">Hạn nộp:</span>
+            <div class="text-orange-600">{{ formatDate(row.deadline) }}</div>
+          </div>
+          <div>
+            <span class="font-medium">Lượt nộp:</span>
+            <div class="text-gray-900">{{ row.appliedNumber }}</div>
+          </div>
+          <div>
+            <span class="font-medium">Lượt xem:</span>
+            <div class="text-gray-900">{{ row.views }}</div>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2 mt-3">
+          <span *ngIf="row.isUrgent" class="inline-block px-2 py-1 text-xs font-medium text-orange-800 bg-orange-100 rounded-full">
+            Tuyển gấp
+          </span>
+          <span
+            class="inline-block px-2 py-1 text-xs font-medium rounded-full"
+            [ngClass]="JOB_POST_STATUS_BG_COLOR[row.isUrgent] || 'bg-gray-100 text-gray-800'"
+          >
+            {{ row.isUrgent ? 'Ưu tiên' : 'Bình thường' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No data -->
+  <ng-template #noData>
+    <app-no-data-card title="Bạn chưa có tin tuyển dụng nào" class="animate-fadeInUp">
+      <div class="text-orange-600 text-sm mt-2">
+        Hãy tạo tin tuyển dụng đầu tiên của bạn!
+      </div>
+    </app-no-data-card>
+  </ng-template>
+
+  <!-- Pagination -->
+  <div class="flex flex-col sm:flex-row justify-between items-center gap-3 p-3 lg:p-4 border-t border-gray-200 bg-gray-50">
+    <div class="text-sm text-gray-600 order-2 sm:order-1">
+      Hiển thị
+      <select
+        (change)="onChangeRowsPerPage($event)"
+        [value]="rowsPerPage"
+        class="border border-orange-300 rounded px-2 py-1 mx-2 bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
+      >
+        <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">{{ size }}</option>
+      </select>
+      mục
+    </div>
+    <div *ngIf="totalPages > 1" class="flex justify-center order-1 sm:order-2">
+      <nav class="inline-flex rounded-lg border border-gray-100 shadow-sm" aria-label="Pagination">
+        <button
+          (click)="goToPage(page - 1)"
+          [disabled]="page === 0"
+          class="px-2 lg:px-3 py-2 border-r border-gray-100 rounded-l-lg text-orange-600 hover:bg-orange-600 hover:text-white disabled:text-gray-400 disabled:hover:bg-white disabled:hover:text-gray-400 transition-all duration-300"
+          aria-label="Previous page"
+        >
+          <i class="fas fa-chevron-left text-sm"></i>
+        </button>
+
+        <!-- Mobile: Only show current page info -->
+        <div class="block sm:hidden px-3 py-2 text-orange-600 bg-orange-50 text-sm">
+          {{ page + 1 }} / {{ totalPages }}
+        </div>
+
+        <!-- Desktop: Show page numbers -->
+        <div class="hidden sm:flex">
+          <button
+            *ngFor="let p of getVisiblePages()"
+            (click)="goToPage(p - 1)"
+            class="px-3 lg:px-4 py-2 border-r border-gray-100 text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-300"
+            [class.bg-orange-600]="p === page + 1"
+            [class.text-white]="p === page + 1"
+          >
+            {{ p }}
+          </button>
+        </div>
+
+        <button
+          (click)="goToPage(page + 1)"
+          [disabled]="page === totalPages - 1"
+          class="px-2 lg:px-3 py-2 rounded-r-lg text-orange-600 hover:bg-orange-600 hover:text-white disabled:text-gray-400 disabled:hover:bg-white disabled:hover:text-gray-400 transition-all duration-300"
+          aria-label="Next page"
+        >
+          <i class="fas fa-chevron-right text-sm"></i>
+        </button>
+      </nav>
+    </div>
+  </div>
+</div>

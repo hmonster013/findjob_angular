@@ -1,0 +1,101 @@
+/* Base styles for container */
+#filter-job-post-card {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+#filter-job-post-card .grid {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+#filter-job-post-card .grid > * {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Job post wrapper */
+#filter-job-post-card app-job-post {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: block;
+}
+
+/* Responsive pagination scroll for mobile */
+.pagination-scroll {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: unset;
+  padding-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.pagination-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  #filter-job-post-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    padding: 0;
+    margin: 0;
+  }
+
+  #filter-job-post-card .grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  #filter-job-post-card .grid > * {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+  }
+
+  #filter-job-post-card app-job-post {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    display: block !important;
+  }
+
+  .pagination-scroll {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    gap: 0.15rem !important;
+    padding-bottom: 4px;
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+  .pagination-scroll button {
+    min-width: 40px;
+    font-size: 15px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 0.5rem;
+  }
+}

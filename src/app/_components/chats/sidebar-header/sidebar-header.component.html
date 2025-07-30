@@ -1,0 +1,29 @@
+<div class="px-6 py-5 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+  <div class="flex items-center justify-between">
+    <!-- Logo và tiêu đề -->
+    <div class="flex items-center space-x-3 cursor-pointer group" (click)="handleRedirect()">
+      <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center group-hover:bg-white/30 transition-all duration-300">
+        <img [src]="IMAGES.logoWhite" alt="FindJob Logo" class="h-6 w-auto" />
+      </div>
+      <div>
+        <h2 class="text-xl font-bold tracking-tight">FindJob</h2>
+        <p class="text-xs opacity-90 font-medium">Professional Network</p>
+      </div>
+    </div>
+    <!-- Button -->
+    <button
+      (click)="handleRedirect()"
+      class="flex items-center justify-center w-11 h-11 bg-white/15 text-white rounded-xl hover:bg-white/25 transition-all duration-300 transform hover:scale-105 group"
+      [title]="isEmployer ? 'Về trang quản trị' : 'Về trang chủ'"
+    >
+      <ng-container *ngIf="isEmployer; else goHome">
+        <i class="fas fa-tachometer-alt text-lg group-hover:scale-110 transition-transform duration-300"></i>
+      </ng-container>
+      <ng-template #goHome>
+        <i class="fas fa-home text-lg group-hover:scale-110 transition-transform duration-300"></i>
+      </ng-template>
+    </button>
+  </div>
+
+  <div class="mt-4 h-px bg-white/20"></div>
+</div>

@@ -1,0 +1,18 @@
+<div class="flex flex-col min-h-screen">
+  <!-- Header -->
+  <app-header></app-header>
+
+  <!-- TopSlide -->
+  <app-top-slide></app-top-slide>
+
+  <!-- Main Content -->
+  <main class="flex-1 px-2 sm:px-4 md:px-6 lg:px-8 xl:px-8 py-6">
+    <div class="max-w-screen-xl mx-auto w-full">
+      <app-search-container></app-search-container>
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <app-footer></app-footer>
+</div>

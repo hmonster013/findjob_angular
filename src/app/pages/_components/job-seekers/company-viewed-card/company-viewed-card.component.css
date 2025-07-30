@@ -1,0 +1,10 @@
+.saved-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(47, 161, 51, 0.15);
+  color: rgb(47, 161, 50);
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}

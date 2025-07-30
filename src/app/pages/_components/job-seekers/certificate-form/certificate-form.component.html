@@ -1,0 +1,110 @@
+<form [formGroup]="form" id="modal-form" (ngSubmit)="onSubmit()" class="space-y-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Name -->
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Tên chứng chỉ <span class="text-red-600">*</span></label>
+      <input
+        formControlName="name"
+        type="text"
+        placeholder="Nhập tên chứng chỉ"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('name')?.errors && form.get('name')?.touched}"
+      />
+      <div
+        *ngIf="form.get('name')?.errors && form.get('name')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('name')?.errors?.['required']">Tên chứng chỉ là bắt buộc.</div>
+        <div *ngIf="form.get('name')?.errors?.['maxlength']">Tên chứng chỉ không được vượt quá 200 ký tự.</div>
+      </div>
+    </div>
+
+    <!-- Training Place -->
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-gray-800 mb-1">Trường/Trung tâm đào tạo <span class="text-red-600">*</span></label>
+      <input
+        formControlName="trainingPlace"
+        type="text"
+        placeholder="Nhập tên trường/trung tâm"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('trainingPlace')?.errors && form.get('trainingPlace')?.touched}"
+      />
+      <div
+        *ngIf="form.get('trainingPlace')?.errors && form.get('trainingPlace')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('trainingPlace')?.errors?.['required']">Trường/trung tâm là bắt buộc.</div>
+        <div *ngIf="form.get('trainingPlace')?.errors?.['maxlength']">Trường/trung tâm không được vượt quá 255 ký tự.</div>
+      </div>
+    </div>
+
+    <!-- Start Date -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Ngày cấp <span class="text-red-600">*</span></label>
+      <input
+        formControlName="startDate"
+        type="date"
+        [max]="maxYesterday"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all"
+        [ngClass]="{'border-red-600': form.get('startDate')?.errors && form.get('startDate')?.touched}"
+      />
+      <div
+        *ngIf="form.get('startDate')?.errors && form.get('startDate')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('startDate')?.errors?.['required']">Ngày cấp là bắt buộc.</div>
+      </div>
+    </div>
+
+    <!-- Expiration Date -->
+    <div>
+      <label class="block text-sm font-medium text-gray-800 mb-1">Ngày hết hạn <span *ngIf="!form.get('noExpiration')?.value" class="text-red-600">*</span></label>
+      <input
+        formControlName="expirationDate"
+        type="date"
+        [max]="maxToday"
+        [disabled]="form.get('noExpiration')?.value"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-all disabled:bg-gray-100"
+        [ngClass]="{'border-red-600': form.get('expirationDate')?.errors && form.get('expirationDate')?.touched}"
+      />
+      <div
+        *ngIf="form.get('expirationDate')?.errors && form.get('expirationDate')?.touched"
+        class="text-red-600 text-xs mt-1"
+      >
+        <div *ngIf="form.get('expirationDate')?.errors?.['required']">Ngày hết hạn là bắt buộc.</div>
+        <div *ngIf="form.get('expirationDate')?.errors?.['invalidRange']">Ngày hết hạn phải sau ngày cấp.</div>
+      </div>
+    </div>
+
+    <!-- No Expiration -->
+    <div class="md:col-span-2">
+      <label class="flex items-center gap-2 text-sm font-medium text-gray-800">
+        <input
+          type="checkbox"
+          formControlName="noExpiration"
+          (change)="onNoExpirationChange($event)"
+          class="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-600"
+        />
+        Chứng chỉ vô thời hạn
+      </label>
+    </div>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex justify-end gap-4 mt-6">
+    <button
+      type="button"
+      (click)="cancel()"
+      class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-all flex items-center gap-2"
+    >
+      <i class="fas fa-times"></i> Hủy
+    </button>
+    <button
+      type="submit"
+      class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-all flex items-center gap-2 disabled:bg-orange-400 disabled:cursor-not-allowed"
+      [disabled]="form.invalid"
+    >
+      <i class="fas fa-save"></i> Lưu
+    </button>
+  </div>
+</form>

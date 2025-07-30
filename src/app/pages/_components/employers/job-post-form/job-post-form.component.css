@@ -1,0 +1,22 @@
+.quill-editor {
+  background-color: white;
+}
+
+/* Ensure Quill editor doesn't overflow */
+quill-editor {
+  display: block;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Smooth scrolling for form */
+form {
+  overscroll-behavior: contain;
+}
+
+/* Ensure sticky buttons cover the full width */
+.sticky {
+  width: 100%;
+  left: 0;
+  right: 0;
+}

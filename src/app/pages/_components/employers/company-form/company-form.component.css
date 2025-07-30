@@ -1,0 +1,50 @@
+/* Loại bỏ mũi tên mặc định của trình duyệt */
+select.appearance-none::-ms-expand {
+  display: none;
+}
+
+select.appearance-none {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Tùy chỉnh dropdown khi focus/hover */
+select:focus {
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+}
+
+select:hover:not(:disabled) {
+  border-color: #f97316;
+}
+
+/* Tùy chỉnh trạng thái disabled */
+select:disabled {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+/* Đảm bảo select responsive */
+@media (max-width: 640px) {
+  select {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* Tùy chỉnh quill-editor cho đồng bộ với chủ đề */
+quill-editor .ql-container {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.375rem;
+}
+
+quill-editor .ql-toolbar {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.375rem 0.375rem 0 0;
+}
+
+quill-editor:focus-within {
+  border-color: #f97316 !important;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+}

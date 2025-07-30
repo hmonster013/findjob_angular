@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+/* Đảm bảo canvas full width */
+canvas {
+  width: 100%;
+}

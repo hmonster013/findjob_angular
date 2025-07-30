@@ -1,0 +1,95 @@
+<div class="p-6 sm:p-3 bg-white rounded-lg shadow-xl border border-gray-300">
+  <!-- Title -->
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+    <i class="fas fa-user text-orange-600"></i> Thông tin cá nhân
+  </h2>
+  <hr class="border-gray-200 mb-4 sm:mb-2">
+
+  <!-- Loading Skeleton -->
+  <div *ngIf="isLoadingProfile" class="space-y-3 sm:space-y-2 animate-pulse">
+    <div class="h-6 sm:h-4 bg-gray-200 rounded-md"></div>
+    <div class="h-6 sm:h-4 bg-gray-200 rounded-md"></div>
+    <div class="h-6 sm:h-4 bg-gray-200 rounded-md"></div>
+  </div>
+
+  <!-- No Profile -->
+  <div *ngIf="!isLoadingProfile && !profile" class="text-center py-12 sm:py-6 bg-gray-50 rounded-lg border-2 border-gray-300 shadow-md">
+    <i class="fas fa-user-circle text-5xl sm:text-3xl text-gray-400 mb-4 sm:mb-2"></i>
+    <p class="text-lg sm:text-base font-medium text-gray-700">Bạn chưa có thông tin cá nhân.</p>
+    <p class="text-sm text-gray-500 mt-2 sm:mt-1">Cập nhật thông tin để hoàn thiện hồ sơ!</p>
+    <button
+      (click)="handleShowEdit()"
+      class="mt-4 sm:mt-2 px-4 sm:px-2 py-2 sm:py-1 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-all flex items-center gap-2 sm:gap-1 mx-auto"
+    >
+      <i class="fas fa-plus"></i> Thêm thông tin
+    </button>
+  </div>
+
+  <!-- Profile Info -->
+  <div *ngIf="!isLoadingProfile && profile" class="space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+      <div>
+        <span class="font-semibold text-gray-800">Họ tên:</span> {{ profile.user.fullName || 'Chưa cập nhật' }}
+      </div>
+      <div>
+        <span class="font-semibold text-gray-800">Số điện thoại:</span> {{ profile.phone || 'Chưa cập nhật' }}
+      </div>
+      <div>
+        <span class="font-semibold text-gray-800">Ngày sinh:</span>
+        {{ profile.birthday ? (profile.birthday | date: 'dd/MM/yyyy') : 'Chưa cập nhật' }}
+      </div>
+      <div>
+        <span class="font-semibold text-gray-800">Giới tính:</span>
+        {{ allConfig?.genderDict[profile.gender] || 'Chưa cập nhật' }}
+      </div>
+      <div>
+        <span class="font-semibold text-gray-800">Tình trạng hôn nhân:</span>
+        {{ allConfig?.maritalStatusDict[profile.maritalStatus] || 'Chưa cập nhật' }}
+      </div>
+      <div>
+        <span class="font-semibold text-gray-800">Tỉnh/Thành phố:</span>
+        {{ allConfig?.cityDict[profile.location?.city] || 'Chưa cập nhật' }}
+      </div>
+      <div>
+        <span class="font-semibold text-gray-800">Quận/Huyện:</span>
+        {{ profile.location?.district ? getDistrictName(profile.location.district) : 'Chưa cập nhật' }}
+      </div>
+      <div>
+        <span class="font-semibold text-gray-800">Địa chỉ:</span> {{ profile.location?.address || 'Chưa cập nhật' }}
+      </div>
+    </div>
+
+    <div class="mt-6 sm:mt-2 flex justify-end">
+      <button
+        (click)="handleShowEdit()"
+        class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-all flex items-center gap-2"
+      >
+        <i class="fas fa-edit"></i> Chỉnh sửa
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Popup -->
+  <div
+    *ngIf="openPopup"
+    class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50 transition-opacity duration-300"
+  >
+    <div class="bg-white rounded-lg p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-xl border border-gray-200 relative">
+      <!-- Form -->
+      <app-personal-profile-form
+        [editData]="profile"
+        [handleUpdateProfile]="handleUpdate"
+        [allConfig]="allConfig"
+        (cancelForm)="openPopup = false"
+      ></app-personal-profile-form>
+    </div>
+  </div>
+
+  <!-- Fullscreen Loading -->
+  <div
+    *ngIf="isFullScreenLoading"
+    class="fixed inset-0 bg-gray-500/75 flex items-center justify-center z-50"
+  >
+    <div class="animate-spin rounded-full h-12 w-12 border-4 border-amber-600 border-t-transparent"></div>
+  </div>
+</div>

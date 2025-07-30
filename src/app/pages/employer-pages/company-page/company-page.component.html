@@ -1,0 +1,26 @@
+<div class="w-full bg-orange-50 rounded-lg shadow-sm p-2 sm:p-5">
+  <!-- Tabs -->
+  <div class="tab-list flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center justify-center sm:justify-start border-b border-gray-200">
+    <button
+      *ngFor="let tab of tabItems"
+      (click)="selectTab(tab.id)"
+      [class]="
+        'w-full sm:w-auto flex items-center justify-center whitespace-nowrap px-3 sm:px-4 py-2 rounded-md text-gray-800 text-sm font-medium transition-all duration-300 ease-in-out ' +
+        (selectedTab === tab.id
+          ? 'bg-orange-100 text-orange-600 font-bold border-b-4 border-orange-600 shadow-sm'
+          : 'hover:bg-orange-50 hover:text-orange-600')
+      "
+    >
+      <i class="fas fa-{{tab.icon}} mr-2 text-base"></i>
+      {{ tab.label }}
+    </button>
+  </div>
+
+  <!-- Nội dung tab -->
+  <div class="mt-3 sm:mt-4">
+    <ng-container [ngSwitch]="selectedTab">
+      <app-company-card *ngSwitchCase="'company'" />
+      <app-company-image-card *ngSwitchCase="'media'" />
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,111 @@
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 mobile-container">
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoading" class="space-y-4">
+    <div class="h-32 bg-gray-200 rounded-lg animate-pulse mobile-skeleton"></div>
+    <div class="h-24 bg-gray-200 rounded-lg animate-pulse mobile-skeleton"></div>
+    <div class="h-24 bg-gray-200 rounded-lg animate-pulse mobile-skeleton"></div>
+    <div class="h-24 bg-gray-200 rounded-lg animate-pulse mobile-skeleton"></div>
+  </div>
+
+  <!-- No Data -->
+  <div *ngIf="!isLoading && !profileDetail" class="text-center py-12 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 text-lg mobile-no-data">
+    Không tìm thấy hồ sơ ứng viên. Có thể hồ sơ này đã được đặt chế độ không cho phép tìm kiếm.
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!isLoading && profileDetail" class="space-y-6 mobile-sections">
+    <!-- Top Info -->
+    <div class="bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg p-6 flex flex-col md:flex-row md:justify-between md:items-center gap-6 mobile-header">
+      <div class="flex items-center gap-4 mobile-header-info">
+        <img [src]="profileDetail?.user?.avatarUrl || IMAGES.imageDefault" alt="avatar" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg mobile-avatar" />
+        <div class="space-y-1 mobile-info">
+          <h1 class="text-2xl font-bold">{{ profileDetail.user.fullName || '---' }}</h1>
+          <p class="text-base opacity-90">{{ profileDetail.title || 'Chưa cập nhật' }}</p>
+          <p class="text-sm opacity-80">
+            Cập nhật: {{ formatDate(profileDetail.updateAt) }}
+            <span *ngIf="profileDetail.lastViewedDate" class="ml-2 inline-flex items-center bg-white/20 px-2 py-1 rounded text-xs mobile-status-badge">
+              <i class="fas fa-check-circle mr-1"></i> Xem lần cuối: {{ formatDate(profileDetail.lastViewedDate) }}
+            </span>
+          </p>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3 mobile-actions">
+        <button type="button" (click)="printProfile()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors mobile-action-button">
+          <i class="fas fa-print"></i> In hồ sơ
+        </button>
+        <button
+          type="button"
+          (click)="handleSave()"
+          class="px-4 py-2 rounded-lg flex items-center gap-2 transition-colors mobile-action-button"
+          [ngClass]="profileDetail.isSaved ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-orange-500 hover:bg-orange-600 text-white'"
+        >
+          <i [ngClass]="profileDetail.isSaved ? 'fas fa-heart' : 'far fa-heart'"></i>
+          {{ profileDetail.isSaved ? 'Đã lưu' : 'Lưu hồ sơ' }}
+        </button>
+        <button type="button" (click)="onOpenSendMail()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors mobile-action-button">
+          <i [ngClass]="profileDetail.isSentEmail ? 'fas fa-envelope-open-text' : 'fas fa-envelope'"></i>
+          {{ profileDetail.isSentEmail ? 'Gửi lại Email' : 'Gửi Email' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Profile Detail -->
+    <div class="space-y-6 mobile-sections">
+      <div class="bg-white border border-gray-200 rounded-lg p-6 mobile-section">
+        <h2 class="text-xl font-semibold text-orange-600 border-b-2 border-orange-600 pb-2 mb-4 mobile-section-title">Thông tin cá nhân</h2>
+        <div class="text-gray-700 mobile-section-content" [innerHTML]="getPersonalInfoHtml()"></div>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-lg p-6 mobile-section">
+        <h2 class="text-xl font-semibold text-orange-600 border-b-2 border-orange-600 pb-2 mb-4 mobile-section-title">Thông tin chung</h2>
+        <div class="text-gray-700 mobile-section-content" [innerHTML]="getGeneralInfoHtml()"></div>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-lg p-6 mobile-section">
+        <h2 class="text-xl font-semibold text-orange-600 border-b-2 border-orange-600 pb-2 mb-4 mobile-section-title">Mục tiêu nghề nghiệp</h2>
+        <div class="text-gray-700 mobile-section-content" [innerHTML]="getCareerGoalHtml()"></div>
+      </div>
+
+      <div *ngIf="profileDetail.type === 'WEBSITE'" class="space-y-6 mobile-sections">
+        <div class="bg-white border border-gray-200 rounded-lg p-6 mobile-section">
+          <h2 class="text-xl font-semibold text-orange-600 border-b-2 border-orange-600 pb-2 mb-4 mobile-section-title">Kinh nghiệm làm việc</h2>
+          <div class="text-gray-700 mobile-section-content" [innerHTML]="getSafeHtml(profileDetail.experiencesDetails, 'experience')"></div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg p-6 mobile-section">
+          <h2 class="text-xl font-semibold text-orange-600 border-b-2 border-orange-600 pb-2 mb-4 mobile-section-title">Học vấn</h2>
+          <div class="text-gray-700 mobile-section-content" [innerHTML]="getSafeHtml(profileDetail.educationDetails, 'education')"></div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg p-6 mobile-section">
+          <h2 class="text-xl font-semibold text-orange-600 border-b-2 border-orange-600 pb-2 mb-4 mobile-section-title">Chứng chỉ</h2>
+          <div class="text-gray-700 mobile-section-content" [innerHTML]="getSafeHtml(profileDetail.certificates, 'certificate')"></div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg p-6 mobile-section">
+          <h2 class="text-xl font-semibold text-orange-600 border-b-2 border-orange-600 pb-2 mb-4 mobile-section-title">Ngôn ngữ</h2>
+          <div class="text-gray-700 mobile-section-content" [innerHTML]="getSafeHtml(profileDetail.languageSkills, 'language')"></div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg p-6 mobile-section">
+          <h2 class="text-xl font-semibold text-orange-600 border-b-2 border-orange-600 pb-2 mb-4 mobile-section-title">Kỹ năng chuyên môn</h2>
+          <div class="text-gray-700 mobile-section-content" [innerHTML]="getSafeHtml(profileDetail.advancedSkills, 'skill')"></div>
+        </div>
+      </div>
+
+      <div *ngIf="profileDetail.type === 'uploadFile'" class="bg-white border border-gray-200 rounded-lg p-6 mobile-section">
+        <h2 class="text-xl font-semibold text-orange-600 border-b-2 border-orange-600 pb-2 mb-4 mobile-section-title">File hồ sơ</h2>
+        <a [href]="pdfUrl" target="_blank" class="text-orange-600 hover:text-orange-700 underline mobile-section-content">Xem file CV</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Send Email -->
+  <app-send-mail-card
+    *ngIf="openSendMailPopup"
+    [openPopup]="openSendMailPopup"
+    [sendMailData]="sendMailData"
+    (handleSendEmail)="handleSendEmail($event)"
+    (setOpenPopup)="openSendMailPopup = $event"
+  ></app-send-mail-card>
+</div>

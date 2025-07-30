@@ -1,0 +1,65 @@
+<div class="p-4 sm:p-5 rounded-lg border border-orange-200 shadow-md bg-orange-50 h-full flex flex-col space-y-6 chart-container hover:shadow-xl transition-shadow duration-300">
+  <div class="flex items-center justify-between">
+    <h2 class="text-xl font-semibold text-orange-800">{{ title }}</h2>
+    <div class="tooltip">
+      <i class="fas fa-redo text-lg text-orange-400 hover:text-orange-600 hover:scale-110 transition-all duration-300"></i>
+      <span class="tooltiptext">Thống kê số hồ sơ ứng tuyển theo ngày</span>
+    </div>
+  </div>
+
+  <div class="border-t border-dashed border-orange-300"></div>
+
+  <div class="flex-1">
+    <div class="chart-date-controls flex justify-end mb-4 gap-3">
+      <input
+        type="date"
+        [value]="selectedDateRange[0].format('YYYY-MM-DD')"
+        (change)="onDateChange($event, 'start')"
+        class="border border-orange-300 rounded px-2 py-1 sm:px-3 sm:py-2 text-sm focus:ring-2 focus:ring-orange-500"
+      />
+      <input
+        type="date"
+        [value]="selectedDateRange[1].format('YYYY-MM-DD')"
+        (change)="onDateChange($event, 'end')"
+        class="border border-orange-300 rounded px-2 py-1 sm:px-3 sm:py-2 text-sm focus:ring-2 focus:ring-orange-500"
+      />
+      <button
+        class="bg-orange-600 text-white rounded px-3 py-1 sm:px-4 sm:py-2 text-sm hover:bg-orange-700 hover:scale-105 hover:shadow-md transition-all duration-300 disabled:bg-orange-300 disabled:cursor-not-allowed"
+        (click)="onSubmitDateChange()"
+        [disabled]="!allowSubmit"
+      >
+        Cập nhật
+      </button>
+    </div>
+
+    <div class="relative min-h-[320px] max-h-[400px]">
+      <!-- Loading state -->
+      <div *ngIf="isLoading" class="flex items-center justify-center h-[320px] animate-pulse">
+        <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-600"></div>
+      </div>
+
+      <!-- Error state -->
+      <div *ngIf="!isLoading && errorMessage" class="flex items-center justify-center h-[320px] bg-orange-50 rounded-md error-state animate-fadeInUp">
+        <div class="text-center">
+          <h3 class="text-orange-800 font-semibold">Lỗi tải dữ liệu</h3>
+          <p class="text-orange-600">{{ errorMessage }}</p>
+          <img src="/assets/images/error.svg" alt="Error state" class="mx-auto mt-4 h-24">
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!isLoading && !errorMessage && (!data || !data.labels || data.labels.length === 0)" class="flex items-center justify-center h-[320px] bg-orange-50 rounded-md empty-state animate-fadeInUp">
+        <div class="text-center">
+          <h3 class="text-orange-800 font-semibold">Không có dữ liệu</h3>
+          <p class="text-orange-600">Không có dữ liệu để thống kê trong khoảng thời gian này</p>
+          <img src="/assets/images/empty.svg" alt="Empty state" class="mx-auto mt-4 h-24">
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="h-[320px] chart-wrapper" [ngClass]="{'visible': !isLoading && !errorMessage && data && data.labels && data.labels.length > 0}">
+        <canvas #chartCanvas class="h-full w-full"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

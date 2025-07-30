@@ -1,0 +1,22 @@
+.page-container {
+  padding: 1.5rem; /* p-6 */
+  background-color: #f9fafb; /* bg-gray-50 */
+  min-height: 100vh;
+}
+
+.card-wrapper {
+  max-width: 48rem; /* max-w-3xl */
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .page-container {
+    padding: 2rem; /* md:p-8 */
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-container {
+    padding: 3rem; /* lg:p-12 */
+  }
+}

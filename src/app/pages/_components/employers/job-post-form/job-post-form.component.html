@@ -1,0 +1,429 @@
+<div class="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-md flex flex-col">
+  <!-- Alert -->
+  <div *ngIf="editData" class="mb-4 sm:mb-6 p-4 bg-orange-50 text-gray-700 rounded-md flex items-center gap-2 animate-fadeInUp">
+    <i class="fas fa-redo text-lg text-orange-600"></i>
+    Khi bạn cập nhật bài đăng, nó sẽ ở trạng thái chờ kiểm duyệt!
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- Job Name -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Tên công việc <span class="text-red-500">*</span></label>
+        <input
+          formControlName="jobName"
+          placeholder="Nhập tên công việc"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('jobName')?.touched && form.get('jobName')?.invalid}"
+        />
+        <div *ngIf="form.get('jobName')?.touched && form.get('jobName')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('jobName')?.errors?.['required'] ? 'Tên công việc là bắt buộc' :
+             form.get('jobName')?.errors?.['maxlength'] ? 'Tên công việc vượt quá 200 ký tự' :
+             form.get('jobName')?.errors?.['serverError'] ? form.get('jobName')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <!-- Career -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Ngành nghề <span class="text-red-500">*</span></label>
+        <select
+          formControlName="career"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('career')?.touched && form.get('career')?.invalid}"
+        >
+          <option value="">Chọn ngành nghề</option>
+          <option *ngFor="let career of allConfig.careerOptions" [value]="career.id">{{ career.name }}</option>
+        </select>
+        <div *ngIf="form.get('career')?.touched && form.get('career')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('career')?.errors?.['required'] ? 'Ngành nghề là bắt buộc' :
+             form.get('career')?.errors?.['serverError'] ? form.get('career')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <!-- Position -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Vị trí/Chức vụ <span class="text-red-500">*</span></label>
+        <select
+          formControlName="position"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('position')?.touched && form.get('position')?.invalid}"
+        >
+          <option value="">Chọn vị trí</option>
+          <option *ngFor="let position of allConfig.positionOptions" [value]="position.id">{{ position.name }}</option>
+        </select>
+        <div *ngIf="form.get('position')?.touched && form.get('position')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('position')?.errors?.['required'] ? 'Vị trí là bắt buộc' :
+             form.get('position')?.errors?.['serverError'] ? form.get('position')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <!-- Experience -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Kinh nghiệm <span class="text-red-500">*</span></label>
+        <select
+          formControlName="experience"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('experience')?.touched && form.get('experience')?.invalid}"
+        >
+          <option value="">Chọn kinh nghiệm</option>
+          <option *ngFor="let experience of allConfig.experienceOptions" [value]="experience.id">{{ experience.name }}</option>
+        </select>
+        <div *ngIf="form.get('experience')?.touched && form.get('experience')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('experience')?.errors?.['required'] ? 'Kinh nghiệm là bắt buộc' :
+             form.get('experience')?.errors?.['serverError'] ? form.get('experience')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <!-- Type of Workplace -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nơi làm việc <span class="text-red-500">*</span></label>
+        <select
+          formControlName="typeOfWorkplace"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('typeOfWorkplace')?.touched && form.get('typeOfWorkplace')?.invalid}"
+        >
+          <option value="">Chọn nơi làm việc</option>
+          <option *ngFor="let workplace of allConfig.typeOfWorkplaceOptions" [value]="workplace.id">{{ workplace.name }}</option>
+        </select>
+        <div *ngIf="form.get('typeOfWorkplace')?.touched && form.get('typeOfWorkplace')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('typeOfWorkplace')?.errors?.['required'] ? 'Nơi làm việc là bắt buộc' :
+             form.get('typeOfWorkplace')?.errors?.['serverError'] ? form.get('typeOfWorkplace')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <!-- Job Type -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Hình thức làm việc <span class="text-red-500">*</span></label>
+        <select
+          formControlName="jobType"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('jobType')?.touched && form.get('jobType')?.invalid}"
+        >
+          <option value="">Chọn hình thức</option>
+          <option *ngFor="let jobType of allConfig.jobTypeOptions" [value]="jobType.id">{{ jobType.name }}</option>
+        </select>
+        <div *ngIf="form.get('jobType')?.touched && form.get('jobType')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('jobType')?.errors?.['required'] ? 'Hình thức làm việc là bắt buộc' :
+             form.get('jobType')?.errors?.['serverError'] ? form.get('jobType')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <!-- Quantity -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Số lượng tuyển <span class="text-red-500">*</span></label>
+        <input
+          formControlName="quantity"
+          type="number"
+          placeholder="Nhập số lượng tuyển"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('quantity')?.touched && form.get('quantity')?.invalid}"
+        />
+        <div *ngIf="form.get('quantity')?.touched && form.get('quantity')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('quantity')?.errors?.['required'] ? 'Số lượng tuyển là bắt buộc' :
+             form.get('quantity')?.errors?.['min'] ? 'Số lượng tuyển ít nhất là 1' :
+             form.get('quantity')?.errors?.['serverError'] ? form.get('quantity')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <!-- Gender Required -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Yêu cầu giới tính <span class="text-red-500">*</span></label>
+        <select
+          formControlName="genderRequired"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('genderRequired')?.touched && form.get('genderRequired')?.invalid}"
+        >
+          <option value="">Chọn giới tính</option>
+          <option *ngFor="let gender of allConfig.genderOptions" [value]="gender.id">{{ gender.name }}</option>
+        </select>
+        <div *ngIf="form.get('genderRequired')?.touched && form.get('genderRequired')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('genderRequired')?.errors?.['required'] ? 'Yêu cầu giới tính là bắt buộc' :
+             form.get('genderRequired')?.errors?.['serverError'] ? form.get('genderRequired')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <!-- Salary -->
+      <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Lương tối thiểu <span class="text-red-500">*</span></label>
+          <input
+            formControlName="salaryMin"
+            placeholder="Nhập lương tối thiểu"
+            type="number"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+            [ngClass]="{'border-red-500': form.get('salaryMin')?.touched && form.get('salaryMin')?.invalid}"
+          />
+          <div *ngIf="form.get('salaryMin')?.touched && form.get('salaryMin')?.invalid" class="text-red-500 text-xs mt-1">
+            {{ form.get('salaryMin')?.errors?.['required'] ? 'Lương tối thiểu là bắt buộc' :
+               form.get('salaryMin')?.errors?.['min'] ? 'Lương tối thiểu không hợp lệ' :
+               form.get('salaryMin')?.errors?.['minGreaterThanMax'] ? form.get('salaryMin')?.errors?.['minGreaterThanMax'] :
+               form.get('salaryMin')?.errors?.['serverError'] ? form.get('salaryMin')?.errors?.['serverError'] : '' }}
+          </div>
+        </div>
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Lương tối đa <span class="text-red-500">*</span></label>
+          <input
+            formControlName="salaryMax"
+            placeholder="Nhập lương tối đa"
+            type="number"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+            [ngClass]="{'border-red-500': form.get('salaryMax')?.touched && form.get('salaryMax')?.invalid}"
+          />
+          <div *ngIf="form.get('salaryMax')?.touched && form.get('salaryMax')?.invalid" class="text-red-500 text-xs mt-1">
+            {{ form.get('salaryMax')?.errors?.['required'] ? 'Lương tối đa là bắt buộc' :
+               form.get('salaryMax')?.errors?.['min'] ? 'Lương tối đa không hợp lệ' :
+               form.get('salaryMax')?.errors?.['maxLessThanMin'] ? form.get('salaryMax')?.errors?.['maxLessThanMin'] :
+               form.get('salaryMax')?.errors?.['serverError'] ? form.get('salaryMax')?.errors?.['serverError'] : '' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Academic Level -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Bằng cấp <span class="text-red-500">*</span></label>
+        <select
+          formControlName="academicLevel"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('academicLevel')?.touched && form.get('academicLevel')?.invalid}"
+        >
+          <option value="">Chọn bằng cấp</option>
+          <option *ngFor="let academic of allConfig.academicLevelOptions" [value]="academic.id">{{ academic.name }}</option>
+        </select>
+        <div *ngIf="form.get('academicLevel')?.touched && form.get('academicLevel')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('academicLevel')?.errors?.['required'] ? 'Bằng cấp là bắt buộc' :
+             form.get('academicLevel')?.errors?.['serverError'] ? form.get('academicLevel')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <!-- Deadline -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Hạn nộp hồ sơ <span class="text-red-500">*</span></label>
+        <input
+          type="date"
+          formControlName="deadline"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('deadline')?.touched && form.get('deadline')?.invalid}"
+        />
+        <div *ngIf="form.get('deadline')?.touched && form.get('deadline')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('deadline')?.errors?.['required'] ? 'Hạn nộp hồ sơ là bắt buộc' :
+             form.get('deadline')?.errors?.['minDate'] ? form.get('deadline')?.errors?.['minDate'] :
+             form.get('deadline')?.errors?.['serverError'] ? form.get('deadline')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Rich Text Editors -->
+    <div class="grid grid-cols-1 gap-4 sm:gap-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả công việc <span class="text-red-500">*</span></label>
+        <quill-editor
+          formControlName="jobDescription"
+          [styles]="{ 'min-height': '150px', 'height': 'auto' }"
+          placeholder="Nhập mô tả công việc"
+          class="border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('jobDescription')?.touched && form.get('jobDescription')?.invalid}"
+        ></quill-editor>
+        <div *ngIf="form.get('jobDescription')?.touched && form.get('jobDescription')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('jobDescription')?.errors?.['required'] ? 'Mô tả công việc là bắt buộc' :
+             form.get('jobDescription')?.errors?.['noContent'] ? 'Mô tả công việc phải có nội dung' :
+             form.get('jobDescription')?.errors?.['serverError'] ? form.get('jobDescription')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Yêu cầu công việc <span class="text-red-500">*</span></label>
+        <quill-editor
+          formControlName="jobRequirement"
+          [styles]="{ 'min-height': '150px', 'height': 'auto' }"
+          placeholder="Nhập yêu cầu công việc"
+          class="border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('jobRequirement')?.touched && form.get('jobRequirement')?.invalid}"
+        ></quill-editor>
+        <div *ngIf="form.get('jobRequirement')?.touched && form.get('jobRequirement')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('jobRequirement')?.errors?.['required'] ? 'Yêu cầu công việc là bắt buộc' :
+             form.get('jobRequirement')?.errors?.['noContent'] ? 'Yêu cầu công việc phải có nội dung' :
+             form.get('jobRequirement')?.errors?.['serverError'] ? form.get('jobRequirement')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Quyền lợi được hưởng <span class="text-red-500">*</span></label>
+        <quill-editor
+          formControlName="benefitsEnjoyed"
+          [styles]="{ 'min-height': '150px', 'height': 'auto' }"
+          placeholder="Nhập quyền lợi được hưởng"
+          class="border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('benefitsEnjoyed')?.touched && form.get('benefitsEnjoyed')?.invalid}"
+        ></quill-editor>
+        <div *ngIf="form.get('benefitsEnjoyed')?.touched && form.get('benefitsEnjoyed')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('benefitsEnjoyed')?.errors?.['required'] ? 'Quyền lợi là bắt buộc' :
+             form.get('benefitsEnjoyed')?.errors?.['noContent'] ? 'Quyền lợi phải có nội dung' :
+             form.get('benefitsEnjoyed')?.errors?.['serverError'] ? form.get('benefitsEnjoyed')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6" formGroupName="location">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Tỉnh/Thành phố <span class="text-red-500">*</span></label>
+        <select
+          formControlName="city"
+          (change)="onCityChange($event)"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('location.city')?.touched && form.get('location.city')?.invalid}"
+          [disabled]="isLoadingDistricts"
+        >
+          <option value="">Chọn tỉnh thành</option>
+          <option *ngFor="let city of cityOptions" [value]="city.id">{{ city.name }}</option>
+        </select>
+        <div *ngIf="form.get('location.city')?.touched && form.get('location.city')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('location.city')?.errors?.['required'] ? 'Tỉnh/Thành phố là bắt buộc' :
+             form.get('location.city')?.errors?.['serverError'] ? form.get('location.city')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <div class="relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Quận/Huyện <span class="text-red-500">*</span></label>
+        <select
+          formControlName="district"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('location.district')?.touched && form.get('location.district')?.invalid}"
+          [disabled]="isLoadingDistricts || !form.get('location.city')?.value"
+        >
+          <option value="">Chọn quận huyện</option>
+          <option *ngFor="let district of districtOptions" [value]="district.id">{{ district.name }}</option>
+        </select>
+        <div *ngIf="isLoadingDistricts" class="absolute right-3 top-10 animate-spin h-5 w-5 border-2 border-orange-600 border-t-transparent rounded-full"></div>
+        <div *ngIf="form.get('location.district')?.touched && form.get('location.district')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('location.district')?.errors?.['required'] ? 'Quận/Huyện là bắt buộc' :
+             form.get('location.district')?.errors?.['serverError'] ? form.get('location.district')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Địa chỉ <span class="text-red-500">*</span></label>
+        <input
+          formControlName="address"
+          placeholder="Nhập địa chỉ"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('location.address')?.touched && form.get('location.address')?.invalid}"
+        />
+        <div *ngIf="form.get('location.address')?.touched && form.get('location.address')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('location.address')?.errors?.['required'] ? 'Địa chỉ là bắt buộc' :
+             form.get('location.address')?.errors?.['maxlength'] ? 'Địa chỉ vượt quá 255 ký tự' :
+             form.get('location.address')?.errors?.['serverError'] ? form.get('location.address')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Vĩ độ <span class="text-red-500">*</span></label>
+        <input
+          formControlName="lat"
+          placeholder="Nhập vĩ độ"
+          type="number"
+          step="any"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('location.lat')?.touched && form.get('location.lat')?.invalid}"
+        />
+        <div *ngIf="form.get('location.lat')?.touched && form.get('location.lat')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('location.lat')?.errors?.['required'] ? 'Vĩ độ là bắt buộc' :
+             form.get('location.lat')?.errors?.['pattern'] ? 'Vĩ độ không hợp lệ' :
+             form.get('location.lat')?.errors?.['serverError'] ? form.get('location.lat')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Kinh độ <span class="text-red-500">*</span></label>
+        <input
+          formControlName="lng"
+          placeholder="Nhập kinh độ"
+          type="number"
+          step="any"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('location.lng')?.touched && form.get('location.lng')?.invalid}"
+        />
+        <div *ngIf="form.get('location.lng')?.touched && form.get('location.lng')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('location.lng')?.errors?.['required'] ? 'Kinh độ là bắt buộc' :
+             form.get('location.lng')?.errors?.['pattern'] ? 'Kinh độ không hợp lệ' :
+             form.get('location.lng')?.errors?.['serverError'] ? form.get('location.lng')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Tên người liên hệ <span class="text-red-500">*</span></label>
+        <input
+          formControlName="contactPersonName"
+          placeholder="Nhập tên người liên hệ"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('contactPersonName')?.touched && form.get('contactPersonName')?.invalid}"
+        />
+        <div *ngIf="form.get('contactPersonName')?.touched && form.get('contactPersonName')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('contactPersonName')?.errors?.['required'] ? 'Tên người liên hệ là bắt buộc' :
+             form.get('contactPersonName')?.errors?.['maxlength'] ? 'Tên người liên hệ vượt quá 100 ký tự' :
+             form.get('contactPersonName')?.errors?.['serverError'] ? form.get('contactPersonName')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại liên hệ <span class="text-red-500">*</span></label>
+        <input
+          formControlName="contactPersonPhone"
+          placeholder="Nhập số điện thoại liên hệ"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('contactPersonPhone')?.touched && form.get('contactPersonPhone')?.invalid}"
+        />
+        <div *ngIf="form.get('contactPersonPhone')?.touched && form.get('contactPersonPhone')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('contactPersonPhone')?.errors?.['required'] ? 'Số điện thoại là bắt buộc' :
+             form.get('contactPersonPhone')?.errors?.['pattern'] ? 'Số điện thoại không hợp lệ (10-15 số)' :
+             form.get('contactPersonPhone')?.errors?.['serverError'] ? form.get('contactPersonPhone')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Email liên hệ <span class="text-red-500">*</span></label>
+        <input
+          formControlName="contactPersonEmail"
+          placeholder="Nhập email liên hệ"
+          class="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:border-gray-300 transition-all duration-300"
+          [ngClass]="{'border-red-500': form.get('contactPersonEmail')?.touched && form.get('contactPersonEmail')?.invalid}"
+        />
+        <div *ngIf="form.get('contactPersonEmail')?.touched && form.get('contactPersonEmail')?.invalid" class="text-red-500 text-xs mt-1">
+          {{ form.get('contactPersonEmail')?.errors?.['required'] ? 'Email là bắt buộc' :
+             form.get('contactPersonEmail')?.errors?.['email'] ? 'Email không hợp lệ' :
+             form.get('contactPersonEmail')?.errors?.['maxlength'] ? 'Email vượt quá 100 ký tự' :
+             form.get('contactPersonEmail')?.errors?.['serverError'] ? form.get('contactPersonEmail')?.errors?.['serverError'] : '' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Urgent Recruitment -->
+    <div class="flex items-center gap-2 pb-6">
+      <input
+        type="checkbox"
+        formControlName="isUrgent"
+        id="isUrgent"
+        class="h-4 w-4 text-orange-500 border-gray-200 rounded focus:ring-orange-500 transition-all duration-300"
+      />
+      <label for="isUrgent" class="text-sm text-gray-700">Tuyển gấp</label>
+    </div>
+  </form>
+
+  <!-- Sticky Buttons -->
+  <div class="sticky bottom-0 bg-white p-3 sm:p-4 border-t border-gray-200 flex justify-end gap-3 shadow-sm z-10">
+    <button
+      type="button"
+      class="px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-200 text-gray-800 rounded-md text-sm font-medium hover:bg-gray-300 hover:shadow-md transition-all duration-300"
+      (click)="onCancel()"
+    >
+      Hủy
+    </button>
+    <button
+      type="submit"
+      class="px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-md text-sm font-medium hover:from-orange-600 hover:to-orange-700 hover:shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+      (click)="onSubmit()"
+      [disabled]="form.invalid"
+    >
+      Lưu tin tuyển dụng
+    </button>
+  </div>
+</div>

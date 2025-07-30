@@ -1,0 +1,84 @@
+<div
+  class="border border-gray-100 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 relative bg-white cursor-pointer"
+  (click)="navigateToDetail()"
+>
+  <!-- Nếu Loading -->
+  <ng-container *ngIf="isLoading; else jobContent">
+    <div class="flex gap-5">
+      <div class="w-20 h-20 bg-gray-200 rounded-lg animate-pulse"></div>
+      <div class="flex-1 space-y-4">
+        <div class="h-6 bg-gray-200 rounded animate-pulse w-3/4"></div>
+        <div class="h-4 bg-gray-200 rounded animate-pulse w-1/2"></div>
+        <div class="flex gap-2">
+          <div class="h-4 bg-gray-200 rounded-full w-20 animate-pulse"></div>
+          <div class="h-4 bg-gray-200 rounded-full w-20 animate-pulse"></div>
+          <div class="h-4 bg-gray-200 rounded-full w-20 animate-pulse"></div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 h-4 bg-gray-200 rounded animate-pulse w-1/4 ml-auto"></div>
+  </ng-container>
+
+  <!-- Nội dung thực -->
+  <ng-template #jobContent>
+    <div class="flex gap-5">
+      <!-- Logo -->
+      <div class="relative">
+        <img
+          [src]="companyImageUrl || IMAGES.imageDefault"
+          alt="Company Logo"
+          class="w-20 h-20 rounded-lg border border-gray-100 p-1 bg-white object-cover"
+        />
+        <!-- Tuyển gấp -->
+        <div
+          *ngIf="isUrgent"
+          class="absolute -top-2 -right-2 bg-orange-100 text-orange-600 w-7 h-7 flex items-center justify-center rounded-full animate-pulse"
+        >
+          <i class="fas fa-bolt text-sm"></i>
+        </div>
+      </div>
+
+      <!-- Job info -->
+      <div class="flex-1 flex flex-col justify-between overflow-hidden">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 truncate hover:text-orange-600 transition-colors">
+            {{ jobName }}
+          </h3>
+          <p class="text-sm text-blue-600 font-medium truncate">{{ companyName }}</p>
+        </div>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2 mt-3 text-sm">
+          <div class="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full text-green-600">
+            <i class="fas fa-money-bill-wave text-xs"></i>
+            {{ salaryString(salaryMin, salaryMax) }}
+          </div>
+          <div class="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full text-blue-600">
+            <i class="fas fa-map-marker-alt text-xs"></i>
+            {{ cityName || 'Chưa cập nhật' }}
+          </div>
+          <div class="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full text-gray-600">
+            <i class="fas fa-calendar-alt text-xs"></i>
+            {{ deadlineFormatted }}
+          </div>
+        </div>
+
+        <!-- Badge HOT -->
+        <div
+          *ngIf="isHot"
+          class="absolute top-2 right-2 bg-red-100 text-red-600 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 animate-pulse"
+        >
+          <i class="fas fa-fire text-xs"></i> HOT
+        </div>
+      </div>
+    </div>
+
+    <hr class="border-gray-100 my-4" />
+
+    <!-- Countdown -->
+    <div class="flex justify-end items-center text-sm text-gray-500 gap-1.5">
+      <i class="fas fa-clock text-gray-600 text-xs"></i>
+      Còn {{ daysLeft }} ngày
+    </div>
+  </ng-template>
+</div>

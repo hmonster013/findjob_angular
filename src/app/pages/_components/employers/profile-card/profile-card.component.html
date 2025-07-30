@@ -1,0 +1,114 @@
+<div class="flex flex-col gap-4 p-4 sm:p-6 bg-white mobile-container">
+  <!-- Search Bar -->
+  <div class="mobile-search-section">
+    <app-profile-search (search)="onSearch($event)" (reset)="onReset()"></app-profile-search>
+  </div>
+
+  <!-- Results -->
+  <div class="rounded-lg shadow-md bg-white chart-container hover:shadow-md transition-shadow duration-300 mobile-results-container">
+    <div class="p-4 sm:p-6 mobile-results-content">
+      <!-- Title -->
+      <div class="flex items-center border-b border-gray-100 pb-3 mb-6 mobile-title-section">
+        <h2 class="text-2xl font-bold tracking-tight flex items-center gap-2 mobile-title">
+          Kết quả tìm kiếm
+          <span class="bg-orange-100 text-orange-600 text-sm font-semibold px-3 py-1 rounded-full mobile-count-badge">
+            {{ count | number }} hồ sơ
+          </span>
+        </h2>
+      </div>
+
+      <!-- Page Size Selector -->
+      <div *ngIf="resumes.length > 0" class="flex justify-end mb-4 mobile-page-size">
+        <div class="flex items-center gap-2">
+          <label for="pageSize" class="text-sm text-gray-600">Hiển thị:</label>
+          <select
+            id="pageSize"
+            (change)="onChangePageSize($event)"
+            [value]="pageSize"
+            class="border border-orange-300 rounded px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
+          >
+            <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">{{ size }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Skeleton Loading -->
+      <div *ngIf="isLoading" class="grid gap-4">
+        <div *ngFor="let _ of [].constructor(pageSize)" class="p-4 bg-white border border-gray-200 rounded-lg animate-pulse mobile-skeleton">
+          <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div class="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+          <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+        </div>
+      </div>
+
+      <!-- No Data -->
+      <div *ngIf="!isLoading && resumes.length === 0" class="py-8 mobile-no-data">
+        <app-no-data-card title="Không tìm thấy hồ sơ" class="animate-fadeInUp">
+          <div class="text-orange-600 text-sm mt-2">
+            Hãy thử thay đổi bộ lọc để tìm hồ sơ phù hợp!
+          </div>
+        </app-no-data-card>
+      </div>
+
+      <!-- Resume List -->
+      <div *ngIf="!isLoading && resumes.length > 0" class="grid gap-4 mobile-resume-list">
+        <div *ngFor="let resume of resumes">
+          <app-job-seeker-profile
+            [jobSeekerProfile]="resume"
+            [id]="resume.id"
+            [slug]="resume.slug"
+            [title]="resume.title"
+            [salaryMin]="resume.salaryMin"
+            [salaryMax]="resume.salaryMax"
+            [updateAt]="resume.updateAt"
+            [isSaved]="resume.isSaved"
+            [viewEmployerNumber]="resume.viewEmployerNumber"
+            [user]="resume.userDict"
+            [jobSeekerProfile]="resume.jobSeekerProfileDict"
+            [type]="resume.type"
+            [lastViewedDate]="resume.lastViewedDate"
+            [cityName]="resume.cityName"
+            [experienceName]="resume.experienceName"
+            (save)="confirmSave(resume)"
+            class="hover:shadow-lg transition-shadow duration-200"
+          ></app-job-seeker-profile>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="!isLoading && resumes.length > 0" class="flex justify-between items-center p-4 border-t border-gray-200 bg-gray-50 mt-4 mobile-pagination">
+        <div class="text-sm text-gray-600 mobile-pagination-info">
+          Hiển thị {{ pageSize }} mục
+        </div>
+        <div *ngIf="totalPages > 1" class="flex justify-center mobile-pagination-nav">
+          <nav class="inline-flex rounded-lg border border-gray-100 shadow-sm" aria-label="Pagination">
+            <button
+              (click)="onChangePage(page - 1)"
+              [disabled]="page === 1"
+              class="px-3 py-2 border-r border-gray-100 rounded-l-lg text-orange-600 hover:bg-orange-600 hover:text-white disabled:text-gray-400 disabled:hover:bg-white disabled:hover:text-gray-400 transition-all duration-300 mobile-pagination-button"
+            >
+              <i class="fas fa-chevron-left text-sm"></i>
+            </button>
+            <button
+              *ngFor="let pageNum of getVisiblePages()"
+              (click)="onChangePage(pageNum)"
+              class="px-4 py-2 border-r border-gray-100 text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-300 mobile-pagination-button"
+              [class.bg-orange-600]="pageNum === page"
+              [class.text-white]="pageNum === page"
+              [class.active]="pageNum === page"
+            >
+              {{ pageNum }}
+            </button>
+            <button
+              (click)="onChangePage(page + 1)"
+              [disabled]="page === totalPages"
+              class="px-3 py-2 rounded-r-lg text-orange-600 hover:bg-orange-600 hover:text-white disabled:text-gray-400 disabled:hover:bg-white disabled:hover:text-gray-400 transition-all duration-300 mobile-pagination-button"
+            >
+              <i class="fas fa-chevron-right text-sm"></i>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

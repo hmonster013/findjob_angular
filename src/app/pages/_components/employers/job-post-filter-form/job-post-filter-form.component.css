@@ -1,0 +1,229 @@
+/* job-post-filter-form.component.css */
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Import styling từ ProfileSearchComponent */
+.filter-form {
+  transition: all 0.2s ease;
+}
+
+.filter-form input,
+.filter-form select,
+.filter-form button {
+  box-sizing: border-box;
+}
+
+.filter-form select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #7C2D12; /* orange-800 */
+  color: #FFFFFF; /* white */
+  text-align: center;
+  border-radius: 4px;
+  padding: 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s ease;
+  transform: translateY(-10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #F97316; /* orange-600 */
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Default desktop styles */
+.mobile-search-form {
+  /* Default form layout */
+}
+
+.mobile-basic-search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.mobile-search-input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.mobile-city-select {
+  flex: none;
+  width: 176px; /* w-44 equivalent */
+}
+
+.mobile-button-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.mobile-search-button {
+  padding: 12px 20px;
+  background: linear-gradient(to right, #f97316, #ea580c);
+  color: white;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.mobile-search-button:hover {
+  background: linear-gradient(to right, #ea580c, #dc2626);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+.mobile-search-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .mobile-search-container {
+    margin: 0 !important;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-search-form {
+    padding: 16px;
+  }
+
+  .mobile-basic-search {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .mobile-search-input {
+    flex: 1;
+    min-width: auto;
+    width: 100%;
+  }
+
+  .mobile-search-input input {
+    width: 100% !important;
+    padding: 12px 16px 12px 40px;
+    font-size: 16px; /* Prevent zoom on iOS */
+    border-radius: 8px;
+  }
+
+  .mobile-search-input .fas.fa-search {
+    left: 12px;
+  }
+
+  .mobile-city-select {
+    width: 100%;
+  }
+
+  .mobile-city-select select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px; /* Prevent zoom on iOS */
+    border-radius: 8px;
+  }
+
+  .mobile-button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .mobile-search-button {
+    width: 100%;
+    padding: 12px 20px;
+    background: linear-gradient(to right, #f97316, #ea580c);
+    color: white;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: none;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .mobile-search-container {
+    margin: 0 8px !important;
+    padding: 12px !important;
+  }
+
+  .mobile-search-form {
+    padding: 12px;
+  }
+
+  .mobile-basic-search {
+    gap: 12px;
+  }
+
+  .mobile-search-input input {
+    padding: 10px 12px 10px 36px;
+    font-size: 16px;
+  }
+
+  .mobile-city-select select {
+    padding: 10px 12px;
+    font-size: 16px;
+  }
+
+  .mobile-search-button {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
+
+/* Focus states for accessibility */
+@media (max-width: 768px) {
+  .mobile-search-input input:focus,
+  .mobile-city-select select:focus,
+  .mobile-search-button:focus {
+    outline: 2px solid #f97316;
+    outline-offset: 2px;
+  }
+}
+
+
+
+

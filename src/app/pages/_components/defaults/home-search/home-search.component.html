@@ -1,0 +1,47 @@
+<div class="flex flex-col gap-3 p-4 bg-white border border-gray-200 rounded-xl shadow-md sm:flex-row sm:items-center sm:gap-4">
+  <form [formGroup]="form" (ngSubmit)="onSearch()" class="flex flex-col gap-3 w-full sm:flex-row sm:items-center sm:gap-4">
+    <!-- Search Input -->
+    <div class="w-full relative sm:flex-1">
+      <input
+        type="text"
+        formControlName="kw"
+        placeholder="Nhập vị trí muốn ứng tuyển"
+        class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800 placeholder-gray-400 transition-all"
+      />
+      <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+    </div>
+
+    <!-- Dropdown: Lọc theo ngành nghề -->
+    <div class="relative w-full sm:w-48">
+      <select
+        formControlName="careerId"
+        class="appearance-none w-full pl-4 pr-8 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800 bg-white transition-all"
+      >
+        <option value="">Lọc theo ngành nghề</option>
+        <option *ngFor="let career of careers" [value]="career.id">{{ career.name }}</option>
+      </select>
+      <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+    </div>
+
+    <!-- Dropdown: Lọc theo thành phố -->
+    <div class="relative w-full sm:w-48">
+      <select
+        formControlName="cityId"
+        class="appearance-none w-full pl-4 pr-8 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800 bg-white transition-all"
+      >
+        <option value="">Lọc theo thành phố</option>
+        <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+      </select>
+      <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+    </div>
+
+    <!-- Search Button -->
+    <button
+      type="submit"
+      class="w-full flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all shadow-sm hover:shadow-md sm:w-auto"
+    >
+      <i class="fas fa-search text-sm"></i>
+      Tìm việc
+    </button>
+  </form>
+</div>

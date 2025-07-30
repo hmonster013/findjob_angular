@@ -1,0 +1,65 @@
+<!-- left-drawer.component.html -->
+
+<div
+  *ngIf="mobileOpen"
+  class="fixed inset-0 z-[9999] bg-black/50 flex justify-start md:hidden"
+  (click)="onClickOutside()"
+>
+  <div
+    class="bg-white h-full p-4 w-[240px] rounded-tr-lg overflow-y-auto"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Logo -->
+    <div class="flex justify-center mb-4">
+      <a [routerLink]="['/']">
+        <img
+          src="/assets/images/logo-light.png"
+          alt="MyJob Logo"
+          class="h-11 object-contain transition-transform hover:scale-105"
+        />
+      </a>
+    </div>
+
+    <hr class="my-4 border-gray-200" />
+
+    <!-- Pages List -->
+    <ul class="flex flex-col gap-2 mb-6">
+      <li *ngFor="let page of pages">
+        <a
+          [routerLink]="[page.path]"
+          routerLinkActive="bg-gray-100 text-primary font-bold"
+          class="block text-center py-2 rounded-lg hover:bg-gray-100 transition-all text-gray-700"
+        >
+          {{ page.label }}
+        </a>
+      </li>
+    </ul>
+
+    <!-- Account Switch Menu -->
+    <div class="mb-6">
+      <app-account-switch-menu [isShowButton]="true"></app-account-switch-menu>
+    </div>
+
+    <hr class="my-4 border-gray-200" />
+
+    <!-- Auth Button -->
+    <div class="flex flex-col gap-3 mt-6">
+      <button
+        *ngIf="isAuthenticated; else registerButton"
+        (click)="handleLogoutConfirm()"
+        class="bg-red-500 text-white font-semibold py-2 rounded hover:bg-red-600 transition-all"
+      >
+        Đăng xuất
+      </button>
+
+      <ng-template #registerButton>
+        <button
+          class="bg-primary-600 text-white font-semibold py-2 rounded hover:bg-primary-700 transition-all"
+          (click)="handleRegister()"
+        >
+          Đăng ký
+        </button>
+      </ng-template>
+    </div>
+  </div>
+</div>

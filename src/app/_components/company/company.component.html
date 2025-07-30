@@ -1,0 +1,90 @@
+<!-- Nếu loading -->
+<ng-container *ngIf="isLoading; else normalContent">
+  <div class="p-5 border border-gray-100 rounded-xl shadow-sm space-y-4 animate-pulse bg-white">
+    <div class="w-full h-36 bg-gray-200 rounded-lg"></div>
+    <div class="flex gap-4 items-center -mt-10">
+      <div class="w-20 h-20 bg-gray-200 rounded-md"></div>
+      <div class="flex-1 space-y-2">
+        <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+      </div>
+    </div>
+    <div class="space-y-3 mt-4">
+      <div class="h-4 bg-gray-200 rounded"></div>
+      <div class="h-4 bg-gray-200 rounded"></div>
+      <div class="h-4 bg-gray-200 rounded"></div>
+      <div class="h-4 bg-gray-200 rounded"></div>
+    </div>
+    <div class="h-8 bg-gray-200 rounded-full mt-4"></div>
+  </div>
+</ng-container>
+
+<!-- Nếu có dữ liệu -->
+<ng-template #normalContent>
+  <div class="p-5 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition flex flex-col justify-between h-full">
+    <!-- Cover + Logo -->
+    <div class="relative">
+      <img
+        [src]="companyCoverImageUrl || IMAGES.coverImageDefault"
+        alt="Cover"
+        class="w-full h-36 object-cover rounded-lg brightness-90"
+      />
+
+      <a
+        [routerLink]="['/cong-ty', slug]"
+        class="absolute -bottom-8 left-4 w-20 h-20 rounded-lg bg-white p-1 border border-gray-100 hover:scale-105 transition transform"
+      >
+        <img
+          [src]="companyImageUrl || IMAGES.imageDefault"
+          alt="Company Logo"
+          class="w-full h-full object-cover rounded-md"
+        />
+      </a>
+
+      <div
+        class="absolute top-2 right-2 bg-red-100 text-red-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"
+      >
+        <i class="fas fa-eye text-xs"></i> {{ followNumber || 0 }} lượt theo dõi
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="pt-10 px-2 flex-1 flex flex-col">
+      <a
+        [routerLink]="['/cong-ty', slug]"
+        class="font-semibold text-base text-gray-800 hover:text-orange-600 transition mb-2 truncate"
+      >
+        {{ companyName.length > 55 ? (companyName | slice:0:55) + '...' : companyName }}
+      </a>
+
+      <div class="space-y-2 text-gray-600 text-sm">
+        <div class="flex items-center gap-2">
+          <i class="fas fa-paint-brush text-blue-600 text-xs"></i>
+          {{ fieldOperation || 'Chưa cập nhật' }}
+        </div>
+        <div class="flex items-center gap-2">
+          <i class="fas fa-map-marker-alt text-blue-600 text-xs"></i>
+          {{ cityName || 'Chưa cập nhật' }}
+        </div>
+        <div class="flex items-center gap-2">
+          <i class="fas fa-users text-gray-600 text-xs"></i>
+          {{ employeeSizeName || 'Chưa cập nhật' }}
+        </div>
+        <div class="flex items-center gap-2 text-orange-600 font-semibold">
+          <i class="fas fa-briefcase text-orange-600 text-xs"></i>
+          {{ jobPostNumber || 0 }} việc làm
+        </div>
+      </div>
+    </div>
+
+    <!-- Follow button -->
+    <div class="mt-4" *ngIf="isJobSeeker">
+      <button
+        (click)="handleFollow()"
+        class="w-full px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:bg-orange-700 transition-all duration-300"
+        [ngClass]="{'opacity-50 cursor-not-allowed': loadingFollow}"
+      >
+        {{ loadingFollow ? 'Đang xử lý...' : (followed ? 'Đang theo dõi' : 'Theo dõi') }}
+      </button>
+    </div>
+  </div>
+</ng-template>

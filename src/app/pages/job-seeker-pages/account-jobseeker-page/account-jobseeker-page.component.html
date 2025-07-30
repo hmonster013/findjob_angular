@@ -1,0 +1,13 @@
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+  <!-- Left: Account -->
+  <div class="md:col-span-5 lg:col-span-6">
+    <app-account-card [title]="'Thông tin tài khoản'" />
+  </div>
+
+  <!-- Right: Personal Info + Settings -->
+  <div class="md:col-span-7 lg:col-span-6 space-y-6">
+    <div><app-personal-info-card [title]="'Thông tin cá nhân'" /></div>
+
+    <div><app-setting-card [title]="'Cài đặt'" /></div>
+  </div>
+</div>

@@ -1,0 +1,192 @@
+<aside
+  [ngClass]="{
+    'fixed inset-0 z-40 bg-black/50 flex justify-start lg:hidden transition-opacity duration-300': isMobile && mobileOpen,
+    'bg-orange-50 border-r border-orange-200 shadow-lg h-screen lg:sticky lg:top-0 lg:z-10': !isMobile
+  }"
+  [style.width.px]="isMobile ? null : drawerWidth"
+  (click)="isMobile ? handleDrawerToggle?.() : null"
+>
+  <div
+    class="bg-orange-50 h-full px-4 py-5 flex flex-col transform transition-transform duration-300 scrollbar-thin scrollbar-thumb-orange-300 scrollbar-track-orange-100 overscroll-contain clip-path-inset"
+    [ngClass]="{'translate-x-0 shadow-2xl': isMobile && mobileOpen, '-translate-x-full': isMobile && !mobileOpen}"
+    [style.width.px]="drawerWidth"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Logo -->
+    <div class="flex justify-center items-center mb-8">
+      <a
+        [routerLink]="['/' + ROUTES.EMPLOYER.DASHBOARD]"
+        class="flex flex-row items-center gap-3"
+      >
+        <img
+          [src]="IMAGES.logoBlack"
+          alt="FindJob Logo"
+          class="h-12 sm:h-14 rounded-md shadow-md transform transition-transform duration-300 hover:scale-105"
+          loading="lazy"
+        />
+        <span class="text-orange-600 font-bold text-xl">{{APP_NAME}}</span>
+      </a>
+    </div>
+
+    <!-- Close button for mobile -->
+    <button
+      *ngIf="isMobile"
+      class="self-end mb-6 p-2 rounded-lg bg-orange-100 hover:bg-orange-200 hover:scale-110 hover:shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+      (click)="handleDrawerToggle?.()"
+      aria-label="Đóng sidebar"
+    >
+      <i class="fas fa-times text-orange-600 text-xl"></i>
+    </button>
+
+    <!-- Menu -->
+    <div class="flex-1 overflow-y-auto">
+      <ul class="flex flex-col gap-2 overflow-visible px-3">
+        <!-- Dashboard -->
+        <li>
+          <a
+            [routerLink]="['/' + ROUTES.EMPLOYER.DASHBOARD]"
+            routerLinkActive="bg-gradient-to-r from-orange-100 to-orange-200 text-orange-700 font-semibold shadow-sm"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200 hover:text-orange-700 hover:scale-[1.01] hover:shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500 origin-center"
+            aria-label="Bản điều khiển"
+          >
+            <i class="fas fa-tachometer-alt text-xl text-orange-600"></i>
+            <span class="font-medium">Bảng điều khiển</span>
+          </a>
+        </li>
+
+        <!-- Danh sách tin đăng -->
+        <li>
+          <a
+            [routerLink]="['/' + ROUTES.EMPLOYER.JOB_POST]"
+            routerLinkActive="bg-gradient-to-r from-orange-100 to-orange-200 text-orange-700 font-semibold shadow-sm"
+            class="flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200 hover:text-orange-700 hover:scale-[1.01] hover:shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500 origin-center"
+            aria-label="Danh sách tin đăng"
+          >
+            <i class="fas fa-file-alt text-xl text-orange-600"></i>
+            <span class="font-medium">Danh sách tin đăng</span>
+          </a>
+        </li>
+
+        <!-- Quản lý ứng viên -->
+        <li>
+          <div
+            (click)="toggleExpand('candidates')"
+            class="flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200 hover:text-orange-700 hover:scale-[1.01] hover:shadow-md transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-500 origin-center"
+            [attr.aria-expanded]="expandedItems.candidates"
+            aria-controls="candidates-submenu"
+            role="button"
+            tabindex="0"
+            (keydown.enter)="toggleExpand('candidates')"
+            (keydown.space)="toggleExpand('candidates')"
+          >
+            <i class="fas fa-users text-xl text-orange-600"></i>
+            <span class="font-medium">Quản lý ứng viên</span>
+            <i class="ml-auto fas text-orange-600 text-lg" [ngClass]="expandedItems.candidates ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+          </div>
+          <ul *ngIf="expandedItems.candidates" id="candidates-submenu" class="ml-12 flex flex-col gap-2 mt-2 px-2 animate-slideIn">
+            <li>
+              <a
+                [routerLink]="['/' + ROUTES.EMPLOYER.APPLIED_PROFILE]"
+                routerLinkActive="bg-gradient-to-r from-orange-100 to-orange-200 text-orange-700 font-semibold shadow-sm border-l-4 border-orange-500 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-orange-500 after:transition-all after:duration-300 hover:after:w-full"
+                class="flex items-center gap-2 pl-2 text-gray-600 hover:text-orange-700 hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200 hover:translate-x-2 hover:scale-[1.01] hover:shadow-md hover:rounded-md hover:border-l-4 hover:border-orange-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                aria-label="Hồ sơ ứng tuyển"
+              >
+                <i class="fas fa-circle text-xs text-orange-500 hover:text-orange-600 hover:scale-110 transition-transform duration-300"></i>
+                <span class="font-medium">Hồ sơ ứng tuyển</span>
+              </a>
+            </li>
+            <li>
+              <a
+                [routerLink]="['/' + ROUTES.EMPLOYER.SAVED_PROFILE]"
+                routerLinkActive="bg-gradient-to-r from-orange-100 to-orange-200 text-orange-700 font-semibold shadow-sm border-l-4 border-orange-500 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-orange-500 after:transition-all after:duration-300 hover:after:w-full"
+                class="flex items-center gap-2 pl-2 text-gray-600 hover:text-orange-700 hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200 hover:translate-x-2 hover:scale-[1.01] hover:shadow-md hover:rounded-md hover:border-l-4 hover:border-orange-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                aria-label="Hồ sơ đã lưu"
+              >
+                <i class="fas fa-circle text-xs text-orange-500 hover:text-orange-600 hover:scale-110 transition-transform duration-300"></i>
+                <span class="font-medium">Hồ sơ đã lưu</span>
+              </a>
+            </li>
+            <li>
+              <a
+                [routerLink]="['/' + ROUTES.EMPLOYER.PROFILE]"
+                routerLinkActive="bg-gradient-to-r from-orange-100 to-orange-200 text-orange-700 font-semibold shadow-sm border-l-4 border-orange-500 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-orange-500 after:transition-all after:duration-300 hover:after:w-full"
+                class="flex items-center gap-2 pl-2 text-gray-600 hover:text-orange-700 hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200 hover:translate-x-2 hover:scale-[1.01] hover:shadow-md hover:rounded-md hover:border-l-4 hover:border-orange-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                aria-label="Tìm ứng viên mới"
+              >
+                <i class="fas fa-circle text-xs text-orange-500 hover:text-orange-600 hover:scale-110 transition-transform duration-300"></i>
+                <span class="font-medium">Tìm ứng viên mới</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Thông báo -->
+        <li>
+          <a
+            [routerLink]="['/' + ROUTES.EMPLOYER.NOTIFICATION]"
+            routerLinkActive="bg-gradient-to-r from-orange-100 to-orange-200 text-orange-700 font-semibold shadow-sm"
+            class="flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200 hover:text-orange-700 hover:scale-[1.01] hover:shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500 origin-center"
+            aria-label="Thông báo"
+          >
+            <i class="fas fa-bell text-xl text-orange-600"></i>
+            <span class="font-medium">Thông báo</span>
+          </a>
+        </li>
+
+        <!-- Quản lý tài khoản -->
+        <li>
+          <div
+            (click)="toggleExpand('account')"
+            class="flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200 hover:text-orange-700 hover:scale-[1.01] hover:shadow-md transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-500 origin-center"
+            [attr.aria-expanded]="expandedItems.account"
+            aria-controls="account-submenu"
+            role="button"
+            tabindex="0"
+            (keydown.enter)="toggleExpand('account')"
+            (keydown.space)="toggleExpand('account')"
+          >
+            <i class="fas fa-building text-xl text-orange-600"></i>
+            <span class="font-medium">Quản lý tài khoản</span>
+            <i class="ml-auto fas text-orange-600 text-lg" [ngClass]="expandedItems.account ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+          </div>
+          <ul *ngIf="expandedItems.account" id="account-submenu" class="ml-12 flex flex-col gap-2 mt-2 px-2 animate-slideIn">
+            <li>
+              <a
+                [routerLink]="['/' + ROUTES.EMPLOYER.COMPANY]"
+                routerLinkActive="bg-gradient-to-r from-orange-100 to-orange-200 text-orange-700 font-semibold shadow-sm border-l-4 border-orange-500 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-orange-500 after:transition-all after:duration-300 hover:after:w-full"
+                class="flex items-center gap-2 pl-2 text-gray-600 hover:text-orange-700 hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200 hover:translate-x-2 hover:scale-[1.01] hover:shadow-md hover:rounded-md hover:border-l-4 hover:border-orange-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                aria-label="Thông tin công ty"
+              >
+                <i class="fas fa-circle text-xs text-orange-500 hover:text-orange-600 hover:scale-110 transition-transform duration-300"></i>
+                <span class="font-medium">Thông tin công ty</span>
+              </a>
+            </li>
+            <li>
+              <a
+                [routerLink]="['/' + ROUTES.EMPLOYER.ACCOUNT]"
+                routerLinkActive="bg-gradient-to-r from-orange-100 to-orange-200 text-orange-700 font-semibold shadow-sm border-l-4 border-orange-500 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-orange-500 after:transition-all after:duration-300 hover:after:w-full"
+                class="flex items-center gap-2 pl-2 text-gray-600 hover:text-orange-700 hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200 hover:translate-x-2 hover:scale-[1.01] hover:shadow-md hover:rounded-md hover:border-l-4 hover:border-orange-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                aria-label="Tài khoản"
+              >
+                <i class="fas fa-circle text-xs text-orange-500 hover:text-orange-600 hover:scale-110 transition-transform duration-300"></i>
+                <span class="font-medium">Tài khoản</span>
+              </a>
+            </li>
+            <li>
+              <a
+                [routerLink]="['/' + ROUTES.EMPLOYER.SETTING]"
+                routerLinkActive="bg-gradient-to-r from-orange-100 to-orange-200 text-orange-700 font-semibold shadow-sm border-l-4 border-orange-500 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-orange-500 after:transition-all after:duration-300 hover:after:w-full"
+                class="flex items-center gap-2 pl-2 text-gray-600 hover:text-orange-700 hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200 hover:translate-x-2 hover:scale-[1.01] hover:shadow-md hover:rounded-md hover:border-l-4 hover:border-orange-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                aria-label="Cài đặt"
+              >
+                <i class="fas fa-circle text-xs text-orange-500 hover:text-orange-600 hover:scale-110 transition-transform duration-300"></i>
+                <span class="font-medium">Cài đặt</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</aside>

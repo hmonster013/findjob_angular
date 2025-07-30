@@ -1,0 +1,157 @@
+<div class="bg-white p-6 rounded-xl border-2 border-gray-300 shadow-lg">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-full">
+    <!-- Main search section -->
+    <div class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center w-full mb-4">
+      <!-- Main search row -->
+      <div class="flex flex-col lg:flex-row gap-4 flex-1">
+        <!-- Keyword Search -->
+        <div class="flex-1 min-w-0">
+          <div class="relative">
+            <input
+              type="text"
+              formControlName="kw"
+              placeholder="Tìm kiếm cơ hội việc làm"
+              class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-md"
+            />
+            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-600 text-lg"></i>
+          </div>
+        </div>
+
+        <!-- Career -->
+        <div class="flex-1 min-w-0">
+          <select
+            formControlName="careerId"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+          >
+            <option value="">Tất cả ngành nghề</option>
+            <option *ngFor="let item of careerOptions" [value]="item.id">{{ item.name }}</option>
+          </select>
+        </div>
+
+        <!-- City -->
+        <div class="flex-1 min-w-0">
+          <select
+            formControlName="cityId"
+            class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+          >
+            <option value="">Tất cả tỉnh thành</option>
+            <option *ngFor="let item of cityOptions" [value]="item.id">{{ item.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex gap-3 items-center justify-center lg:justify-start">
+        <button
+          type="submit"
+          class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg"
+        >
+          Tìm kiếm
+        </button>
+        <button
+          type="button"
+          (click)="toggleAdvanceFilter()"
+          class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg"
+        >
+          {{ showAdvanceFilter ? 'Ẩn lọc nâng cao' : 'Lọc nâng cao' }}
+        </button>
+        <button
+          *ngIf="isFormNotEmpty()"
+          type="button"
+          (click)="onReset()"
+          class="text-orange-600 hover:text-orange-700 p-2 transition-all"
+        >
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Advanced Filter -->
+    <div *ngIf="showAdvanceFilter" class="w-full border-t-2 border-gray-300 pt-6">
+      <h3 class="text-lg font-semibold text-orange-600 mb-4">Lọc nâng cao</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Job Details Group -->
+        <div>
+          <h4 class="text-sm font-medium text-gray-700 mb-2">Chi tiết công việc</h4>
+          <!-- Position -->
+          <div class="mb-4">
+            <label class="block text-sm text-gray-600 mb-1">Vị trí</label>
+            <select
+              formControlName="positionId"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            >
+              <option value="">Tất cả vị trí</option>
+              <option *ngFor="let item of positionOptions" [value]="item.id">{{ item.name }}</option>
+            </select>
+          </div>
+          <!-- Experience -->
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">Kinh nghiệm</label>
+            <select
+              formControlName="experienceId"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            >
+              <option value="">Tất cả kinh nghiệm</option>
+              <option *ngFor="let item of experienceOptions" [value]="item.id">{{ item.name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Work Conditions Group -->
+        <div>
+          <h4 class="text-sm font-medium text-gray-700 mb-2">Điều kiện làm việc</h4>
+          <!-- Job Type -->
+          <div class="mb-4">
+            <label class="block text-sm text-gray-600 mb-1">Hình thức làm việc</label>
+            <select
+              formControlName="jobTypeId"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            >
+              <option value="">Tất cả hình thức</option>
+              <option *ngFor="let item of jobTypeOptions" [value]="item.id">{{ item.name }}</option>
+            </select>
+          </div>
+          <!-- Type of Workplace -->
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">Loại hình làm việc</label>
+            <select
+              formControlName="typeOfWorkplaceId"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            >
+              <option value="">Tất cả loại hình</option>
+              <option *ngFor="let item of typeOfWorkplaceOptions" [value]="item.id">{{ item.name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Additional Filters Group -->
+        <div>
+          <h4 class="text-sm font-medium text-gray-700 mb-2">Yêu cầu khác</h4>
+          <!-- Gender -->
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">Giới tính</label>
+            <select
+              formControlName="genderId"
+              class="w-full px-3 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all hover:shadow-sm"
+            >
+              <option value="">Tất cả giới tính</option>
+              <option *ngFor="let item of genderOptions" [value]="item.id">{{ item.name }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reset Button -->
+      <div class="mt-6">
+        <button
+          type="button"
+          (click)="onReset()"
+          class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-3 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2"
+        >
+          <i class="fas fa-trash text-lg"></i>
+          Xóa bộ lọc
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

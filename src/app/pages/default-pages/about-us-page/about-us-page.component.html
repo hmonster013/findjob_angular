@@ -1,0 +1,31 @@
+<div class="max-w-screen-xl mx-auto py-6 sm:py-12 px-2 sm:px-6 bg-white rounded-xl">
+  <!-- Header -->
+  <div class="mb-6 sm:mb-12 text-center">
+    <h1 class="text-2xl sm:text-4xl font-bold text-orange-600 tracking-tight">
+      Về chúng tôi
+    </h1>
+    <p class="mt-2 sm:mt-4 max-w-3xl mx-auto text-gray-600 leading-6 sm:leading-7 text-base sm:text-lg">
+      {{ APP_NAME }} - Kênh thông tin tuyển dụng và việc làm dành cho mọi Doanh nghiệp và Ứng viên. Chúng tôi tin tưởng sẽ đem lại
+      <span class="text-orange-600 font-semibold">"HY VỌNG"</span>
+      cho Doanh nghiệp tìm kiếm nhân tài và cho Ứng viên tìm kiếm cơ hội nghề nghiệp. Với 2 hệ thống: Website dành cho Nhà Tuyển Dụng và
+      Ứng dụng dành cho Người Tìm Việc, {{ APP_NAME }} sẽ mang lại những trải nghiệm mới mẻ, thú vị; kết nối ước mơ chinh phục công việc
+      và giúp doanh nghiệp xây dựng đội ngũ nhân sự vững mạnh.
+    </p>
+  </div>
+
+  <!-- Features -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-8 sm:mb-16">
+    <div
+      *ngFor="let feature of features"
+      class="bg-white p-3 sm:p-6 rounded-xl border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+    >
+      <i class="fas fa-{{ feature.icon }} text-orange-600 text-2xl sm:text-3xl mb-2 sm:mb-4"></i>
+      <h3 class="text-base sm:text-xl font-semibold mb-2 sm:mb-3 text-gray-800 hover:text-orange-600 transition-colors">
+        {{ feature.title }}
+      </h3>
+      <p class="text-gray-600 text-xs sm:text-sm leading-5 sm:leading-6">
+        {{ feature.description }}
+      </p>
+    </div>
+  </div>
+</div>

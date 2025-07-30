@@ -1,0 +1,84 @@
+<div class="bg-white rounded-lg border border-gray-200 shadow-md flex flex-col flex-1 h-full w-full">
+  <!-- Header -->
+  <div class="job-post-header flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 lg:gap-4 p-4 lg:p-6 bg-white border-b border-gray-100">
+    <h1 class="job-post-title text-xl lg:text-2xl font-semibold text-orange-600">Quản lý tin tuyển dụng</h1>
+    <div class="job-post-actions flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+      <button
+        class="flex items-center justify-center gap-2 px-3 lg:px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        (click)="onExport()"
+        [disabled]="list.length === 0"
+      >
+        <i class="fas fa-download text-base lg:text-lg"></i>
+        <span class="hidden sm:inline">Tải danh sách</span>
+        <span class="sm:hidden">Tải</span>
+      </button>
+      <button
+        class="flex items-center justify-center gap-2 px-3 lg:px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-300"
+        (click)="onOpenCreate()"
+      >
+        <i class="fas fa-plus text-base lg:text-lg"></i>
+        <span class="hidden sm:inline">Thêm mới</span>
+        <span class="sm:hidden">Thêm</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter Form -->
+  <div class="job-post-filter p-3 lg:p-6 bg-white">
+    <app-job-post-filter-form (filter)="onFilter($event)"></app-job-post-filter-form>
+  </div>
+
+  <!-- Loading Progress -->
+  <div *ngIf="isLoadingList && !isFullScreenLoading" class="w-full h-1 bg-orange-200 rounded-full overflow-hidden mx-3 lg:mx-6">
+    <div class="h-full bg-orange-600 animate-pulse"></div>
+  </div>
+
+  <!-- Table Container -->
+  <div class="job-post-table-wrapper flex-1 mx-2 lg:mx-6 mb-3 lg:mb-6">
+    <app-job-posts-table
+      [dataSource]="list"
+      [total]="total"
+      [page]="page"
+      [rowsPerPage]="rowsPerPage"
+      [orderBy]="orderBy"
+      [order]="order"
+      [headCells]="headCells"
+      [isLoading]="isLoadingList"
+      (edit)="onEdit($event)"
+      (delete)="onDelete($event)"
+      (pageChange)="onPageChange($event)"
+      (rowsPerPageChange)="onRowsPerPageChange($event)"
+      (sortChange)="onSortChange($event)"
+    ></app-job-posts-table>
+  </div>
+
+  <!-- Full Screen Loading -->
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-gray-500/50 flex justify-center items-center z-[2000]">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-orange-600"></div>
+  </div>
+
+  <!-- Popup Modal -->
+  <div *ngIf="openPopup" class="job-post-popup-modal fixed inset-0 bg-gray-500/50 flex justify-center items-center z-[1000] p-2 lg:p-4 animate-fadeInUp">
+    <div class="job-post-popup-content bg-white w-full max-w-4xl rounded-lg lg:rounded-xl relative max-h-[95vh] lg:max-h-[90vh] flex flex-col overflow-hidden">
+      <button
+        (click)="onCloseForm()"
+        class="absolute top-3 right-3 lg:top-4 lg:right-4 text-gray-500 hover:text-orange-600 z-10 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+      >
+        <i class="fas fa-times text-lg lg:text-xl"></i>
+      </button>
+
+      <h2 class="text-lg lg:text-xl font-bold p-4 lg:p-6 pb-2 lg:pb-0 text-orange-600 pr-12">
+        {{ editData ? 'Cập nhật tin tuyển dụng' : 'Tạo mới tin tuyển dụng' }}
+      </h2>
+
+      <div class="flex-1 overflow-y-auto p-4 lg:p-6 pt-2 lg:pt-6">
+        <app-job-post-form
+          [editData]="editData"
+          [serverErrors]="serverErrors"
+          (handleAddOrUpdate)="onSave($event)"
+          (cancel)="onCloseForm()"
+        ></app-job-post-form>
+      </div>
+    </div>
+  </div>
+</div>

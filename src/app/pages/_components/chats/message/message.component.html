@@ -1,0 +1,22 @@
+<div [ngClass]="isOwnMessage() ? 'flex justify-end mb-4' : 'flex justify-start mb-4'">
+  <div class="flex items-end gap-2" [ngClass]="isOwnMessage() ? 'flex-row-reverse' : 'flex-row'">
+    <!-- Avatar -->
+    <img
+      [src]="avatarUrl || IMAGES.imageDefault"
+      alt="Avatar"
+      class="w-8 h-8 rounded-full border border-gray-300 object-cover"
+    />
+
+    <!-- Nội dung tin nhắn -->
+    <div
+      [ngClass]="isOwnMessage()
+        ? 'bg-orange-500 text-white rounded-lg rounded-br-none px-3 py-2 max-w-xs'
+        : 'bg-gray-200 text-gray-800 rounded-lg rounded-bl-none px-3 py-2 max-w-xs'"
+    >
+      <p class="text-sm">{{ text }}</p>
+      <p class="text-xs mt-1" [ngClass]="isOwnMessage() ? 'text-gray-100' : 'text-gray-500'">
+        {{ formatCreatedAt() }}
+      </p>
+    </div>
+  </div>
+</div>

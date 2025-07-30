@@ -1,0 +1,17 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+  <div *ngFor="let field of fields" class="flex flex-col">
+    <label class="text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+    <select [formControlName]="field.controlName" class="input-text">
+      <option value="">{{ field.placeholder }}</option>
+      <option *ngFor="let option of allConfig?.[field.optionKey]" [value]="option.id">
+        {{ option.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-span-1 md:col-span-3 flex justify-end mt-4">
+    <button type="submit" class="btn-primary">Lọc hồ sơ</button>
+  </div>
+
+</form>

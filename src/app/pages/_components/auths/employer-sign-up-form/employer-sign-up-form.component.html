@@ -1,0 +1,451 @@
+<!-- employer-sign-up-form.component.html -->
+<form [formGroup]="signUpForm" (ngSubmit)="handleNextStep()" class="space-y-5 employer-sign-up-form">
+  <!-- Step Indicator -->
+  <div class="flex justify-center mb-6">
+    <div class="flex items-center space-x-2">
+      <div
+        class="w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold"
+        [ngClass]="currentStep >= 1 ? 'bg-orange-600' : 'bg-gray-300'"
+      >
+        1
+      </div>
+      <div class="w-12 h-1" [ngClass]="currentStep >= 2 ? 'bg-orange-600' : 'bg-gray-300'"></div>
+      <div
+        class="w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold"
+        [ngClass]="currentStep >= 2 ? 'bg-orange-600' : 'bg-gray-300'"
+      >
+        2
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="currentStep === 1" class="flex flex-col gap-5">
+    <!-- Full Name -->
+    <div>
+      <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">
+        Họ và Tên <span class="text-red-500">*</span>
+      </label>
+      <div class="relative">
+        <input
+          id="fullName"
+          type="text"
+          formControlName="fullName"
+          placeholder="Nhập họ và tên"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="fullName-error"
+          [attr.aria-invalid]="signUpForm.get('fullName')?.invalid && signUpForm.get('fullName')?.touched"
+        />
+        <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div
+        *ngIf="signUpForm.get('fullName')?.invalid && signUpForm.get('fullName')?.touched"
+        id="fullName-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="signUpForm.get('fullName')?.errors?.['required']">Họ và tên là bắt buộc</span>
+        <span *ngIf="signUpForm.get('fullName')?.errors?.['maxlength']">Họ và tên không được quá 100 ký tự</span>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+        Email <span class="text-red-500">*</span>
+      </label>
+      <div class="relative">
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Nhập email của bạn"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="email-error"
+          [attr.aria-invalid]="emailControl?.invalid && emailControl?.touched"
+          (blur)="handleCheckCreds()"
+        />
+        <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div
+        *ngIf="emailControl?.invalid && emailControl?.touched"
+        id="email-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="emailControl?.errors?.['required']">Email là bắt buộc</span>
+        <span *ngIf="emailControl?.errors?.['email']">Email không đúng định dạng</span>
+        <span *ngIf="emailControl?.errors?.['maxlength']">Email không được quá 100 ký tự</span>
+      </div>
+      <div *ngIf="serverErrors?.email" class="text-red-500 text-xs mt-1">{{ serverErrors.email }}</div>
+    </div>
+
+    <!-- Password -->
+    <div>
+      <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+        Mật khẩu <span class="text-red-500">*</span>
+      </label>
+      <div class="relative">
+        <input
+          id="password"
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="Nhập mật khẩu của bạn"
+          class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="password-error"
+          [attr.aria-invalid]="signUpForm.get('password')?.invalid && signUpForm.get('password')?.touched"
+        />
+        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        <button
+          type="button"
+          (click)="togglePassword()"
+          class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-orange-600 transition-colors"
+          aria-label="Toggle password visibility"
+        >
+          <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+        </button>
+      </div>
+      <div
+        *ngIf="signUpForm.get('password')?.invalid && signUpForm.get('password')?.touched"
+        id="password-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="signUpForm.get('password')?.errors?.['required']">Mật khẩu là bắt buộc</span>
+        <span *ngIf="signUpForm.get('password')?.errors?.['minlength']">Mật khẩu phải có ít nhất 8 ký tự</span>
+        <span *ngIf="signUpForm.get('password')?.errors?.['maxlength']">Mật khẩu không được quá 128 ký tự</span>
+        <span *ngIf="signUpForm.get('password')?.errors?.['pattern']">Phải chứa chữ hoa, chữ thường, số, ký tự đặc biệt</span>
+      </div>
+    </div>
+
+    <!-- Confirm Password -->
+    <div>
+      <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">
+        Nhập lại mật khẩu <span class="text-red-500">*</span>
+      </label>
+      <div class="relative">
+        <input
+          id="confirmPassword"
+          [type]="showConfirmPassword ? 'text' : 'password'"
+          formControlName="confirmPassword"
+          placeholder="Nhập lại mật khẩu"
+          class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="confirmPassword-error"
+          [attr.aria-invalid]="signUpForm.get('confirmPassword')?.invalid && signUpForm.get('confirmPassword')?.touched"
+        />
+        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        <button
+          type="button"
+          (click)="toggleConfirmPassword()"
+          class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-orange-600 transition-colors"
+          aria-label="Toggle confirm password visibility"
+        >
+          <i class="fas" [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+        </button>
+      </div>
+      <div
+        *ngIf="signUpForm.get('confirmPassword')?.invalid && signUpForm.get('confirmPassword')?.touched"
+        id="confirmPassword-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="signUpForm.get('confirmPassword')?.errors?.['required']">Vui lòng nhập lại mật khẩu</span>
+      </div>
+      <div
+        *ngIf="signUpForm.hasError('mismatch') && signUpForm.get('confirmPassword')?.touched"
+        class="text-red-500 text-xs mt-1"
+      >
+        Mật khẩu không khớp
+      </div>
+    </div>
+
+    <!-- Next Step -->
+    <button
+      type="submit"
+      [disabled]="isSubmitting || signUpForm.get('fullName')?.invalid || signUpForm.get('email')?.invalid || signUpForm.get('password')?.invalid || signUpForm.get('confirmPassword')?.invalid || serverErrors?.email"
+      class="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <i *ngIf="isSubmitting" class="fas fa-spinner fa-spin"></i>
+      <i *ngIf="!isSubmitting" class="fas fa-arrow-right"></i>
+      Tiếp tục
+    </button>
+  </div>
+
+  <div *ngIf="currentStep === 2" class="flex flex-col gap-5">
+    <!-- Company Name -->
+    <div>
+      <label for="companyName" class="block text-sm font-medium text-gray-700 mb-1">
+        Tên công ty <span class="text-red-500">*</span>
+      </label>
+      <div class="relative">
+        <input
+          id="companyName"
+          type="text"
+          formControlName="companyName"
+          placeholder="Nhập tên công ty"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="companyName-error"
+          [attr.aria-invalid]="signUpForm.get('companyName')?.invalid && signUpForm.get('companyName')?.touched"
+        />
+        <i class="fas fa-building absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div
+        *ngIf="signUpForm.get('companyName')?.invalid && signUpForm.get('companyName')?.touched"
+        id="companyName-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="signUpForm.get('companyName')?.errors?.['required']">Tên công ty là bắt buộc</span>
+        <span *ngIf="signUpForm.get('companyName')?.errors?.['maxlength']">Tên công ty không được quá 255 ký tự</span>
+      </div>
+      <div *ngIf="serverErrors?.companyName" class="text-red-500 text-xs mt-1">{{ serverErrors.companyName }}</div>
+    </div>
+
+    <!-- Company Email -->
+    <div>
+      <label for="companyEmail" class="block text-sm font-medium text-gray-700 mb-1">
+        Email công ty <span class="text-red-500">*</span>
+      </label>
+      <div class="relative">
+        <input
+          id="companyEmail"
+          type="email"
+          formControlName="companyEmail"
+          placeholder="Nhập email công ty"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="companyEmail-error"
+          [attr.aria-invalid]="signUpForm.get('companyEmail')?.invalid && signUpForm.get('companyEmail')?.touched"
+        />
+        <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div
+        *ngIf="signUpForm.get('companyEmail')?.invalid && signUpForm.get('companyEmail')?.touched"
+        id="companyEmail-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="signUpForm.get('companyEmail')?.errors?.['required']">Email công ty là bắt buộc</span>
+        <span *ngIf="signUpForm.get('companyEmail')?.errors?.['email']">Email không đúng định dạng</span>
+        <span *ngIf="signUpForm.get('companyEmail')?.errors?.['maxlength']">Email không được quá 100 ký tự</span>
+      </div>
+      <div *ngIf="serverErrors?.companyEmail" class="text-red-500 text-xs mt-1">{{ serverErrors.companyEmail }}</div>
+    </div>
+
+    <!-- Company Phone -->
+    <div>
+      <label for="companyPhone" class="block text-sm font-medium text-gray-700 mb-1">
+        Số điện thoại
+      </label>
+      <div class="relative">
+        <input
+          id="companyPhone"
+          type="text"
+          formControlName="companyPhone"
+          placeholder="Nhập số điện thoại"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="companyPhone-error"
+          [attr.aria-invalid]="signUpForm.get('companyPhone')?.invalid && signUpForm.get('companyPhone')?.touched"
+        />
+        <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div
+        *ngIf="signUpForm.get('companyPhone')?.invalid && signUpForm.get('companyPhone')?.touched"
+        id="companyPhone-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="signUpForm.get('companyPhone')?.errors?.['maxlength']">Số điện thoại không được quá 15 ký tự</span>
+      </div>
+      <div *ngIf="serverErrors?.companyPhone" class="text-red-500 text-xs mt-1">{{ serverErrors.companyPhone }}</div>
+    </div>
+
+    <!-- Tax Code -->
+    <div>
+      <label for="taxCode" class="block text-sm font-medium text-gray-700 mb-1">
+        Mã số thuế <span class="text-red-500">*</span>
+      </label>
+      <div class="relative">
+        <input
+          id="taxCode"
+          type="text"
+          formControlName="taxCode"
+          placeholder="Nhập mã số thuế"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="taxCode-error"
+          [attr.aria-invalid]="signUpForm.get('taxCode')?.invalid && signUpForm.get('taxCode')?.touched"
+        />
+        <i class="fas fa-id-card absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div
+        *ngIf="signUpForm.get('taxCode')?.invalid && signUpForm.get('taxCode')?.touched"
+        id="taxCode-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="signUpForm.get('taxCode')?.errors?.['required']">Mã số thuế là bắt buộc</span>
+        <span *ngIf="signUpForm.get('taxCode')?.errors?.['maxlength']">Mã số thuế không được quá 30 ký tự</span>
+      </div>
+      <div *ngIf="serverErrors?.taxCode" class="text-red-500 text-xs mt-1">{{ serverErrors.taxCode }}</div>
+    </div>
+
+    <!-- Since -->
+    <div>
+      <label for="since" class="block text-sm font-medium text-gray-700 mb-1">Ngày thành lập</label>
+      <div class="relative">
+        <input
+          id="since"
+          type="date"
+          formControlName="since"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+        />
+        <i class="fas fa-calendar-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+    </div>
+
+    <!-- Field Operation -->
+    <div>
+      <label for="fieldOperation" class="block text-sm font-medium text-gray-700 mb-1">Lĩnh vực hoạt động</label>
+      <div class="relative">
+        <input
+          id="fieldOperation"
+          type="text"
+          formControlName="fieldOperation"
+          placeholder="Nhập lĩnh vực hoạt động"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="fieldOperation-error"
+          [attr.aria-invalid]="signUpForm.get('fieldOperation')?.invalid && signUpForm.get('fieldOperation')?.touched"
+        />
+        <i class="fas fa-briefcase absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div
+        *ngIf="signUpForm.get('fieldOperation')?.invalid && signUpForm.get('fieldOperation')?.touched"
+        id="fieldOperation-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="signUpForm.get('fieldOperation')?.errors?.['maxlength']">Lĩnh vực không được quá 255 ký tự</span>
+      </div>
+    </div>
+
+    <!-- Employee Size -->
+    <div>
+      <label for="employeeSize" class="block text-sm font-medium text-gray-700 mb-1">
+        Quy mô công ty <span class="text-red-500">*</span>
+      </label>
+      <div class="relative">
+        <select
+          id="employeeSize"
+          formControlName="employeeSize"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="employeeSize-error"
+          [attr.aria-invalid]="signUpForm.get('employeeSize')?.invalid && signUpForm.get('employeeSize')?.touched"
+        >
+          <option value="" disabled>Chọn quy mô công ty</option>
+          <option *ngFor="let size of employeeSizes" [value]="size.id">{{ size.name }}</option>
+        </select>
+        <i class="fas fa-users absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div
+        *ngIf="signUpForm.get('employeeSize')?.invalid && signUpForm.get('employeeSize')?.touched"
+        id="employeeSize-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="signUpForm.get('employeeSize')?.errors?.['required']">Quy mô công ty là bắt buộc</span>
+      </div>
+    </div>
+
+    <!-- Website -->
+    <div>
+      <label for="websiteUrl" class="block text-sm font-medium text-gray-700 mb-1">Website (nếu có)</label>
+      <div class="relative">
+        <input
+          id="websiteUrl"
+          type="text"
+          formControlName="websiteUrl"
+          placeholder="Nhập website của bạn"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="websiteUrl-error"
+          [attr.aria-invalid]="signUpForm.get('websiteUrl')?.invalid && signUpForm.get('websiteUrl')?.touched"
+        />
+        <i class="fas fa-globe absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div
+        *ngIf="signUpForm.get('websiteUrl')?.invalid && signUpForm.get('websiteUrl')?.touched"
+        id="websiteUrl-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="signUpForm.get('websiteUrl')?.errors?.['maxlength']">Website không được quá 300 ký tự</span>
+      </div>
+    </div>
+
+    <!-- City -->
+    <div>
+      <label for="city" class="block text-sm font-medium text-gray-700 mb-1">
+        Tỉnh/Thành phố <span class="text-red-500">*</span>
+      </label>
+      <div class="relative">
+        <select
+          id="city"
+          formControlName="city"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="city-error"
+          [attr.aria-invalid]="signUpForm.get('city')?.invalid && signUpForm.get('city')?.touched"
+        >
+          <option value="" disabled>Chọn tỉnh/thành phố</option>
+          <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+        </select>
+        <i class="fas fa-map-marker-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div
+        *ngIf="signUpForm.get('city')?.invalid && signUpForm.get('city')?.touched"
+        id="city-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="signUpForm.get('city')?.errors?.['required']">Tỉnh/Thành phố là bắt buộc</span>
+      </div>
+    </div>
+
+    <!-- District -->
+    <div>
+      <label for="district" class="block text-sm font-medium text-gray-700 mb-1">Quận/Huyện</label>
+      <div class="relative">
+        <select
+          id="district"
+          formControlName="district"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+        >
+          <option value="" disabled>Chọn quận/huyện</option>
+          <option *ngFor="let district of districts" [value]="district.id">{{ district.name }}</option>
+        </select>
+        <i class="fas fa-map-marker-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div>
+      <label for="address" class="block text-sm font-medium text-gray-700 mb-1">
+        Địa chỉ <span class="text-red-500">*</span>
+      </label>
+      <div class="relative">
+        <input
+          id="address"
+          type="text"
+          formControlName="address"
+          placeholder="Nhập địa chỉ"
+          class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-sm transition-colors"
+          aria-describedby="address-error"
+          [attr.aria-invalid]="signUpForm.get('address')?.invalid && signUpForm.get('address')?.touched"
+        />
+        <i class="fas fa-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div
+        *ngIf="signUpForm.get('address')?.invalid && signUpForm.get('address')?.touched"
+        id="address-error"
+        class="text-red-500 text-xs mt-1"
+      >
+        <span *ngIf="signUpForm.get('address')?.errors?.['required']">Địa chỉ là bắt buộc</span>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button
+      type="submit"
+      [disabled]="isSubmitting || !signUpForm.valid"
+      class="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <i *ngIf="isSubmitting" class="fas fa-spinner fa-spin"></i>
+      <i *ngIf="!isSubmitting" class="fas fa-user-plus"></i>
+      Đăng ký
+    </button>
+  </div>
+</form>

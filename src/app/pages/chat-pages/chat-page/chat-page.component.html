@@ -1,0 +1,51 @@
+<div class="grid grid-cols-1 md:grid-cols-12 h-screen bg-gradient-to-br from-orange-50 to-amber-50 overflow-hidden">
+  <!-- LEFT SIDEBAR -->
+  <div *ngIf="!isMobile" class="hidden sm:block md:col-span-3 chat-sidebar">
+    <div class="h-full bg-white/80 backdrop-blur-sm shadow-lg border-r border-orange-100 flex flex-col">
+      <app-sidebar-header />
+      <div class="sidebar-content">
+        <app-left-side-bar [isEmployer]="isEmployer" />
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CHAT WINDOW -->
+  <div class="col-span-12 sm:col-span-9 md:col-span-6 bg-white/90 backdrop-blur-sm chat-main flex flex-col shadow-xl">
+          <div class="flex-1 overflow-hidden">
+        <app-chat-window [showMobileHeader]="true" [onToggleLeftDrawer]="toggleLeftDrawer.bind(this)" [onToggleRightDrawer]="toggleRightDrawer.bind(this)" class="md:hidden" />
+        <app-chat-window [showMobileHeader]="false" class="hidden md:block" />
+      </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div *ngIf="!isMedium" class="hidden md:block md:col-span-3 chat-sidebar">
+    <div class="h-full bg-white/80 backdrop-blur-sm shadow-lg border-l border-orange-100 flex flex-col">
+      <div class="sidebar-content">
+        <app-right-side-bar [isEmployer]="isEmployer" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE LEFT DRAWER -->
+<div
+  *ngIf="isMobile && openLeftDrawer"
+  class="fixed inset-0 z-50 bg-white/30 backdrop-blur-sm flex"
+  (click)="openLeftDrawer = false"
+>
+  <div class="bg-white w-4/5 max-w-sm shadow-2xl transform transition-transform duration-300 ease-out mobile-drawer" (click)="$event.stopPropagation()">
+    <app-sidebar-header />
+    <app-left-side-bar [isEmployer]="isEmployer" />
+  </div>
+</div>
+
+<!-- MOBILE RIGHT DRAWER -->
+<div
+  *ngIf="isMedium && openRightDrawer"
+  class="fixed inset-0 z-50 bg-white/30 backdrop-blur-sm flex justify-end"
+  (click)="openRightDrawer = false"
+>
+  <div class="bg-white w-4/5 max-w-sm shadow-2xl transform transition-transform duration-300 ease-out mobile-drawer" (click)="$event.stopPropagation()">
+    <app-right-side-bar [isEmployer]="isEmployer" />
+  </div>
+</div>

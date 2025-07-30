@@ -1,0 +1,88 @@
+<div class="w-full">
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoading" class="space-y-4 px-2 sm:px-4 w-full">
+    <div *ngFor="let _ of [1,2,3,4,5]" class="flex items-center p-4 bg-gray-50 rounded-lg animate-pulse w-full">
+      <div class="w-12 h-12 bg-gray-200 rounded-md mr-0 sm:mr-4 flex-shrink-0"></div>
+      <div class="flex-1 min-w-0">
+        <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+      </div>
+      <div class="w-24 h-8 bg-gray-200 rounded flex-shrink-0"></div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div
+    *ngIf="!isLoading && companiesFollowed.length === 0"
+    class="text-center text-gray-600 py-12 bg-gray-50 rounded-lg border border-gray-200 shadow-md px-2 sm:px-4 w-full"
+  >
+    <i class="fas fa-heart mx-auto text-6xl text-gray-400 mb-4"></i>
+    <p class="text-lg font-medium text-gray-700">Bạn chưa theo dõi công ty nào.</p>
+    <p class="text-sm text-gray-500 mt-2">Theo dõi công ty để nhận thông tin việc làm mới nhất!</p>
+  </div>
+
+  <!-- List companies -->
+  <div *ngIf="!isLoading && companiesFollowed.length > 0" class="space-y-4 px-2 sm:px-4 w-full">
+    <div
+      *ngFor="let company of companiesFollowed"
+      class="flex flex-col sm:flex-row items-start sm:items-center p-4 bg-white border border-gray-200 rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ease-in-out w-full overflow-x-auto gap-2"
+    >
+      <img
+        [src]="company.company.companyImageUrl || IMAGES.imageDefault"
+        alt="{{ company.company.companyName }}"
+        class="h-12 w-12 rounded-md object-cover mr-0 sm:mr-4 mb-2 sm:mb-0 border border-gray-200 flex-shrink-0"
+      />
+      <div class="flex-1 min-w-0 w-full">
+        <a
+          [routerLink]="['/cong-ty', company.company.slug]"
+          class="text-base font-semibold text-amber-600 hover:underline break-words"
+        >
+          {{ company.company.companyName || 'Chưa cập nhật' }}
+        </a>
+        <p class="text-sm text-gray-600 mt-2 break-words">{{ company.company.fieldOperation || 'Chưa cập nhật' }}</p>
+        <p class="text-sm text-gray-600 mt-1 flex flex-wrap items-center">
+          <i class="fas fa-users text-xs mr-1 text-gray-500"></i> Theo dõi: {{ company.company.followNumber || 0 }}
+          <span class="mx-2">•</span>
+          <i class="fas fa-briefcase text-xs mr-1 text-gray-500"></i> Bài đăng: {{ company.company.jobPostNumber || 0 }}
+        </p>
+      </div>
+      <button
+        (click)="handleUnfollow(company.company.slug)"
+        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition-all duration-300 ease-in-out hover:shadow-md hover:-translate-y-0.5 flex items-center w-full sm:w-auto justify-center mt-2 sm:mt-0"
+      >
+        <i class="fas fa-user-minus mr-1 text-xs"></i> Hủy theo dõi
+      </button>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && totalPages > 1" class="flex flex-wrap justify-center items-center space-x-2 mt-8 w-full overflow-x-auto px-2 sm:px-0">
+    <button
+      (click)="handleChangePage(page - 1)"
+      [disabled]="page <= 1"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-amber-600 text-white hover:bg-amber-700 hover:shadow-md hover:-translate-y-0.5 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 ease-in-out"
+    >
+      <i class="fas fa-chevron-left text-xs"></i>
+    </button>
+    <div class="flex space-x-1">
+      <button
+        *ngFor="let p of pages"
+        (click)="handleChangePage(p)"
+        [ngClass]="{
+          'bg-amber-600 text-white shadow-md': p === page,
+          'bg-gray-100 text-gray-700 hover:bg-amber-100 hover:shadow-md': p !== page
+        }"
+        class="w-10 h-10 flex items-center justify-center rounded-full text-sm hover:-translate-y-0.5 transition-all duration-300 ease-in-out"
+      >
+        {{ p }}
+      </button>
+    </div>
+    <button
+      (click)="handleChangePage(page + 1)"
+      [disabled]="page >= totalPages"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-amber-600 text-white hover:bg-amber-700 hover:shadow-md hover:-translate-y-0.5 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 ease-in-out"
+    >
+      <i class="fas fa-chevron-right text-xs"></i>
+    </button>
+  </div>
+</div>

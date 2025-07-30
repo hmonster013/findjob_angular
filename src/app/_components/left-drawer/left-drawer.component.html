@@ -1,0 +1,16 @@
+<div *ngIf="mobileOpen" class="fixed inset-0 z-50 flex">
+  <!-- Overlay background -->
+  <div class="fixed inset-0 bg-black opacity-50" (click)="handleDrawerToggle()"></div>
+
+  <!-- Drawer content -->
+  <div class="relative bg-white w-64 h-full shadow-lg z-50">
+    <div class="p-4 flex flex-col space-y-4">
+      <a *ngFor="let page of pages"
+         [routerLink]="page.path"
+         class="block p-2 rounded text-indigo-700 hover:bg-indigo-100 font-medium"
+         (click)="handleDrawerToggle()">
+        {{ page.label }}
+      </a>
+    </div>
+  </div>
+</div>

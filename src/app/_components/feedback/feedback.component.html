@@ -1,0 +1,71 @@
+<!-- feedback.component.html -->
+
+<!-- Nút Phản hồi -->
+<button
+  (click)="openModal()"
+  class="fixed bottom-6 left-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-full shadow-md text-sm flex items-center gap-2 z-50 transition"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-bounce" viewBox="0 0 20 20" fill="currentColor">
+    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm2-9H8v2h4v-2z" />
+  </svg>
+  Phản hồi
+</button>
+
+<!-- Modal -->
+<div *ngIf="open" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl p-6 w-full max-w-lg relative">
+
+    <!-- Nút đóng -->
+    <button (click)="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-xl">
+      &times;
+    </button>
+
+    <!-- Tiêu đề -->
+    <h2 class="text-center text-xl font-bold text-blue-600 mb-4">Phản hồi của bạn</h2>
+
+    <!-- Form -->
+    <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+      <!-- Rating -->
+      <div class="flex justify-center gap-1">
+        <ng-container *ngFor="let star of stars; let idx = index">
+          <svg
+            (click)="setRating(idx + 1)"
+            (mouseenter)="hover = idx + 1"
+            (mouseleave)="hover = 0"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 cursor-pointer transition"
+            [ngClass]="(hover || rating) > idx ? 'text-yellow-400' : 'text-gray-300'"
+            fill="currentColor" viewBox="0 0 20 20"
+          >
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.955a1 1 0 00.95.69h4.166c.969 0 1.371 1.24.588 1.81l-3.367 2.448a1 1 0 00-.364 1.118l1.286 3.955c.3.921-.755 1.688-1.539 1.118L10 13.347l-3.367 2.448c-.784.57-1.838-.197-1.539-1.118l1.286-3.955a1 1 0 00-.364-1.118L2.649 9.382c-.783-.57-.38-1.81.588-1.81h4.166a1 1 0 00.95-.69l1.286-3.955z" />
+          </svg>
+        </ng-container>
+      </div>
+
+      <!-- Textarea Content -->
+      <textarea
+        formControlName="content"
+        class="w-full border rounded-lg p-3 resize-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500"
+        rows="5"
+        placeholder="Chia sẻ trải nghiệm của bạn..."
+      ></textarea>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition"
+        [disabled]="loading"
+      >
+        Gửi phản hồi
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+<!-- Loading Fullscreen -->
+<div *ngIf="loading" class="fixed inset-0 bg-white/70 flex items-center justify-center z-50">
+  <div class="w-12 h-12 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+</div>

@@ -1,0 +1,176 @@
+<ng-container *ngIf="isLoading; else loaded">
+  <div class="text-center py-10 text-gray-500">
+    <i class="fas fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu...
+  </div>
+</ng-container>
+
+<ng-template #loaded>
+  <ng-container *ngIf="companyDetail; else noData">
+    <div class="container mx-auto px-2 sm:px-4 py-4 md:py-6 space-y-6 md:space-y-8">
+      <!-- Company Header (Cover + Info) -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <!-- Cover Image -->
+        <div class="relative h-[140px] sm:h-[180px] md:h-[240px]">
+          <img
+            [src]="companyDetail.companyCoverImageUrl || IMAGES.coverImageDefault"
+            class="w-full h-full object-cover"
+            alt="Company Cover"
+            loading="lazy"
+          />
+          <!-- Logo -->
+          <img
+            [src]="companyDetail.companyImageUrl || IMAGES.imageDefault"
+            class="absolute bottom-0 left-1/2 -translate-x-1/2 sm:left-8 sm:translate-x-0 w-20 h-20 sm:w-24 sm:h-24 rounded-lg border-4 border-amber-500 shadow-lg bg-white object-cover translate-y-1/2 max-w-full"
+            alt="Company Logo"
+          />
+        </div>
+
+        <!-- Company Info -->
+        <div class="pt-12 sm:pt-14 pb-6 px-2 sm:px-4 md:px-6 flex flex-col md:flex-row md:items-start md:gap-6">
+          <div class="flex-1 text-center md:text-left">
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 break-words">{{ companyDetail.companyName }}</h1>
+            <div class="text-gray-600 mt-2 sm:mt-3 space-y-1 sm:space-y-2">
+              <div><i class="fas fa-briefcase mr-2 text-amber-600"></i> {{ companyDetail.fieldOperation || 'Chưa cập nhật' }}</div>
+              <div><i class="fas fa-users mr-2 text-amber-600"></i> {{ employeeSizeDisplay }}</div>
+              <div><i class="fas fa-calendar-alt mr-2 text-amber-600"></i> {{ sinceDisplay }}</div>
+            </div>
+          </div>
+
+          <div class="flex flex-row md:flex-col gap-2 sm:gap-3 mt-4 md:mt-0 w-full md:w-auto justify-center md:justify-start">
+            <button
+              *ngIf="isJobSeeker"
+              (click)="handleFollow()"
+              class="bg-amber-600 text-white px-4 sm:px-6 py-2 rounded-md hover:bg-amber-700 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all flex items-center justify-center min-w-[120px] shadow-md disabled:opacity-60"
+              [disabled]="isLoadingFollow"
+              aria-label="Theo dõi công ty"
+            >
+              <i *ngIf="isLoadingFollow" class="fas fa-spinner fa-spin mr-2"></i>
+              <i *ngIf="!isLoadingFollow" class="fas fa-star mr-2"></i>
+              {{ companyDetail.isFollowed ? 'Đang theo dõi' : 'Theo dõi' }}
+            </button>
+
+            <button
+              class="bg-amber-600 text-white px-4 sm:px-6 py-2 rounded-md hover:bg-amber-700 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all flex items-center justify-center min-w-[120px] shadow-md"
+              (click)="openSharePopup = true"
+              aria-label="Chia sẻ công ty"
+            >
+              <i class="fas fa-share-alt mr-2"></i> Chia sẻ
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content and Sidebar (About Company + Sidebar) -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- About Company -->
+        <div class="lg:col-span-2">
+          <div class="bg-white p-4 sm:p-6 rounded-xl shadow-md h-full">
+            <h2 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">Về công ty</h2>
+            <div
+              class="text-gray-700 leading-relaxed prose max-w-none"
+              [innerHTML]="companyDetail.description || '<i>Chưa cập nhật</i>'"
+            ></div>
+          </div>
+        </div>
+        <!-- Sidebar -->
+        <div class="lg:col-span-1 bg-white p-4 sm:p-6 rounded-xl shadow-md space-y-6">
+          <!-- Website -->
+          <div>
+            <h3 class="font-semibold text-gray-800 flex items-center text-base sm:text-lg">
+              <i class="fas fa-globe mr-2 text-amber-600"></i> Website
+            </h3>
+            <a
+              *ngIf="website"
+              [href]="website"
+              target="_blank"
+              class="text-amber-600 hover:underline break-words text-sm sm:text-base"
+              rel="noopener noreferrer"
+            >{{ website }}</a>
+            <p *ngIf="!website" class="text-gray-400 italic text-sm sm:text-base">Chưa cập nhật</p>
+          </div>
+
+          <!-- Social Media -->
+          <div>
+            <h3 class="font-semibold text-gray-800 flex items-center text-base sm:text-lg">
+              <i class="fas fa-link mr-2 text-amber-600"></i> Theo dõi tại
+            </h3>
+            <div class="flex flex-wrap gap-2 sm:gap-3 mt-2">
+              <a
+                *ngIf="companyDetail.facebookUrl"
+                [href]="companyDetail.facebookUrl"
+                target="_blank"
+                class="text-amber-600 hover:underline flex items-center text-sm sm:text-base"
+                rel="noopener noreferrer"
+              >
+                <i class="fab fa-facebook-f mr-1"></i> Facebook
+              </a>
+              <a
+                *ngIf="companyDetail.youtubeUrl"
+                [href]="companyDetail.youtubeUrl"
+                target="_blank"
+                class="text-amber-600 hover:underline flex items-center text-sm sm:text-base"
+                rel="noopener noreferrer"
+              >
+                <i class="fab fa-youtube mr-1"></i> YouTube
+              </a>
+              <a
+                *ngIf="companyDetail.linkedinUrl"
+                [href]="companyDetail.linkedinUrl"
+                target="_blank"
+                class="text-amber-600 hover:underline flex items-center text-sm sm:text-base"
+                rel="noopener noreferrer"
+              >
+                <i class="fab fa-linkedin-in mr-1"></i> LinkedIn
+              </a>
+              <p
+                *ngIf="!companyDetail.facebookUrl && !companyDetail.youtubeUrl && !companyDetail.linkedinUrl"
+                class="text-gray-400 italic text-sm sm:text-base"
+              >Chưa cập nhật</p>
+            </div>
+          </div>
+
+          <!-- Contact Info -->
+          <div>
+            <h3 class="font-semibold text-gray-800 flex items-center text-base sm:text-lg">
+              <i class="fas fa-address-card mr-2 text-amber-600"></i> Thông tin liên hệ
+            </h3>
+            <div class="mt-2 space-y-1 sm:space-y-2 text-sm sm:text-base">
+              <p><i class="fas fa-envelope mr-2 text-amber-600"></i> {{ companyDetail.companyEmail || 'Chưa cập nhật' }}</p>
+              <p><i class="fas fa-phone mr-2 text-amber-600"></i> {{ companyDetail.companyPhone || 'Chưa cập nhật' }}</p>
+              <p><i class="fas fa-id-card mr-2 text-amber-600"></i> {{ companyDetail.taxCode || 'Chưa cập nhật' }}</p>
+              <p><i class="fas fa-map-marker-alt mr-2 text-amber-600"></i> {{ location }}</p>
+            </div>
+          </div>
+
+          <!-- Image Gallery -->
+          <div *ngIf="imageList.length > 0">
+            <h3 class="font-semibold text-gray-800 flex items-center text-base sm:text-lg">
+              <i class="fas fa-images mr-2 text-amber-600"></i> Hình ảnh
+            </h3>
+            <app-image-gallery-custom [images]="imageList" class="mt-3" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Job Listings (Full width) -->
+      <div class="mt-6">
+        <div class="bg-white p-4 sm:p-6 rounded-xl shadow-md">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">Việc làm đang tuyển</h2>
+          <app-filter-job-post-card [params]="{ companyId: companyDetail.id }" />
+        </div>
+      </div>
+
+      <!-- Share Popup -->
+      <app-social-network-sharing-popup
+        [open]="openSharePopup"
+        [shareUrl]="currentUrl"
+        [shareTitle]="companyDetail?.companyName || 'Chia sẻ công ty'"
+        (setOpenPopup)="openSharePopup = $event"
+      />
+    </div>
+  </ng-container>
+
+  <ng-template #noData>
+    <app-no-data-card />
+  </ng-template>
+</ng-template>

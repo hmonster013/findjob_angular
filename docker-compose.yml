@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: findjob-frontend
+    restart: unless-stopped
+    ports:
+      - "4200:4200"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: ng serve --host 0.0.0.0 --port 4200
+    networks:
+      - findjob_network
+
+networks:
+  findjob_network:
+    name: findjob_network
+    external: true

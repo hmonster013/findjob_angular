@@ -1,0 +1,366 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4 p-3 sm:p-4 bg-white rounded-md border border-gray-200">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <label for="companyName" class="block text-sm font-medium text-gray-800 mb-1">Tên công ty</label>
+      <input
+        id="companyName"
+        formControlName="companyName"
+        placeholder="Nhập tên công ty"
+        class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+        aria-label="Tên công ty"
+      />
+      <p *ngIf="form.get('companyName')?.touched && form.get('companyName')?.errors" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('companyName')?.errors?.['required'] ? 'Tên công ty là bắt buộc' : 'Tối đa 100 ký tự' }}
+      </p>
+      <p *ngIf="form.get('companyName')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('companyName')?.errors?.['serverError'] }}
+      </p>
+    </div>
+
+    <div class="relative">
+      <label for="employeeSize" class="block text-sm font-medium text-gray-800 mb-1">Quy mô nhân sự</label>
+      <div class="relative">
+        <select
+          id="employeeSize"
+          formControlName="employeeSize"
+          class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200 appearance-none cursor-pointer"
+          aria-label="Quy mô nhân sự"
+        >
+          <option value="">Chọn quy mô nhân sự</option>
+          <option *ngFor="let option of employeeSizeOptions" [value]="option.id.toString()">{{ option.name }}</option>
+        </select>
+        <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-orange-600 text-sm pointer-events-none"></i>
+      </div>
+      <p *ngIf="form.get('employeeSize')?.touched && form.get('employeeSize')?.errors" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        Quy mô nhân sự là bắt buộc
+      </p>
+      <p *ngIf="form.get('employeeSize')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('employeeSize')?.errors?.['serverError'] }}
+      </p>
+    </div>
+
+    <div>
+      <label for="taxCode" class="block text-sm font-medium text-gray-800 mb-1">Mã số thuế</label>
+      <input
+        id="taxCode"
+        formControlName="taxCode"
+        placeholder="Nhập mã số thuế"
+        class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+        aria-label="Mã số thuế"
+      />
+      <p *ngIf="form.get('taxCode')?.touched && form.get('taxCode')?.errors" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('taxCode')?.errors?.['required'] ? 'Mã số thuế là bắt buộc' : form.get('taxCode')?.errors?.['pattern'] ? 'Mã số thuế phải có 10 hoặc 13 số' : 'Tối đa 20 ký tự' }}
+      </p>
+      <p *ngIf="form.get('taxCode')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('taxCode')?.errors?.['serverError'] }}
+      </p>
+    </div>
+
+    <div>
+      <label for="fieldOperation" class="block text-sm font-medium text-gray-800 mb-1">Lĩnh vực hoạt động</label>
+      <input
+        id="fieldOperation"
+        formControlName="fieldOperation"
+        placeholder="Nhập lĩnh vực hoạt động"
+        class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+        aria-label="Lĩnh vực hoạt động"
+      />
+      <p *ngIf="form.get('fieldOperation')?.touched && form.get('fieldOperation')?.errors" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('fieldOperation')?.errors?.['required'] ? 'Lĩnh vực hoạt động là bắt buộc' : 'Tối đa 100 ký tự' }}
+      </p>
+      <p *ngIf="form.get('fieldOperation')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('fieldOperation')?.errors?.['serverError'] }}
+      </p>
+    </div>
+
+    <div>
+      <label for="since" class="block text-sm font-medium text-gray-800 mb-1">Năm thành lập</label>
+      <input
+        id="since"
+        type="date"
+        formControlName="since"
+        class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+        aria-label="Năm thành lập"
+      />
+      <p *ngIf="form.get('since')?.touched && form.get('since')?.errors" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('since')?.errors?.['pattern'] ? 'Ngày không hợp lệ (YYYY-MM-DD)' : 'Ngày không hợp lệ' }}
+      </p>
+      <p *ngIf="form.get('since')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('since')?.errors?.['serverError'] }}
+      </p>
+    </div>
+
+    <div>
+      <label for="websiteUrl" class="block text-sm font-medium text-gray-800 mb-1">Website</label>
+      <input
+        id="websiteUrl"
+        formControlName="websiteUrl"
+        placeholder="Nhập URL website"
+        class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+        aria-label="Website"
+      />
+      <p *ngIf="form.get('websiteUrl')?.touched && form.get('websiteUrl')?.errors" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        URL không hợp lệ
+      </p>
+      <p *ngIf="form.get('websiteUrl')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('websiteUrl')?.errors?.['serverError'] }}
+      </p>
+    </div>
+
+    <div>
+      <label for="facebookUrl" class="block text-sm font-medium text-gray-800 mb-1">Facebook</label>
+      <input
+        id="facebookUrl"
+        formControlName="facebookUrl"
+        placeholder="Nhập URL Facebook"
+        class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+        aria-label="Facebook"
+      />
+      <p *ngIf="form.get('facebookUrl')?.touched && form.get('facebookUrl')?.errors" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        URL Facebook không hợp lệ
+      </p>
+      <p *ngIf="form.get('facebookUrl')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('facebookUrl')?.errors?.['serverError'] }}
+      </p>
+    </div>
+
+    <div>
+      <label for="youtubeUrl" class="block text-sm font-medium text-gray-800 mb-1">YouTube</label>
+      <input
+        id="youtubeUrl"
+        formControlName="youtubeUrl"
+        placeholder="Nhập URL YouTube"
+        class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+        aria-label="YouTube"
+      />
+      <p *ngIf="form.get('youtubeUrl')?.touched && form.get('youtubeUrl')?.errors" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        URL YouTube không hợp lệ
+      </p>
+      <p *ngIf="form.get('youtubeUrl')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('youtubeUrl')?.errors?.['serverError'] }}
+      </p>
+    </div>
+
+    <div>
+      <label for="linkedinUrl" class="block text-sm font-medium text-gray-800 mb-1">LinkedIn</label>
+      <input
+        id="linkedinUrl"
+        formControlName="linkedinUrl"
+        placeholder="Nhập URL LinkedIn"
+        class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+        aria-label="LinkedIn"
+      />
+      <p *ngIf="form.get('linkedinUrl')?.touched && form.get('linkedinUrl')?.errors" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        URL LinkedIn không hợp lệ
+      </p>
+      <p *ngIf="form.get('linkedinUrl')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('linkedinUrl')?.errors?.['serverError'] }}
+      </p>
+    </div>
+
+    <div>
+      <label for="companyEmail" class="block text-sm font-medium text-gray-800 mb-1">Email công ty</label>
+      <input
+        id="companyEmail"
+        type="email"
+        formControlName="companyEmail"
+        placeholder="Nhập email công ty"
+        class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+        aria-label="Email công ty"
+      />
+      <p *ngIf="form.get('companyEmail')?.touched && form.get('companyEmail')?.errors" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('companyEmail')?.errors?.['required'] ? 'Email là bắt buộc' : 'Email không hợp lệ' }}
+      </p>
+      <p *ngIf="form.get('companyEmail')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('companyEmail')?.errors?.['serverError'] }}
+      </p>
+    </div>
+
+    <div>
+      <label for="companyPhone" class="block text-sm font-medium text-gray-800 mb-1">Số điện thoại công ty</label>
+      <input
+        id="companyPhone"
+        formControlName="companyPhone"
+        placeholder="Nhập số điện thoại"
+        class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+        aria-label="Số điện thoại công ty"
+      />
+      <p *ngIf="form.get('companyPhone')?.touched && form.get('companyPhone')?.errors" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('companyPhone')?.errors?.['required'] ? 'Số điện thoại là bắt buộc' : 'Số điện thoại phải bắt đầu bằng 0 và có 10-11 số' }}
+      </p>
+      <p *ngIf="form.get('companyPhone')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+        <i class="fas fa-exclamation-circle mr-1"></i>
+        {{ form.get('companyPhone')?.errors?.['serverError'] }}
+      </p>
+    </div>
+
+    <!-- Nhóm location -->
+    <div formGroupName="location" class="sm:col-span-2">
+      <h3 class="text-sm font-medium text-gray-800 mb-2">Thông tin địa chỉ</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="relative">
+          <label for="city" class="block text-sm font-medium text-gray-800 mb-1">Tỉnh/Thành phố</label>
+          <div class="relative">
+            <select
+              id="city"
+              formControlName="city"
+              (change)="onCityChange($event)"
+              class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200 appearance-none cursor-pointer"
+              aria-label="Tỉnh/Thành phố"
+            >
+              <option value="">Chọn Tỉnh/Thành phố</option>
+              <option *ngFor="let city of cityOptions" [value]="city.id.toString()">{{ city.name }}</option>
+            </select>
+            <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-orange-600 text-sm pointer-events-none"></i>
+          </div>
+          <p *ngIf="form.get('location.city')?.touched && form.get('location.city')?.errors" class="text-orange-600 text-xs mt-1">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            Tỉnh/Thành phố là bắt buộc
+          </p>
+          <p *ngIf="form.get('location.city')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            {{ form.get('location.city')?.errors?.['serverError'] }}
+          </p>
+        </div>
+
+        <div class="relative">
+          <label for="district" class="block text-sm font-medium text-gray-800 mb-1">Quận/Huyện</label>
+          <div class="relative">
+            <select
+              id="district"
+              formControlName="district"
+              class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200 appearance-none cursor-pointer disabled:bg-gray-100 disabled:cursor-not-allowed disabled:border-gray-200"
+              aria-label="Quận/Huyện"
+              [disabled]="!form.get('location.city')?.value || districtOptions.length === 0"
+            >
+              <option value="">Chọn Quận/Huyện</option>
+              <option *ngFor="let district of districtOptions" [value]="district.id.toString()">{{ district.name }}</option>
+            </select>
+            <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-orange-600 text-sm pointer-events-none" [ngClass]="{'text-gray-400': !form.get('location.city')?.value || districtOptions.length === 0}"></i>
+          </div>
+          <p *ngIf="form.get('location.district')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            {{ form.get('location.district')?.errors?.['serverError'] }}
+          </p>
+        </div>
+
+        <div class="sm:col-span-2">
+          <label for="address" class="block text-sm font-medium text-gray-800 mb-1">Địa chỉ</label>
+          <input
+            id="address"
+            formControlName="address"
+            placeholder="Nhập địa chỉ chi tiết"
+            class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+            aria-label="Địa chỉ"
+          />
+          <p *ngIf="form.get('location.address')?.touched && form.get('location.address')?.errors" class="text-orange-600 text-xs mt-1">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            {{ form.get('location.address')?.errors?.['required'] ? 'Địa chỉ là bắt buộc' : 'Tối đa 200 ký tự' }}
+          </p>
+          <p *ngIf="form.get('location.address')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            {{ form.get('location.address')?.errors?.['serverError'] }}
+          </p>
+        </div>
+
+        <div>
+          <label for="lat" class="block text-sm font-medium text-gray-800 mb-1">Vĩ độ</label>
+          <input
+            id="lat"
+            formControlName="lat"
+            placeholder="Nhập vĩ độ"
+            type="number"
+            step="any"
+            class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+            aria-label="Vĩ độ"
+          />
+          <p *ngIf="form.get('location.lat')?.touched && form.get('location.lat')?.errors" class="text-orange-600 text-xs mt-1">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            Vĩ độ không hợp lệ
+          </p>
+          <p *ngIf="form.get('location.lat')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            {{ form.get('location.lat')?.errors?.['serverError'] }}
+          </p>
+        </div>
+
+        <div>
+          <label for="lng" class="block text-sm font-medium text-gray-800 mb-1">Kinh độ</label>
+          <input
+            id="lng"
+            formControlName="lng"
+            placeholder="Nhập kinh độ"
+            type="number"
+            step="any"
+            class="w-full h-10 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-300 transition-all duration-200"
+            aria-label="Kinh độ"
+          />
+          <p *ngIf="form.get('location.lng')?.touched && form.get('location.lng')?.errors" class="text-orange-600 text-xs mt-1">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            Kinh độ không hợp lệ
+          </p>
+          <p *ngIf="form.get('location.lng')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            {{ form.get('location.lng')?.errors?.['serverError'] }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1">
+    <label for="description" class="block text-sm font-medium text-gray-800 mb-1">Giới thiệu về công ty</label>
+    <quill-editor
+      id="description"
+      formControlName="description"
+      [styles]="{ 'min-height': '200px', 'border': '1px solid #e5e7eb', 'border-radius': '0.375rem', 'padding-bottom': '40px' }"
+      placeholder="Nhập mô tả về công ty"
+      class="bg-white"
+    ></quill-editor>
+    <p *ngIf="form.get('description')?.touched && form.get('description')?.errors" class="text-orange-600 text-xs mt-1">
+      <i class="fas fa-exclamation-circle mr-1"></i>
+      {{ form.get('description')?.errors?.['required'] ? 'Mô tả là bắt buộc' : 'Tối thiểu 10 ký tự' }}
+    </p>
+    <p *ngIf="form.get('description')?.hasError('serverError')" class="text-orange-600 text-xs mt-1">
+      <i class="fas fa-exclamation-circle mr-1"></i>
+      {{ form.get('description')?.errors?.['serverError'] }}
+    </p>
+  </div>
+
+  <div class="flex justify-end mt-6">
+    <div class="group relative tooltip">
+      <button
+        type="submit"
+        [disabled]="form.invalid"
+        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md text-sm font-medium hover:shadow-md transition-all duration-200 disabled:bg-orange-300 disabled:cursor-not-allowed"
+        aria-label="Lưu thông tin"
+      >
+        <i class="fas fa-check text-sm"></i> Lưu thông tin
+      </button>
+      <span class="tooltiptext absolute hidden group-hover:block -top-10 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+        Lưu thông tin
+      </span>
+    </div>
+  </div>
+</form>

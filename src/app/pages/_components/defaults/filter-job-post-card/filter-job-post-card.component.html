@@ -1,0 +1,87 @@
+<div id="filter-job-post-card" class="space-y-6 w-full max-w-full overflow-hidden">
+  <!-- Jobs Grid -->
+  <div class="w-full max-w-full overflow-hidden" [ngClass]="{
+    'grid grid-cols-1 gap-3': true,
+    'sm:grid-cols-2 sm:gap-4': mode === 'responsive' && col === 2,
+    'md:grid-cols-3 md:gap-4': mode === 'responsive' && col === 3
+  }">
+    <ng-container *ngIf="isLoading; else jobPostList">
+      <div class="w-full max-w-full overflow-hidden" *ngFor="let i of [].constructor(pageSize); let idx = index">
+        <app-job-post [isLoading]="true"></app-job-post>
+      </div>
+    </ng-container>
+
+    <ng-template #jobPostList>
+      <ng-container *ngIf="jobPosts.length > 0; else noData">
+        <div class="w-full max-w-full overflow-hidden" *ngFor="let job of jobPosts">
+          <app-job-post
+            [id]="job.id"
+            [slug]="job.slug"
+            [companyImageUrl]="job?.companyDict?.companyImageUrl"
+            [companyName]="job?.companyDict?.companyName"
+            [jobName]="job?.jobName"
+            [cityName]="getCityName(job?.locationDict?.city)"
+            [deadline]="job?.deadline"
+            [isUrgent]="job?.isUrgent"
+            [isHot]="job?.isHot"
+            [salaryMin]="job.salaryMin"
+            [salaryMax]="job.salaryMax"
+            [isLoading]="false"
+          ></app-job-post>
+        </div>
+      </ng-container>
+    </ng-template>
+
+    <ng-template #noData>
+      <div class="w-full max-w-full overflow-hidden">
+        <app-no-data-card></app-no-data-card>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="totalPages > 1" class="flex justify-center mt-6 sm:mt-8 w-full overflow-x-auto">
+    <div class="flex gap-1 sm:gap-2 items-center pagination-scroll w-full">
+      <!-- Nút Previous -->
+      <button
+        (click)="changePage(page - 1)"
+        [disabled]="page === 1"
+        [ngClass]="{
+          'px-4 py-2 text-base': mode === 'responsive',
+          'px-3 py-1 text-sm': mode === 'fixed'
+        }"
+        class="bg-gray-100 text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+      >
+        Previous
+      </button>
+
+      <!-- Nút trang -->
+      <button
+        *ngFor="let p of getVisiblePages()"
+        (click)="changePage(p)"
+        [ngClass]="{
+          'bg-orange-600 text-white border-orange-600 shadow-md scale-105': p === page,
+          'bg-white text-gray-700 border-gray-200': p !== page,
+          'px-4 py-2 text-base': mode === 'responsive',
+          'px-3 py-1 text-sm': mode === 'fixed'
+        }"
+        class="border rounded-lg hover:bg-gray-100 hover:border-gray-300 transition-all"
+      >
+        {{ p }}
+      </button>
+
+      <!-- Nút Next -->
+      <button
+        (click)="changePage(page + 1)"
+        [disabled]="page === totalPages"
+        [ngClass]="{
+          'px-4 py-2 text-base': mode === 'responsive',
+          'px-3 py-1 text-sm': mode === 'fixed'
+        }"
+        class="bg-gray-100 text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+  <!-- LEFT SIDEBAR -->
+  <div class="md:col-span-5 lg:col-span-3 space-y-6">
+    <!-- Sidebar Profile -->
+    <div><app-sidebar-profile [currentUser]="currentUser" /></div>
+    <!-- Sidebar View Total -->
+    <div><app-sidebar-view-total /></div>
+    <!-- Job Application Card -->
+    <div><app-job-application-card [jobSeekerProfileId]="currentUser?.jobSeekerProfile?.id" /></div>
+  </div>
+  <!-- RIGHT CONTENT -->
+  <div class="md:col-span-7 lg:col-span-9 space-y-6">
+    <div>
+      <app-job-seeker-quantity-statistics />
+    </div>
+    <div>
+      <app-activity-chart />
+    </div>
+    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300">
+      <h2 class="text-lg font-semibold mb-4 text-amber-600">Việc làm gợi ý</h2>
+      <app-suggested-job-post-card [pageSize]="10" />
+    </div>
+  </div>
+</div>

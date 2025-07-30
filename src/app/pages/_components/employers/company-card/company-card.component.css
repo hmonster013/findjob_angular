@@ -1,0 +1,17 @@
+.card-container {
+  max-width: 100%;
+}
+
+.card-section {
+  margin-bottom: 1.5rem;
+}
+
+.tooltip .tooltiptext {
+  z-index: 10;
+}
+
+@media (min-width: 640px) {
+  .card-section {
+    margin-bottom: 2rem;
+  }
+}

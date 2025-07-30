@@ -1,0 +1,101 @@
+<div class="p-6 bg-white rounded-lg shadow-xl border border-gray-200">
+  <!-- Title -->
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+      <i class="fas fa-briefcase text-orange-600"></i> Kinh nghiệm làm việc
+    </h2>
+    <button
+      (click)="handleShowAdd()"
+      class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-all flex items-center gap-2"
+    >
+      <i class="fas fa-plus"></i> Thêm
+    </button>
+  </div>
+  <hr class="border-gray-200 mb-4">
+
+  <!-- Loading Skeleton -->
+  <div *ngIf="isLoadingExperiencesDetail" class="space-y-4 animate-pulse">
+    <div class="h-6 bg-gray-200 rounded-md"></div>
+    <div class="h-6 bg-gray-200 rounded-md"></div>
+  </div>
+
+  <!-- No Experiences -->
+  <div *ngIf="!isLoadingExperiencesDetail && experiencesDetail.length === 0" class="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
+    <i class="fas fa-briefcase text-5xl text-gray-400 mb-4"></i>
+    <p class="text-lg font-medium text-gray-700">Bạn chưa có kinh nghiệm làm việc nào.</p>
+    <p class="text-sm text-gray-500 mt-2">Thêm kinh nghiệm để hoàn thiện hồ sơ!</p>
+    <button
+      (click)="handleShowAdd()"
+      class="mt-4 px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-all flex items-center gap-2 mx-auto"
+    >
+      <i class="fas fa-plus"></i> Thêm kinh nghiệm
+    </button>
+  </div>
+
+  <!-- Experiences List -->
+  <div *ngIf="!isLoadingExperiencesDetail && experiencesDetail.length > 0" class="relative">
+    <div class="border-l-2 border-orange-600 ml-4">
+      <div *ngFor="let experience of experiencesDetail; let i = index" class="relative mb-8 ml-4">
+        <div class="absolute -left-5 top-2 w-3 h-3 bg-orange-600 rounded-full"></div>
+        <div class="p-4 bg-gray-50 rounded-lg shadow-md">
+          <h3 class="text-lg font-semibold text-gray-800">{{ experience.jobName }}</h3>
+          <p class="text-sm text-gray-600 mt-1">{{ experience.companyName }}</p>
+          <p class="text-xs text-gray-500 mt-1">
+            {{ experience.startDate | date: 'MM/yyyy' }} - {{ experience.endDate | date: 'MM/yyyy' }}
+          </p>
+          <p class="text-sm text-gray-600 mt-2">{{ experience.description || 'Không có mô tả' }}</p>
+          <div class="flex space-x-4 mt-3">
+            <button
+              (click)="handleShowUpdate(experience.id)"
+              class="text-orange-600 hover:text-orange-700 text-sm font-medium flex items-center gap-1"
+            >
+              <i class="fas fa-edit"></i> Sửa
+            </button>
+            <button
+              (click)="handleDelete(experience.id)"
+              class="text-red-600 hover:text-red-700 text-sm font-medium flex items-center gap-1"
+            >
+              <i class="fas fa-trash"></i> Xóa
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Popup -->
+  <div
+    *ngIf="openPopup"
+    class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50 transition-opacity duration-300"
+  >
+    <div class="bg-white rounded-lg p-8 max-w-xl w-full max-h-[80vh] overflow-y-auto shadow-xl border border-gray-200 relative">
+      <!-- Close Button -->
+      <button
+        (click)="openPopup = false"
+        class="absolute top-4 right-4 text-gray-600 hover:text-orange-600 transition-all duration-200"
+        aria-label="Đóng modal"
+      >
+        <i class="fas fa-times text-xl"></i>
+      </button>
+      <!-- Form Title -->
+      <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+        <i class="fas fa-briefcase text-orange-600"></i>
+        {{ editData ? 'Chỉnh sửa kinh nghiệm' : 'Thêm kinh nghiệm' }}
+      </h3>
+      <!-- Form -->
+      <app-experience-detail-form
+        [editData]="editData"
+        [handleAddOrUpdate]="handleAddOrUpdate"
+        [resumeSlug]="resumeSlug"
+      ></app-experience-detail-form>
+    </div>
+  </div>
+
+  <!-- Fullscreen Loading -->
+  <div
+    *ngIf="isFullScreenLoading"
+    class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50"
+  >
+    <div class="animate-spin rounded-full h-12 w-12 border-4 border-orange-600 border-t-transparent"></div>
+  </div>
+</div>

@@ -1,0 +1,195 @@
+/* job-posts-table.component.css */
+
+/* Base styles */
+.job-posts-table-container {
+  transition: box-shadow 0.3s ease;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #7C2D12; /* orange-800 */
+  color: #FFFFFF; /* white */
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  transform: translateY(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #F97316; /* orange-600 */
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsive improvements */
+@media (max-width: 768px) {
+  .job-posts-table-container {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  /* Mobile card hover effect */
+  .job-posts-table-container > div > div > div:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Mobile card layout improvements */
+@media (max-width: 640px) {
+  .job-posts-table-container {
+    padding: 8px;
+  }
+
+  /* Card spacing */
+  .space-y-3 > * + * {
+    margin-top: 12px;
+  }
+
+  /* Mobile pagination */
+  .job-posts-table-container nav {
+    font-size: 0.875rem;
+  }
+
+  .job-posts-table-container nav button {
+    min-width: 36px;
+    min-height: 36px;
+  }
+}
+
+/* Touch target improvements for mobile */
+@media (max-width: 480px) {
+  /* Ensure buttons are touch-friendly */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Card padding adjustment */
+  .job-posts-table-container > div > div > div {
+    padding: 16px;
+  }
+
+  /* Smaller text on very small screens */
+  .text-sm {
+    font-size: 0.825rem;
+  }
+
+  /* Grid adjustments for very small screens */
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .grid-cols-2 > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .grid-cols-2 > div:last-child {
+    border-bottom: none;
+  }
+}
+
+/* Hover effects for desktop */
+@media (hover: hover) {
+  .job-posts-table-container tr:hover {
+    background-color: #f9fafb;
+  }
+
+  .job-posts-table-container button:hover {
+    transform: scale(1.05);
+  }
+}
+
+/* Focus states for accessibility */
+button:focus {
+  outline: 2px solid #F97316;
+  outline-offset: 2px;
+}
+
+select:focus {
+  outline: 2px solid #F97316;
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.job-posts-table-container.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Smooth transitions */
+.job-posts-table-container * {
+  transition: all 0.2s ease;
+}
+
+/* Table scroll shadow effect */
+.overflow-x-auto {
+  position: relative;
+}
+
+.overflow-x-auto::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  background: linear-gradient(to left, rgba(0,0,0,0.1), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.overflow-x-auto:hover::before {
+  opacity: 1;
+}
+
+/* Status badge improvements */
+.rounded-full {
+  white-space: nowrap;
+}
+
+/* Mobile action buttons */
+@media (max-width: 768px) {
+  .hover\:bg-orange-50:hover {
+    background-color: #FFF7ED;
+  }
+}

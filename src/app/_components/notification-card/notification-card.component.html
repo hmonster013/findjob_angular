@@ -1,0 +1,82 @@
+<div class="relative">
+  <!-- Icon Notification + Badge -->
+  <button (click)="toggleMenu()" class="relative p-2 hover:opacity-80 cursor-pointer">
+    <i class="fas fa-bell text-white text-lg" [ngClass]="unreadCount > 0 ? 'animate-bounce' : ''"></i>
+    <span *ngIf="unreadCount > 0"
+          class="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full">
+      {{ unreadCount }}
+    </span>
+  </button>
+
+  <!-- Backdrop with opacity -->
+  <div *ngIf="open" class="fixed inset-0 z-40" (click)="toggleMenu()"></div>
+
+  <!-- Dropdown Menu -->
+  <div
+    *ngIf="open"
+    class="notification-dropdown absolute right-0 mt-2 w-80 sm:w-96 max-w-[90vw] bg-white border border-orange-200 rounded-lg shadow-lg z-50 overflow-hidden"
+  >
+    <div class="flex justify-between items-center px-4 py-3 bg-orange-600 text-white relative">
+      <h5 class="font-semibold">Thông báo</h5>
+      <button *ngIf="notifications.length > 0" (click)="clearAll()" class="text-sm hover:text-orange-200 flex items-center gap-1 hidden sm:inline-flex">
+        <i class="fas fa-trash"></i>
+        Xóa tất cả
+      </button>
+    </div>
+
+    <!-- Skeleton Loading -->
+    <div *ngIf="isLoading" class="space-y-4 p-4">
+      <div *ngFor="let _ of [1,2,3,4,5]" class="flex items-center gap-3 animate-pulse">
+        <div class="w-10 h-10 bg-gray-200 rounded border border-gray-200"></div>
+        <div class="flex-1">
+          <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications List -->
+    <div class="max-h-96 overflow-y-auto flex flex-col" *ngIf="!isLoading">
+      <ng-container *ngIf="notifications.length > 0; else noNoti">
+        <div *ngFor="let noti of notifications"
+             class="border-b bg-white hover:bg-orange-50 p-4 cursor-pointer transition-all duration-300"
+             [ngClass]="{'border-l-4 border-orange-600': !noti.is_read}"
+             (click)="markAsRead(noti)">
+          <div class="flex items-start gap-3">
+            <img
+              [src]="getValidImageUrl(noti.image)"
+              class="w-10 h-10 rounded border border-gray-200 object-cover"
+              alt="Notification"
+              onerror="this.src='/assets/images/fallback-image.jpg'"
+            />
+            <div class="flex-1">
+              <div class="font-medium text-gray-800" [ngClass]="{'font-bold': !noti.is_read}">{{ noti.title }}</div>
+              <div class="text-sm text-gray-600 line-clamp-2">{{ noti.content }}</div>
+              <div class="text-xs text-gray-500 mt-1 flex items-center">
+                <i class="fas fa-clock mr-1"></i>
+                {{ noti.time | date:'dd/MM/yyyy HH:mm' }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button
+          *ngIf="canLoadMore"
+          (click)="loadMore()"
+          class="py-2 text-sm text-center text-orange-600 hover:text-orange-700 hover:bg-orange-100 flex items-center justify-center gap-1 transition-all duration-300"
+        >
+          <i class="fas fa-chevron-down text-orange-600"></i>
+          Xem thêm
+        </button>
+      </ng-container>
+
+      <ng-template #noNoti>
+        <div class="text-center text-gray-500 py-8 flex flex-col items-center gap-2 bg-white">
+          <i class="fas fa-bell-slash text-orange-400 text-3xl"></i>
+          <p class="font-medium">Không có thông báo nào</p>
+          <p class="text-sm">Bạn sẽ nhận thông báo khi có cập nhật mới!</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

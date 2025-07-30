@@ -1,0 +1,77 @@
+<div class="bg-white p-6 rounded-lg shadow-xl border-2 border-gray-300 space-y-6">
+  <!-- Title -->
+  <div class="flex justify-between items-center">
+    <h2 class="text-2xl font-semibold text-gray-800">Thông tin tài khoản</h2>
+  </div>
+
+  <!-- Divider -->
+  <hr class="border-gray-300">
+
+  <!-- Main Content -->
+  <div class="px-0 sm:px-2 space-y-6">
+    <div class="flex flex-col gap-6">
+      <!-- Avatar Section -->
+      <div>
+        <app-avatar-card></app-avatar-card>
+      </div>
+
+      <!-- Account Form Section -->
+      <div>
+        <app-account-form (update)="handleUpdateAccount($event)" [serverErrors]="serverErrors"></app-account-form>
+        <div class="mt-2 text-right">
+          <button
+            (click)="openPopup = true"
+            class="text-amber-600 hover:text-amber-700 hover:underline text-xs font-medium transition-all duration-300 ease-in-out"
+          >
+            Thay đổi mật khẩu
+          </button>
+        </div>
+        <!-- Update Button -->
+        <div class="mt-4 flex justify-center">
+          <button
+            type="submit"
+            form="account-form"
+            class="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-md shadow-md hover:bg-amber-700 hover:shadow-lg text-sm font-medium transition-all duration-300 ease-in-out flex items-center gap-2"
+          >
+            <i class="fas fa-save text-xs"></i> Cập nhật
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Change Popup -->
+  <div
+    *ngIf="openPopup"
+    class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50 transition-opacity duration-300"
+  >
+    <div
+      class="bg-white p-6 rounded-lg shadow-xl border-2 border-gray-300 w-full max-w-md transform transition-transform duration-300 scale-100"
+    >
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-800">Cập nhật mật khẩu</h3>
+        <button
+          (click)="openPopup = false"
+          class="text-gray-600 hover:text-gray-800 transition-all duration-300 ease-in-out"
+        >
+          <i class="fas fa-times text-base"></i>
+        </button>
+      </div>
+      <app-update-password-form (updatePassword)="handleUpdatePassword($event)" [serverErrors]="serverErrors"></app-update-password-form>
+      <div class="flex justify-end mt-4">
+        <button
+          type="submit"
+          form="modal-form"
+          class="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-md shadow-md hover:bg-amber-700 hover:shadow-lg text-sm font-medium transition-all duration-300 ease-in-out flex items-center gap-2"
+        >
+          <i class="fas fa-save text-xs"></i> Lưu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="isFullScreenLoading" class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50">
+    <div class="animate-spin rounded-full h-10 w-10 border-4 border-amber-600 border-t-transparent shadow-lg"></div>
+  </div>
+</div>

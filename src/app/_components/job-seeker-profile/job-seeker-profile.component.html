@@ -1,0 +1,101 @@
+<div class="border border-gray-200 rounded-lg p-4 sm:p-5 bg-white hover:shadow-md transition-shadow duration-200 cursor-pointer">
+  <!-- Loading State -->
+  <ng-container *ngIf="isLoading; else profileContent">
+    <div class="flex flex-col sm:flex-row justify-between gap-4 animate-pulse">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 bg-gray-200 rounded-full"></div>
+        <div class="flex-1 space-y-3">
+          <div class="h-5 bg-gray-200 rounded w-1/2"></div>
+          <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+          <div class="flex gap-2">
+            <div class="h-4 bg-gray-200 rounded w-20"></div>
+            <div class="h-4 bg-gray-200 rounded w-20"></div>
+            <div class="h-4 bg-gray-200 rounded w-20"></div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col items-end gap-2">
+        <div class="h-8 w-8 bg-gray-200 rounded-full"></div>
+        <div class="h-4 bg-gray-200 rounded w-24"></div>
+        <div class="h-4 bg-gray-200 rounded w-16"></div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Profile Content -->
+  <ng-template #profileContent>
+    <div class="flex flex-col sm:flex-row justify-between gap-4">
+      <!-- Left Section -->
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-orange-600">
+          <i class="fas fa-user text-xl"></i>
+        </div>
+        <div class="flex-1 space-y-2">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h3 class="font-semibold text-orange-600 hover:text-orange-700 text-base cursor-pointer" (click)="viewProfile()">
+              {{ user?.fullName || 'Chưa cập nhật' }}
+              <span class="text-gray-500 text-sm">
+                ({{ jobSeekerProfile?.old || 'Chưa cập nhật' }} tuổi)
+              </span>
+            </h3>
+            <div *ngIf="lastViewedDate" class="bg-orange-100 text-orange-600 text-xs rounded-full px-2 py-1">
+              <i class="fas fa-check-circle mr-1"></i> Đã xem: {{ lastViewedDate | date: 'dd/MM/yyyy HH:mm' }}
+            </div>
+          </div>
+          <h4 class="text-orange-600 font-medium hover:text-orange-700 text-sm cursor-pointer" (click)="viewProfile()">
+            <i class="fas fa-file-alt mr-1" *ngIf="type === 'UPLOAD'"></i>
+            {{ title || 'Chưa cập nhật' }}
+          </h4>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <div class="bg-orange-100 text-orange-600 px-2 py-1 rounded-full flex items-center gap-1">
+              <i class="fas fa-money-bill-wave"></i> {{ salaryStringFn(salaryMin, salaryMax) }}
+            </div>
+            <div class="bg-orange-100 text-orange-600 px-2 py-1 rounded-full flex items-center gap-1">
+              <i class="fas fa-briefcase"></i> {{ experienceName || 'Chưa cập nhật' }}
+            </div>
+            <div class="bg-orange-100 text-orange-600 px-2 py-1 rounded-full flex items-center gap-1">
+              <i class="fas fa-map-marker-alt"></i> {{ cityName || 'Chưa cập nhật' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Section -->
+      <div class="flex flex-col items-end gap-2">
+        <div class="flex gap-2">
+          <div class="group relative">
+            <button
+              (click)="toggleSave()"
+              class="text-orange-600 hover:bg-orange-100 p-2 rounded-full transition-all duration-200"
+              attr.aria-label="{{ isSaved ? 'Hủy lưu hồ sơ' : 'Lưu hồ sơ' }}"
+            >
+              <i class="fas fa-heart" *ngIf="isSaved"></i>
+              <i class="far fa-heart" *ngIf="!isSaved"></i>
+            </button>
+            <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+              {{ isSaved ? 'Hủy lưu hồ sơ' : 'Lưu hồ sơ' }}
+            </span>
+          </div>
+          <div class="group relative">
+            <button
+              (click)="viewProfile()"
+              class="text-orange-600 hover:bg-orange-100 p-2 rounded-full transition-all duration-200"
+              aria-label="Xem hồ sơ"
+            >
+              <i class="fas fa-eye"></i>
+            </button>
+            <span class="absolute hidden group-hover:block -top-8 left-1/2 transform -translate-x-1/2 bg-orange-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap border border-orange-600">
+              Xem hồ sơ
+            </span>
+          </div>
+        </div>
+        <div class="text-xs text-gray-500">
+          <i class="fas fa-clock mr-1"></i> Cập nhật: {{ updateAt ? (updateAt | date: 'dd/MM/yyyy') : 'Chưa cập nhật' }}
+        </div>
+        <div class="text-xs text-gray-500 flex items-center gap-1">
+          <i class="fas fa-users"></i> {{ viewEmployerNumber || 0 }} NTD quan tâm
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

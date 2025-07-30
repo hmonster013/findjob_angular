@@ -1,0 +1,54 @@
+<div class="top-company-carousel max-w-[1452px] mx-auto py-5">
+  <ng-container *ngIf="isLoading; else showRealData">
+    <swiper-container
+      style="
+        --swiper-pagination-color: #f97316;
+        --swiper-pagination-bullet-size: 12px;
+      "
+      [attr.slides-per-view]="col"
+      space-between="16"
+      pagination="true"
+      navigation="false"
+      direction="horizontal"
+      class="w-full h-[260px]"
+    >
+      <swiper-slide *ngFor="let i of skeletonArray">
+        <div class="company-slide flex flex-col items-center justify-center w-full h-[165px] bg-white border border-gray-200 rounded-lg shadow-sm animate-pulse">
+          <div class="w-20 h-20 bg-gray-300 rounded-md mb-2"></div>
+          <div class="w-2/3 h-4 bg-gray-300 rounded"></div>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+  </ng-container>
+
+  <ng-template #showRealData>
+    <swiper-container
+      style="
+        --swiper-pagination-color: #f97316;
+        --swiper-pagination-bullet-size: 13px;
+      "
+      [attr.slides-per-view]="col"
+      space-between="16"
+      pagination="true"
+      navigation="false"
+      direction="horizontal"
+      class="w-full h-[210px]"
+    >
+      <swiper-slide *ngFor="let company of companies">
+        <div
+          class="company-slide flex flex-col items-center justify-center w-full h-[165px] bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer"
+          (click)="navigateToCompany(company.slug)"
+        >
+          <img
+            [src]="company.companyImageUrl ? company.companyImageUrl : IMAGES.imageDefault"
+            alt="{{ company.companyName }}"
+            class="w-20 h-20 object-contain bg-gray-50 rounded-md mb-2"
+          />
+          <h6 class="company-name text-sm font-semibold text-gray-900 text-center truncate w-[90%]">
+            {{ company.companyName }}
+          </h6>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+  </ng-template>
+</div>

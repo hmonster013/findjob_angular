@@ -1,0 +1,103 @@
+<div class="p-6 bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300">
+  <!-- Header -->
+  <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+    <i class="fas fa-file-pdf mr-2 text-amber-600"></i> CV Đính kèm
+  </h2>
+
+  <!-- Loading Skeleton -->
+  <div *ngIf="isLoadingCv" class="animate-pulse space-y-4">
+    <div class="h-5 bg-gray-200 rounded w-full"></div>
+    <div class="h-96 bg-gray-200 rounded"></div>
+  </div>
+
+  <!-- Empty State -->
+  <div
+    *ngIf="!isLoadingCv && !cvUrl"
+    class="text-center text-gray-600 p-6 bg-gray-50 rounded-lg text-sm flex items-center justify-center"
+  >
+    <i class="fas fa-exclamation-circle mr-2 text-amber-600"></i> Bạn chưa tải lên CV nào.
+  </div>
+
+  <!-- CV Preview -->
+  <div *ngIf="!isLoadingCv && cvUrl" class="space-y-4">
+    <object
+      [data]="cvUrl"
+      type="application/pdf"
+      width="100%"
+      height="500px"
+      class="border border-gray-300 rounded-lg"
+    >
+      <div class="text-center p-4 bg-gray-100 rounded-lg">
+        <p class="text-sm text-gray-600">
+          Không hiển thị được PDF.
+          <a [href]="cvUrl" target="_blank" class="text-amber-600 hover:text-amber-700 underline"
+            >Xem CV</a
+          >
+        </p>
+      </div>
+    </object>
+  </div>
+
+  <!-- Upload Button -->
+  <div class="mt-6 flex justify-end">
+    <button
+      (click)="handleOpenUploadPopup()"
+      class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm flex items-center gap-2 transition-colors duration-200"
+    >
+      <i class="fas fa-upload"></i> Tải CV mới
+    </button>
+  </div>
+
+  <!-- Upload CV Modal -->
+  <div
+    *ngIf="openPopup"
+    class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-[1000] transition-opacity duration-300"
+  >
+    <div class="bg-white rounded-xl p-6 max-w-md w-full relative transform transition-transform duration-300 scale-100">
+      <!-- Close Button -->
+      <button
+        (click)="openPopup = false"
+        class="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+        aria-label="Đóng modal"
+      >
+        <i class="fas fa-times text-xl"></i>
+      </button>
+
+      <!-- Modal Content -->
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Tải lên CV mới</h3>
+      <div class="space-y-4">
+        <input
+          type="file"
+          (change)="handleFileChange($event)"
+          accept="application/pdf"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-600 focus:border-amber-600 file:bg-gray-50 file:border-0 file:text-gray-700 file:py-2 file:px-4 file:rounded"
+        />
+
+        <div class="flex justify-end space-x-2">
+          <button
+            (click)="openPopup = false"
+            class="px-4 py-2 rounded-md bg-gray-300 hover:bg-gray-400 text-gray-800 transition-colors duration-200"
+          >
+            Hủy
+          </button>
+          <button
+            (click)="handleSubmit()"
+            class="px-4 py-2 rounded-md bg-amber-600 hover:bg-amber-700 text-white transition-colors duration-200"
+            [disabled]="!file"
+            [ngClass]="{ 'opacity-50 cursor-not-allowed': !file }"
+          >
+            Xác nhận
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Loading -->
+  <div
+    *ngIf="isFullScreenLoading"
+    class="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-[1000]"
+  >
+    <i class="fas fa-spinner fa-spin text-amber-600 text-5xl"></i>
+  </div>
+</div>

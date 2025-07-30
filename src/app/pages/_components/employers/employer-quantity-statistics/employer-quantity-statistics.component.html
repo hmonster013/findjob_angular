@@ -1,0 +1,80 @@
+<div class="relative">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+    <div *ngFor="let _ of [1,2,3,4]" class="bg-orange-100 rounded-xl p-4 sm:p-5 animate-pulse">
+      <div class="h-8 bg-orange-200 rounded w-12 mb-2"></div>
+      <div class="h-4 bg-orange-200 rounded w-3/4"></div>
+    </div>
+  </div>
+
+  <!-- Data State -->
+  <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+    <!-- Tổng số tin tuyển -->
+    <div
+      class="bg-orange-50 rounded-xl shadow-lg p-4 sm:p-5 flex items-center space-x-4 hover:bg-gradient-to-br hover:from-orange-50 hover:to-orange-100 hover:shadow-md hover:scale-[1.01] transition-all duration-300 cursor-pointer animate-fadeInUp"
+      role="region"
+      aria-label="Tổng số tin tuyển dụng"
+    >
+      <i class="fas fa-file-alt text-orange-600 text-2xl sm:text-3xl"></i>
+      <div>
+        <div class="text-gray-600 font-semibold text-sm uppercase tracking-wide mb-1">
+          Tất cả tin tuyển dụng
+        </div>
+        <div class="text-xl sm:text-2xl font-bold text-orange-600 hover:text-orange-700">
+          {{ data.totalJobPost || 0 }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Tin tuyển chờ duyệt -->
+    <div
+      class="bg-orange-50 rounded-xl shadow-lg p-4 sm:p-5 flex items-center space-x-4 hover:bg-gradient-to-br hover:from-orange-50 hover:to-orange-100 hover:shadow-md hover:scale-[1.01] transition-all duration-300 cursor-pointer animate-fadeInUp animation-delay-100"
+      role="region"
+      aria-label="Tin tuyển dụng chờ duyệt"
+    >
+      <i class="fas fa-hourglass-half text-orange-600 text-2xl sm:text-3xl"></i>
+      <div>
+        <div class="text-gray-600 font-semibold text-sm uppercase tracking-wide mb-1">
+          Tin tuyển dụng chờ duyệt
+        </div>
+        <div class="text-xl sm:text-2xl font-bold text-orange-600 hover:text-orange-700">
+          {{ data.totalJobPostingPendingApproval || 0 }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Tin tuyển hết hạn -->
+    <div
+      class="bg-orange-50 rounded-xl shadow-lg p-4 sm:p-5 flex items-center space-x-4 hover:bg-gradient-to-br hover:from-orange-50 hover:to-orange-100 hover:shadow-md hover:scale-[1.01] transition-all duration-300 cursor-pointer animate-fadeInUp animation-delay-200"
+      role="region"
+      aria-label="Tin tuyển dụng hết hạn"
+    >
+      <i class="fas fa-times-circle text-orange-600 text-2xl sm:text-3xl"></i>
+      <div>
+        <div class="text-gray-600 font-semibold text-sm uppercase tracking-wide mb-1">
+          Tin tuyển dụng hết hạn
+        </div>
+        <div class="text-xl sm:text-2xl font-bold text-orange-600 hover:text-orange-700">
+          {{ data.totalJobPostExpired || 0 }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Ứng viên ứng tuyển -->
+    <div
+      class="bg-orange-50 rounded-xl shadow-lg p-4 sm:p-5 flex items-center space-x-4 hover:bg-gradient-to-br hover:from-orange-50 hover:to-orange-100 hover:shadow-md hover:scale-[1.01] transition-all duration-300 cursor-pointer animate-fadeInUp animation-delay-300"
+      role="region"
+      aria-label="Ứng viên ứng tuyển"
+    >
+      <i class="fas fa-user-plus text-orange-600 text-2xl sm:text-3xl"></i>
+      <div>
+        <div class="text-gray-600 font-semibold text-sm uppercase tracking-wide mb-1">
+          Ứng viên ứng tuyển
+        </div>
+        <div class="text-xl sm:text-2xl font-bold text-orange-600 hover:text-orange-700">
+          {{ data.totalApply || 0 }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

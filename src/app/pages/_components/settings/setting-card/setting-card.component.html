@@ -1,0 +1,42 @@
+<div class="card-container p-6 bg-white rounded-lg shadow-xl border-2 border-gray-300">
+  <!-- Title -->
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="card-title text-2xl font-semibold text-gray-800">{{ title }}</h2>
+  </div>
+
+  <!-- Divider -->
+  <hr class="divider border-gray-300">
+
+  <!-- Loading Skeleton -->
+  <div *ngIf="isLoadingSettings" class="space-y-4">
+    <div class="skeleton-checkbox h-6 bg-gray-200 rounded-md shadow-md animate-pulse"></div>
+    <div class="skeleton-checkbox h-6 bg-gray-200 rounded-md shadow-md animate-pulse"></div>
+    <div class="flex justify-center mt-4">
+      <div class="skeleton-button h-10 w-32 bg-gray-200 rounded-md shadow-md animate-pulse"></div>
+    </div>
+  </div>
+
+  <!-- Settings Form -->
+  <div *ngIf="!isLoadingSettings">
+    <div class="mt-2">
+      <app-setting-form
+        [editData]="editData"
+        (update)="handleUpdateUserSetting($event)"
+      ></app-setting-form>
+    </div>
+
+    <div class="flex justify-center mt-6">
+      <button
+        type="submit"
+        form="setting-form"
+        class="submit-button px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-md shadow-md hover:bg-amber-700 hover:shadow-lg border-2 border-amber-600 text-sm font-medium transition-all duration-300 ease-in-out flex items-center gap-2 disabled:bg-gray-300 disabled:border-gray-300 disabled:shadow-none disabled:cursor-not-allowed"
+        [disabled]="isSubmitting"
+      >
+        <i *ngIf="!isSubmitting" class="fas fa-save text-xs"></i>
+        <span *ngIf="!isSubmitting">Cập nhật</span>
+        <span *ngIf="isSubmitting" class="spinner inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+        <span *ngIf="isSubmitting">Đang cập nhật...</span>
+      </button>
+    </div>
+  </div>
+</div>

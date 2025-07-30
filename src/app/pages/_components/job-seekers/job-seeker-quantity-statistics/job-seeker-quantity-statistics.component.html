@@ -1,0 +1,73 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <!-- Việc làm đã ứng tuyển -->
+  <div
+    class="p-4 bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex flex-col items-center"
+  >
+    <i class="fas fa-briefcase text-3xl text-amber-600 mb-2"></i>
+    <div class="text-gray-800 font-semibold text-lg text-center">
+      Việc làm đã ứng tuyển
+    </div>
+    <div class="text-amber-600 font-bold text-2xl mt-2">
+      <ng-container *ngIf="isLoading; else loadedApply">
+        <div class="h-8 w-12 bg-gray-200 rounded animate-pulse"></div>
+      </ng-container>
+      <ng-template #loadedApply>
+        {{ data?.totalApply ?? 0 }}
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Việc làm đã lưu -->
+  <div
+    class="p-4 bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex flex-col items-center"
+  >
+    <i class="fas fa-heart text-3xl text-amber-600 mb-2"></i>
+    <div class="text-gray-800 font-semibold text-lg text-center">
+      Việc làm đã lưu
+    </div>
+    <div class="text-amber-600 font-bold text-2xl mt-2">
+      <ng-container *ngIf="isLoading; else loadedSave">
+        <div class="h-8 w-12 bg-gray-200 rounded animate-pulse"></div>
+      </ng-container>
+      <ng-template #loadedSave>
+        {{ data?.totalSave ?? 0 }}
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- NTD đã xem hồ sơ -->
+  <div
+    class="p-4 bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex flex-col items-center"
+  >
+    <i class="fas fa-eye text-3xl text-amber-600 mb-2"></i>
+    <div class="text-gray-800 font-semibold text-lg text-center">
+      NTD đã xem hồ sơ
+    </div>
+    <div class="text-amber-600 font-bold text-2xl mt-2">
+      <ng-container *ngIf="isLoading; else loadedView">
+        <div class="h-8 w-12 bg-gray-200 rounded animate-pulse"></div>
+      </ng-container>
+      <ng-template #loadedView>
+        {{ data?.totalView ?? 0 }}
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- NTD đang theo dõi -->
+  <div
+    class="p-4 bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex flex-col items-center"
+  >
+    <i class="fas fa-user-plus text-3xl text-amber-600 mb-2"></i>
+    <div class="text-gray-800 font-semibold text-lg text-center">
+      NTD đang theo dõi
+    </div>
+    <div class="text-amber-600 font-bold text-2xl mt-2">
+      <ng-container *ngIf="isLoading; else loadedFollow">
+        <div class="h-8 w-12 bg-gray-200 rounded animate-pulse"></div>
+      </ng-container>
+      <ng-template #loadedFollow>
+        {{ data?.totalFollow ?? 0 }}
+      </ng-template>
+    </div>
+  </div>
+</div>
